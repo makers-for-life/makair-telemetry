@@ -1,0 +1,189 @@
+//
+// MakAir
+//
+// Protocol Buffers message definitions for MakAir telemetry
+//
+// Copyright: 2020, Makers For Life
+// License: Public Domain License
+//
+
+syntax = "proto3";
+
+enum MessageType {
+  TELEMETRY = 0;
+}
+
+message Disambiguator {
+  MessageType type = 1;
+}
+
+enum AlarmCode {
+  PRESSURE_TOO_LOW_3_CYCLES = 11;
+  PLATEAU_PRESSURE_NOT_REACHED_3_CYCLES = 12;
+  BATTERY_WEAK_VOLTAGE_12V = 13;
+  PEEP_TARGET_NOT_REACHED_3_CYCLES = 14;
+  MOTOR_OVERHEATING = 15;
+  BATTERY_DISCONNECTED = 16;
+  HIGH_PEAK_PRESSURE = 17;
+  PRESSURE_SENSOR_FAILURE = 18;
+  BATTERY_WEAK_VOLTAGE_12_3V = 21;
+  PLATEAU_PRESSURE_NOT_REACHED_2_CYCLES = 22;
+  PEEP_TARGET_NOT_REACHED_2_CYCLES = 23;
+  PRESSURE_TOO_LOW_2_CYCLES = 24;
+}
+
+enum Mode {
+  PRODUCTION = 0;
+  QUALIFICATION = 1;
+  INTEGRATIONTEST = 2;
+}
+
+enum Phase {
+  INHALATION = 0;
+  EXHALATION = 1;
+}
+
+enum SubPhase {
+  INSPIRATION = 0;
+  HOLD_INSPIRATION = 1;
+  EXHALE = 2;
+}
+
+enum AlarmPriority {
+  HIGH = 0;
+  MEDIUM = 1;
+  LOW = 2;
+}
+
+message BootMessage {
+  MessageType type = 1;
+  string version = 2;
+  string device_id = 3;
+  uint64 systick = 4;
+  Mode mode = 5;
+  // 8 bit values do not exist in protobuf, using the smallest unsigned int which is uint32.
+  uint32 value128 = 6;
+}
+
+message StoppedMessage {
+  MessageType type = 1;
+  string version = 2;
+  string device_id = 3;
+  uint64 systick = 4;
+}
+
+message DataSnapshot {
+  MessageType type = 1;
+  string version = 2;
+  string device_id = 3;
+  uint64 systick = 4;
+  uint32 centile = 5;
+  uint32 pressure = 6;
+  Phase phase = 7;
+  SubPhase subphase = 8;
+  uint32 blower_valve_position = 9;
+  uint32 patient_valve_position = 10;
+  uint32 blower_rpm = 11;
+  uint32 battery_level = 12;
+}
+
+message MachineStateSnapshot {
+  MessageType type = 1;
+  string version = 2;
+  string device_id = 3;
+  uint64 systick = 4;
+  uint32 cycle = 5;
+  uint32 peak_command = 6;
+  uint32 peep_command = 7;
+  uint32 plateau_command = 8;
+  uint32 cpm_command = 9;
+  uint32 previous_peak_pressure = 10;
+  uint32 previous_plateau_pressure = 11;
+  uint32 previous_peep_pressure = 12;  
+  repeated AlarmCode current_alarm_codes = 13;
+  repeated AlarmCode previous_alarm_codes = 14;
+}
+
+message AlarmTrap {
+  MessageType type = 1;
+  string version = 2;
+  string device_id = 3;
+  uint64 systick = 4;
+  uint32 centile = 5;
+  uint32 pressure = 6;
+  Phase phase = 7;
+  SubPhase subphase = 8;
+  uint32 cycle = 9;
+  AlarmCode alarm_code = 10;
+  AlarmPriority alarm_priority = 11;
+  bool triggered = 12;
+  uint32 expected = 13;
+  uint32 measured = 14;
+  uint32 cycles_since_trigger = 15;
+}
+
+message MakAirTelemetry {
+  //
+  // The first tag (1) contains a message type
+  // This convention allows to deserialize all messages
+  // with the simple disambiguating message:
+  //
+  //   message Disambiguator {
+  //     MessageType type = 1;
+  //   }
+  //
+  // Then given the result the serialized content can be
+  // deserialized using the correct proto definition.
+  //
+  MessageType type = 1;
+
+  //
+  // The encoding used for the 'encoded' field.
+  //
+  enum Encoding {
+    // MakAir specific telemetry frames, delta encoded, varint, opt gzipped
+    MAKAIR_DELTA_OPTGZIP = 0;
+    // The 'encoded' field contains raw protobuf data
+    RAWPB = 1;
+  }
+
+  //
+  // List of encodings of the 'encoded' blobs.
+  // If the number of elements in 'encoding' is smaller than the number
+  // of elements in 'encoded', the encoding of the extraneous elements is
+  // assumed to be the same as the last specified encoding.
+  // If 'encoding' does not contain any entry, the encoding is assumed to be RAW (0).
+  //
+  repeated Encoding encoding = 2;
+
+  //
+  // List of encoded telemetry messages. Those messages can either be serialized
+  // MakairTelemetry messages, instances of the other telemetry message types,
+  // ot blobs containing telemetry data in MakAir specific format for space efficiency.
+  // When this field is used, no element of the MessageOneOf oneof should be present.
+  // This mechanism can be used recursively, i.e. first level with an 'encoded' field containing
+  // elements in RAW encoding, then this message can be serialized and compressed using GZIP for example
+  // then the gzipped content can be set as the 'encoded' field of a new MakairTelemetry instance which
+  // could then be serialized, encrypted and set as value of a third MakairTelemetry instance.
+  // Therefore compression and encryption can be applied all with a single message type.
+  //
+  repeated bytes encoded = 3;
+
+  string version = 4;
+  bytes device_id = 5;
+
+  //
+  // The reference timestamp of the lowest systick value in the message
+  // either in one of the elements of MessageOneOf below or in one of
+  // the encoded elements.
+  //
+  uint64 timestamp = 6;
+
+  oneof MessageOneOf {
+    BootMessage boot = 7;
+    StoppedMessage stopped = 8;
+    DataSnapshot data = 9;
+    MachineStateSnapshot state = 10;
+    AlarmTrap alarm = 11;
+  }
+}

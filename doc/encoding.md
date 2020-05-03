@@ -18,7 +18,7 @@ This choice of technology allows to transmit data from several 10s of MakAir ven
 
 This limit in the amount of air time available to each device has a direct impact on the amount of data that can be sent by the MakAir devices.
 
-The LoRaWAN communications between the MakAir devices and the LoRaWAN Gateway will make use of a bandwidtg of 125kHz with spreading factors 7 and 8. This gives a maximum theoretical transmission bitrate of 5470 bits/s for SF7 and 3125 bits/s for SF8 both with maximum payloads of 230 bytes. Our budget for transmitting data is therefore roughly 200 bytes per packet. With added headers, a 200 bytes payload takes ~340ms to transmit using SF7/125kHz (DR7), so in order to respect the air time limit, one such packet could be transmitted every 34s.
+The LoRaWAN communications between the MakAir devices and the LoRaWAN Gateway will make use of a bandwidth of 125kHz with spreading factors 7 and 8. This gives a maximum theoretical transmission bitrate of 5470 bits/s for SF7 and 3125 bits/s for SF8 both with maximum payloads of 230 bytes. Our budget for transmitting data is therefore roughly 200 bytes per packet. With added headers, a 200 bytes payload takes ~340ms to transmit using SF7/125kHz (DR7), so in order to respect the air time limit, one such packet could be transmitted every 34s.
 
 Given this transmission budget, an encoding needs to be designed which will enable the transmission of a maximum of data from the MakAir.
 

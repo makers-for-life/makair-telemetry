@@ -71,9 +71,9 @@ The data contained in the `encoded` field can be of one of the defined types in 
 The `MAKAIR_DELTA_OPTGZIP` encoding is a special encoding of the raw telemetry output by the MakAir with the following optimizations:
 
 * The `version` and `device_id` fields are removed, the values from the `MakAirTelemetry` message are used.
-* The `alarm_codes` portion is not transmitted. This can be discussed, but the alarms are sent in dedicated frames so should be received.
+* The `alarm_codes` portion is not transmitted. This can be discussed, but the alarms are sent in dedicated frames so should be received. A recap of current alarms could be sent without respecting the air time as they are there to solve a life threatening situation.
 * The other fields are delta encoded between frames.
-* The resulting numbers (N per frame) are then [VARINT](https://developers.google.com/protocol-buffers/docs/encoding) encoded.
+* The resulting numbers (N per frame) are then zig-zag [VARINT](https://developers.google.com/protocol-buffers/docs/encoding) encoded.
 * The resulting byte array is compressed using `OPTGZIP`.
 
 The resulting blob is then added in the `encoded` field of a new `MakAirTelemetry` message. The `encoding` field can be left empty as `MAKAIR_DELTA_OPTGZIP` is the default value.
@@ -84,16 +84,10 @@ The `Encoding` enum can be extended to add an `ENCRYPTED` value to be used when 
 
 ## Performance evaluation
 
-The `MAKAIR_DELTA_OPTGZIP` format leads to messages which average 8 to 11 bytes per original frame for a total of 20 frames per message. That includes the base timestamp and the `device_id`. The `version` is not transmitted.
+The `MAKAIR_DELTA_OPTGZIP` format leads to messages which average 7.75 to 9.5 bytes per original frame for a total of 20 frames per message. That includes the base timestamp and the `device_id`. The `version` is not transmitted.
 
 20 frames occupying less than 200 bytes is what needs to be transmitted to transmit all the data for a `cpm_command` of 35 (the max), thus respecting `DATA-2`. For other values of `cpm_command`, the constraint is a little looser and the footprint tests seem to indicate all data can be transmitted without problem, thus respecting `DATA-3`.
 
 In order to conform to `DATA-4` the packets will be limited to 200 bytes. After each `MachineStateSnsapshot` frame is received from the MCU, it is added to a in-memory buffer, if the number of frames in the buffer allows to respect the air time (`DATA-5`), the frames are encoded and the size of the resulting packet is checked. If that packet is over 200 bytes, the first frame of the buffer is discarded and the encoding is retried. If the packet is below 200 bytes, it is sent.
 
 The alarms are sent as soon as they are received from the MCU in a `MakAirTelemetry` message containing a single `AlarmTrap` message, thus respecting `DATA-1`. 
-
-
-
-
-
-

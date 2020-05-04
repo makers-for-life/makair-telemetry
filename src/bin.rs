@@ -8,11 +8,18 @@ extern crate clap;
 #[macro_use]
 extern crate log;
 
+extern crate base64;
+
 use clap::Clap;
 use std::fs::File;
 use std::fs::OpenOptions;
+use std::io::BufRead;
+use std::io::BufReader;
 use std::io::BufWriter;
 use std::sync::mpsc::{Receiver, Sender, TryRecvError};
+
+use parsers::*;
+use structures::*;
 
 use telemetry::*;
 
@@ -36,6 +43,10 @@ enum Mode {
     /// Reads telemetry from a recorded file, parses it and streams result to stdout
     #[clap(version = crate_version!(), author = crate_authors!())]
     Play(Play),
+
+    /// Reads telemetry from a recorded file, parses it and compute some statistics
+    #[clap(version = crate_version!(), author = crate_authors!())]
+    Stats(Stats),
 }
 
 #[derive(Clap)]
@@ -63,6 +74,13 @@ struct Play {
     input: String,
 }
 
+#[derive(Clap)]
+struct Stats {
+    /// Path of the recorded file
+    #[clap(short = "i")]
+    input: String,
+}
+
 fn main() {
     env_logger::init();
     let opts: Opts = Opts::parse();
@@ -71,6 +89,7 @@ fn main() {
         Mode::Debug(cfg) => debug(cfg),
         Mode::Record(cfg) => record(cfg),
         Mode::Play(cfg) => play(cfg),
+        Mode::Stats(cfg) => stats(cfg),
     }
 }
 
@@ -143,5 +162,268 @@ fn play(cfg: Play) {
                 std::process::exit(0);
             }
         }
+    }
+}
+
+fn stats(cfg: Stats) {
+    let f = File::open(cfg.input).expect("failed to play recorded file");
+    let f = BufReader::new(f);
+
+    let mut buffer = Vec::new();
+
+    for line in f.lines() {
+        let mut bytes = base64::decode(line.unwrap()).unwrap();
+        buffer.append(&mut bytes);
+    }
+
+    let mut telemetry_messages: Vec<TelemetryMessage> = Vec::new();
+
+    while !buffer.is_empty() {
+        match parse_telemetry_message(&buffer) {
+            Ok((rest, message)) => {
+                telemetry_messages.push(message);
+                buffer = Vec::from(rest);
+            }
+            // There are not enough bytes, let's wait until we get more
+            Err(nom::Err::Incomplete(_)) => {
+                break;
+            }
+            // We can't do anything with the begining of the buffer, let's drop its first byte
+            Err(e) => {
+                debug!("{:?}", &e);
+                if !buffer.is_empty() {
+                    buffer.remove(0);
+                }
+            }
+        }
+    }
+
+    let mut nb_boot_messages: u32 = 0;
+    let mut nb_alarm_traps: u32 = 0;
+    let mut nb_data_snapshots: u32 = 0;
+    let mut nb_machine_state_snapshots: u32 = 0;
+    let mut nb_stopped_messages: u32 = 0;
+
+    for message in &telemetry_messages {
+        match message {
+            TelemetryMessage::BootMessage(_) => {
+                nb_boot_messages += 1;
+            }
+            TelemetryMessage::AlarmTrap(_) => {
+                nb_alarm_traps += 1;
+            }
+            TelemetryMessage::DataSnapshot(_) => {
+                nb_data_snapshots += 1;
+            }
+            TelemetryMessage::MachineStateSnapshot(_) => {
+                nb_machine_state_snapshots += 1;
+            }
+            TelemetryMessage::StoppedMessage(_) => {
+                nb_stopped_messages += 1;
+            }
+        }
+    }
+
+    println!("Statistics");
+    println!("Nb BootMessages: {}", nb_boot_messages);
+    println!("Nb AlarmTraps: {}", nb_alarm_traps);
+    println!("Nb DataSnapshots: {}", nb_data_snapshots);
+    println!("Nb MachineStateSnapshot: {}", nb_machine_state_snapshots);
+    println!("Nb StoppedMessage: {}", nb_stopped_messages);
+    println!(
+        "Estimated duration: {:.3} seconds",
+        compute_duration(telemetry_messages) as f32 / 1000_f32
+    );
+}
+
+fn compute_duration(messages: Vec<TelemetryMessage>) -> u32 {
+    let mut duration: u32 = 0;
+
+    for message in &messages {
+        match message {
+            TelemetryMessage::DataSnapshot(_) => {
+                duration += 10;
+            }
+
+            TelemetryMessage::StoppedMessage(_) => {
+                duration += 100;
+            }
+            _ => {}
+        }
+    }
+
+    duration
+}
+
+#[cfg(test)]
+mod tests {
+    // Note this useful idiom: importing names from outer (for mod tests) scope.
+    use super::*;
+
+    #[test]
+    fn test_compute_duration_no_data() {
+        assert_eq!(compute_duration(vec![]), 0);
+    }
+
+    #[test]
+    fn test_compute_duration_one_boot_message() {
+        let mut vect: Vec<TelemetryMessage> = Vec::new();
+        vect.push(TelemetryMessage::BootMessage(BootMessage {
+            version: String::from(""),
+            device_id: String::from(""),
+            systick: 0,
+            mode: Mode::Production,
+            value128: 0,
+        }));
+
+        assert_eq!(compute_duration(vect), 0);
+    }
+
+    #[test]
+    fn test_compute_duration_one_alarm_trap() {
+        let mut vect: Vec<TelemetryMessage> = Vec::new();
+        vect.push(TelemetryMessage::AlarmTrap(AlarmTrap {
+            version: String::from(""),
+            device_id: String::from(""),
+            systick: 0,
+            centile: 0,
+            pressure: 0,
+            phase: Phase::Inhalation,
+            subphase: SubPhase::Inspiration,
+            cycle: 0,
+            alarm_code: 0,
+            alarm_priority: AlarmPriority::Low,
+            triggered: true,
+            expected: 0,
+            measured: 0,
+            cycles_since_trigger: 0,
+        }));
+
+        assert_eq!(compute_duration(vect), 0);
+    }
+
+    #[test]
+    fn test_compute_duration_one_data_snapshot() {
+        let mut vect: Vec<TelemetryMessage> = Vec::new();
+        vect.push(TelemetryMessage::DataSnapshot(DataSnapshot {
+            version: String::from(""),
+            device_id: String::from(""),
+            systick: 0,
+            centile: 0,
+            pressure: 0,
+            phase: Phase::Inhalation,
+            subphase: SubPhase::Inspiration,
+            blower_valve_position: 0,
+            patient_valve_position: 0,
+            blower_rpm: 0,
+            battery_level: 0,
+        }));
+
+        assert_eq!(compute_duration(vect), 10);
+    }
+
+    #[test]
+    fn test_compute_duration_one_machine_state_snapshot() {
+        let mut vect: Vec<TelemetryMessage> = Vec::new();
+        vect.push(TelemetryMessage::MachineStateSnapshot(
+            MachineStateSnapshot {
+                version: String::from(""),
+                device_id: String::from(""),
+                systick: 0,
+                cycle: 0,
+                peak_command: 0,
+                plateau_command: 0,
+                peep_command: 0,
+                cpm_command: 0,
+                previous_peak_pressure: 0,
+                previous_plateau_pressure: 0,
+                previous_peep_pressure: 0,
+                current_alarm_codes: vec![],
+            },
+        ));
+
+        assert_eq!(compute_duration(vect), 0);
+    }
+
+    #[test]
+    fn test_compute_duration_one_stopped_message() {
+        let mut vect: Vec<TelemetryMessage> = Vec::new();
+
+        vect.push(TelemetryMessage::StoppedMessage(StoppedMessage {
+            version: String::from(""),
+            device_id: String::from(""),
+            systick: 0,
+        }));
+
+        assert_eq!(compute_duration(vect), 100);
+    }
+
+    #[test]
+    fn test_compute_duration_one_of_each_message() {
+        let mut vect: Vec<TelemetryMessage> = Vec::new();
+
+        vect.push(TelemetryMessage::BootMessage(BootMessage {
+            version: String::from(""),
+            device_id: String::from(""),
+            systick: 0,
+            mode: Mode::Production,
+            value128: 0,
+        }));
+
+        vect.push(TelemetryMessage::AlarmTrap(AlarmTrap {
+            version: String::from(""),
+            device_id: String::from(""),
+            systick: 0,
+            centile: 0,
+            pressure: 0,
+            phase: Phase::Inhalation,
+            subphase: SubPhase::Inspiration,
+            cycle: 0,
+            alarm_code: 0,
+            alarm_priority: AlarmPriority::Low,
+            triggered: true,
+            expected: 0,
+            measured: 0,
+            cycles_since_trigger: 0,
+        }));
+
+        vect.push(TelemetryMessage::DataSnapshot(DataSnapshot {
+            version: String::from(""),
+            device_id: String::from(""),
+            systick: 0,
+            centile: 0,
+            pressure: 0,
+            phase: Phase::Inhalation,
+            subphase: SubPhase::Inspiration,
+            blower_valve_position: 0,
+            patient_valve_position: 0,
+            blower_rpm: 0,
+            battery_level: 0,
+        }));
+
+        vect.push(TelemetryMessage::MachineStateSnapshot(
+            MachineStateSnapshot {
+                version: String::from(""),
+                device_id: String::from(""),
+                systick: 0,
+                cycle: 0,
+                peak_command: 0,
+                plateau_command: 0,
+                peep_command: 0,
+                cpm_command: 0,
+                previous_peak_pressure: 0,
+                previous_plateau_pressure: 0,
+                previous_peep_pressure: 0,
+                current_alarm_codes: vec![],
+            },
+        ));
+
+        vect.push(TelemetryMessage::StoppedMessage(StoppedMessage {
+            version: String::from(""),
+            device_id: String::from(""),
+            systick: 0,
+        }));
+
+        assert_eq!(compute_duration(vect), 110);
     }
 }

@@ -7,8 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          path: repo
 
       - name: Install latest stable
         uses: actions-rs/toolchain@v1.0.6
@@ -20,7 +18,6 @@ jobs:
       - name: Lint
         uses: actions-rs/clippy-check@v1.0.5
         with:
-          name: clippy-telemetry
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --all-targets --all-features -- -D warnings
 

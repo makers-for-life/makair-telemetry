@@ -9,7 +9,7 @@ extern crate log;
 extern crate nom;
 
 pub mod alarm;
-pub mod parsers;
+mod parsers;
 pub mod structures;
 
 pub use serial;
@@ -176,11 +176,6 @@ pub fn gather_telemetry_from_file(file: File, tx: Sender<TelemetryChannelType>) 
     let reader = BufReader::new(file);
     let mut buffer = Vec::new();
 
-    let stopped_message_period = std::time::Duration::from_millis(100);
-    let data_message_period = std::time::Duration::from_millis(10);
-
-    info!("start playing telemetry messages");
-
     for line in reader.lines() {
         if let Ok(line_str) = line {
             if let Ok(mut bytes) = base64::decode(line_str) {
@@ -191,15 +186,6 @@ pub fn gather_telemetry_from_file(file: File, tx: Sender<TelemetryChannelType>) 
                     match parse_telemetry_message(&buffer) {
                         // It worked! Let's extract the message and replace the buffer with the rest of the bytes
                         Ok((rest, message)) => {
-                            match message {
-                                TelemetryMessage::StoppedMessage { .. } => {
-                                    std::thread::sleep(stopped_message_period);
-                                }
-                                TelemetryMessage::DataSnapshot { .. } => {
-                                    std::thread::sleep(data_message_period);
-                                }
-                                _ => (),
-                            }
                             tx.send(Ok(message))
                                 .expect("failed sending message to tx channel");
                             buffer = Vec::from(rest);

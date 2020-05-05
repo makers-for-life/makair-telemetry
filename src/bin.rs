@@ -13,12 +13,9 @@ extern crate base64;
 use clap::Clap;
 use std::fs::File;
 use std::fs::OpenOptions;
-use std::io::BufRead;
-use std::io::BufReader;
 use std::io::BufWriter;
 use std::sync::mpsc::{Receiver, Sender, TryRecvError};
 
-use parsers::*;
 use structures::*;
 
 use telemetry::*;
@@ -147,11 +144,25 @@ fn play(cfg: Play) {
     let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
         std::sync::mpsc::channel();
     std::thread::spawn(move || {
+        info!("start playing telemetry messages");
         gather_telemetry_from_file(file, tx);
     });
+
+    let stopped_message_period = std::time::Duration::from_millis(100);
+    let data_message_period = std::time::Duration::from_millis(10);
+
     loop {
         match rx.try_recv() {
             Ok(msg) => {
+                match msg {
+                    Ok(TelemetryMessage::StoppedMessage { .. }) => {
+                        std::thread::sleep(stopped_message_period);
+                    }
+                    Ok(TelemetryMessage::DataSnapshot { .. }) => {
+                        std::thread::sleep(data_message_period);
+                    }
+                    _ => (),
+                }
                 display_message(msg);
             }
             Err(TryRecvError::Empty) => {
@@ -166,37 +177,15 @@ fn play(cfg: Play) {
 }
 
 fn stats(cfg: Stats) {
-    let f = File::open(cfg.input).expect("failed to play recorded file");
-    let f = BufReader::new(f);
+    let file = File::open(cfg.input).expect("failed to compute statistics for recorded file");
 
-    let mut buffer = Vec::new();
-
-    for line in f.lines() {
-        let mut bytes = base64::decode(line.unwrap()).unwrap();
-        buffer.append(&mut bytes);
-    }
+    let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
+        std::sync::mpsc::channel();
+    std::thread::spawn(move || {
+        gather_telemetry_from_file(file, tx);
+    });
 
     let mut telemetry_messages: Vec<TelemetryMessage> = Vec::new();
-
-    while !buffer.is_empty() {
-        match parse_telemetry_message(&buffer) {
-            Ok((rest, message)) => {
-                telemetry_messages.push(message);
-                buffer = Vec::from(rest);
-            }
-            // There are not enough bytes, let's wait until we get more
-            Err(nom::Err::Incomplete(_)) => {
-                break;
-            }
-            // We can't do anything with the begining of the buffer, let's drop its first byte
-            Err(e) => {
-                debug!("{:?}", &e);
-                if !buffer.is_empty() {
-                    buffer.remove(0);
-                }
-            }
-        }
-    }
 
     let mut nb_boot_messages: u32 = 0;
     let mut nb_alarm_traps: u32 = 0;
@@ -204,36 +193,47 @@ fn stats(cfg: Stats) {
     let mut nb_machine_state_snapshots: u32 = 0;
     let mut nb_stopped_messages: u32 = 0;
 
-    for message in &telemetry_messages {
-        match message {
-            TelemetryMessage::BootMessage(_) => {
-                nb_boot_messages += 1;
+    loop {
+        match rx.try_recv() {
+            Ok(message) => {
+                match message {
+                    Ok(TelemetryMessage::BootMessage(_)) => {
+                        nb_boot_messages += 1;
+                    }
+                    Ok(TelemetryMessage::AlarmTrap(_)) => {
+                        nb_alarm_traps += 1;
+                    }
+                    Ok(TelemetryMessage::DataSnapshot(_)) => {
+                        nb_data_snapshots += 1;
+                    }
+                    Ok(TelemetryMessage::MachineStateSnapshot(_)) => {
+                        nb_machine_state_snapshots += 1;
+                    }
+                    Ok(TelemetryMessage::StoppedMessage(_)) => {
+                        nb_stopped_messages += 1;
+                    }
+                    _ => {}
+                }
+                telemetry_messages.push(message.unwrap());
             }
-            TelemetryMessage::AlarmTrap(_) => {
-                nb_alarm_traps += 1;
+            Err(TryRecvError::Empty) => {
+                std::thread::sleep(std::time::Duration::from_millis(1));
             }
-            TelemetryMessage::DataSnapshot(_) => {
-                nb_data_snapshots += 1;
-            }
-            TelemetryMessage::MachineStateSnapshot(_) => {
-                nb_machine_state_snapshots += 1;
-            }
-            TelemetryMessage::StoppedMessage(_) => {
-                nb_stopped_messages += 1;
+            Err(TryRecvError::Disconnected) => {
+                println!("Statistics");
+                println!("Nb BootMessages: {}", nb_boot_messages);
+                println!("Nb AlarmTraps: {}", nb_alarm_traps);
+                println!("Nb DataSnapshots: {}", nb_data_snapshots);
+                println!("Nb MachineStateSnapshot: {}", nb_machine_state_snapshots);
+                println!("Nb StoppedMessage: {}", nb_stopped_messages);
+                println!(
+                    "Estimated duration: {:.3} seconds",
+                    compute_duration(telemetry_messages) as f32 / 1000_f32
+                );
+                std::process::exit(0);
             }
         }
     }
-
-    println!("Statistics");
-    println!("Nb BootMessages: {}", nb_boot_messages);
-    println!("Nb AlarmTraps: {}", nb_alarm_traps);
-    println!("Nb DataSnapshots: {}", nb_data_snapshots);
-    println!("Nb MachineStateSnapshot: {}", nb_machine_state_snapshots);
-    println!("Nb StoppedMessage: {}", nb_stopped_messages);
-    println!(
-        "Estimated duration: {:.3} seconds",
-        compute_duration(telemetry_messages) as f32 / 1000_f32
-    );
 }
 
 fn compute_duration(messages: Vec<TelemetryMessage>) -> u32 {

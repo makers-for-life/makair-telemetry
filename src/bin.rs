@@ -180,27 +180,29 @@ fn stats(cfg: Stats) {
 
     loop {
         match rx.try_recv() {
-            Ok(message) => {
-                match message {
-                    Ok(TelemetryMessage::BootMessage(_)) => {
-                        nb_boot_messages += 1;
+            Ok(channel_message) => match channel_message {
+                Ok(message) => {
+                    match message {
+                        TelemetryMessage::BootMessage(_) => {
+                            nb_boot_messages += 1;
+                        }
+                        TelemetryMessage::AlarmTrap(_) => {
+                            nb_alarm_traps += 1;
+                        }
+                        TelemetryMessage::DataSnapshot(_) => {
+                            nb_data_snapshots += 1;
+                        }
+                        TelemetryMessage::MachineStateSnapshot(_) => {
+                            nb_machine_state_snapshots += 1;
+                        }
+                        TelemetryMessage::StoppedMessage(_) => {
+                            nb_stopped_messages += 1;
+                        }
                     }
-                    Ok(TelemetryMessage::AlarmTrap(_)) => {
-                        nb_alarm_traps += 1;
-                    }
-                    Ok(TelemetryMessage::DataSnapshot(_)) => {
-                        nb_data_snapshots += 1;
-                    }
-                    Ok(TelemetryMessage::MachineStateSnapshot(_)) => {
-                        nb_machine_state_snapshots += 1;
-                    }
-                    Ok(TelemetryMessage::StoppedMessage(_)) => {
-                        nb_stopped_messages += 1;
-                    }
-                    _ => {}
+                    telemetry_messages.push(message);
                 }
-                telemetry_messages.push(message.unwrap());
-            }
+                _ => {}
+            },
             Err(TryRecvError::Empty) => {
                 std::thread::sleep(std::time::Duration::from_millis(1));
             }

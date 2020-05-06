@@ -263,22 +263,20 @@ mod tests {
 
     #[test]
     fn test_compute_duration_one_boot_message() {
-        let mut vect: Vec<TelemetryMessage> = Vec::new();
-        vect.push(TelemetryMessage::BootMessage(BootMessage {
+        let vect: Vec<TelemetryMessage> = vec![TelemetryMessage::BootMessage(BootMessage {
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
             mode: Mode::Production,
             value128: 0,
-        }));
+        })];
 
         assert_eq!(compute_duration(vect), 0);
     }
 
     #[test]
     fn test_compute_duration_one_alarm_trap() {
-        let mut vect: Vec<TelemetryMessage> = Vec::new();
-        vect.push(TelemetryMessage::AlarmTrap(AlarmTrap {
+        let vect: Vec<TelemetryMessage> = vec![TelemetryMessage::AlarmTrap(AlarmTrap {
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -293,15 +291,14 @@ mod tests {
             expected: 0,
             measured: 0,
             cycles_since_trigger: 0,
-        }));
+        })];
 
         assert_eq!(compute_duration(vect), 0);
     }
 
     #[test]
     fn test_compute_duration_one_data_snapshot() {
-        let mut vect: Vec<TelemetryMessage> = Vec::new();
-        vect.push(TelemetryMessage::DataSnapshot(DataSnapshot {
+        let vect: Vec<TelemetryMessage> = vec![TelemetryMessage::DataSnapshot(DataSnapshot {
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -313,15 +310,14 @@ mod tests {
             patient_valve_position: 0,
             blower_rpm: 0,
             battery_level: 0,
-        }));
+        })];
 
         assert_eq!(compute_duration(vect), 10);
     }
 
     #[test]
     fn test_compute_duration_one_machine_state_snapshot() {
-        let mut vect: Vec<TelemetryMessage> = Vec::new();
-        vect.push(TelemetryMessage::MachineStateSnapshot(
+        let vect: Vec<TelemetryMessage> = vec![TelemetryMessage::MachineStateSnapshot(
             MachineStateSnapshot {
                 version: String::from(""),
                 device_id: String::from(""),
@@ -336,7 +332,7 @@ mod tests {
                 previous_peep_pressure: 0,
                 current_alarm_codes: vec![],
             },
-        ));
+        )];
 
         assert_eq!(compute_duration(vect), 0);
     }

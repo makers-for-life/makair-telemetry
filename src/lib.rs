@@ -172,9 +172,16 @@ pub fn display_message(message: TelemetryChannelType) {
     }
 }
 
-pub fn gather_telemetry_from_file(file: File, tx: Sender<TelemetryChannelType>) {
+pub fn gather_telemetry_from_file(
+    file: File,
+    tx: Sender<TelemetryChannelType>,
+    enable_time_simulation: bool,
+) {
     let reader = BufReader::new(file);
     let mut buffer = Vec::new();
+
+    let stopped_message_period = std::time::Duration::from_millis(100);
+    let data_message_period = std::time::Duration::from_millis(10);
 
     for line in reader.lines() {
         if let Ok(line_str) = line {
@@ -186,6 +193,17 @@ pub fn gather_telemetry_from_file(file: File, tx: Sender<TelemetryChannelType>) 
                     match parse_telemetry_message(&buffer) {
                         // It worked! Let's extract the message and replace the buffer with the rest of the bytes
                         Ok((rest, message)) => {
+                            if enable_time_simulation {
+                                match message {
+                                    TelemetryMessage::StoppedMessage { .. } => {
+                                        std::thread::sleep(stopped_message_period);
+                                    }
+                                    TelemetryMessage::DataSnapshot { .. } => {
+                                        std::thread::sleep(data_message_period);
+                                    }
+                                    _ => (),
+                                }
+                            }
                             tx.send(Ok(message))
                                 .expect("failed sending message to tx channel");
                             buffer = Vec::from(rest);

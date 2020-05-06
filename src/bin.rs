@@ -142,24 +142,12 @@ fn play(cfg: Play) {
         std::sync::mpsc::channel();
     std::thread::spawn(move || {
         info!("start playing telemetry messages");
-        gather_telemetry_from_file(file, tx);
+        gather_telemetry_from_file(file, tx, true);
     });
-
-    let stopped_message_period = std::time::Duration::from_millis(100);
-    let data_message_period = std::time::Duration::from_millis(10);
 
     loop {
         match rx.try_recv() {
             Ok(msg) => {
-                match msg {
-                    Ok(TelemetryMessage::StoppedMessage { .. }) => {
-                        std::thread::sleep(stopped_message_period);
-                    }
-                    Ok(TelemetryMessage::DataSnapshot { .. }) => {
-                        std::thread::sleep(data_message_period);
-                    }
-                    _ => (),
-                }
                 display_message(msg);
             }
             Err(TryRecvError::Empty) => {
@@ -179,7 +167,7 @@ fn stats(cfg: Stats) {
     let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
         std::sync::mpsc::channel();
     std::thread::spawn(move || {
-        gather_telemetry_from_file(file, tx);
+        gather_telemetry_from_file(file, tx, false);
     });
 
     let mut telemetry_messages: Vec<TelemetryMessage> = Vec::new();

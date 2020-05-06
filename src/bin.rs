@@ -8,12 +8,16 @@ extern crate clap;
 #[macro_use]
 extern crate log;
 
+mod statistics;
+
 use clap::Clap;
 use std::fs::File;
 use std::fs::OpenOptions;
 use std::io::BufWriter;
 use std::sync::mpsc::{Receiver, Sender, TryRecvError};
 
+use statistics::*;
+use structures::*;
 use telemetry::*;
 
 #[derive(Clap)]
@@ -36,6 +40,10 @@ enum Mode {
     /// Reads telemetry from a recorded file, parses it and streams result to stdout
     #[clap(version = crate_version!(), author = crate_authors!())]
     Play(Play),
+
+    /// Reads telemetry from a recorded file, parses it and compute some statistics
+    #[clap(version = crate_version!(), author = crate_authors!())]
+    Stats(Stats),
 }
 
 #[derive(Clap)]
@@ -63,6 +71,13 @@ struct Play {
     input: String,
 }
 
+#[derive(Clap)]
+struct Stats {
+    /// Path of the recorded file
+    #[clap(short = "i")]
+    input: String,
+}
+
 fn main() {
     env_logger::init();
     let opts: Opts = Opts::parse();
@@ -71,6 +86,7 @@ fn main() {
         Mode::Debug(cfg) => debug(cfg),
         Mode::Record(cfg) => record(cfg),
         Mode::Play(cfg) => play(cfg),
+        Mode::Stats(cfg) => stats(cfg),
     }
 }
 
@@ -128,8 +144,10 @@ fn play(cfg: Play) {
     let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
         std::sync::mpsc::channel();
     std::thread::spawn(move || {
-        gather_telemetry_from_file(file, tx);
+        info!("start playing telemetry messages");
+        gather_telemetry_from_file(file, tx, true);
     });
+
     loop {
         match rx.try_recv() {
             Ok(msg) => {
@@ -140,6 +158,67 @@ fn play(cfg: Play) {
             }
             Err(TryRecvError::Disconnected) => {
                 warn!("end of recording");
+                std::process::exit(0);
+            }
+        }
+    }
+}
+
+fn stats(cfg: Stats) {
+    let file = File::open(cfg.input).expect("failed to open given recorded file");
+
+    let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
+        std::sync::mpsc::channel();
+    std::thread::spawn(move || {
+        gather_telemetry_from_file(file, tx, false);
+    });
+
+    let mut telemetry_messages: Vec<TelemetryMessage> = Vec::new();
+
+    let mut nb_boot_messages: u32 = 0;
+    let mut nb_alarm_traps: u32 = 0;
+    let mut nb_data_snapshots: u32 = 0;
+    let mut nb_machine_state_snapshots: u32 = 0;
+    let mut nb_stopped_messages: u32 = 0;
+
+    loop {
+        match rx.try_recv() {
+            Ok(channel_message) => {
+                if let Ok(message) = channel_message {
+                    match message {
+                        TelemetryMessage::BootMessage(_) => {
+                            nb_boot_messages += 1;
+                        }
+                        TelemetryMessage::AlarmTrap(_) => {
+                            nb_alarm_traps += 1;
+                        }
+                        TelemetryMessage::DataSnapshot(_) => {
+                            nb_data_snapshots += 1;
+                        }
+                        TelemetryMessage::MachineStateSnapshot(_) => {
+                            nb_machine_state_snapshots += 1;
+                        }
+                        TelemetryMessage::StoppedMessage(_) => {
+                            nb_stopped_messages += 1;
+                        }
+                    }
+                    telemetry_messages.push(message);
+                }
+            }
+            Err(TryRecvError::Empty) => {
+                std::thread::sleep(std::time::Duration::from_millis(1));
+            }
+            Err(TryRecvError::Disconnected) => {
+                println!("Statistics");
+                println!("Nb BootMessages: {}", nb_boot_messages);
+                println!("Nb AlarmTraps: {}", nb_alarm_traps);
+                println!("Nb DataSnapshots: {}", nb_data_snapshots);
+                println!("Nb MachineStateSnapshot: {}", nb_machine_state_snapshots);
+                println!("Nb StoppedMessage: {}", nb_stopped_messages);
+                println!(
+                    "Estimated duration: {:.3} seconds",
+                    compute_duration(telemetry_messages) as f32 / 1000_f32
+                );
                 std::process::exit(0);
             }
         }

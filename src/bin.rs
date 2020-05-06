@@ -180,8 +180,8 @@ fn stats(cfg: Stats) {
 
     loop {
         match rx.try_recv() {
-            Ok(channel_message) => match channel_message {
-                Ok(message) => {
+            Ok(channel_message) => {
+                if let Ok(message) = channel_message {
                     match message {
                         TelemetryMessage::BootMessage(_) => {
                             nb_boot_messages += 1;
@@ -201,8 +201,7 @@ fn stats(cfg: Stats) {
                     }
                     telemetry_messages.push(message);
                 }
-                _ => {}
-            },
+            }
             Err(TryRecvError::Empty) => {
                 std::thread::sleep(std::time::Duration::from_millis(1));
             }

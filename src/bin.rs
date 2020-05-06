@@ -8,8 +8,6 @@ extern crate clap;
 #[macro_use]
 extern crate log;
 
-extern crate base64;
-
 use clap::Clap;
 use std::fs::File;
 use std::fs::OpenOptions;
@@ -17,7 +15,6 @@ use std::io::BufWriter;
 use std::sync::mpsc::{Receiver, Sender, TryRecvError};
 
 use structures::*;
-
 use telemetry::*;
 
 #[derive(Clap)]
@@ -177,7 +174,7 @@ fn play(cfg: Play) {
 }
 
 fn stats(cfg: Stats) {
-    let file = File::open(cfg.input).expect("failed to compute statistics for recorded file");
+    let file = File::open(cfg.input).expect("failed to open given recorded file");
 
     let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
         std::sync::mpsc::channel();
@@ -257,7 +254,6 @@ fn compute_duration(messages: Vec<TelemetryMessage>) -> u32 {
 
 #[cfg(test)]
 mod tests {
-    // Note this useful idiom: importing names from outer (for mod tests) scope.
     use super::*;
 
     #[test]

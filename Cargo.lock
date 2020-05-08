@@ -238,6 +238,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "makair-telemetry"
+version = "1.0.0"
+dependencies = [
+ "base64",
+ "clap",
+ "env_logger",
+ "log",
+ "nom",
+ "proptest",
+ "serial",
+]
+
+[[package]]
 name = "memchr"
 version = "2.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -656,19 +669,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "telemetry"
-version = "1.0.0"
-dependencies = [
- "base64",
- "clap",
- "env_logger",
- "log",
- "nom",
- "proptest",
- "serial",
 ]
 
 [[package]]

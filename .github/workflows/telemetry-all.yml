@@ -41,7 +41,7 @@ jobs:
         uses: actions-rs/cargo@v1.0.1
         with:
           command: build
-          args: --bin telemetry_debug --features=build-binary --release
+          args: --bin makair_telemetry --features=build-binary --release
 
       - name: Build documentation
         uses: actions-rs/cargo@v1.0.1
@@ -55,8 +55,8 @@ jobs:
       - name: Archive binary
         uses: actions/upload-artifact@v1
         with:
-          name: telemetry_debug
-          path: target/release/telemetry_debug
+          name: makair_telemetry
+          path: target/release/makair_telemetry
 
       - name: Archive documentation
         uses: actions/upload-artifact@v1

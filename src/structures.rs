@@ -7,6 +7,7 @@ use std::cmp::{Ord, Ordering, PartialOrd};
 use std::convert::TryFrom;
 use std::io;
 
+/// Variants of the MakAir firmware
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Mode {
     Production,
@@ -14,12 +15,14 @@ pub enum Mode {
     IntegrationTest,
 }
 
+/// Phases of the respiratory cycle
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Phase {
     Inhalation,
     Exhalation,
 }
 
+/// Sub-phases of the respiratory cycle
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SubPhase {
     Inspiration,
@@ -27,6 +30,7 @@ pub enum SubPhase {
     Exhale,
 }
 
+/// Supported alarm priorities
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum AlarmPriority {
     High,
@@ -68,71 +72,124 @@ impl TryFrom<u8> for AlarmPriority {
     }
 }
 
+/// A telemetry message that is sent once every time the MCU boots
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BootMessage {
+    /// Version of the MCU firmware
     pub version: String,
+    /// Internal ID of the MCU
     pub device_id: String,
+    /// Number of microseconds since the MCU booted
     pub systick: u64,
+    /// Firmware variant currently flashed
     pub mode: Mode,
+    /// The number "128"
+    ///
+    /// This is only used to make sure that serial port was correctly opened and that there is no endianness problem.
     pub value128: u8,
 }
 
+/// A telemetry message that is sent every 100 ms when the MCU is in "stop" mode
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StoppedMessage {
+    /// Version of the MCU firmware
     pub version: String,
+    /// Internal ID of the MCU
     pub device_id: String,
+    /// Number of microseconds since the MCU booted
     pub systick: u64,
 }
 
+/// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DataSnapshot {
+    /// Version of the MCU firmware
     pub version: String,
+    /// Internal ID of the MCU
     pub device_id: String,
+    /// Number of microseconds since the MCU booted
     pub systick: u64,
+    /// Number of hundredth of seconds since the begining of the current breathing cycle
     pub centile: u16,
+    /// Current pressure in mmH2O
     pub pressure: u16,
+    /// Current phase
     pub phase: Phase,
+    /// Current sub-phase
     pub subphase: SubPhase,
+    /// Current angle of the blower valve
     pub blower_valve_position: u8,
+    /// Current angle of the patient valve
     pub patient_valve_position: u8,
+    /// Current blower speed (no unit)
     pub blower_rpm: u8,
+    /// Current battery level in volts
     pub battery_level: u8,
 }
 
+/// A telemetry message that is sent at the end of every respiratory cycle
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct MachineStateSnapshot {
+    /// Version of the MCU firmware
     pub version: String,
+    /// Internal ID of the MCU
     pub device_id: String,
+    /// Number of microseconds since the MCU booted
     pub systick: u64,
+    /// Number of the current breathing cycle since MCU booted
     pub cycle: u32,
+    /// Requested peak command in cmH2O
     pub peak_command: u8,
+    /// Requested plateau command in cmH2O
     pub plateau_command: u8,
+    /// Requested PEEP command in cmH2O
     pub peep_command: u8,
+    /// Requested number of cycles per minute
     pub cpm_command: u8,
+    /// Measured peak pressure in mmH2O
     pub previous_peak_pressure: u16,
+    /// Measured pleateau pressure in mmH2O
     pub previous_plateau_pressure: u16,
+    /// Measured PEEP in mmH2O
     pub previous_peep_pressure: u16,
+    /// Codes of the alarms that are currently triggered
     pub current_alarm_codes: Vec<u8>,
 }
 
+/// A telemetry message that is sent every time an alarm is triggered or stopped
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AlarmTrap {
+    /// Version of the MCU firmware
     pub version: String,
+    /// Internal ID of the MCU
     pub device_id: String,
+    /// Number of microseconds since the MCU booted
     pub systick: u64,
+    /// Number of hundredth of seconds since the begining of the current breathing cycle
     pub centile: u16,
+    /// Current pressure in mmH2O
     pub pressure: u16,
+    /// Current phase
     pub phase: Phase,
+    /// Current sub-phase
     pub subphase: SubPhase,
+    /// Number of the current breathing cycle since MCU booted
     pub cycle: u32,
+    /// Code of the alarm
     pub alarm_code: u8,
+    /// Priority level of the alarm
     pub alarm_priority: AlarmPriority,
+    /// `true` if alarm was triggered, `false` if it was stopped
     pub triggered: bool,
+    /// Expected value (unit depends on the alarm)
     pub expected: u32,
+    /// Measured value (unit depends on the alarm)
     pub measured: u32,
+    /// Number of cycle for which this alarm has been triggered
     pub cycles_since_trigger: u32,
 }
 
+/// Supported telemetry messages
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TelemetryMessage {
     BootMessage(BootMessage),

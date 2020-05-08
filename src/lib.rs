@@ -8,8 +8,10 @@ extern crate log;
 #[macro_use]
 extern crate nom;
 
+/// Utilities related to alarms
 pub mod alarm;
 mod parsers;
+/// Structures to represent telemetry messages
 pub mod structures;
 
 pub use serial;
@@ -27,6 +29,13 @@ use structures::*;
 
 pub type TelemetryChannelType = Result<TelemetryMessage, serial::core::Error>;
 
+/// Open a serial port, consume it endlessly and send back parsed telemetry messages through a channel
+///
+/// * `port_id` - Name or path to the serial port.
+/// * `tx` - Sender of a channel.
+/// * `file_buf` - Optional file buffer; if specified, messages will also be serialized and written in this file.
+///
+/// This is meant to be run in a dedicated thread.
 pub fn gather_telemetry(
     port_id: &str,
     tx: Sender<TelemetryChannelType>,
@@ -124,6 +133,7 @@ pub fn gather_telemetry(
     }
 }
 
+/// Helper to display telemetry messages
 pub fn display_message(message: TelemetryChannelType) {
     match message {
         Ok(TelemetryMessage::BootMessage(BootMessage { value128, .. })) => {
@@ -172,6 +182,13 @@ pub fn display_message(message: TelemetryChannelType) {
     }
 }
 
+/// Open a file containing serialized telemetry data, read it and send back parsed telemetry messages through a channel
+///
+/// * `file` - Handle to a file that contains telemetry data.
+/// * `tx` - Sender of a channel.
+/// * `enable_time_simulation` - If `true`, telemetry messages will be sent in a realistic timing; if `false`, they will be read as fast as possible.
+///
+/// This is meant to be run in a dedicated thread.
 pub fn gather_telemetry_from_file(
     file: File,
     tx: Sender<TelemetryChannelType>,

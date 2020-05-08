@@ -1,0 +1,133 @@
+//
+// Set the TTL of the macro to 1 minute so we can modify it and have
+// it reloaded in Warp 10 within 60 seconds.
+//
+1 m MSTU / MACROTTL
+
+{
+  'name' 'makair/encode'
+  // This macro needs the ->VARINT function which appeared in 2.5.1
+  'since' '2.5.1'
+  'desc'
+<'
+Encodes a number of MakAir telemetry `MachineStateSnapshot` frames into a Protobuf message suitable for transmission over LoRa.
+
+The current alarm codes from the frames are NOT included in the message. They need to be transmitted independently. Since they are related to a life threatening situation, they can be transmitted over LoRa without respecting the air time limit.
+'>
+  'sig' [
+    [ [ 'timestamp:LONG' 'frames:LIST<BYTES>' ] [ 'message:BYTES' ] ]
+  ]
+  'params' {
+    'timestamp' 'Timestamp (in platform time units) of the first frame of the list.'
+    'frames' 'List of telemetry frames of type `MachineStateSnapshot`.'
+    'message' 'Protobuf messages containing the input frames.'
+  }
+} '.info' STORE
+<%
+  !$.info INFO
+  SAVE '.context' STORE
+    [ 'frames' 'timestamp' ] STORE
+
+    //
+    // Iterate over the frames, keeping only the `MachineStateSnapshot` ones
+    //
+    []
+    $frames
+    <%
+      MAKAIR.TELEMETRY-> 'frame' STORE
+      $frame 'type' GET
+      'MachineStateSnapshot' != <% CONTINUE %> IFT
+      // Add the frame to the list
+      $frame +!
+    %> FOREACH
+
+    // Replace the original list with only the `MachineStateSnapshot`
+    'frames' STORE
+
+    //
+    // Now extract all fields in an array for each frame
+    // Note: we ignore the current alarm codes
+    //
+
+    // Remove variable $device_id if set
+    'device_id' FORGET
+
+    $frames
+    <%
+      'telemetry' STORE
+      // Extract the device_id, the first one will be used
+      // for all frames
+      $telemetry 'device_id' GET 'device_id' CSTORE
+      [
+        $telemetry 'systick' GET
+        $telemetry 'cycle' GET
+        $telemetry 'peak_command' GET
+        $telemetry 'plateau_command' GET
+        $telemetry 'peep_command' GET
+        $telemetry 'cpm_command' GET
+        $telemetry 'previous_peak_pressure' GET
+        $telemetry 'previous_plateau_pressure' GET
+        $telemetry 'previous_peep_pressure' GET
+      ]
+    %> false LMAP
+    'values' STORE
+
+    //
+    // Compute deltas
+    //
+    $values
+    <%
+      'idx' STORE
+      // Keep the first array as is
+      $idx 0 ==
+      <%
+        'last' STORE $last
+        // We do not ZigZag encode the first array as we assume
+        // numbers are not negative and we want to encode the
+        // first systick value on as few bytes as possible
+      %>
+      <%
+        'current' STORE
+        [ $current $last ] ZIP
+        <%
+          LIST-> DROP -
+        %> false LMAP
+        $current 'last' STORE
+        // Adapt value so we alternatively encode positive and negative values
+        <%
+          DUP 1 << SWAP 63 >> ^
+        %> false LMAP
+      %>
+      IFTE
+      // Encode all the LONGs using VARINT encoding, producing
+      // a single byte array
+      ->VARINT
+    %> LMAP
+
+    //
+    // Concatenate the byte arrays resulting from the ->VARINT calls
+    //
+    '' 'ASCII' ->BYTES SWAP
+    <% + %> FOREACH
+
+    //
+    // Compress the resulting byte array using optimized GZIP
+    // This macro in on SenX' WarpFleet repository:
+    //
+    //   https://warpfleet.senx.io/macros/senx/gzip/OPTGZIP.mc2
+    //
+    @senx/gzip/OPTGZIP
+    'encoded' STORE
+
+    //
+    // Now build the protobuf message
+    //
+    {
+      'device_id' $device_id
+      'timestamp' $timestamp
+      // We do not need to set 'encoding' since the default
+      // enum value for Encoding is MAKAIR_DELTA_OPTGZIP
+      'encoded' [ $encoded ]
+    } @makair/proto 'MakAirTelemetry' ->PB
+  $.context RESTORE
+%>

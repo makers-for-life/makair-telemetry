@@ -10,7 +10,7 @@
 
 This crate is a library that handles reading and parsing the MakAir's telemetry binary protocol.
 
-➡ [API documentation]()
+➡ [API documentation](https://makers-for-life.github.io/makair-telemetry)
 
 ## Telemetry CLI Tool
 

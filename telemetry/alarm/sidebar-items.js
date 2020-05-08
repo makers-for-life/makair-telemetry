@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["AlarmCode","Wrapper arround an alarm code"]]});

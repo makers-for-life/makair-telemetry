@@ -43,8 +43,31 @@ jobs:
           command: build
           args: --bin telemetry_debug --features=build-binary --release
 
+      - name: Build documentation
+        uses: actions-rs/cargo@v1.0.1
+        with:
+          command: doc
+
+      - name: Prepare documentation to be hosted
+        run: |
+          cp .github/documentation_index.html target/doc/index.html
+
       - name: Archive binary
         uses: actions/upload-artifact@v1
         with:
           name: telemetry_debug
           path: target/release/telemetry_debug
+
+      - name: Archive documentation
+        uses: actions/upload-artifact@v1
+        with:
+          name: doc
+          path: target/doc/
+
+      - name: Deploy documentation
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        if: github.ref == 'refs/heads/master'
+        with:
+          BRANCH: gh-pages
+          FOLDER: target/doc/
+          TARGET_FOLDER: ./

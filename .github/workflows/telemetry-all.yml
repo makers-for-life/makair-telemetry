@@ -37,11 +37,41 @@ jobs:
         with:
           command: test
 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install latest stable
+        uses: actions-rs/toolchain@v1.0.6
+        with:
+            toolchain: stable
+            override: true
+            components: rustfmt, clippy
+
       - name: Build debug tool
         uses: actions-rs/cargo@v1.0.1
         with:
           command: build
           args: --bin makair_telemetry --features=build-binary --release
+
+      - name: Archive binary
+        uses: actions/upload-artifact@v1
+        with:
+          name: makair_telemetry
+          path: target/release/makair_telemetry
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install latest stable
+        uses: actions-rs/toolchain@v1.0.6
+        with:
+            toolchain: stable
+            override: true
+            components: rustfmt, clippy
 
       - name: Build documentation
         uses: actions-rs/cargo@v1.0.1
@@ -52,12 +82,6 @@ jobs:
         run: |
           cp .github/documentation_index.html target/doc/index.html
           tar czvf doc.tar.gz target/doc/
-
-      - name: Archive binary
-        uses: actions/upload-artifact@v1
-        with:
-          name: makair_telemetry
-          path: target/release/makair_telemetry
 
       - name: Archive documentation
         uses: actions/upload-artifact@v1

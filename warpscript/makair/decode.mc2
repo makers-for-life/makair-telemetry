@@ -3,6 +3,13 @@
 // it reloaded in Warp 10 within 60 seconds.
 //
 1 m MSTU / MACROTTL
+
+//
+// The encoding can only work if the platform time units are at least
+// microseconds
+//
+
+1 us 0 > 'Macro can only be used if platform time units is micro of nano second' ASSERTMSG
 {
   'name' 'makair/decode'
   'since' '2.5.1'
@@ -31,7 +38,6 @@ Decode a message encoded via `@makair/encode` and output the individual frames.
     // Extract the device_id
     //
     $message 'device_id' GET 'device_id' STORE
-    $message 'timestamp' GET 'timestamp' STORE
     $message 'encoded' GET 0 GET
     // Decompress content
     @senx/gzip/UNOPTGZIP
@@ -72,6 +78,7 @@ Decode a message encoded via `@makair/encode` and output the individual frames.
     //
     // We now have an array with arrays containing the original
     // values from each frame. We will rebuild the frames.
+    // Note that systick is now the real timestamp of the frame (in platform time units).
     //
     <%
       {} SWAP

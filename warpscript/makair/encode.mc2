@@ -4,6 +4,12 @@
 //
 1 m MSTU / MACROTTL
 
+//
+// The encoding can only work if the platform time units are at least
+// microseconds
+//
+
+1 us 0 > 'Macro can only be used if platform time units is micro of nano second' ASSERTMSG
 {
   'name' 'makair/encode'
   // This macro needs the ->VARINT function which appeared in 2.5.1
@@ -59,7 +65,8 @@ The current alarm codes from the frames are NOT included in the message. They ne
       // for all frames
       $telemetry 'device_id' GET 'device_id' CSTORE
       [
-        $telemetry 'systick' GET
+        // Replace systick with the real timestamp at which the frame occurred
+        $telemetry 'systick' GET 1 us * $timestamp +
         $telemetry 'cycle' GET
         $telemetry 'peak_command' GET
         $telemetry 'plateau_command' GET
@@ -124,7 +131,6 @@ The current alarm codes from the frames are NOT included in the message. They ne
     //
     {
       'device_id' $device_id
-      'timestamp' $timestamp
       // We do not need to set 'encoding' since the default
       // enum value for Encoding is MAKAIR_DELTA_OPTGZIP
       'encoded' [ $encoded ]

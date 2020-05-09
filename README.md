@@ -1,5 +1,7 @@
 # MakAir Telemetry
 
+**ℹ️ Telemetry tools are intended to be used as a library of the Control UI runtime, or as a CLI (eg. to test the telemetry protocol with the firmware).**
+
 ## Versions
 
 | Version | Last Changelog | Ready? |

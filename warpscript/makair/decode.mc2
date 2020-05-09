@@ -1,0 +1,96 @@
+//
+// Set the TTL of the macro to 1 minute so we can modify it and have
+// it reloaded in Warp 10 within 60 seconds.
+//
+1 m MSTU / MACROTTL
+{
+  'name' 'makair/decode'
+  'since' '2.5.1'
+  'desc'
+<'
+Decode a message encoded via `@makair/encode` and output the individual frames.
+'>
+  'sig' [
+    [ [ 'message:BYTES' ] [ 'frames:LIST<MAP>' ] ]
+  ]
+  'params' {
+    'message' 'Encoded message that needs to be decoded.'
+    'frames' 'List of extracted frames.'
+  }
+} '.info' STORE
+<%
+  !$.info INFO
+  SAVE '.context' STORE
+    //
+    // Decode the Protobuf message
+    //
+    @makair/proto
+    'MakAirTelemetry' PB->
+    'message' STORE
+    //
+    // Extract the device_id
+    //
+    $message 'device_id' GET 'device_id' STORE
+    $message 'timestamp' GET 'timestamp' STORE
+    $message 'encoded' GET 0 GET
+    // Decompress content
+    @senx/gzip/UNOPTGZIP
+    'encoded' STORE
+
+    //
+    // Decode the VARINTs
+    //
+    $encoded VARINT-> 'varints' STORE
+
+    //
+    // Reshape the array.
+    // Each frame contains 9 numbers
+    //
+    $varints [ $varints SIZE 9 / 9 ] RESHAPE
+
+    <%
+      0 !=
+      <%
+        'current' STORE
+        // Add the current values with those from the previous
+        // reconstructed array
+        [ $last $current ] ZIP
+        <%
+          LIST-> DROP
+          // Undo the zig zag trick
+          'unsigned' STORE
+          $unsigned 63 << 63 >> $unsigned ^ 1 >>
+          // Flip the top bit
+          $unsigned 1 63 << & ^
+          +
+        %> false LMAP
+      %>
+      IFT
+      'last' STORE $last
+    %> LMAP
+
+    //
+    // We now have an array with arrays containing the original
+    // values from each frame. We will rebuild the frames.
+    //
+    <%
+      {} SWAP
+      [
+        'systick'
+        'cycle'
+        'peak_command'
+        'plateau_command'
+        'peep_command'
+        'cpm_command'
+        'previous_peak_pressure'
+        'previous_plateau_pressure'
+        'previous_peep_pressure'
+      ]      
+      2 ->LIST ZIP
+      <%
+        LIST-> DROP PUT
+      %> FOREACH
+      $device_id 'device_id' PUT
+    %> false LMAP
+  $.context RESTORE
+%>

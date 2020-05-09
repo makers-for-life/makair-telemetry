@@ -18,7 +18,7 @@ The current alarm codes from the frames are NOT included in the message. They ne
     [ [ 'timestamp:LONG' 'frames:LIST<BYTES>' ] [ 'message:BYTES' ] ]
   ]
   'params' {
-    'timestamp' 'Timestamp (in platform time units) of the first frame of the list.'
+    'timestamp' 'Timestamp (in platform time units) of systick 0.'
     'frames' 'List of telemetry frames of type `MachineStateSnapshot`.'
     'message' 'Protobuf messages containing the input frames.'
   }

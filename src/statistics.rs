@@ -103,6 +103,7 @@ mod tests {
                 previous_plateau_pressure: 0,
                 previous_peep_pressure: 0,
                 current_alarm_codes: vec![],
+                volume: None,
             },
         )];
 
@@ -179,6 +180,7 @@ mod tests {
                 previous_plateau_pressure: 0,
                 previous_peep_pressure: 0,
                 current_alarm_codes: vec![],
+                volume: None,
             },
         ));
 

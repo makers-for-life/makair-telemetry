@@ -154,6 +154,8 @@ pub struct MachineStateSnapshot {
     pub previous_peep_pressure: u16,
     /// Codes of the alarms that are currently triggered
     pub current_alarm_codes: Vec<u8>,
+    /// Measured volume in mL (sensor might not be enabled)
+    pub volume: Option<u16>,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped

@@ -604,6 +604,18 @@
 <span id="604">604</span>
 <span id="605">605</span>
 <span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir</span>
 <span class="comment">//</span>
@@ -794,6 +806,8 @@
             <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">previous_peep_pressure</span>: <span class="ident">be_u16</span>
             <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">sep</span>
             <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">current_alarm_codes</span>: <span class="ident">u8_array</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">sep</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">previous_volume</span>: <span class="ident">be_u16</span>
             <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">end</span>
             <span class="op">&gt;</span><span class="op">&gt;</span> (<span class="ident">TelemetryMessage</span>::<span class="ident">MachineStateSnapshot</span>(<span class="ident">MachineStateSnapshot</span> {
                 <span class="ident">version</span>: <span class="ident">software_version</span>.<span class="ident">to_string</span>(),
@@ -808,6 +822,11 @@
                 <span class="ident">previous_plateau_pressure</span>,
                 <span class="ident">previous_peep_pressure</span>,
                 <span class="ident">current_alarm_codes</span>,
+                <span class="ident">previous_volume</span>: <span class="kw">if</span> <span class="ident">previous_volume</span> <span class="op">=</span><span class="op">=</span> <span class="number">0xFFFF</span> {
+                    <span class="prelude-val">None</span>
+                } <span class="kw">else</span> {
+                    <span class="prelude-val">Some</span>(<span class="ident">previous_volume</span>)
+                },
             }))
     )
 );
@@ -875,6 +894,7 @@
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="ident">proptest</span>::<span class="ident">collection</span>;
+    <span class="kw">use</span> <span class="ident">proptest</span>::<span class="ident">option</span>;
     <span class="kw">use</span> <span class="ident">proptest</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 
     <span class="kw">fn</span> <span class="ident">flat</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
@@ -1084,6 +1104,7 @@
             <span class="ident">previous_plateau_pressure</span> <span class="kw">in</span> (<span class="number">0u16</span>..),
             <span class="ident">previous_peep_pressure</span> <span class="kw">in</span> (<span class="number">0u16</span>..),
             <span class="ident">current_alarm_codes</span> <span class="kw">in</span> <span class="ident">collection</span>::<span class="ident">vec</span>(<span class="number">0u8</span>.., <span class="number">0</span>..<span class="number">100</span>),
+            <span class="ident">previous_volume</span> <span class="kw">in</span> <span class="ident">option</span>::<span class="ident">of</span>(<span class="number">0u16</span>..<span class="number">0xFFFE</span>),
         ) {
             <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">MachineStateSnapshot</span> {
                 <span class="ident">version</span>,
@@ -1098,6 +1119,7 @@
                 <span class="ident">previous_plateau_pressure</span>,
                 <span class="ident">previous_peep_pressure</span>,
                 <span class="ident">current_alarm_codes</span>,
+                <span class="ident">previous_volume</span>,
             };
 
             <span class="comment">// This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp</span>
@@ -1129,6 +1151,8 @@
                 <span class="string">b&quot;\t&quot;</span>,
                 <span class="kw-2">&amp;</span>[<span class="ident">msg</span>.<span class="ident">current_alarm_codes</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u8</span>],
                 <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">current_alarm_codes</span>,
+                <span class="string">b&quot;\t&quot;</span>,
+                <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">previous_volume</span>.<span class="ident">unwrap_or</span>(<span class="number">0xFFFF</span>).<span class="ident">to_be_bytes</span>(),
                 <span class="string">b&quot;\n&quot;</span>,
             ]);
 

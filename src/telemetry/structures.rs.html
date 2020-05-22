@@ -226,6 +226,8 @@
 <span id="226">226</span>
 <span id="227">227</span>
 <span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir</span>
 <span class="comment">//</span>
@@ -383,6 +385,8 @@
     <span class="kw">pub</span> <span class="ident">previous_peep_pressure</span>: <span class="ident">u16</span>,
     <span class="doccomment">/// Codes of the alarms that are currently triggered</span>
     <span class="kw">pub</span> <span class="ident">current_alarm_codes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Measured previous_volume in mL (sensor might not be enabled)</span>
+    <span class="kw">pub</span> <span class="ident">previous_volume</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// A telemetry message that is sent every time an alarm is triggered or stopped</span>

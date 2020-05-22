@@ -270,8 +270,46 @@ named!(
     )
 );
 
-named!(pub parse_telemetry_message<TelemetryMessage>, preceded!(header, terminated!(alt!(
-    boot | stopped | data_snapshot | machine_state_snapshot | alarm_trap
+named!(
+    message<TelemetryMessage>,
+    alt!(boot | stopped | data_snapshot | machine_state_snapshot | alarm_trap)
+);
+
+pub fn with_input<
+    I: Clone + nom::Offset + nom::Slice<nom::lib::std::ops::RangeTo<usize>>,
+    O,
+    E: nom::error::ParseError<I>,
+    F,
+>(
+    parser: F,
+) -> impl Fn(I) -> nom::IResult<I, (I, O), E>
+where
+    F: Fn(I) -> nom::IResult<I, O, E>,
+{
+    move |input: I| {
+        let i = input.clone();
+        match parser(i) {
+            Ok((i, o)) => {
+                let index = input.offset(&i);
+                Ok((i, (input.slice(..index), o)))
+            }
+            Err(e) => Err(e),
+        }
+    }
+}
+
+named!(pub parse_telemetry_message<TelemetryMessage>, preceded!(header, terminated!(map_res!(
+    pair!(with_input(message), nom::number::streaming::be_u32),
+    |((msg_bytes, msg), expected_crc): ((&[u8], TelemetryMessage), u32)| {
+        let mut crc = crc32fast::Hasher::new();
+        crc.update(msg_bytes);
+        let computed_crc = crc.finalize();
+        if expected_crc == computed_crc {
+            Ok(msg)
+        } else {
+            Err(())
+        }
+    }
 ), footer)));
 
 #[cfg(test)]

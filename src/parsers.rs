@@ -7,6 +7,9 @@ use nom::number::streaming::{be_u16, be_u32, be_u64, be_u8};
 
 use crate::structures::*;
 
+named!(header, tag!(b"\x03\x0C"));
+named!(footer, tag!(b"\x30\xC0"));
+
 named!(sep, tag!("\t"));
 named!(end, tag!("\n"));
 
@@ -267,9 +270,9 @@ named!(
     )
 );
 
-named!(pub parse_telemetry_message<TelemetryMessage>, alt!(
+named!(pub parse_telemetry_message<TelemetryMessage>, preceded!(header, terminated!(alt!(
     boot | stopped | data_snapshot | machine_state_snapshot | alarm_trap
-));
+), footer)));
 
 #[cfg(test)]
 mod tests {

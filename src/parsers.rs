@@ -187,7 +187,8 @@ named!(
             >> previous_peep_pressure: be_u16
             >> sep
             >> current_alarm_codes: u8_array
-            >> previous_volume: opt!(preceded!(sep, be_u16))
+            >> sep
+            >> previous_volume: be_u16
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 version: software_version.to_string(),
@@ -202,7 +203,11 @@ named!(
                 previous_plateau_pressure,
                 previous_peep_pressure,
                 current_alarm_codes,
-                previous_volume,
+                previous_volume: if previous_volume == 0xFFFF {
+                    None
+                } else {
+                    Some(previous_volume)
+                },
             }))
     )
 );
@@ -480,7 +485,7 @@ mod tests {
             previous_plateau_pressure in (0u16..),
             previous_peep_pressure in (0u16..),
             current_alarm_codes in collection::vec(0u8.., 0..100),
-            previous_volume in option::of(0u16..),
+            previous_volume in option::of(0u16..0xFFFE),
         ) {
             let msg = MachineStateSnapshot {
                 version,
@@ -499,10 +504,6 @@ mod tests {
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
-            let previous_volume: Vec<u8> = match &msg.previous_volume {
-                Some(v) => flat(&[b"\t", &v.to_be_bytes()]),
-                None => vec![],
-            };
             let input = &flat(&[
                 b"S:\x01",
                 &[msg.version.len() as u8],
@@ -531,7 +532,8 @@ mod tests {
                 b"\t",
                 &[msg.current_alarm_codes.len() as u8],
                 &msg.current_alarm_codes,
-                &previous_volume,
+                b"\t",
+                &msg.previous_volume.unwrap_or(0xFFFF).to_be_bytes(),
                 b"\n",
             ]);
 

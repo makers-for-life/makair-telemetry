@@ -201,6 +201,39 @@ pub enum TelemetryMessage {
     AlarmTrap(AlarmTrap),
 }
 
+/// Extension of Nom's `ErrorKind` to be able to represent CRC errors
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum TelemetryErrorKind {
+    /// Standard Nom error
+    ParserError(nom::error::ErrorKind),
+    /// CRC error
+    CrcError {
+        /// Expected CRC (included in the message)
+        expected: u32,
+        /// Computed CRC (from the actual message)
+        computed: u32,
+    },
+}
+
+/// Custom parser error type to leverage `TelemetryErrorKind`
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TelemetryError<I>(pub I, pub TelemetryErrorKind);
+
+impl<I> nom::error::ParseError<I> for TelemetryError<I> {
+    fn from_error_kind(input: I, kind: nom::error::ErrorKind) -> Self {
+        TelemetryError(input, TelemetryErrorKind::ParserError(kind))
+    }
+    fn append(_: I, _: nom::error::ErrorKind, other: Self) -> Self {
+        other
+    }
+}
+
+impl<I> From<(I, nom::error::ErrorKind)> for TelemetryError<I> {
+    fn from(error: (I, nom::error::ErrorKind)) -> Self {
+        TelemetryError(error.0, TelemetryErrorKind::ParserError(error.1))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::structures::AlarmPriority;

@@ -90,6 +90,17 @@ pub fn gather_telemetry(
 
                                             buffer = Vec::from(rest);
                                         }
+                                        // Message was read but there was a CRC error
+                                        Err(nom::Err::Failure(TelemetryError(
+                                            msg_bytes,
+                                            TelemetryErrorKind::CrcError { expected, computed },
+                                        ))) => {
+                                            warn!(
+                                                "[CRC error]\texpected={}\tcomputed={}",
+                                                expected, computed
+                                            );
+                                            buffer = buffer.clone().split_off(msg_bytes.len());
+                                        }
                                         // There are not enough bytes, let's wait until we get more
                                         Err(nom::Err::Incomplete(_)) => {
                                             // Do nothing

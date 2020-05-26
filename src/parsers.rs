@@ -4,8 +4,17 @@
 // License: Public Domain License
 
 use nom::number::streaming::{be_u16, be_u32, be_u64, be_u8};
+use nom::IResult;
 
 use crate::structures::*;
+
+fn header(input: &[u8]) -> IResult<&[u8], &[u8], TelemetryError<&[u8]>> {
+    nom::bytes::streaming::tag(b"\x03\x0C")(input)
+}
+
+fn footer(input: &[u8]) -> IResult<&[u8], &[u8], TelemetryError<&[u8]>> {
+    nom::bytes::streaming::tag(b"\x30\xC0")(input)
+}
 
 named!(sep, tag!("\t"));
 named!(end, tag!("\n"));
@@ -267,9 +276,66 @@ named!(
     )
 );
 
-named!(pub parse_telemetry_message<TelemetryMessage>, alt!(
-    boot | stopped | data_snapshot | machine_state_snapshot | alarm_trap
-));
+pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
+    nom::branch::alt((
+        boot,
+        stopped,
+        data_snapshot,
+        machine_state_snapshot,
+        alarm_trap,
+    ))(input)
+    .map_err(nom::Err::convert)
+}
+
+pub fn with_input<
+    I: Clone + nom::Offset + nom::Slice<nom::lib::std::ops::RangeTo<usize>>,
+    O,
+    E: nom::error::ParseError<I>,
+    F,
+>(
+    parser: F,
+) -> impl Fn(I) -> nom::IResult<I, (I, O), E>
+where
+    F: Fn(I) -> nom::IResult<I, O, E>,
+{
+    move |input: I| {
+        let i = input.clone();
+        match parser(i) {
+            Ok((i, o)) => {
+                let index = input.offset(&i);
+                Ok((i, (input.slice(..index), o)))
+            }
+            Err(e) => Err(e),
+        }
+    }
+}
+
+pub fn parse_telemetry_message(
+    input: &[u8],
+) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
+    use nom::sequence::{pair, preceded, terminated};
+
+    let parser = preceded(
+        header,
+        terminated(pair(with_input(message), be_u32), footer),
+    );
+    parser(input).and_then(|(rest, ((msg_bytes, msg), expected_crc))| {
+        let mut crc = crc32fast::Hasher::new();
+        crc.update(msg_bytes);
+        let computed_crc = crc.finalize();
+        if expected_crc == computed_crc {
+            Ok((rest, msg))
+        } else {
+            Err(nom::Err::Failure(TelemetryError(
+                input,
+                TelemetryErrorKind::CrcError {
+                    expected: expected_crc,
+                    computed: computed_crc,
+                },
+            )))
+        }
+    })
+}
 
 #[cfg(test)]
 mod tests {
@@ -329,6 +395,77 @@ mod tests {
             AlarmPriority::High => 4,
             AlarmPriority::Medium => 2,
             AlarmPriority::Low => 1,
+        }
+    }
+
+    proptest! {
+        #[test]
+        fn test_crc_check(
+            random_crc in (0u32..),
+            version in ".*",
+            device_id1 in (0u32..),
+            device_id2 in (0u32..),
+            device_id3 in (0u32..),
+            systick in (0u64..),
+            mode in mode_strategy(),
+            value128 in (0u8..),
+        ) {
+            let msg = BootMessage {
+                version,
+                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                systick,
+                mode,
+                value128,
+            };
+
+            // This needs to be consistent with sendBootMessage() defined in src/software/firmware/srcs/telemetry.cpp
+            let input_message = &flat(&[
+                b"B:\x01",
+                &[msg.version.len() as u8],
+                &msg.version.as_bytes(),
+                &device_id1.to_be_bytes(),
+                &device_id2.to_be_bytes(),
+                &device_id3.to_be_bytes(),
+                b"\t",
+                &msg.systick.to_be_bytes(),
+                b"\t",
+                &[mode_ordinal(&msg.mode)],
+                b"\t",
+                &[msg.value128],
+                b"\n",
+            ]);
+            let mut crc = crc32fast::Hasher::new();
+            crc.update(input_message);
+            let expected_crc = crc.finalize();
+
+            let fake_crc = if random_crc == expected_crc {
+                if random_crc > 0 { random_crc - 1 } else { random_crc + 1 }
+            } else {
+                random_crc
+            };
+
+            let input = &flat(&[
+                b"\x03\x0C",
+                &input_message,
+                &expected_crc.to_be_bytes(),
+                b"\x30\xC0",
+            ]);
+            let fake_input = &flat(&[
+                b"\x03\x0C",
+                &input_message,
+                &fake_crc.to_be_bytes(),
+                b"\x30\xC0",
+            ]);
+
+            let expected = TelemetryMessage::BootMessage(msg);
+            assert_eq!(nom::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(fake_input), Err(nom::Err::Failure(TelemetryError(
+                &fake_input[..],
+                TelemetryErrorKind::CrcError{
+                    expected: fake_crc,
+                    computed: expected_crc,
+                }
+            ))));
         }
     }
 

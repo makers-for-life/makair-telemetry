@@ -122,6 +122,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "crc32fast"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba125de2af0df55319f41944744ad91c71113bf74a4646efff39afe1f6842db1"
+dependencies = [
+ "cfg-if",
+]
+
+[[package]]
 name = "env_logger"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -243,6 +252,7 @@ version = "1.0.0"
 dependencies = [
  "base64",
  "clap",
+ "crc32fast",
  "env_logger",
  "log",
  "nom",

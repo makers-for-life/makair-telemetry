@@ -3,6 +3,7 @@ ALIASES["arrayvec"] = {};
 ALIASES["base64"] = {};
 ALIASES["bitflags"] = {};
 ALIASES["cfg_if"] = {};
+ALIASES["crc32fast"] = {};
 ALIASES["ioctl_rs"] = {};
 ALIASES["lexical_core"] = {};
 ALIASES["libc"] = {};

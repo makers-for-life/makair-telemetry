@@ -1,4 +1,4 @@
-/// Available setting in the control protocol
+/// Available settings in the control protocol
 #[derive(Debug, Copy, Clone)]
 pub enum ControlSetting {
     PeakPressure = 1,

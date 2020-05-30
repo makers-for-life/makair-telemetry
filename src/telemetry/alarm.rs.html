@@ -56,19 +56,19 @@
 <span class="comment">// Copyright: 2020, Makers For Life</span>
 <span class="comment">// License: Public Domain License</span>
 
-<span class="kw">const</span> <span class="ident">RMC_SW_1</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">12</span>;
-<span class="kw">const</span> <span class="ident">RMC_SW_2</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">11</span>;
-<span class="kw">const</span> <span class="ident">RMC_SW_3</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">14</span>;
-<span class="kw">const</span> <span class="ident">RMC_SW_11</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">21</span>;
-<span class="kw">const</span> <span class="ident">RMC_SW_12</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">13</span>;
-<span class="kw">const</span> <span class="ident">RMC_SW_14</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">22</span>;
-<span class="kw">const</span> <span class="ident">RMC_SW_15</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">23</span>;
-<span class="kw">const</span> <span class="ident">RMC_SW_16</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">31</span>;
-<span class="kw">const</span> <span class="ident">RMC_SW_18</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">17</span>;
-<span class="kw">const</span> <span class="ident">RMC_SW_19</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">24</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_1</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">12</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_2</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">11</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_3</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">14</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_11</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">21</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_12</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">13</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_14</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">22</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_15</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">23</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_16</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">31</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_18</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">17</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_19</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">24</span>;
 
 <span class="doccomment">/// Wrapper arround an alarm code</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Hash</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Hash</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AlarmCode</span> {
     <span class="ident">code</span>: <span class="ident">u8</span>,
 }

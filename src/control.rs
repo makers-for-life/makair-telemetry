@@ -4,6 +4,8 @@ pub enum ControlSetting {
     PeakPressure = 1,
     PlateauPressure = 2,
     PEEP = 3,
+    CyclesPerMinute = 4,
+    ExpiratoryTerm = 5,
 }
 
 /// A control message

@@ -1,21 +1,17 @@
+/// Available setting in the control protocol
 #[derive(Debug, Copy, Clone)]
 pub enum ControlSetting {
     PeakPressure = 1,
     PlateauPressure = 2,
     PEEP = 3,
 }
-/*
-impl std::fmt::Display for ControlSetting {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PeakPressure => write!(f, "PeakPressure"),
-        }
-    }
-}*/
 
+/// A control message
 #[derive(Debug, Clone)]
 pub struct ControlMessage {
+    /// The setting to change
     pub setting: ControlSetting,
+    /// The new value of the setting
     pub value: u16,
 }
 
@@ -40,6 +36,9 @@ impl ControlMessage {
         crc.finalize()
     }
 
+    /// Create a frame to be sent trough serial port
+    ///
+    /// This converts message to binary and adds header, footer and CRC
     pub fn to_control_frame(&self) -> Vec<u8> {
         flat(&[
             b"\x05\x0A",

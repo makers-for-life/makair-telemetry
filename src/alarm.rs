@@ -15,7 +15,7 @@ pub const RMC_SW_18: u8 = 17;
 pub const RMC_SW_19: u8 = 24;
 
 /// Wrapper arround an alarm code
-#[derive(Debug, Eq, PartialEq, Hash, Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Hash, Clone, Copy, PartialOrd, Ord)]
 pub struct AlarmCode {
     code: u8,
 }

@@ -16,6 +16,7 @@ use std::fs::OpenOptions;
 use std::io::BufWriter;
 use std::sync::mpsc::{Receiver, Sender, TryRecvError};
 
+use control::*;
 use statistics::*;
 use structures::*;
 use telemetry::*;
@@ -51,6 +52,10 @@ struct Debug {
     /// Address of the port to use
     #[clap(short = "p")]
     port: String,
+
+    /// Randomly send control messages
+    #[clap(short = "c", long = "random-control-messages")]
+    random_control_messages: bool,
 }
 
 #[derive(Clap)]
@@ -91,10 +96,27 @@ fn main() {
 }
 
 fn debug(cfg: Debug) {
+    let control_rx = if cfg.random_control_messages {
+        let (control_tx, control_rx): (Sender<ControlMessage>, Receiver<ControlMessage>) =
+            std::sync::mpsc::channel();
+        std::thread::spawn(move || loop {
+            std::thread::sleep(std::time::Duration::from_secs(3));
+            control_tx
+                .send(ControlMessage {
+                    setting: ControlSetting::PeakPressure,
+                    value: 5,
+                })
+                .expect("[control tx] failed to send control message");
+        });
+        Some(control_rx)
+    } else {
+        None
+    };
+
     let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
         std::sync::mpsc::channel();
     std::thread::spawn(move || {
-        gather_telemetry(&cfg.port, tx, None);
+        gather_telemetry(&cfg.port, tx, None, control_rx);
     });
     loop {
         match rx.try_recv() {
@@ -122,7 +144,7 @@ fn record(cfg: Record) {
     let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
         std::sync::mpsc::channel();
     std::thread::spawn(move || {
-        gather_telemetry(&cfg.port, tx, Some(file_buffer));
+        gather_telemetry(&cfg.port, tx, Some(file_buffer), None);
     });
     loop {
         match rx.try_recv() {

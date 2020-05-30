@@ -10,6 +10,8 @@ extern crate nom;
 
 /// Utilities related to alarms
 pub mod alarm;
+/// Structures to represent control messages
+pub mod control;
 mod parsers;
 /// Structures to represent telemetry messages
 pub mod structures;
@@ -22,8 +24,10 @@ use std::io::BufReader;
 use std::io::BufWriter;
 use std::io::Read;
 use std::io::Write;
-use std::sync::mpsc::Sender;
+use std::sync::mpsc::{Receiver, Sender};
+use std::sync::{Arc, Mutex};
 
+use control::*;
 use parsers::*;
 use structures::*;
 
@@ -34,12 +38,14 @@ pub type TelemetryChannelType = Result<TelemetryMessage, serial::core::Error>;
 /// * `port_id` - Name or path to the serial port.
 /// * `tx` - Sender of a channel.
 /// * `file_buf` - Optional file buffer; if specified, messages will also be serialized and written in this file.
+/// * `control_rx` - Optional receiver of a channel used to send control messages through the serial port.
 ///
 /// This is meant to be run in a dedicated thread.
 pub fn gather_telemetry(
     port_id: &str,
     tx: Sender<TelemetryChannelType>,
     mut file_buf: Option<BufWriter<File>>,
+    control_rx: Option<Receiver<ControlMessage>>,
 ) {
     loop {
         info!("opening {}", &port_id);
@@ -64,8 +70,14 @@ pub fn gather_telemetry(
                         std::thread::sleep(std::time::Duration::from_secs(1));
                     }
                     Ok(_) => {
+                        let port_handle = Arc::new(Mutex::new(port));
                         let mut buffer = Vec::new();
-                        for b in port.bytes() {
+                        loop {
+                            let mut tmp = [0; 1];
+                            let b = port_handle
+                                .lock()
+                                .expect("[port] failed getting exclusive lock on serial port to read telemetry")
+                                .read(&mut tmp).map(|_| tmp[0]);
                             match b {
                                 // We got a new byte
                                 Ok(byte) => {
@@ -136,6 +148,21 @@ pub fn gather_telemetry(
                                     }
                                 }
                             };
+                            if let Some(rx) = control_rx.as_ref() {
+                                if let Ok(message) = rx.try_recv() {
+                                    let write = port_handle
+                                        .lock()
+                                        .expect("[port] failed getting exclusive lock on serial port to write control message")
+                                        .write_all(&message.to_control_frame());
+                                    match write {
+                                        Ok(_) => debug!("→ {}", &message),
+                                        Err(e) => warn!(
+                                            "Could not send control message '{}': {:?}",
+                                            &message, &e
+                                        ),
+                                    }
+                                }
+                            }
                         }
                     }
                 }

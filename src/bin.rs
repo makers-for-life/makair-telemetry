@@ -9,6 +9,7 @@ extern crate clap;
 extern crate log;
 
 mod statistics;
+mod storm;
 
 use clap::Clap;
 use std::fs::File;
@@ -18,6 +19,7 @@ use std::sync::mpsc::{Receiver, Sender, TryRecvError};
 
 use control::*;
 use statistics::*;
+use storm::*;
 use structures::*;
 use telemetry::*;
 
@@ -102,10 +104,7 @@ fn debug(cfg: Debug) {
         std::thread::spawn(move || loop {
             std::thread::sleep(std::time::Duration::from_secs(3));
             control_tx
-                .send(ControlMessage {
-                    setting: ControlSetting::PeakPressure,
-                    value: 5,
-                })
+                .send(gen_random_message())
                 .expect("[control tx] failed to send control message");
         });
         Some(control_rx)

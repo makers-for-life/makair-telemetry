@@ -1,3 +1,12 @@
+// MakAir
+//
+// Copyright: 2020, Makers For Life
+// License: Public Domain License
+
+use rand::distributions::{Distribution, Standard};
+use rand::Rng;
+use std::convert::TryFrom;
+
 /// Available settings in the control protocol
 #[derive(Debug, Copy, Clone)]
 pub enum ControlSetting {
@@ -8,6 +17,28 @@ pub enum ControlSetting {
     ExpiratoryTerm = 5,
 }
 
+impl std::convert::TryFrom<u8> for ControlSetting {
+    type Error = &'static str;
+
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        match value {
+            1 => Ok(ControlSetting::PeakPressure),
+            2 => Ok(ControlSetting::PlateauPressure),
+            3 => Ok(ControlSetting::PEEP),
+            4 => Ok(ControlSetting::CyclesPerMinute),
+            5 => Ok(ControlSetting::ExpiratoryTerm),
+            _ => Err("Invalid setting number"),
+        }
+    }
+}
+
+impl Distribution<ControlSetting> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> ControlSetting {
+        let number = rng.gen_range(1, 6);
+        ControlSetting::try_from(number).unwrap()
+    }
+}
+
 /// A control message
 #[derive(Debug, Clone)]
 pub struct ControlMessage {
@@ -15,6 +46,20 @@ pub struct ControlMessage {
     pub setting: ControlSetting,
     /// The new value of the setting
     pub value: u16,
+}
+
+impl Distribution<ControlMessage> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> ControlMessage {
+        let setting: ControlSetting = rng.gen();
+        let value = match setting {
+            ControlSetting::PeakPressure => rng.gen_range(0, 71),
+            ControlSetting::PlateauPressure => rng.gen_range(10, 41),
+            ControlSetting::PEEP => rng.gen_range(0, 31),
+            ControlSetting::CyclesPerMinute => rng.gen_range(5, 36),
+            ControlSetting::ExpiratoryTerm => rng.gen_range(500, 5001),
+        };
+        ControlMessage { setting, value }
+    }
 }
 
 impl std::fmt::Display for ControlMessage {

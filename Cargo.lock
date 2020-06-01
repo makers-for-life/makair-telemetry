@@ -257,6 +257,7 @@ dependencies = [
  "log",
  "nom",
  "proptest",
+ "rand 0.7.3",
  "serial",
 ]
 

@@ -214,6 +214,9 @@ pub fn display_message(message: TelemetryChannelType) {
             );
             debug!("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }
+        Ok(TelemetryMessage::ControlAck(ControlAck { setting, value, .. })) => {
+            info!("← {:?} = {}", &setting, &value);
+        }
         Err(e) => {
             warn!("an error occurred: {:?}", e);
         }

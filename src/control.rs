@@ -8,7 +8,7 @@ use rand::Rng;
 use std::convert::TryFrom;
 
 /// Available settings in the control protocol
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum ControlSetting {
     PeakPressure = 1,
     PlateauPressure = 2,

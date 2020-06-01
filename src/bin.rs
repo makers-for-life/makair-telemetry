@@ -245,6 +245,7 @@ fn stats(cfg: Stats) {
     let mut nb_data_snapshots: u32 = 0;
     let mut nb_machine_state_snapshots: u32 = 0;
     let mut nb_stopped_messages: u32 = 0;
+    let mut nb_control_ack: u32 = 0;
 
     loop {
         match rx.try_recv() {
@@ -266,6 +267,9 @@ fn stats(cfg: Stats) {
                         TelemetryMessage::StoppedMessage(_) => {
                             nb_stopped_messages += 1;
                         }
+                        TelemetryMessage::ControlAck(_) => {
+                            nb_control_ack += 1;
+                        }
                     }
                     telemetry_messages.push(message);
                 }
@@ -280,6 +284,7 @@ fn stats(cfg: Stats) {
                 println!("Nb DataSnapshots: {}", nb_data_snapshots);
                 println!("Nb MachineStateSnapshot: {}", nb_machine_state_snapshots);
                 println!("Nb StoppedMessage: {}", nb_stopped_messages);
+                println!("Nb ControlAck: {}", nb_control_ack);
                 println!(
                     "Estimated duration: {:.3} seconds",
                     compute_duration(telemetry_messages) as f32 / 1000_f32
@@ -301,10 +306,7 @@ fn control(cfg: Control) {
     std::thread::spawn(move || loop {
         std::thread::sleep(std::time::Duration::from_secs(3));
         control_tx
-            .send(ControlMessage {
-                setting,
-                value,
-            })
+            .send(ControlMessage { setting, value })
             .expect("[control tx] failed to send control message");
     });
 

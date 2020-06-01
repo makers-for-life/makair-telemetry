@@ -47,6 +47,10 @@ enum Mode {
     /// Reads telemetry from a recorded file, parses it and compute some statistics
     #[clap(version = crate_version!(), author = crate_authors!())]
     Stats(Stats),
+
+    /// Send a lot of control messages and/or bytes to a serial port
+    #[clap(version = crate_version!(), author = crate_authors!())]
+    Storm(Storm),
 }
 
 #[derive(Clap)]
@@ -55,7 +59,7 @@ struct Debug {
     #[clap(short = "p")]
     port: String,
 
-    /// Randomly send control messages
+    /// Randomly send control messages at a normal pace
     #[clap(short = "c", long = "random-control-messages")]
     random_control_messages: bool,
 }
@@ -85,6 +89,25 @@ struct Stats {
     input: String,
 }
 
+#[derive(Clap)]
+struct Storm {
+    /// Address of the port to use
+    #[clap(short = "p")]
+    port: String,
+
+    /// [generator] Send valid control messages
+    #[clap(short = "v", long = "valid")]
+    valid: bool,
+
+    /// [generator] Send random bytes
+    #[clap(short = "b", long = "bytes")]
+    bytes: bool,
+
+    /// [generator] Send control messages with wrong CRC
+    #[clap(short = "c", long = "wrong-crc")]
+    wrong_crc: bool,
+}
+
 fn main() {
     env_logger::init();
     let opts: Opts = Opts::parse();
@@ -94,6 +117,7 @@ fn main() {
         Mode::Record(cfg) => record(cfg),
         Mode::Play(cfg) => play(cfg),
         Mode::Stats(cfg) => stats(cfg),
+        Mode::Storm(cfg) => storm(cfg),
     }
 }
 
@@ -241,6 +265,79 @@ fn stats(cfg: Stats) {
                     compute_duration(telemetry_messages) as f32 / 1000_f32
                 );
                 std::process::exit(0);
+            }
+        }
+    }
+}
+
+fn storm(cfg: Storm) {
+    use serial::prelude::*;
+    use std::io::Write;
+
+    let port_id = cfg.port;
+    let (tx, rx): (Sender<Vec<u8>>, Receiver<Vec<u8>>) = std::sync::mpsc::channel();
+
+    let mut generators: Vec<&'static str> = vec![];
+    if cfg.valid {
+        generators.push("valid");
+    };
+    if cfg.bytes {
+        generators.push("bytes");
+    };
+    if cfg.wrong_crc {
+        generators.push("wrong_crc");
+    };
+    if generators.is_empty() {
+        panic!("You must specify at least one generator; use '-h' to see the list");
+    }
+
+    std::thread::spawn(move || {
+        use rand::seq::SliceRandom;
+
+        std::thread::sleep(std::time::Duration::from_secs(3));
+        loop {
+            let bytes = match generators.choose(&mut rand::thread_rng()) {
+                Some(&"valid") => gen_random_message_bytes(),
+                Some(&"bytes") => gen_random_bytes(),
+                Some(&"wrong_crc") => gen_random_message_with_wrong_crc(),
+                _ => unreachable!(),
+            };
+            tx.send(bytes).expect("[tx] failed to send bytes");
+            std::thread::sleep(std::time::Duration::from_millis(15));
+        }
+    });
+
+    info!("opening {}", &port_id);
+    match serial::open(&port_id) {
+        Err(e) => {
+            error!("{:?}", e);
+            std::thread::sleep(std::time::Duration::from_secs(1));
+        }
+        Ok(mut port) => {
+            match port.reconfigure(&|settings| {
+                settings.set_char_size(serial::Bits8);
+                settings.set_parity(serial::ParityNone);
+                settings.set_stop_bits(serial::Stop1);
+                settings.set_flow_control(serial::FlowNone);
+                settings.set_baud_rate(serial::Baud115200)
+            }) {
+                Err(e) => {
+                    error!("{}", e);
+                    std::thread::sleep(std::time::Duration::from_secs(1));
+                }
+                Ok(_) => loop {
+                    match rx.try_recv() {
+                        Ok(bytes) => {
+                            let write = port.write_all(&bytes);
+                            match write {
+                                Ok(_) => debug!("→ {:?}", &bytes),
+                                Err(e) => warn!("Could not send bytes '{:?}': {:?}", &bytes, &e),
+                            }
+                        }
+                        Err(std::sync::mpsc::TryRecvError::Empty) => (),
+                        Err(e) => panic!(e),
+                    }
+                },
             }
         }
     }

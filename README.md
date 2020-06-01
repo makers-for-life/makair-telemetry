@@ -26,5 +26,6 @@ It has the following commands:
 | play | Reads telemetry from a recorded file, parses it and streams result to stdout |
 | record | Reads telemetry from a serial port and save bytes to a file |
 | stats | Reads telemetry from a recorded file, parses it and compute some statistics |
+| storm | Send a lot of control messages and/or bytes to a serial port |
 
 You can use the scripts provided in the `scripts/` directory to run it through Cargo (you need a working Rust development environment).

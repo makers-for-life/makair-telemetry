@@ -86,12 +86,21 @@ impl ControlMessage {
     /// Create a frame to be sent trough serial port
     ///
     /// This converts message to binary and adds header, footer and CRC
-    pub fn to_control_frame(&self) -> Vec<u8> {
+    ///
+    /// * `force_crc` - CRC value to be used; will be computed if not specified.
+    pub fn to_control_frame_with(&self, force_crc: Option<u32>) -> Vec<u8> {
         flat(&[
             b"\x05\x0A",
             &self.to_bytes(),
-            &self.crc().to_be_bytes(),
+            &force_crc.unwrap_or_else(|| self.crc()).to_be_bytes(),
             b"\x50\xA0",
         ])
+    }
+
+    /// Create a frame to be sent trough serial port
+    ///
+    /// This converts message to binary and adds header, footer and CRC
+    pub fn to_control_frame(&self) -> Vec<u8> {
+        self.to_control_frame_with(None)
     }
 }

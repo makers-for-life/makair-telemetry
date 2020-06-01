@@ -303,7 +303,7 @@ fn control(cfg: Control) {
 
     let (control_tx, control_rx): (Sender<ControlMessage>, Receiver<ControlMessage>) =
         std::sync::mpsc::channel();
-    std::thread::spawn(move || loop {
+    std::thread::spawn(move || {
         std::thread::sleep(std::time::Duration::from_secs(3));
         control_tx
             .send(ControlMessage { setting, value })

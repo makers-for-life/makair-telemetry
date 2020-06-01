@@ -48,6 +48,10 @@ enum Mode {
     #[clap(version = crate_version!(), author = crate_authors!())]
     Stats(Stats),
 
+    /// Send one specific control message to a serial port, then run debug mode
+    #[clap(version = crate_version!(), author = crate_authors!())]
+    Control(Control),
+
     /// Send a lot of control messages and/or bytes to a serial port
     #[clap(version = crate_version!(), author = crate_authors!())]
     Storm(Storm),
@@ -90,6 +94,21 @@ struct Stats {
 }
 
 #[derive(Clap)]
+struct Control {
+    /// Address of the port to use
+    #[clap(short = "p")]
+    port: String,
+
+    /// Setting internal number
+    #[clap(name = "setting")]
+    setting: u8,
+
+    /// Value
+    #[clap(name = "value")]
+    value: u16,
+}
+
+#[derive(Clap)]
 struct Storm {
     /// Address of the port to use
     #[clap(short = "p")]
@@ -117,6 +136,7 @@ fn main() {
         Mode::Record(cfg) => record(cfg),
         Mode::Play(cfg) => play(cfg),
         Mode::Stats(cfg) => stats(cfg),
+        Mode::Control(cfg) => control(cfg),
         Mode::Storm(cfg) => storm(cfg),
     }
 }
@@ -265,6 +285,44 @@ fn stats(cfg: Stats) {
                     compute_duration(telemetry_messages) as f32 / 1000_f32
                 );
                 std::process::exit(0);
+            }
+        }
+    }
+}
+
+fn control(cfg: Control) {
+    use std::convert::TryFrom;
+
+    let setting = ControlSetting::try_from(cfg.setting).unwrap();
+    let value = cfg.value;
+
+    let (control_tx, control_rx): (Sender<ControlMessage>, Receiver<ControlMessage>) =
+        std::sync::mpsc::channel();
+    std::thread::spawn(move || loop {
+        std::thread::sleep(std::time::Duration::from_secs(3));
+        control_tx
+            .send(ControlMessage {
+                setting,
+                value,
+            })
+            .expect("[control tx] failed to send control message");
+    });
+
+    let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
+        std::sync::mpsc::channel();
+    std::thread::spawn(move || {
+        gather_telemetry(&cfg.port, tx, None, Some(control_rx));
+    });
+    loop {
+        match rx.try_recv() {
+            Ok(msg) => {
+                display_message(msg);
+            }
+            Err(TryRecvError::Empty) => {
+                std::thread::sleep(std::time::Duration::from_millis(10));
+            }
+            Err(TryRecvError::Disconnected) => {
+                panic!("channel to serial port thread was closed");
             }
         }
     }

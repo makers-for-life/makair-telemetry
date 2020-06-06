@@ -125,6 +125,10 @@ struct Storm {
     /// [generator] Send control messages with wrong CRC
     #[clap(short = "c", long = "wrong-crc")]
     wrong_crc: bool,
+
+    /// Send data as fast as possible (MCU might not be able to read it, but it should not crash)
+    #[clap(short = "f", long = "full-blast")]
+    full_blast: bool,
 }
 
 fn main() {
@@ -335,6 +339,7 @@ fn storm(cfg: Storm) {
     use std::io::Write;
 
     let port_id = cfg.port;
+    let full_blast = cfg.full_blast;
     let (tx, rx): (Sender<Vec<u8>>, Receiver<Vec<u8>>) = std::sync::mpsc::channel();
 
     let mut generators: Vec<&'static str> = vec![];
@@ -363,7 +368,9 @@ fn storm(cfg: Storm) {
                 _ => unreachable!(),
             };
             tx.send(bytes).expect("[tx] failed to send bytes");
-            std::thread::sleep(std::time::Duration::from_millis(15));
+            if !full_blast {
+                std::thread::sleep(std::time::Duration::from_millis(15));
+            }
         }
     });
 

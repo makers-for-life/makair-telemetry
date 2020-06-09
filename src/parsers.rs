@@ -204,6 +204,12 @@ named!(
             >> current_alarm_codes: u8_array
             >> sep
             >> previous_volume: be_u16
+            >> sep
+            >> expiratory_term: be_u8
+            >> sep
+            >> trigger_enabled: be_u8
+            >> sep
+            >> trigger_offset: be_u8
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 version: software_version.to_string(),
@@ -223,6 +229,9 @@ named!(
                 } else {
                     Some(previous_volume)
                 },
+                expiratory_term,
+                trigger_enabled: trigger_enabled != 0,
+                trigger_offset,
             }))
     )
 );
@@ -377,6 +386,7 @@ pub fn parse_telemetry_message(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use proptest::bool;
     use proptest::collection;
     use proptest::option;
     use proptest::prelude::*;
@@ -670,6 +680,9 @@ mod tests {
             previous_peep_pressure in (0u16..),
             current_alarm_codes in collection::vec(0u8.., 0..100),
             previous_volume in option::of(0u16..0xFFFE),
+            expiratory_term in (0u8..),
+            trigger_enabled in bool::ANY,
+            trigger_offset in (0u8..),
         ) {
             let msg = MachineStateSnapshot {
                 version,
@@ -685,6 +698,9 @@ mod tests {
                 previous_peep_pressure,
                 current_alarm_codes,
                 previous_volume,
+                expiratory_term,
+                trigger_enabled,
+                trigger_offset
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -718,6 +734,12 @@ mod tests {
                 &msg.current_alarm_codes,
                 b"\t",
                 &msg.previous_volume.unwrap_or(0xFFFF).to_be_bytes(),
+                b"\t",
+                &msg.expiratory_term.to_be_bytes(),
+                b"\t",
+                if msg.trigger_enabled { b"\x01" } else { b"\x00" },
+                b"\t",
+                &msg.trigger_offset.to_be_bytes(),
                 b"\n",
             ]);
 

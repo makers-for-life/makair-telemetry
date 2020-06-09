@@ -158,6 +158,12 @@ pub struct MachineStateSnapshot {
     pub current_alarm_codes: Vec<u8>,
     /// Measured previous_volume in mL (sensor might not be enabled)
     pub previous_volume: Option<u16>,
+    /// Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
+    pub expiratory_term: u8,
+    /// State of the trigger
+    pub trigger_enabled: bool,
+    /// Trigger offset in mmH2O
+    pub trigger_offset: u8,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped

@@ -10,11 +10,20 @@ use std::convert::TryFrom;
 /// Available settings in the control protocol
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum ControlSetting {
+    /// Peak pressure in mmH20 (value must be between 0 and 700)
     PeakPressure = 1,
+    /// Plateau pressure in mmH2O (value must be between 100 and 400)
     PlateauPressure = 2,
+    /// PEEP in mmH2O (value must be between 0 and 300)
     PEEP = 3,
+    /// Number of cycles per minute (value must be between 5 and 35)
     CyclesPerMinute = 4,
+    /// Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10 (value must be between 10 and 60)
     ExpiratoryTerm = 5,
+    /// State of the trigger (value must be 1 if enabled and 0 if disabled)
+    TriggerEnabled = 6,
+    /// Trigger offset in mmH2O (value must be between 0 and 100)
+    TriggerOffset = 7,
 }
 
 impl std::convert::TryFrom<u8> for ControlSetting {
@@ -27,6 +36,8 @@ impl std::convert::TryFrom<u8> for ControlSetting {
             3 => Ok(ControlSetting::PEEP),
             4 => Ok(ControlSetting::CyclesPerMinute),
             5 => Ok(ControlSetting::ExpiratoryTerm),
+            6 => Ok(ControlSetting::TriggerEnabled),
+            7 => Ok(ControlSetting::TriggerOffset),
             _ => Err("Invalid setting number"),
         }
     }
@@ -57,6 +68,8 @@ impl Distribution<ControlMessage> for Standard {
             ControlSetting::PEEP => rng.gen_range(0, 31),
             ControlSetting::CyclesPerMinute => rng.gen_range(5, 36),
             ControlSetting::ExpiratoryTerm => rng.gen_range(500, 5001),
+            ControlSetting::TriggerEnabled => rng.gen_range(0, 2),
+            ControlSetting::TriggerOffset => rng.gen_range(0, 101),
         };
         ControlMessage { setting, value }
     }

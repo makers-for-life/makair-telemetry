@@ -17,7 +17,7 @@ clap = { version = "3.0.0-beta.1", optional = true }
 env_logger = { version = "0.7.1", optional = true }
 
 [dev-dependencies]
-proptest = "0.9.6"
+proptest = "0.10.0"
 
 [lib]
 name = "telemetry"

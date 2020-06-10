@@ -6,11 +6,12 @@
 
 | Version | Last Changelog | Ready? |
 | ------- | -------------- | ------ |
-| V1.0.0 | Working serial parsing from firmware | ✅
+| V1.0.x | Working serial parsing from firmware | ✅
+| V1.1.x | Extend telemetry protocol and add control protocol | ✅
 
 ## Telemetry Library
 
-This crate is a library that handles reading and parsing the MakAir's telemetry binary protocol.
+This crate is a library that handles reading and parsing the MakAir's telemetry binary protocol, and optionally sending new settings values using the Makair's control binary protocol.
 
 ➡ [API documentation](https://makers-for-life.github.io/makair-telemetry)
 

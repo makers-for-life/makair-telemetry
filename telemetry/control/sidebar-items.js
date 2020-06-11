@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["ControlSetting","Available settings in the control protocol"]],"struct":[["ControlMessage","A control message"]]});

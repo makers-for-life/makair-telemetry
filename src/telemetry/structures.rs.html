@@ -261,6 +261,30 @@
 <span id="261">261</span>
 <span id="262">262</span>
 <span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir</span>
 <span class="comment">//</span>
@@ -270,6 +294,8 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>::{<span class="ident">Ord</span>, <span class="ident">Ordering</span>, <span class="ident">PartialOrd</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
+
+<span class="kw">pub</span> <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">control</span>::<span class="ident">ControlSetting</span>;
 
 <span class="doccomment">/// Variants of the MakAir firmware</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
@@ -420,6 +446,12 @@
     <span class="kw">pub</span> <span class="ident">current_alarm_codes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Measured previous_volume in mL (sensor might not be enabled)</span>
     <span class="kw">pub</span> <span class="ident">previous_volume</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Expiration term in the &quot;Inspiration/Expiration&quot; ratio given that Inspiration = 10</span>
+    <span class="kw">pub</span> <span class="ident">expiratory_term</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// State of the trigger</span>
+    <span class="kw">pub</span> <span class="ident">trigger_enabled</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Trigger offset in mmH2O</span>
+    <span class="kw">pub</span> <span class="ident">trigger_offset</span>: <span class="ident">u8</span>,
 }
 
 <span class="doccomment">/// A telemetry message that is sent every time an alarm is triggered or stopped</span>
@@ -455,6 +487,21 @@
     <span class="kw">pub</span> <span class="ident">cycles_since_trigger</span>: <span class="ident">u32</span>,
 }
 
+<span class="doccomment">/// An ACK message that is sent every time a setting is changed using the control protocol</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ControlAck</span> {
+    <span class="doccomment">/// Version of the MCU firmware</span>
+    <span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// Internal ID of the MCU</span>
+    <span class="kw">pub</span> <span class="ident">device_id</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// Number of microseconds since the MCU booted</span>
+    <span class="kw">pub</span> <span class="ident">systick</span>: <span class="ident">u64</span>,
+    <span class="doccomment">/// Setting that was changed</span>
+    <span class="kw">pub</span> <span class="ident">setting</span>: <span class="ident">ControlSetting</span>,
+    <span class="doccomment">/// New value</span>
+    <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">u16</span>,
+}
+
 <span class="doccomment">/// Supported telemetry messages</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TelemetryMessage</span> {
@@ -463,6 +510,7 @@
     <span class="ident">DataSnapshot</span>(<span class="ident">DataSnapshot</span>),
     <span class="ident">MachineStateSnapshot</span>(<span class="ident">MachineStateSnapshot</span>),
     <span class="ident">AlarmTrap</span>(<span class="ident">AlarmTrap</span>),
+    <span class="ident">ControlAck</span>(<span class="ident">ControlAck</span>),
 }
 
 <span class="doccomment">/// Extension of Nom&#39;s `ErrorKind` to be able to represent CRC errors</span>

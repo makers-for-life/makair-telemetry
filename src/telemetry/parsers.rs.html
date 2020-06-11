@@ -753,6 +753,116 @@
 <span id="753">753</span>
 <span id="754">754</span>
 <span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir</span>
 <span class="comment">//</span>
@@ -761,6 +871,7 @@
 
 <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">number</span>::<span class="ident">streaming</span>::{<span class="ident">be_u16</span>, <span class="ident">be_u32</span>, <span class="ident">be_u64</span>, <span class="ident">be_u8</span>};
 <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">IResult</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">structures</span>::<span class="kw-2">*</span>;
 
@@ -794,6 +905,11 @@
             ))
             <span class="op">|</span> <span class="macro">map</span><span class="macro">!</span>(<span class="macro">tag</span><span class="macro">!</span>([<span class="number">68u8</span>]), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> (<span class="ident">Phase</span>::<span class="ident">Exhalation</span>, <span class="ident">SubPhase</span>::<span class="ident">Exhale</span>))
     )
+);
+
+<span class="macro">named</span><span class="macro">!</span>(
+    <span class="ident">control_setting</span><span class="op">&lt;</span><span class="ident">ControlSetting</span><span class="op">&gt;</span>,
+    <span class="macro">map_res</span><span class="macro">!</span>(<span class="ident">be_u8</span>, <span class="op">|</span><span class="ident">num</span><span class="op">|</span> <span class="ident">ControlSetting</span>::<span class="ident">try_from</span>(<span class="ident">num</span>))
 );
 
 <span class="macro">named</span><span class="macro">!</span>(
@@ -954,6 +1070,12 @@
             <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">current_alarm_codes</span>: <span class="ident">u8_array</span>
             <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">sep</span>
             <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">previous_volume</span>: <span class="ident">be_u16</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">sep</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">expiratory_term</span>: <span class="ident">be_u8</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">sep</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">trigger_enabled</span>: <span class="ident">be_u8</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">sep</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">trigger_offset</span>: <span class="ident">be_u8</span>
             <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">end</span>
             <span class="op">&gt;</span><span class="op">&gt;</span> (<span class="ident">TelemetryMessage</span>::<span class="ident">MachineStateSnapshot</span>(<span class="ident">MachineStateSnapshot</span> {
                 <span class="ident">version</span>: <span class="ident">software_version</span>.<span class="ident">to_string</span>(),
@@ -973,6 +1095,9 @@
                 } <span class="kw">else</span> {
                     <span class="prelude-val">Some</span>(<span class="ident">previous_volume</span>)
                 },
+                <span class="ident">expiratory_term</span>,
+                <span class="ident">trigger_enabled</span>: <span class="ident">trigger_enabled</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>,
+                <span class="ident">trigger_offset</span>,
             }))
     )
 );
@@ -1032,6 +1157,36 @@
     )
 );
 
+<span class="macro">named</span><span class="macro">!</span>(
+    <span class="ident">control_ack</span><span class="op">&lt;</span><span class="ident">TelemetryMessage</span><span class="op">&gt;</span>,
+    <span class="macro">do_parse</span><span class="macro">!</span>(
+        <span class="macro">tag</span><span class="macro">!</span>(<span class="string">&quot;A:&quot;</span>)
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="macro">tag</span><span class="macro">!</span>([<span class="number">1u8</span>])
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">software_version_len</span>: <span class="ident">be_u8</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">software_version</span>:
+                <span class="macro">map_res</span><span class="macro">!</span>(<span class="macro">take</span><span class="macro">!</span>(<span class="ident">software_version_len</span>), <span class="op">|</span><span class="ident">bytes</span><span class="op">|</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(
+                    <span class="ident">bytes</span>
+                ))
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">device_id1</span>: <span class="ident">be_u32</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">device_id2</span>: <span class="ident">be_u32</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">device_id3</span>: <span class="ident">be_u32</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">sep</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">systick</span>: <span class="ident">be_u64</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">sep</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">setting</span>: <span class="ident">control_setting</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">sep</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">value</span>: <span class="ident">be_u16</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">end</span>
+            <span class="op">&gt;</span><span class="op">&gt;</span> (<span class="ident">TelemetryMessage</span>::<span class="ident">ControlAck</span>(<span class="ident">ControlAck</span> {
+                <span class="ident">version</span>: <span class="ident">software_version</span>.<span class="ident">to_string</span>(),
+                <span class="ident">device_id</span>: <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}-{}-{}&quot;</span>, <span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>),
+                <span class="ident">systick</span>,
+                <span class="ident">setting</span>,
+                <span class="ident">value</span>,
+            }))
+    )
+);
+
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">message</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">nom</span>::<span class="ident">branch</span>::<span class="ident">alt</span>((
         <span class="ident">boot</span>,
@@ -1039,6 +1194,7 @@
         <span class="ident">data_snapshot</span>,
         <span class="ident">machine_state_snapshot</span>,
         <span class="ident">alarm_trap</span>,
+        <span class="ident">control_ack</span>,
     ))(<span class="ident">input</span>)
     .<span class="ident">map_err</span>(<span class="ident">nom</span>::<span class="prelude-val">Err</span>::<span class="ident">convert</span>)
 }
@@ -1096,6 +1252,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="ident">proptest</span>::<span class="ident">bool</span>;
     <span class="kw">use</span> <span class="ident">proptest</span>::<span class="ident">collection</span>;
     <span class="kw">use</span> <span class="ident">proptest</span>::<span class="ident">option</span>;
     <span class="kw">use</span> <span class="ident">proptest</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
@@ -1143,6 +1300,16 @@
             <span class="ident">Just</span>(<span class="ident">AlarmPriority</span>::<span class="ident">Low</span>),
             <span class="ident">Just</span>(<span class="ident">AlarmPriority</span>::<span class="ident">Medium</span>),
             <span class="ident">Just</span>(<span class="ident">AlarmPriority</span>::<span class="ident">High</span>),
+        ]
+    }
+
+    <span class="kw">fn</span> <span class="ident">control_setting_strategy</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">Value</span> <span class="op">=</span> <span class="ident">ControlSetting</span><span class="op">&gt;</span> {
+        <span class="macro">prop_oneof</span><span class="macro">!</span>[
+            <span class="ident">Just</span>(<span class="ident">ControlSetting</span>::<span class="ident">PeakPressure</span>),
+            <span class="ident">Just</span>(<span class="ident">ControlSetting</span>::<span class="ident">PlateauPressure</span>),
+            <span class="ident">Just</span>(<span class="ident">ControlSetting</span>::<span class="ident">PEEP</span>),
+            <span class="ident">Just</span>(<span class="ident">ControlSetting</span>::<span class="ident">CyclesPerMinute</span>),
+            <span class="ident">Just</span>(<span class="ident">ControlSetting</span>::<span class="ident">ExpiratoryTerm</span>),
         ]
     }
 
@@ -1379,6 +1546,9 @@
             <span class="ident">previous_peep_pressure</span> <span class="kw">in</span> (<span class="number">0u16</span>..),
             <span class="ident">current_alarm_codes</span> <span class="kw">in</span> <span class="ident">collection</span>::<span class="ident">vec</span>(<span class="number">0u8</span>.., <span class="number">0</span>..<span class="number">100</span>),
             <span class="ident">previous_volume</span> <span class="kw">in</span> <span class="ident">option</span>::<span class="ident">of</span>(<span class="number">0u16</span>..<span class="number">0xFFFE</span>),
+            <span class="ident">expiratory_term</span> <span class="kw">in</span> (<span class="number">0u8</span>..),
+            <span class="ident">trigger_enabled</span> <span class="kw">in</span> <span class="ident">bool</span>::<span class="ident">ANY</span>,
+            <span class="ident">trigger_offset</span> <span class="kw">in</span> (<span class="number">0u8</span>..),
         ) {
             <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">MachineStateSnapshot</span> {
                 <span class="ident">version</span>,
@@ -1394,6 +1564,9 @@
                 <span class="ident">previous_peep_pressure</span>,
                 <span class="ident">current_alarm_codes</span>,
                 <span class="ident">previous_volume</span>,
+                <span class="ident">expiratory_term</span>,
+                <span class="ident">trigger_enabled</span>,
+                <span class="ident">trigger_offset</span>
             };
 
             <span class="comment">// This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp</span>
@@ -1427,6 +1600,12 @@
                 <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">current_alarm_codes</span>,
                 <span class="string">b&quot;\t&quot;</span>,
                 <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">previous_volume</span>.<span class="ident">unwrap_or</span>(<span class="number">0xFFFF</span>).<span class="ident">to_be_bytes</span>(),
+                <span class="string">b&quot;\t&quot;</span>,
+                <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">expiratory_term</span>.<span class="ident">to_be_bytes</span>(),
+                <span class="string">b&quot;\t&quot;</span>,
+                <span class="kw">if</span> <span class="ident">msg</span>.<span class="ident">trigger_enabled</span> { <span class="string">b&quot;\x01&quot;</span> } <span class="kw">else</span> { <span class="string">b&quot;\x00&quot;</span> },
+                <span class="string">b&quot;\t&quot;</span>,
+                <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">trigger_offset</span>.<span class="ident">to_be_bytes</span>(),
                 <span class="string">b&quot;\n&quot;</span>,
             ]);
 
@@ -1506,6 +1685,47 @@
 
             <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TelemetryMessage</span>::<span class="ident">AlarmTrap</span>(<span class="ident">msg</span>);
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">nom</span>::<span class="ident">dbg_dmp</span>(<span class="ident">alarm_trap</span>, <span class="string">&quot;alarm_trap&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
+        }
+    }
+
+    <span class="macro">proptest</span><span class="macro">!</span> {
+        <span class="attribute">#[<span class="ident">test</span>]</span>
+        <span class="kw">fn</span> <span class="ident">test_control_ack_message_parser</span>(
+            <span class="ident">version</span> <span class="kw">in</span> <span class="string">&quot;.*&quot;</span>,
+            <span class="ident">device_id1</span> <span class="kw">in</span> (<span class="number">0u32</span>..),
+            <span class="ident">device_id2</span> <span class="kw">in</span> (<span class="number">0u32</span>..),
+            <span class="ident">device_id3</span> <span class="kw">in</span> (<span class="number">0u32</span>..),
+            <span class="ident">systick</span> <span class="kw">in</span> (<span class="number">0u64</span>..),
+            <span class="ident">setting</span> <span class="kw">in</span> <span class="ident">control_setting_strategy</span>(),
+            <span class="ident">value</span> <span class="kw">in</span> (<span class="number">0u16</span>..),
+        ) {
+            <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">ControlAck</span> {
+                <span class="ident">version</span>,
+                <span class="ident">device_id</span>: <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}-{}-{}&quot;</span>, <span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>),
+                <span class="ident">systick</span>,
+                <span class="ident">setting</span>,
+                <span class="ident">value</span>,
+            };
+
+            <span class="comment">// This needs to be consistent with sendAlarmTrap() defined in src/software/firmware/srcs/telemetry.cpp</span>
+            <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
+                <span class="string">b&quot;A:\x01&quot;</span>,
+                <span class="kw-2">&amp;</span>[<span class="ident">msg</span>.<span class="ident">version</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u8</span>],
+                <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">version</span>.<span class="ident">as_bytes</span>(),
+                <span class="kw-2">&amp;</span><span class="ident">device_id1</span>.<span class="ident">to_be_bytes</span>(),
+                <span class="kw-2">&amp;</span><span class="ident">device_id2</span>.<span class="ident">to_be_bytes</span>(),
+                <span class="kw-2">&amp;</span><span class="ident">device_id3</span>.<span class="ident">to_be_bytes</span>(),
+                <span class="string">b&quot;\t&quot;</span>,
+                <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">systick</span>.<span class="ident">to_be_bytes</span>(),
+                <span class="string">b&quot;\t&quot;</span>,
+                <span class="kw-2">&amp;</span>(<span class="ident">msg</span>.<span class="ident">setting</span> <span class="kw">as</span> <span class="ident">u8</span>).<span class="ident">to_be_bytes</span>(),
+                <span class="string">b&quot;\t&quot;</span>,
+                <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">value</span>.<span class="ident">to_be_bytes</span>(),
+                <span class="string">b&quot;\n&quot;</span>,
+            ]);
+
+            <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TelemetryMessage</span>::<span class="ident">ControlAck</span>(<span class="ident">msg</span>);
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">nom</span>::<span class="ident">dbg_dmp</span>(<span class="ident">control_ack</span>, <span class="string">&quot;control_ack&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
         }
     }
 }

@@ -7,6 +7,8 @@ use std::cmp::{Ord, Ordering, PartialOrd};
 use std::convert::TryFrom;
 use std::io;
 
+pub use crate::control::ControlSetting;
+
 /// Variants of the MakAir firmware
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Mode {
@@ -156,6 +158,12 @@ pub struct MachineStateSnapshot {
     pub current_alarm_codes: Vec<u8>,
     /// Measured previous_volume in mL (sensor might not be enabled)
     pub previous_volume: Option<u16>,
+    /// Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
+    pub expiratory_term: u8,
+    /// State of the trigger
+    pub trigger_enabled: bool,
+    /// Trigger offset in mmH2O
+    pub trigger_offset: u8,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped
@@ -191,6 +199,21 @@ pub struct AlarmTrap {
     pub cycles_since_trigger: u32,
 }
 
+/// An ACK message that is sent every time a setting is changed using the control protocol
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ControlAck {
+    /// Version of the MCU firmware
+    pub version: String,
+    /// Internal ID of the MCU
+    pub device_id: String,
+    /// Number of microseconds since the MCU booted
+    pub systick: u64,
+    /// Setting that was changed
+    pub setting: ControlSetting,
+    /// New value
+    pub value: u16,
+}
+
 /// Supported telemetry messages
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TelemetryMessage {
@@ -199,6 +222,7 @@ pub enum TelemetryMessage {
     DataSnapshot(DataSnapshot),
     MachineStateSnapshot(MachineStateSnapshot),
     AlarmTrap(AlarmTrap),
+    ControlAck(ControlAck),
 }
 
 /// Extension of Nom's `ErrorKind` to be able to represent CRC errors

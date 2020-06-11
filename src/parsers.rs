@@ -5,6 +5,7 @@
 
 use nom::number::streaming::{be_u16, be_u32, be_u64, be_u8};
 use nom::IResult;
+use std::convert::TryFrom;
 
 use crate::structures::*;
 
@@ -38,6 +39,11 @@ named!(
             ))
             | map!(tag!([68u8]), |_| (Phase::Exhalation, SubPhase::Exhale))
     )
+);
+
+named!(
+    control_setting<ControlSetting>,
+    map_res!(be_u8, |num| ControlSetting::try_from(num))
 );
 
 named!(
@@ -198,6 +204,12 @@ named!(
             >> current_alarm_codes: u8_array
             >> sep
             >> previous_volume: be_u16
+            >> sep
+            >> expiratory_term: be_u8
+            >> sep
+            >> trigger_enabled: be_u8
+            >> sep
+            >> trigger_offset: be_u8
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 version: software_version.to_string(),
@@ -217,6 +229,9 @@ named!(
                 } else {
                     Some(previous_volume)
                 },
+                expiratory_term,
+                trigger_enabled: trigger_enabled != 0,
+                trigger_offset,
             }))
     )
 );
@@ -276,6 +291,36 @@ named!(
     )
 );
 
+named!(
+    control_ack<TelemetryMessage>,
+    do_parse!(
+        tag!("A:")
+            >> tag!([1u8])
+            >> software_version_len: be_u8
+            >> software_version:
+                map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
+                    bytes
+                ))
+            >> device_id1: be_u32
+            >> device_id2: be_u32
+            >> device_id3: be_u32
+            >> sep
+            >> systick: be_u64
+            >> sep
+            >> setting: control_setting
+            >> sep
+            >> value: be_u16
+            >> end
+            >> (TelemetryMessage::ControlAck(ControlAck {
+                version: software_version.to_string(),
+                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                systick,
+                setting,
+                value,
+            }))
+    )
+);
+
 pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
     nom::branch::alt((
         boot,
@@ -283,6 +328,7 @@ pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<
         data_snapshot,
         machine_state_snapshot,
         alarm_trap,
+        control_ack,
     ))(input)
     .map_err(nom::Err::convert)
 }
@@ -340,6 +386,7 @@ pub fn parse_telemetry_message(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use proptest::bool;
     use proptest::collection;
     use proptest::option;
     use proptest::prelude::*;
@@ -387,6 +434,16 @@ mod tests {
             Just(AlarmPriority::Low),
             Just(AlarmPriority::Medium),
             Just(AlarmPriority::High),
+        ]
+    }
+
+    fn control_setting_strategy() -> impl Strategy<Value = ControlSetting> {
+        prop_oneof![
+            Just(ControlSetting::PeakPressure),
+            Just(ControlSetting::PlateauPressure),
+            Just(ControlSetting::PEEP),
+            Just(ControlSetting::CyclesPerMinute),
+            Just(ControlSetting::ExpiratoryTerm),
         ]
     }
 
@@ -623,6 +680,9 @@ mod tests {
             previous_peep_pressure in (0u16..),
             current_alarm_codes in collection::vec(0u8.., 0..100),
             previous_volume in option::of(0u16..0xFFFE),
+            expiratory_term in (0u8..),
+            trigger_enabled in bool::ANY,
+            trigger_offset in (0u8..),
         ) {
             let msg = MachineStateSnapshot {
                 version,
@@ -638,6 +698,9 @@ mod tests {
                 previous_peep_pressure,
                 current_alarm_codes,
                 previous_volume,
+                expiratory_term,
+                trigger_enabled,
+                trigger_offset
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -671,6 +734,12 @@ mod tests {
                 &msg.current_alarm_codes,
                 b"\t",
                 &msg.previous_volume.unwrap_or(0xFFFF).to_be_bytes(),
+                b"\t",
+                &msg.expiratory_term.to_be_bytes(),
+                b"\t",
+                if msg.trigger_enabled { b"\x01" } else { b"\x00" },
+                b"\t",
+                &msg.trigger_offset.to_be_bytes(),
                 b"\n",
             ]);
 
@@ -750,6 +819,47 @@ mod tests {
 
             let expected = TelemetryMessage::AlarmTrap(msg);
             assert_eq!(nom::dbg_dmp(alarm_trap, "alarm_trap")(input), Ok((&[][..], expected)));
+        }
+    }
+
+    proptest! {
+        #[test]
+        fn test_control_ack_message_parser(
+            version in ".*",
+            device_id1 in (0u32..),
+            device_id2 in (0u32..),
+            device_id3 in (0u32..),
+            systick in (0u64..),
+            setting in control_setting_strategy(),
+            value in (0u16..),
+        ) {
+            let msg = ControlAck {
+                version,
+                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                systick,
+                setting,
+                value,
+            };
+
+            // This needs to be consistent with sendAlarmTrap() defined in src/software/firmware/srcs/telemetry.cpp
+            let input = &flat(&[
+                b"A:\x01",
+                &[msg.version.len() as u8],
+                &msg.version.as_bytes(),
+                &device_id1.to_be_bytes(),
+                &device_id2.to_be_bytes(),
+                &device_id3.to_be_bytes(),
+                b"\t",
+                &msg.systick.to_be_bytes(),
+                b"\t",
+                &(msg.setting as u8).to_be_bytes(),
+                b"\t",
+                &msg.value.to_be_bytes(),
+                b"\n",
+            ]);
+
+            let expected = TelemetryMessage::ControlAck(msg);
+            assert_eq!(nom::dbg_dmp(control_ack, "control_ack")(input), Ok((&[][..], expected)));
         }
     }
 }

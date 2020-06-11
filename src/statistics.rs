@@ -104,6 +104,9 @@ mod tests {
                 previous_peep_pressure: 0,
                 current_alarm_codes: vec![],
                 previous_volume: None,
+                expiratory_term: 0,
+                trigger_enabled: false,
+                trigger_offset: 0,
             },
         )];
 
@@ -181,6 +184,9 @@ mod tests {
                 previous_peep_pressure: 0,
                 current_alarm_codes: vec![],
                 previous_volume: None,
+                expiratory_term: 0,
+                trigger_enabled: false,
+                trigger_offset: 0,
             },
         ));
 

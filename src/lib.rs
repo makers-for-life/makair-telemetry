@@ -95,6 +95,7 @@ pub fn gather_telemetry(
                                                     "[tx channel] failed flushing buffer to file",
                                                 );
                                                 file_buffer.write_all(b"\n").expect("[tx channel] failed ending buffer flush to file");
+                                                file_buffer.flush().expect("[tx channel] failed flushing buffer flush to file");
                                             }
 
                                             tx.send(Ok(message))

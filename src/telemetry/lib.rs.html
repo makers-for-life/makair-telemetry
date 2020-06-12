@@ -283,6 +283,7 @@
 <span id="283">283</span>
 <span id="284">284</span>
 <span id="285">285</span>
+<span id="286">286</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir</span>
 <span class="comment">//</span>
@@ -381,6 +382,7 @@
                                                     <span class="string">&quot;[tx channel] failed flushing buffer to file&quot;</span>,
                                                 );
                                                 <span class="ident">file_buffer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\n&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;[tx channel] failed ending buffer flush to file&quot;</span>);
+                                                <span class="ident">file_buffer</span>.<span class="ident">flush</span>().<span class="ident">expect</span>(<span class="string">&quot;[tx channel] failed flushing buffer flush to file&quot;</span>);
                                             }
 
                                             <span class="ident">tx</span>.<span class="ident">send</span>(<span class="prelude-val">Ok</span>(<span class="ident">message</span>))

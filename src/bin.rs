@@ -4,8 +4,6 @@
 // License: Public Domain License
 
 #[macro_use]
-extern crate clap;
-#[macro_use]
 extern crate log;
 
 mod statistics;
@@ -24,7 +22,7 @@ use structures::*;
 use telemetry::*;
 
 #[derive(Clap)]
-#[clap(version = crate_version!(), author = crate_authors!())]
+#[clap(author, about, version)]
 struct Opts {
     #[clap(subcommand)]
     mode: Mode,
@@ -33,70 +31,70 @@ struct Opts {
 #[derive(Clap)]
 enum Mode {
     /// Reads telemetry from a serial port, parses it and streams result to stdout
-    #[clap(version = crate_version!(), author = crate_authors!())]
+    #[clap(author, about, version)]
     Debug(Debug),
 
     /// Reads telemetry from a serial port and save bytes to a file
-    #[clap(version = crate_version!(), author = crate_authors!())]
+    #[clap(author, about, version)]
     Record(Record),
 
     /// Reads telemetry from a recorded file, parses it and streams result to stdout
-    #[clap(version = crate_version!(), author = crate_authors!())]
+    #[clap(author, about, version)]
     Play(Play),
 
     /// Reads telemetry from a recorded file, parses it and compute some statistics
-    #[clap(version = crate_version!(), author = crate_authors!())]
+    #[clap(author, about, version)]
     Stats(Stats),
 
     /// Send one specific control message to a serial port, then run debug mode
-    #[clap(version = crate_version!(), author = crate_authors!())]
+    #[clap(author, about, version)]
     Control(Control),
 
     /// Send a lot of control messages and/or bytes to a serial port
-    #[clap(version = crate_version!(), author = crate_authors!())]
+    #[clap(author, about, version)]
     Storm(Storm),
 }
 
 #[derive(Clap)]
 struct Debug {
     /// Address of the port to use
-    #[clap(short = "p")]
+    #[clap(short = 'p')]
     port: String,
 
     /// Randomly send control messages at a normal pace
-    #[clap(short = "c", long = "random-control-messages")]
+    #[clap(short = 'c', long = "random-control-messages")]
     random_control_messages: bool,
 }
 
 #[derive(Clap)]
 struct Record {
     /// Address of the port to use
-    #[clap(short = "p")]
+    #[clap(short = 'p')]
     port: String,
 
     /// Path of the file to write to
-    #[clap(short = "o")]
+    #[clap(short = 'o')]
     output: String,
 }
 
 #[derive(Clap)]
 struct Play {
     /// Path of the recorded file
-    #[clap(short = "i")]
+    #[clap(short = 'i')]
     input: String,
 }
 
 #[derive(Clap)]
 struct Stats {
     /// Path of the recorded file
-    #[clap(short = "i")]
+    #[clap(short = 'i')]
     input: String,
 }
 
 #[derive(Clap)]
 struct Control {
     /// Address of the port to use
-    #[clap(short = "p")]
+    #[clap(short = 'p')]
     port: String,
 
     /// Setting internal number
@@ -111,23 +109,23 @@ struct Control {
 #[derive(Clap)]
 struct Storm {
     /// Address of the port to use
-    #[clap(short = "p")]
+    #[clap(short = 'p')]
     port: String,
 
     /// [generator] Send valid control messages
-    #[clap(short = "v", long = "valid")]
+    #[clap(short = 'v', long = "valid")]
     valid: bool,
 
     /// [generator] Send random bytes
-    #[clap(short = "b", long = "bytes")]
+    #[clap(short = 'b', long = "bytes")]
     bytes: bool,
 
     /// [generator] Send control messages with wrong CRC
-    #[clap(short = "c", long = "wrong-crc")]
+    #[clap(short = 'c', long = "wrong-crc")]
     wrong_crc: bool,
 
     /// Send data as fast as possible (MCU might not be able to read it, but it should not crash)
-    #[clap(short = "f", long = "full-blast")]
+    #[clap(short = 'f', long = "full-blast")]
     full_blast: bool,
 }
 

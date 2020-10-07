@@ -282,7 +282,7 @@ named!(
                 subphase: phase_and_subphase.1,
                 cycle,
                 alarm_code,
-                alarm_priority: alarm_priority,
+                alarm_priority,
                 triggered,
                 expected,
                 measured,

@@ -82,6 +82,10 @@ struct Play {
     /// Path of the recorded file
     #[clap(short = 'i')]
     input: String,
+
+    /// Parse and output data as fast as possible
+    #[clap(long = "full-blast")]
+    full_blast: bool,
 }
 
 #[derive(Clap)]
@@ -210,9 +214,10 @@ fn play(cfg: Play) {
     let file = File::open(cfg.input).expect("failed to play recorded file");
     let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
         std::sync::mpsc::channel();
+    let enable_time_simulation = !cfg.full_blast;
     std::thread::spawn(move || {
         info!("start playing telemetry messages");
-        gather_telemetry_from_file(file, tx, true);
+        gather_telemetry_from_file(file, tx, enable_time_simulation);
     });
 
     loop {

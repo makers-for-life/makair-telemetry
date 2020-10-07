@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/lexical-core-0.6.7/src/util/format.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>format.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../lexical_core/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/lexical-core-0.7.4/src/util/format.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>format.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../lexical_core/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -2760,148 +2760,6 @@
 <span id="2760">2760</span>
 <span id="2761">2761</span>
 <span id="2762">2762</span>
-<span id="2763">2763</span>
-<span id="2764">2764</span>
-<span id="2765">2765</span>
-<span id="2766">2766</span>
-<span id="2767">2767</span>
-<span id="2768">2768</span>
-<span id="2769">2769</span>
-<span id="2770">2770</span>
-<span id="2771">2771</span>
-<span id="2772">2772</span>
-<span id="2773">2773</span>
-<span id="2774">2774</span>
-<span id="2775">2775</span>
-<span id="2776">2776</span>
-<span id="2777">2777</span>
-<span id="2778">2778</span>
-<span id="2779">2779</span>
-<span id="2780">2780</span>
-<span id="2781">2781</span>
-<span id="2782">2782</span>
-<span id="2783">2783</span>
-<span id="2784">2784</span>
-<span id="2785">2785</span>
-<span id="2786">2786</span>
-<span id="2787">2787</span>
-<span id="2788">2788</span>
-<span id="2789">2789</span>
-<span id="2790">2790</span>
-<span id="2791">2791</span>
-<span id="2792">2792</span>
-<span id="2793">2793</span>
-<span id="2794">2794</span>
-<span id="2795">2795</span>
-<span id="2796">2796</span>
-<span id="2797">2797</span>
-<span id="2798">2798</span>
-<span id="2799">2799</span>
-<span id="2800">2800</span>
-<span id="2801">2801</span>
-<span id="2802">2802</span>
-<span id="2803">2803</span>
-<span id="2804">2804</span>
-<span id="2805">2805</span>
-<span id="2806">2806</span>
-<span id="2807">2807</span>
-<span id="2808">2808</span>
-<span id="2809">2809</span>
-<span id="2810">2810</span>
-<span id="2811">2811</span>
-<span id="2812">2812</span>
-<span id="2813">2813</span>
-<span id="2814">2814</span>
-<span id="2815">2815</span>
-<span id="2816">2816</span>
-<span id="2817">2817</span>
-<span id="2818">2818</span>
-<span id="2819">2819</span>
-<span id="2820">2820</span>
-<span id="2821">2821</span>
-<span id="2822">2822</span>
-<span id="2823">2823</span>
-<span id="2824">2824</span>
-<span id="2825">2825</span>
-<span id="2826">2826</span>
-<span id="2827">2827</span>
-<span id="2828">2828</span>
-<span id="2829">2829</span>
-<span id="2830">2830</span>
-<span id="2831">2831</span>
-<span id="2832">2832</span>
-<span id="2833">2833</span>
-<span id="2834">2834</span>
-<span id="2835">2835</span>
-<span id="2836">2836</span>
-<span id="2837">2837</span>
-<span id="2838">2838</span>
-<span id="2839">2839</span>
-<span id="2840">2840</span>
-<span id="2841">2841</span>
-<span id="2842">2842</span>
-<span id="2843">2843</span>
-<span id="2844">2844</span>
-<span id="2845">2845</span>
-<span id="2846">2846</span>
-<span id="2847">2847</span>
-<span id="2848">2848</span>
-<span id="2849">2849</span>
-<span id="2850">2850</span>
-<span id="2851">2851</span>
-<span id="2852">2852</span>
-<span id="2853">2853</span>
-<span id="2854">2854</span>
-<span id="2855">2855</span>
-<span id="2856">2856</span>
-<span id="2857">2857</span>
-<span id="2858">2858</span>
-<span id="2859">2859</span>
-<span id="2860">2860</span>
-<span id="2861">2861</span>
-<span id="2862">2862</span>
-<span id="2863">2863</span>
-<span id="2864">2864</span>
-<span id="2865">2865</span>
-<span id="2866">2866</span>
-<span id="2867">2867</span>
-<span id="2868">2868</span>
-<span id="2869">2869</span>
-<span id="2870">2870</span>
-<span id="2871">2871</span>
-<span id="2872">2872</span>
-<span id="2873">2873</span>
-<span id="2874">2874</span>
-<span id="2875">2875</span>
-<span id="2876">2876</span>
-<span id="2877">2877</span>
-<span id="2878">2878</span>
-<span id="2879">2879</span>
-<span id="2880">2880</span>
-<span id="2881">2881</span>
-<span id="2882">2882</span>
-<span id="2883">2883</span>
-<span id="2884">2884</span>
-<span id="2885">2885</span>
-<span id="2886">2886</span>
-<span id="2887">2887</span>
-<span id="2888">2888</span>
-<span id="2889">2889</span>
-<span id="2890">2890</span>
-<span id="2891">2891</span>
-<span id="2892">2892</span>
-<span id="2893">2893</span>
-<span id="2894">2894</span>
-<span id="2895">2895</span>
-<span id="2896">2896</span>
-<span id="2897">2897</span>
-<span id="2898">2898</span>
-<span id="2899">2899</span>
-<span id="2900">2900</span>
-<span id="2901">2901</span>
-<span id="2902">2902</span>
-<span id="2903">2903</span>
-<span id="2904">2904</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Number format enumerations and bit masks.</span>
 
@@ -3618,10 +3476,9 @@
     <span class="doccomment">/// Determine if the digit separator is valid.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;radix&quot;</span>))]</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unknown_lints</span>, <span class="ident">ellipsis_inclusive_range_patterns</span>)]</span>
     <span class="kw">fn</span> <span class="ident">is_valid_separator</span>(<span class="ident">ch</span>: <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">match</span> <span class="ident">ch</span> {
-            <span class="string">b&#39;0&#39;</span> ... <span class="string">b&#39;9&#39;</span>       <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+            <span class="string">b&#39;0&#39;</span> ..<span class="op">=</span> <span class="string">b&#39;9&#39;</span>       <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
             <span class="string">b&#39;+&#39;</span> <span class="op">|</span> <span class="string">b&#39;.&#39;</span> <span class="op">|</span> <span class="string">b&#39;-&#39;</span>  <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
             <span class="kw">_</span>                   <span class="op">=</span><span class="op">&gt;</span> (
                 <span class="ident">is_ascii</span>(<span class="ident">ch</span>)
@@ -3633,12 +3490,11 @@
     <span class="doccomment">/// Determine if the digit separator is valid.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;radix&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unknown_lints</span>, <span class="ident">ellipsis_inclusive_range_patterns</span>)]</span>
     <span class="kw">fn</span> <span class="ident">is_valid_separator</span>(<span class="ident">ch</span>: <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">match</span> <span class="ident">ch</span> {
-            <span class="string">b&#39;A&#39;</span> ... <span class="string">b&#39;Z&#39;</span>       <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
-            <span class="string">b&#39;a&#39;</span> ... <span class="string">b&#39;z&#39;</span>       <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
-            <span class="string">b&#39;0&#39;</span> ... <span class="string">b&#39;9&#39;</span>       <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+            <span class="string">b&#39;A&#39;</span> ..<span class="op">=</span> <span class="string">b&#39;Z&#39;</span>       <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+            <span class="string">b&#39;a&#39;</span> ..<span class="op">=</span> <span class="string">b&#39;z&#39;</span>       <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+            <span class="string">b&#39;0&#39;</span> ..<span class="op">=</span> <span class="string">b&#39;9&#39;</span>       <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
             <span class="string">b&#39;+&#39;</span> <span class="op">|</span> <span class="string">b&#39;.&#39;</span> <span class="op">|</span> <span class="string">b&#39;-&#39;</span>  <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
             <span class="kw">_</span>                   <span class="op">=</span><span class="op">&gt;</span> (
                 <span class="ident">is_ascii</span>(<span class="ident">ch</span>)
@@ -3649,15 +3505,14 @@
     }
 
     <span class="doccomment">/// Convert digit separator to flags.</span>
-    <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">digit_separator_to_flags</span> {
-        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">ch</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
-            (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">ch</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">56</span>
-        };
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">digit_separator_to_flags</span>(<span class="ident">ch</span>: <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+        (<span class="ident">ch</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">56</span>
     }
 
     <span class="doccomment">/// Extract digit separator from flags.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">digit_separator_from_flags</span>(<span class="ident">flag</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span> {
+    <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">digit_separator_from_flags</span>(<span class="ident">flag</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span> {
         (<span class="ident">flag</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">56</span>) <span class="kw">as</span> <span class="ident">u8</span>
     }
 
@@ -4112,7 +3967,7 @@
             <span class="comment">// RUST LITERAL [4569ABFGHIJKMN-_]</span>
             <span class="doccomment">/// Float format for a Rust literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">RUST_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_POSITIVE_MANTISSA_SIGN</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_SPECIAL</span>.<span class="ident">bits</span>
@@ -4170,7 +4025,7 @@
             <span class="comment">// C++17 LITERAL [01345689ABMN-&#39;]</span>
             <span class="doccomment">/// Float format for a C++17 literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">CXX17_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;\&#39;&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;\&#39;&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">CASE_SENSITIVE_SPECIAL</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
@@ -4182,7 +4037,7 @@
             <span class="comment">// C++14 LITERAL [01345689ABMN-&#39;]</span>
             <span class="doccomment">/// Float format for a C++14 literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">CXX14_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;\&#39;&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;\&#39;&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">CASE_SENSITIVE_SPECIAL</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
@@ -4289,7 +4144,7 @@
             <span class="comment">// RUBY LITERAL [345689AM-_]</span>
             <span class="doccomment">/// Float format for a Ruby literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">RUBY_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_SPECIAL</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_FLOAT_LEADING_ZEROS</span>.<span class="ident">bits</span>
@@ -4300,7 +4155,7 @@
             <span class="doccomment">/// Float format to parse a Ruby float from string.</span>
             <span class="comment">// Note: Amazingly, Ruby 1.8+ do not allow parsing special values.</span>
             <span class="kw">const</span> <span class="ident">RUBY_STRING</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_SPECIAL</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
             );
@@ -4308,7 +4163,7 @@
             <span class="comment">// SWIFT LITERAL [34569ABFGHIJKMN-_]</span>
             <span class="doccomment">/// Float format for a Swift literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">SWIFT_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_SPECIAL</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
@@ -4362,7 +4217,7 @@
             <span class="comment">// PERL LITERAL [0134569ABDEFGHIJKMN-_]</span>
             <span class="doccomment">/// Float format for a Perl literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">PERL_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_SPECIAL</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
@@ -4390,7 +4245,7 @@
             <span class="comment">// JAVA LITERAL [0134569ABIJKMN-_]</span>
             <span class="doccomment">/// Float format for a Java literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">JAVA_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_SPECIAL</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
@@ -4418,7 +4273,7 @@
             <span class="comment">// KOTLIN LITERAL [0134569ABIJKN-_]</span>
             <span class="doccomment">/// Float format for a Kotlin literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">KOTLIN_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_SPECIAL</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_INTEGER_LEADING_ZEROS</span>.<span class="ident">bits</span>
@@ -4436,7 +4291,7 @@
             <span class="comment">// JULIA LITERAL [01345689AMN-_]</span>
             <span class="doccomment">/// Float format for a Julia literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">JULIA_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">CASE_SENSITIVE_SPECIAL</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTEGER_INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
@@ -4456,7 +4311,7 @@
             <span class="comment">// CSHARP7 LITERAL [034569ABIJKMN-_]</span>
             <span class="doccomment">/// Float format for a C#7 literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">CSHARP7_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_FRACTION_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_SPECIAL</span>.<span class="ident">bits</span>
@@ -4670,7 +4525,7 @@
             <span class="comment">// ELIXIR LITERAL [3459ABMN-_]</span>
             <span class="doccomment">/// Float format for an Elixir literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">ELIXIR_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_EXPONENT_WITHOUT_FRACTION</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_SPECIAL</span>.<span class="ident">bits</span>
@@ -4699,7 +4554,7 @@
             <span class="comment">// D LITERAL [0134569ABFGHIJKN-_]</span>
             <span class="doccomment">/// Float format for a D literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">D_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_SPECIAL</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_INTEGER_LEADING_ZEROS</span>.<span class="ident">bits</span>
@@ -4711,7 +4566,7 @@
             <span class="comment">// D STRING [01345679AFGMN-_]</span>
             <span class="doccomment">/// Float format to parse a D float from string.</span>
             <span class="kw">const</span> <span class="ident">D_STRING</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTEGER_INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">FRACTION_INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
@@ -4751,7 +4606,7 @@
             <span class="comment">// FSHARP LITERAL [13456789ABIJKMN-_]</span>
             <span class="doccomment">/// Float format for a F# literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">FSHARP_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_INTEGER_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">CASE_SENSITIVE_SPECIAL</span>.<span class="ident">bits</span>
@@ -4762,7 +4617,7 @@
             <span class="comment">// FSHARP STRING [013456789ABCDEFGHIJKLMN-_]</span>
             <span class="doccomment">/// Float format to parse a F# float from string.</span>
             <span class="kw">const</span> <span class="ident">FSHARP_STRING</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">CASE_SENSITIVE_SPECIAL</span>.<span class="ident">bits</span>
@@ -4791,7 +4646,7 @@
             <span class="comment">// OCAML LITERAL [1456789ABDFGHIJKMN-_]</span>
             <span class="doccomment">/// Float format for an OCaml literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">OCAML_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_INTEGER_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">NO_POSITIVE_MANTISSA_SIGN</span>.<span class="ident">bits</span>
@@ -4805,7 +4660,7 @@
             <span class="comment">// OCAML STRING [01345679ABCDEFGHIJKLMN-_]</span>
             <span class="doccomment">/// Float format to parse an OCaml float from string.</span>
             <span class="kw">const</span> <span class="ident">OCAML_STRING</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">LEADING_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
@@ -4831,7 +4686,7 @@
             <span class="comment">// REASONML LITERAL [13456789ABDFGHIJKMN-_]</span>
             <span class="doccomment">/// Float format for a ReasonML literal floating-point number.</span>
             <span class="kw">const</span> <span class="ident">REASONML_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_INTEGER_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">CASE_SENSITIVE_SPECIAL</span>.<span class="ident">bits</span>
@@ -4844,7 +4699,7 @@
             <span class="comment">// REASONML STRING [01345679ABCDEFGHIJKLMN-_]</span>
             <span class="doccomment">/// Float format to parse a ReasonML float from string.</span>
             <span class="kw">const</span> <span class="ident">REASONML_STRING</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">LEADING_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
@@ -4857,7 +4712,7 @@
             <span class="doccomment">/// Float format for an Octave literal floating-point number.</span>
             <span class="comment">// Note: Octave accepts both NaN and nan, Inf and inf.</span>
             <span class="kw">const</span> <span class="ident">OCTAVE_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">CASE_SENSITIVE_SPECIAL</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
@@ -4869,7 +4724,7 @@
             <span class="comment">// OCTAVE STRING [01345679ABCDEFGHIJKMN-,]</span>
             <span class="doccomment">/// Float format to parse an Octave float from string.</span>
             <span class="kw">const</span> <span class="ident">OCTAVE_STRING</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;,&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;,&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">LEADING_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
@@ -4881,7 +4736,7 @@
             <span class="doccomment">/// Float format for an Matlab literal floating-point number.</span>
             <span class="comment">// Note: Matlab accepts both NaN and nan, Inf and inf.</span>
             <span class="kw">const</span> <span class="ident">MATLAB_LITERAL</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">CASE_SENSITIVE_SPECIAL</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
@@ -4893,7 +4748,7 @@
             <span class="comment">// MATLAB STRING [01345679ABCDEFGHIJKMN-,]</span>
             <span class="doccomment">/// Float format to parse an Matlab float from string.</span>
             <span class="kw">const</span> <span class="ident">MATLAB_STRING</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;,&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;,&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">LEADING_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
@@ -4924,7 +4779,7 @@
             <span class="comment">// SAGE STRING [01345679ABMN-_]</span>
             <span class="doccomment">/// Float format to parse a Sage float from string.</span>
             <span class="kw">const</span> <span class="ident">SAGE_STRING</span> <span class="op">=</span> (
-                <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="string">b&#39;_&#39;</span>)
+                <span class="ident">digit_separator_to_flags</span>(<span class="string">b&#39;_&#39;</span>)
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">REQUIRED_EXPONENT_DIGITS</span>.<span class="ident">bits</span>
                 <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>
             );
@@ -5011,184 +4866,45 @@
             <span class="doccomment">/// Ignore interface float format flags.</span>
             <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
             <span class="kw">const</span> <span class="ident">IGNORE_INTERFACE</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">IGNORE</span>.<span class="ident">bits</span> <span class="op">&amp;</span> <span class="self">Self</span>::<span class="ident">INTERFACE_FLAG_MASK</span>.<span class="ident">bits</span>;
-
-            <span class="comment">// HIDDEN FLAGS</span>
-
-            <span class="comment">// Early versions of Rustc, such as 1.24.0, do not have const fn.</span>
-            <span class="comment">// We need these flags to be evaluated in a const manner.</span>
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_I</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_L</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_LEADING_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_T</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_TRAILING_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_C</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_CONSECUTIVE_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_IL</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_I</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTEGER_L</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_IT</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_I</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTEGER_T</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_LT</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_L</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTEGER_T</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_ILT</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_IL</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTEGER_T</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_IC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_I</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTEGER_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_LC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_L</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTEGER_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_TC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_T</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTEGER_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_ILC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_IL</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTEGER_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_ITC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_IT</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTEGER_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_LTC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_LT</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTEGER_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">INTEGER_ILTC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">INTEGER_ILT</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">INTEGER_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_I</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_L</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_LEADING_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_T</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_TRAILING_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_C</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_CONSECUTIVE_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_IL</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_I</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">FRACTION_L</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_IT</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_I</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">FRACTION_T</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_LT</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_L</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">FRACTION_T</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_ILT</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_IL</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">FRACTION_T</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_IC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_I</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">FRACTION_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_LC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_L</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">FRACTION_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_TC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_T</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">FRACTION_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_ILC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_IL</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">FRACTION_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_ITC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_IT</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">FRACTION_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_LTC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_LT</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">FRACTION_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">FRACTION_ILTC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">FRACTION_ILT</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">FRACTION_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_I</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_L</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_LEADING_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_T</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_TRAILING_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_C</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_CONSECUTIVE_DIGIT_SEPARATOR</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_IL</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_I</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">EXPONENT_L</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_IT</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_I</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">EXPONENT_T</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_LT</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_L</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">EXPONENT_T</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_ILT</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_IL</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">EXPONENT_T</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_IC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_I</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">EXPONENT_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_LC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_L</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">EXPONENT_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_TC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_T</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">EXPONENT_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_ILC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_IL</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">EXPONENT_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_ITC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_IT</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">EXPONENT_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_LTC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_LT</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">EXPONENT_C</span>.<span class="ident">bits</span>;
-
-            <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">const</span> <span class="ident">EXPONENT_ILTC</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">EXPONENT_ILT</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">EXPONENT_C</span>.<span class="ident">bits</span>;
         }
     }
 
     <span class="comment">// Ensure all our bit flags are valid.</span>
     <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">check_subsequent_flags</span> {
-        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">y</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> (
-            <span class="macro">const_assert</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>; <span class="ident">NumberFormat</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>.<span class="ident">bits</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">1</span> <span class="op">=</span><span class="op">=</span> <span class="ident">NumberFormat</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">y</span>.<span class="ident">bits</span>);
+        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">y</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> (
+            <span class="macro">const_assert</span><span class="macro">!</span>(<span class="ident">NumberFormat</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>.<span class="ident">bits</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">1</span> <span class="op">=</span><span class="op">=</span> <span class="ident">NumberFormat</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">y</span>.<span class="ident">bits</span>);
         );
     }
 
     <span class="comment">// Non-digit separator flags.</span>
-    <span class="macro">const_assert</span><span class="macro">!</span>(<span class="ident">flags0</span>; <span class="ident">NumberFormat</span>::<span class="ident">REQUIRED_INTEGER_DIGITS</span>.<span class="ident">bits</span> <span class="op">=</span><span class="op">=</span> <span class="number">1</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags1</span>; <span class="ident">REQUIRED_INTEGER_DIGITS</span>, <span class="ident">REQUIRED_FRACTION_DIGITS</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags2</span>; <span class="ident">REQUIRED_FRACTION_DIGITS</span>, <span class="ident">REQUIRED_EXPONENT_DIGITS</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags3</span>; <span class="ident">REQUIRED_EXPONENT_DIGITS</span>, <span class="ident">NO_POSITIVE_MANTISSA_SIGN</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags4</span>; <span class="ident">NO_POSITIVE_MANTISSA_SIGN</span>, <span class="ident">REQUIRED_MANTISSA_SIGN</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags5</span>; <span class="ident">REQUIRED_MANTISSA_SIGN</span>, <span class="ident">NO_EXPONENT_NOTATION</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags6</span>; <span class="ident">NO_EXPONENT_NOTATION</span>, <span class="ident">NO_POSITIVE_EXPONENT_SIGN</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags7</span>; <span class="ident">NO_POSITIVE_EXPONENT_SIGN</span>, <span class="ident">REQUIRED_EXPONENT_SIGN</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags8</span>; <span class="ident">REQUIRED_EXPONENT_SIGN</span>, <span class="ident">NO_EXPONENT_WITHOUT_FRACTION</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags9</span>; <span class="ident">NO_EXPONENT_WITHOUT_FRACTION</span>, <span class="ident">NO_SPECIAL</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags10</span>; <span class="ident">NO_SPECIAL</span>, <span class="ident">CASE_SENSITIVE_SPECIAL</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags11</span>; <span class="ident">CASE_SENSITIVE_SPECIAL</span>, <span class="ident">NO_INTEGER_LEADING_ZEROS</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags12</span>; <span class="ident">NO_INTEGER_LEADING_ZEROS</span>, <span class="ident">NO_FLOAT_LEADING_ZEROS</span>);
+    <span class="macro">const_assert</span><span class="macro">!</span>(<span class="ident">NumberFormat</span>::<span class="ident">REQUIRED_INTEGER_DIGITS</span>.<span class="ident">bits</span> <span class="op">=</span><span class="op">=</span> <span class="number">1</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">REQUIRED_INTEGER_DIGITS</span>, <span class="ident">REQUIRED_FRACTION_DIGITS</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">REQUIRED_FRACTION_DIGITS</span>, <span class="ident">REQUIRED_EXPONENT_DIGITS</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">REQUIRED_EXPONENT_DIGITS</span>, <span class="ident">NO_POSITIVE_MANTISSA_SIGN</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">NO_POSITIVE_MANTISSA_SIGN</span>, <span class="ident">REQUIRED_MANTISSA_SIGN</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">REQUIRED_MANTISSA_SIGN</span>, <span class="ident">NO_EXPONENT_NOTATION</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">NO_EXPONENT_NOTATION</span>, <span class="ident">NO_POSITIVE_EXPONENT_SIGN</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">NO_POSITIVE_EXPONENT_SIGN</span>, <span class="ident">REQUIRED_EXPONENT_SIGN</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">REQUIRED_EXPONENT_SIGN</span>, <span class="ident">NO_EXPONENT_WITHOUT_FRACTION</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">NO_EXPONENT_WITHOUT_FRACTION</span>, <span class="ident">NO_SPECIAL</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">NO_SPECIAL</span>, <span class="ident">CASE_SENSITIVE_SPECIAL</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">CASE_SENSITIVE_SPECIAL</span>, <span class="ident">NO_INTEGER_LEADING_ZEROS</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">NO_INTEGER_LEADING_ZEROS</span>, <span class="ident">NO_FLOAT_LEADING_ZEROS</span>);
 
     <span class="comment">// Digit separator flags.</span>
-    <span class="macro">const_assert</span><span class="macro">!</span>(<span class="ident">flags13</span>; <span class="ident">NumberFormat</span>::<span class="ident">INTEGER_INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span> <span class="op">=</span><span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">32</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags14</span>; <span class="ident">INTEGER_INTERNAL_DIGIT_SEPARATOR</span>, <span class="ident">INTEGER_LEADING_DIGIT_SEPARATOR</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags15</span>; <span class="ident">INTEGER_LEADING_DIGIT_SEPARATOR</span>, <span class="ident">INTEGER_TRAILING_DIGIT_SEPARATOR</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags16</span>; <span class="ident">INTEGER_TRAILING_DIGIT_SEPARATOR</span>, <span class="ident">INTEGER_CONSECUTIVE_DIGIT_SEPARATOR</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags17</span>; <span class="ident">INTEGER_CONSECUTIVE_DIGIT_SEPARATOR</span>, <span class="ident">FRACTION_INTERNAL_DIGIT_SEPARATOR</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags18</span>; <span class="ident">FRACTION_INTERNAL_DIGIT_SEPARATOR</span>, <span class="ident">FRACTION_LEADING_DIGIT_SEPARATOR</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags19</span>; <span class="ident">FRACTION_LEADING_DIGIT_SEPARATOR</span>, <span class="ident">FRACTION_TRAILING_DIGIT_SEPARATOR</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags20</span>; <span class="ident">FRACTION_TRAILING_DIGIT_SEPARATOR</span>, <span class="ident">FRACTION_CONSECUTIVE_DIGIT_SEPARATOR</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags21</span>; <span class="ident">FRACTION_CONSECUTIVE_DIGIT_SEPARATOR</span>, <span class="ident">EXPONENT_INTERNAL_DIGIT_SEPARATOR</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags22</span>; <span class="ident">EXPONENT_INTERNAL_DIGIT_SEPARATOR</span>, <span class="ident">EXPONENT_LEADING_DIGIT_SEPARATOR</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags23</span>; <span class="ident">EXPONENT_LEADING_DIGIT_SEPARATOR</span>, <span class="ident">EXPONENT_TRAILING_DIGIT_SEPARATOR</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags24</span>; <span class="ident">EXPONENT_TRAILING_DIGIT_SEPARATOR</span>, <span class="ident">EXPONENT_CONSECUTIVE_DIGIT_SEPARATOR</span>);
-    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">flags25</span>; <span class="ident">EXPONENT_CONSECUTIVE_DIGIT_SEPARATOR</span>, <span class="ident">SPECIAL_DIGIT_SEPARATOR</span>);
+    <span class="macro">const_assert</span><span class="macro">!</span>(<span class="ident">NumberFormat</span>::<span class="ident">INTEGER_INTERNAL_DIGIT_SEPARATOR</span>.<span class="ident">bits</span> <span class="op">=</span><span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">32</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">INTEGER_INTERNAL_DIGIT_SEPARATOR</span>, <span class="ident">INTEGER_LEADING_DIGIT_SEPARATOR</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">INTEGER_LEADING_DIGIT_SEPARATOR</span>, <span class="ident">INTEGER_TRAILING_DIGIT_SEPARATOR</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">INTEGER_TRAILING_DIGIT_SEPARATOR</span>, <span class="ident">INTEGER_CONSECUTIVE_DIGIT_SEPARATOR</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">INTEGER_CONSECUTIVE_DIGIT_SEPARATOR</span>, <span class="ident">FRACTION_INTERNAL_DIGIT_SEPARATOR</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">FRACTION_INTERNAL_DIGIT_SEPARATOR</span>, <span class="ident">FRACTION_LEADING_DIGIT_SEPARATOR</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">FRACTION_LEADING_DIGIT_SEPARATOR</span>, <span class="ident">FRACTION_TRAILING_DIGIT_SEPARATOR</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">FRACTION_TRAILING_DIGIT_SEPARATOR</span>, <span class="ident">FRACTION_CONSECUTIVE_DIGIT_SEPARATOR</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">FRACTION_CONSECUTIVE_DIGIT_SEPARATOR</span>, <span class="ident">EXPONENT_INTERNAL_DIGIT_SEPARATOR</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">EXPONENT_INTERNAL_DIGIT_SEPARATOR</span>, <span class="ident">EXPONENT_LEADING_DIGIT_SEPARATOR</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">EXPONENT_LEADING_DIGIT_SEPARATOR</span>, <span class="ident">EXPONENT_TRAILING_DIGIT_SEPARATOR</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">EXPONENT_TRAILING_DIGIT_SEPARATOR</span>, <span class="ident">EXPONENT_CONSECUTIVE_DIGIT_SEPARATOR</span>);
+    <span class="macro">check_subsequent_flags</span><span class="macro">!</span>(<span class="ident">EXPONENT_CONSECUTIVE_DIGIT_SEPARATOR</span>, <span class="ident">SPECIAL_DIGIT_SEPARATOR</span>);
 
     <span class="doccomment">/// Add flag to flags</span>
     <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">add_flag</span> {
@@ -5307,7 +5023,7 @@
 
             <span class="comment">// Digit separator.</span>
             <span class="kw">if</span> <span class="ident">format</span>.<span class="ident">intersects</span>(<span class="ident">NumberFormat</span>::<span class="ident">DIGIT_SEPARATOR_FLAG_MASK</span>) {
-                <span class="ident">format</span>.<span class="ident">bits</span> <span class="op">|</span><span class="op">=</span> <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="ident">digit_separator</span>);
+                <span class="ident">format</span>.<span class="ident">bits</span> <span class="op">|</span><span class="op">=</span> <span class="ident">digit_separator_to_flags</span>(<span class="ident">digit_separator</span>);
             }
 
             <span class="comment">// Validation.</span>
@@ -5364,7 +5080,7 @@
             }
 
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">format</span> <span class="op">=</span> <span class="ident">NumberFormat</span>::<span class="ident">IGNORE</span>;
-            <span class="ident">format</span>.<span class="ident">bits</span> <span class="op">|</span><span class="op">=</span> <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="ident">digit_separator</span>);
+            <span class="ident">format</span>.<span class="ident">bits</span> <span class="op">|</span><span class="op">=</span> <span class="ident">digit_separator_to_flags</span>(<span class="ident">digit_separator</span>);
 
             <span class="prelude-val">Some</span>(<span class="ident">format</span>)
         }
@@ -5373,7 +5089,7 @@
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
         <span class="attribute">#[<span class="ident">inline</span>]</span>
         <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_separator</span>(<span class="ident">digit_separator</span>: <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumberFormat</span> {
-            <span class="ident">NumberFormat</span> { <span class="ident">bits</span>: <span class="macro">digit_separator_to_flags</span><span class="macro">!</span>(<span class="ident">digit_separator</span>) }
+            <span class="ident">NumberFormat</span> { <span class="ident">bits</span>: <span class="ident">digit_separator_to_flags</span>(<span class="ident">digit_separator</span>) }
         }
 
         <span class="doccomment">/// Get the flag bits from the compiled float format.</span>
@@ -5808,4 +5524,4 @@
     }
 }}   <span class="comment">// cfg_if</span>
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "lexical_core";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "lexical_core";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

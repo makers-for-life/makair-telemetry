@@ -16,7 +16,7 @@ must fit in <code>isize</code>.</li>
 <li>an (unstable) <a href="../../unstable-book/language-features/extern-types.html">extern type</a>, then this function is always safe to
 call, but may panic or otherwise return the wrong value, as the
 extern type's layout is not known. This is the same behavior as
-[<code>align_of_val</code>] on a reference to an extern type tail.</li>
+<a href="../../core/mem/fn.align_of_val.html"><code>align_of_val</code></a> on a reference to a type with an extern type tail.</li>
 <li>otherwise, it is conservatively not allowed to call this function.</li>
 </ul>
 </li>
@@ -27,4 +27,4 @@ extern type's layout is not known. This is the same behavior as
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">4</span>, <span class="kw">unsafe</span> { <span class="ident">mem</span>::<span class="ident">align_of_val_raw</span>(<span class="kw-2">&amp;</span><span class="number">5i32</span>) });</pre></div>
-</div></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "nom";</script><script src="../../../../aliases.js"></script><script src="../../../../main.js"></script><script defer src="../../../../search-index.js"></script></body></html>
+</div></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "nom";</script><script src="../../../../main.js"></script><script defer src="../../../../search-index.js"></script></body></html>

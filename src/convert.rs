@@ -71,12 +71,6 @@ pub fn telemetry_to_gts<'a>(
             ));
             output.push(create_gts_line(
                 msg.systick,
-                "blower_rpm",
-                Value::Number(msg.blower_rpm),
-                source_label,
-            ));
-            output.push(create_gts_line(
-                msg.systick,
                 "battery_level",
                 Value::Number(msg.battery_level),
                 source_label,

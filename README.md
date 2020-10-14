@@ -24,7 +24,7 @@ It has the following commands:
 | Command | Description |
 | --- | --- |
 | control | Send one specific control message to a serial port, then run debug mode |
-| convert | Reads telemetry from a recorded file, parses it and converts it to another format |
+| convert | Reads telemetry from a recorded file, parses it and converts it to another format (Warp10 GTS, JSON Text Sequences) |
 | debug | Reads telemetry from a serial port, parses it and streams result to stdout |
 | play | Reads telemetry from a recorded file, parses it and streams result to stdout |
 | record | Reads telemetry from a serial port and save bytes to a file |

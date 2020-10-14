@@ -9,6 +9,7 @@ use std::convert::TryFrom;
 
 /// Available settings in the control protocol
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub enum ControlSetting {
     /// Peak pressure in mmH20 (value must be between 0 and 700)
     PeakPressure = 1,

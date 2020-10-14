@@ -8,6 +8,7 @@ use crate::structures::*;
 #[derive(Debug, PartialEq)]
 pub enum Format {
     GTS,
+    JSON,
 }
 
 impl std::str::FromStr for Format {
@@ -16,7 +17,8 @@ impl std::str::FromStr for Format {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.trim().to_lowercase().as_str() {
             "gts" => Ok(Self::GTS),
-            _ => Err("Supported formats are: gts"),
+            "json" => Ok(Self::JSON),
+            _ => Err("Supported formats are: gts, json"),
         }
     }
 }
@@ -198,4 +200,11 @@ fn create_gts_line<N: std::string::ToString>(
         None => "{}".to_owned(),
     };
     format!("{}// {}{} {}", ts, name, labels, value)
+}
+
+pub fn telemetry_to_json(message: &TelemetryMessage) -> String {
+    let mut result =
+        serde_json::to_string(&message).expect("Failed to serialize a message to JSON");
+    result.push('\n');
+    result
 }

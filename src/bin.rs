@@ -478,6 +478,7 @@ fn convert(cfg: Convert) {
             Ok(Ok(msg)) => {
                 let output_payload = match cfg.format {
                     Format::GTS => telemetry_to_gts(&msg, &gts_source_label),
+                    Format::JSON => telemetry_to_json(&msg),
                 };
                 output_buffer
                     .write_all(output_payload.as_bytes())

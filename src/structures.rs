@@ -11,6 +11,7 @@ pub use crate::control::ControlSetting;
 
 /// Variants of the MakAir firmware
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub enum Mode {
     Production,
     Qualification,
@@ -19,6 +20,7 @@ pub enum Mode {
 
 /// Phases of the respiratory cycle
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub enum Phase {
     Inhalation,
     Exhalation,
@@ -26,6 +28,7 @@ pub enum Phase {
 
 /// Sub-phases of the respiratory cycle
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub enum SubPhase {
     Inspiration,
     HoldInspiration,
@@ -34,6 +37,7 @@ pub enum SubPhase {
 
 /// Supported alarm priorities
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub enum AlarmPriority {
     High,
     Medium,
@@ -76,6 +80,7 @@ impl TryFrom<u8> for AlarmPriority {
 
 /// A telemetry message that is sent once every time the MCU boots
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct BootMessage {
     /// Version of the MCU firmware
     pub version: String,
@@ -93,6 +98,7 @@ pub struct BootMessage {
 
 /// A telemetry message that is sent every 100 ms when the MCU is in "stop" mode
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct StoppedMessage {
     /// Version of the MCU firmware
     pub version: String,
@@ -104,6 +110,7 @@ pub struct StoppedMessage {
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct DataSnapshot {
     /// Version of the MCU firmware
     pub version: String,
@@ -131,6 +138,7 @@ pub struct DataSnapshot {
 
 /// A telemetry message that is sent at the end of every respiratory cycle
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct MachineStateSnapshot {
     /// Version of the MCU firmware
     pub version: String,
@@ -168,6 +176,7 @@ pub struct MachineStateSnapshot {
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct AlarmTrap {
     /// Version of the MCU firmware
     pub version: String,
@@ -201,6 +210,7 @@ pub struct AlarmTrap {
 
 /// An ACK message that is sent every time a setting is changed using the control protocol
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct ControlAck {
     /// Version of the MCU firmware
     pub version: String,
@@ -216,6 +226,8 @@ pub struct ControlAck {
 
 /// Supported telemetry messages
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(feature = "serialize-messages", serde(tag = "message_type"))]
 pub enum TelemetryMessage {
     BootMessage(BootMessage),
     StoppedMessage(StoppedMessage),

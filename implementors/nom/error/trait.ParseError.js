@@ -1,4 +1,4 @@
 (function() {var implementors = {};
 implementors["nom"] = [];
-implementors["telemetry"] = [{"text":"impl&lt;I&gt; <a class=\"trait\" href=\"nom/error/trait.ParseError.html\" title=\"trait nom::error::ParseError\">ParseError</a>&lt;I&gt; for <a class=\"struct\" href=\"telemetry/structures/struct.TelemetryError.html\" title=\"struct telemetry::structures::TelemetryError\">TelemetryError</a>&lt;I&gt;","synthetic":false,"types":["telemetry::structures::TelemetryError"]}];
+implementors["telemetry"] = [{"text":"impl&lt;I&gt; ParseError&lt;I&gt; for TelemetryError&lt;I&gt;","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

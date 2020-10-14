@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/serial-unix-0.4.0/src/tty.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tty.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../serial_unix/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/serial-unix-0.4.0/src/tty.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tty.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../serial_unix/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><span class="help-button">?</span>
+                <a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -702,12 +703,12 @@
     <span class="doccomment">///   already in use.</span>
     <span class="doccomment">/// * `InvalidInput` if `port` is not a valid device name.</span>
     <span class="doccomment">/// * `Io` for any other error while opening or initializing the device.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">O_RDWR</span>, <span class="ident">O_NONBLOCK</span>, <span class="ident">F_SETFL</span>, <span class="ident">EINVAL</span>};
 
         <span class="kw">let</span> <span class="ident">cstr</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">path</span>.<span class="ident">as_os_str</span>().<span class="ident">as_bytes</span>()) {
-            <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">s</span>,
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">from_raw_os_error</span>(<span class="ident">EINVAL</span>)),
+            <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">s</span>,
+            <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">from_raw_os_error</span>(<span class="ident">EINVAL</span>)),
         };
 
         <span class="kw">let</span> <span class="ident">fd</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">libc</span>::<span class="ident">open</span>(<span class="ident">cstr</span>.<span class="ident">as_ptr</span>(), <span class="ident">O_RDWR</span> <span class="op">|</span> <span class="ident">O_NOCTTY</span> <span class="op">|</span> <span class="ident">O_NONBLOCK</span>, <span class="number">0</span>) };
@@ -737,7 +738,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">port</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_pin</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">pin</span>: <span class="ident">c_int</span>, <span class="ident">level</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">set_pin</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">pin</span>: <span class="ident">c_int</span>, <span class="ident">level</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">retval</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">level</span> {
             <span class="ident">ioctl</span>::<span class="ident">tiocmbis</span>(<span class="self">self</span>.<span class="ident">fd</span>, <span class="ident">pin</span>)
         }
@@ -746,15 +747,15 @@
         };
 
         <span class="kw">match</span> <span class="ident">retval</span> {
-            <span class="prelude-val">Ok</span>(()) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
-            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">from_io_error</span>(<span class="ident">err</span>)),
+            <span class="prelude-val">Ok</span>(()) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(()),
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">from_io_error</span>(<span class="ident">err</span>)),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">read_pin</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">pin</span>: <span class="ident">c_int</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read_pin</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">pin</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">ioctl</span>::<span class="ident">tiocmget</span>(<span class="self">self</span>.<span class="ident">fd</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">pins</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">pins</span> <span class="op">&amp;</span> <span class="ident">pin</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>),
-            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">from_io_error</span>(<span class="ident">err</span>)),
+            <span class="prelude-val">Ok</span>(<span class="ident">pins</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">pins</span> <span class="op">&amp;</span> <span class="ident">pin</span> <span class="op">!=</span> <span class="number">0</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">from_io_error</span>(<span class="ident">err</span>)),
         }
     }
 }
@@ -771,20 +772,20 @@
 }
 
 <span class="kw">impl</span> <span class="ident">AsRawFd</span> <span class="kw">for</span> <span class="ident">TTYPort</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw_fd</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RawFd</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw_fd</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">RawFd</span> {
         <span class="self">self</span>.<span class="ident">fd</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">io</span>::<span class="ident">Read</span> <span class="kw">for</span> <span class="ident">TTYPort</span> {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="macro">try</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">poll</span>::<span class="ident">wait_read_fd</span>(<span class="self">self</span>.<span class="ident">fd</span>, <span class="self">self</span>.<span class="ident">timeout</span>));
 
         <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="ident">libc</span>::<span class="ident">read</span>(<span class="self">self</span>.<span class="ident">fd</span>, <span class="ident">buf</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">buf</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">size_t</span>)
         };
 
-        <span class="kw">if</span> <span class="ident">len</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="kw">if</span> <span class="ident">len</span> <span class="op">&gt;=</span> <span class="number">0</span> {
             <span class="prelude-val">Ok</span>(<span class="ident">len</span> <span class="kw">as</span> <span class="ident">usize</span>)
         }
         <span class="kw">else</span> {
@@ -794,14 +795,14 @@
 }
 
 <span class="kw">impl</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">TTYPort</span> {
-    <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="macro">try</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">poll</span>::<span class="ident">wait_write_fd</span>(<span class="self">self</span>.<span class="ident">fd</span>, <span class="self">self</span>.<span class="ident">timeout</span>));
 
         <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="ident">libc</span>::<span class="ident">write</span>(<span class="self">self</span>.<span class="ident">fd</span>, <span class="ident">buf</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">buf</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">size_t</span>)
         };
 
-        <span class="kw">if</span> <span class="ident">len</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="kw">if</span> <span class="ident">len</span> <span class="op">&gt;=</span> <span class="number">0</span> {
             <span class="prelude-val">Ok</span>(<span class="ident">len</span> <span class="kw">as</span> <span class="ident">usize</span>)
         }
         <span class="kw">else</span> {
@@ -809,7 +810,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="ident">termios</span>::<span class="ident">tcdrain</span>(<span class="self">self</span>.<span class="ident">fd</span>)
     }
 }
@@ -817,7 +818,7 @@
 <span class="kw">impl</span> <span class="ident">SerialDevice</span> <span class="kw">for</span> <span class="ident">TTYPort</span> {
     <span class="kw">type</span> <span class="ident">Settings</span> <span class="op">=</span> <span class="ident">TTYSettings</span>;
 
-    <span class="kw">fn</span> <span class="ident">read_settings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TTYSettings</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read_settings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TTYSettings</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">CREAD</span>, <span class="ident">CLOCAL</span>}; <span class="comment">// cflags</span>
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">ICANON</span>, <span class="ident">ECHO</span>, <span class="ident">ECHOE</span>, <span class="ident">ECHOK</span>, <span class="ident">ECHONL</span>, <span class="ident">ISIG</span>, <span class="ident">IEXTEN</span>}; <span class="comment">// lflags</span>
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">OPOST</span>}; <span class="comment">// oflags</span>
@@ -825,15 +826,15 @@
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">VMIN</span>, <span class="ident">VTIME</span>}; <span class="comment">// c_cc indexes</span>
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">termios</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">termios</span>::<span class="ident">Termios</span>::<span class="ident">from_fd</span>(<span class="self">self</span>.<span class="ident">fd</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">t</span>,
-            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">from_io_error</span>(<span class="ident">e</span>)),
+            <span class="prelude-val">Ok</span>(<span class="ident">t</span>) <span class="op">=&gt;</span> <span class="ident">t</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">from_io_error</span>(<span class="ident">e</span>)),
         };
 
         <span class="comment">// setup TTY for binary serial port access</span>
-        <span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">|</span><span class="op">=</span> <span class="ident">CREAD</span> <span class="op">|</span> <span class="ident">CLOCAL</span>;
-        <span class="ident">termios</span>.<span class="ident">c_lflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span>(<span class="ident">ICANON</span> <span class="op">|</span> <span class="ident">ECHO</span> <span class="op">|</span> <span class="ident">ECHOE</span> <span class="op">|</span> <span class="ident">ECHOK</span> <span class="op">|</span> <span class="ident">ECHONL</span> <span class="op">|</span> <span class="ident">ISIG</span> <span class="op">|</span> <span class="ident">IEXTEN</span>);
-        <span class="ident">termios</span>.<span class="ident">c_oflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span><span class="ident">OPOST</span>;
-        <span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span>(<span class="ident">INLCR</span> <span class="op">|</span> <span class="ident">IGNCR</span> <span class="op">|</span> <span class="ident">ICRNL</span> <span class="op">|</span> <span class="ident">IGNBRK</span>);
+        <span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">|=</span> <span class="ident">CREAD</span> <span class="op">|</span> <span class="ident">CLOCAL</span>;
+        <span class="ident">termios</span>.<span class="ident">c_lflag</span> <span class="op">&amp;=</span> <span class="op">!</span>(<span class="ident">ICANON</span> <span class="op">|</span> <span class="ident">ECHO</span> <span class="op">|</span> <span class="ident">ECHOE</span> <span class="op">|</span> <span class="ident">ECHOK</span> <span class="op">|</span> <span class="ident">ECHONL</span> <span class="op">|</span> <span class="ident">ISIG</span> <span class="op">|</span> <span class="ident">IEXTEN</span>);
+        <span class="ident">termios</span>.<span class="ident">c_oflag</span> <span class="op">&amp;=</span> <span class="op">!</span><span class="ident">OPOST</span>;
+        <span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">&amp;=</span> <span class="op">!</span>(<span class="ident">INLCR</span> <span class="op">|</span> <span class="ident">IGNCR</span> <span class="op">|</span> <span class="ident">ICRNL</span> <span class="op">|</span> <span class="ident">IGNBRK</span>);
 
         <span class="ident">termios</span>.<span class="ident">c_cc</span>[<span class="ident">VMIN</span>] <span class="op">=</span> <span class="number">0</span>;
         <span class="ident">termios</span>.<span class="ident">c_cc</span>[<span class="ident">VTIME</span>] <span class="op">=</span> <span class="number">0</span>;
@@ -841,7 +842,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">TTYSettings</span>::<span class="ident">new</span>(<span class="ident">termios</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">write_settings</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">settings</span>: <span class="kw-2">&amp;</span><span class="ident">TTYSettings</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">write_settings</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">settings</span>: <span class="kw-2">&amp;</span><span class="ident">TTYSettings</span>) <span class="op">-&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">tcsetattr</span>, <span class="ident">tcflush</span>};
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">TCSANOW</span>, <span class="ident">TCIOFLUSH</span>};
 
@@ -857,36 +858,36 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">timeout</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Duration</span> {
+    <span class="kw">fn</span> <span class="ident">timeout</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Duration</span> {
         <span class="self">self</span>.<span class="ident">timeout</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">set_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">set_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">timeout</span> <span class="op">=</span> <span class="ident">timeout</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">set_rts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">set_rts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">set_pin</span>(<span class="ident">ioctl</span>::<span class="ident">TIOCM_RTS</span>, <span class="ident">level</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_dtr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">set_dtr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">set_pin</span>(<span class="ident">ioctl</span>::<span class="ident">TIOCM_DTR</span>, <span class="ident">level</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">read_cts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read_cts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">read_pin</span>(<span class="ident">ioctl</span>::<span class="ident">TIOCM_CTS</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">read_dsr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read_dsr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">read_pin</span>(<span class="ident">ioctl</span>::<span class="ident">TIOCM_DSR</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">read_ri</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read_ri</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">read_pin</span>(<span class="ident">ioctl</span>::<span class="ident">TIOCM_RI</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">read_cd</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read_cd</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">read_pin</span>(<span class="ident">ioctl</span>::<span class="ident">TIOCM_CD</span>)
     }
 }
@@ -898,13 +899,13 @@
 }
 
 <span class="kw">impl</span> <span class="ident">TTYSettings</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">termios</span>: <span class="ident">termios</span>::<span class="ident">Termios</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">termios</span>: <span class="ident">termios</span>::<span class="ident">Termios</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="ident">TTYSettings</span> { <span class="ident">termios</span>: <span class="ident">termios</span> }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">SerialPortSettings</span> <span class="kw">for</span> <span class="ident">TTYSettings</span> {
-    <span class="kw">fn</span> <span class="ident">baud_rate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">core</span>::<span class="ident">BaudRate</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">baud_rate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">core</span>::<span class="ident">BaudRate</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">cfgetospeed</span>, <span class="ident">cfgetispeed</span>};
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">B50</span>, <span class="ident">B75</span>, <span class="ident">B110</span>, <span class="ident">B134</span>, <span class="ident">B150</span>, <span class="ident">B200</span>, <span class="ident">B300</span>, <span class="ident">B600</span>, <span class="ident">B1200</span>, <span class="ident">B1800</span>, <span class="ident">B2400</span>, <span class="ident">B4800</span>, <span class="ident">B9600</span>, <span class="ident">B19200</span>, <span class="ident">B38400</span>};
         <span class="kw">use</span> <span class="ident">termios</span>::<span class="ident">os</span>::<span class="ident">target</span>::{<span class="ident">B57600</span>, <span class="ident">B115200</span>, <span class="ident">B230400</span>};
@@ -924,84 +925,84 @@
         <span class="kw">let</span> <span class="ident">ospeed</span> <span class="op">=</span> <span class="ident">cfgetospeed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">termios</span>);
         <span class="kw">let</span> <span class="ident">ispeed</span> <span class="op">=</span> <span class="ident">cfgetispeed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">termios</span>);
 
-        <span class="kw">if</span> <span class="ident">ospeed</span> <span class="op">!</span><span class="op">=</span> <span class="ident">ispeed</span> {
+        <span class="kw">if</span> <span class="ident">ospeed</span> <span class="op">!=</span> <span class="ident">ispeed</span> {
             <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
 
         <span class="kw">match</span> <span class="ident">ospeed</span> {
-            <span class="ident">B50</span>      <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">50</span>)),
-            <span class="ident">B75</span>      <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">75</span>)),
-            <span class="ident">B110</span>     <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud110</span>),
-            <span class="ident">B134</span>     <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">134</span>)),
-            <span class="ident">B150</span>     <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">150</span>)),
-            <span class="ident">B200</span>     <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">200</span>)),
-            <span class="ident">B300</span>     <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud300</span>),
-            <span class="ident">B600</span>     <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud600</span>),
-            <span class="ident">B1200</span>    <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud1200</span>),
-            <span class="ident">B1800</span>    <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1800</span>)),
-            <span class="ident">B2400</span>    <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud2400</span>),
-            <span class="ident">B4800</span>    <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud4800</span>),
+            <span class="ident">B50</span>      <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">50</span>)),
+            <span class="ident">B75</span>      <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">75</span>)),
+            <span class="ident">B110</span>     <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud110</span>),
+            <span class="ident">B134</span>     <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">134</span>)),
+            <span class="ident">B150</span>     <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">150</span>)),
+            <span class="ident">B200</span>     <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">200</span>)),
+            <span class="ident">B300</span>     <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud300</span>),
+            <span class="ident">B600</span>     <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud600</span>),
+            <span class="ident">B1200</span>    <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud1200</span>),
+            <span class="ident">B1800</span>    <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1800</span>)),
+            <span class="ident">B2400</span>    <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud2400</span>),
+            <span class="ident">B4800</span>    <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud4800</span>),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>))]</span>
-            <span class="ident">B7200</span>    <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">7200</span>)),
-            <span class="ident">B9600</span>    <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud9600</span>),
+            <span class="ident">B7200</span>    <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">7200</span>)),
+            <span class="ident">B9600</span>    <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud9600</span>),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>))]</span>
-            <span class="ident">B14400</span>   <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">14400</span>)),
-            <span class="ident">B19200</span>   <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud19200</span>),
+            <span class="ident">B14400</span>   <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">14400</span>)),
+            <span class="ident">B19200</span>   <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud19200</span>),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>))]</span>
-            <span class="ident">B28800</span>   <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">28800</span>)),
-            <span class="ident">B38400</span>   <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud38400</span>),
-            <span class="ident">B57600</span>   <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud57600</span>),
+            <span class="ident">B28800</span>   <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">28800</span>)),
+            <span class="ident">B38400</span>   <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud38400</span>),
+            <span class="ident">B57600</span>   <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud57600</span>),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>))]</span>
-            <span class="ident">B76800</span>   <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">76800</span>)),
-            <span class="ident">B115200</span>  <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud115200</span>),
-            <span class="ident">B230400</span>  <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">230400</span>)),
+            <span class="ident">B76800</span>   <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">76800</span>)),
+            <span class="ident">B115200</span>  <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Baud115200</span>),
+            <span class="ident">B230400</span>  <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">230400</span>)),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>))]</span>
-            <span class="ident">B460800</span>  <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">460800</span>)),
+            <span class="ident">B460800</span>  <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">460800</span>)),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">B500000</span>  <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">500000</span>)),
+            <span class="ident">B500000</span>  <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">500000</span>)),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">B576000</span>  <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">576000</span>)),
+            <span class="ident">B576000</span>  <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">576000</span>)),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>))]</span>
-            <span class="ident">B921600</span>  <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">921600</span>)),
+            <span class="ident">B921600</span>  <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">921600</span>)),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">B1000000</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1000000</span>)),
+            <span class="ident">B1000000</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1000000</span>)),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">B1152000</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1152000</span>)),
+            <span class="ident">B1152000</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1152000</span>)),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">B1500000</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1500000</span>)),
+            <span class="ident">B1500000</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1500000</span>)),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">B2000000</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">2000000</span>)),
+            <span class="ident">B2000000</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">2000000</span>)),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">B2500000</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">2500000</span>)),
+            <span class="ident">B2500000</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">2500000</span>)),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">B3000000</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">3000000</span>)),
+            <span class="ident">B3000000</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">3000000</span>)),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">B3500000</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">3500000</span>)),
+            <span class="ident">B3500000</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">3500000</span>)),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">B4000000</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">4000000</span>)),
+            <span class="ident">B4000000</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">4000000</span>)),
 
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">char_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">core</span>::<span class="ident">CharSize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">char_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">core</span>::<span class="ident">CharSize</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">CSIZE</span>, <span class="ident">CS5</span>, <span class="ident">CS6</span>, <span class="ident">CS7</span>, <span class="ident">CS8</span>};
 
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;</span> <span class="ident">CSIZE</span> {
-            <span class="ident">CS8</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Bits8</span>),
-            <span class="ident">CS7</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Bits7</span>),
-            <span class="ident">CS6</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Bits6</span>),
-            <span class="ident">CS5</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Bits5</span>),
+            <span class="ident">CS8</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Bits8</span>),
+            <span class="ident">CS7</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Bits7</span>),
+            <span class="ident">CS6</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Bits6</span>),
+            <span class="ident">CS5</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Bits5</span>),
 
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">parity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">core</span>::<span class="ident">Parity</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">parity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">core</span>::<span class="ident">Parity</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">PARENB</span>, <span class="ident">PARODD</span>};
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;</span> <span class="ident">PARENB</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;</span> <span class="ident">PARODD</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;</span> <span class="ident">PARENB</span> <span class="op">!=</span> <span class="number">0</span> {
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;</span> <span class="ident">PARODD</span> <span class="op">!=</span> <span class="number">0</span> {
                 <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">ParityOdd</span>)
             }
             <span class="kw">else</span> {
@@ -1013,10 +1014,10 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">stop_bits</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">core</span>::<span class="ident">StopBits</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">stop_bits</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">core</span>::<span class="ident">StopBits</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">termios</span>::<span class="ident">CSTOPB</span>;
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;</span> <span class="ident">CSTOPB</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;</span> <span class="ident">CSTOPB</span> <span class="op">!=</span> <span class="number">0</span> {
             <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">Stop2</span>)
         }
         <span class="kw">else</span> {
@@ -1024,14 +1025,14 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">flow_control</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">core</span>::<span class="ident">FlowControl</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">flow_control</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">core</span>::<span class="ident">FlowControl</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">IXON</span>, <span class="ident">IXOFF</span>};
         <span class="kw">use</span> <span class="ident">termios</span>::<span class="ident">os</span>::<span class="ident">target</span>::<span class="ident">CRTSCTS</span>;
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;</span> <span class="ident">CRTSCTS</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;</span> <span class="ident">CRTSCTS</span> <span class="op">!=</span> <span class="number">0</span> {
             <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">FlowHardware</span>)
         }
-        <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">&amp;</span> (<span class="ident">IXON</span> <span class="op">|</span> <span class="ident">IXOFF</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">&amp;</span> (<span class="ident">IXON</span> <span class="op">|</span> <span class="ident">IXOFF</span>) <span class="op">!=</span> <span class="number">0</span> {
             <span class="prelude-val">Some</span>(<span class="ident">core</span>::<span class="ident">FlowSoftware</span>)
         }
         <span class="kw">else</span> {
@@ -1039,7 +1040,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">set_baud_rate</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">baud_rate</span>: <span class="ident">core</span>::<span class="ident">BaudRate</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">set_baud_rate</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">baud_rate</span>: <span class="ident">core</span>::<span class="ident">BaudRate</span>) <span class="op">-&gt;</span> <span class="ident">core</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">EINVAL</span>;
         <span class="kw">use</span> <span class="ident">termios</span>::<span class="ident">cfsetspeed</span>;
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">B50</span>, <span class="ident">B75</span>, <span class="ident">B110</span>, <span class="ident">B134</span>, <span class="ident">B150</span>, <span class="ident">B200</span>, <span class="ident">B300</span>, <span class="ident">B600</span>, <span class="ident">B1200</span>, <span class="ident">B1800</span>, <span class="ident">B2400</span>, <span class="ident">B4800</span>, <span class="ident">B9600</span>, <span class="ident">B19200</span>, <span class="ident">B38400</span>};
@@ -1058,63 +1059,63 @@
         <span class="kw">use</span> <span class="ident">termios</span>::<span class="ident">os</span>::<span class="ident">openbsd</span>::{<span class="ident">B7200</span>, <span class="ident">B14400</span>, <span class="ident">B28800</span>, <span class="ident">B76800</span>};
 
         <span class="kw">let</span> <span class="ident">baud</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">baud_rate</span> {
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">50</span>)      <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B50</span>,
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">75</span>)      <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B75</span>,
-            <span class="ident">core</span>::<span class="ident">Baud110</span>            <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B110</span>,
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">134</span>)     <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B134</span>,
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">150</span>)     <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B150</span>,
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">200</span>)     <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B200</span>,
-            <span class="ident">core</span>::<span class="ident">Baud300</span>            <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B300</span>,
-            <span class="ident">core</span>::<span class="ident">Baud600</span>            <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B600</span>,
-            <span class="ident">core</span>::<span class="ident">Baud1200</span>           <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B1200</span>,
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1800</span>)    <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B1800</span>,
-            <span class="ident">core</span>::<span class="ident">Baud2400</span>           <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B2400</span>,
-            <span class="ident">core</span>::<span class="ident">Baud4800</span>           <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B4800</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">50</span>)      <span class="op">=&gt;</span> <span class="ident">B50</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">75</span>)      <span class="op">=&gt;</span> <span class="ident">B75</span>,
+            <span class="ident">core</span>::<span class="ident">Baud110</span>            <span class="op">=&gt;</span> <span class="ident">B110</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">134</span>)     <span class="op">=&gt;</span> <span class="ident">B134</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">150</span>)     <span class="op">=&gt;</span> <span class="ident">B150</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">200</span>)     <span class="op">=&gt;</span> <span class="ident">B200</span>,
+            <span class="ident">core</span>::<span class="ident">Baud300</span>            <span class="op">=&gt;</span> <span class="ident">B300</span>,
+            <span class="ident">core</span>::<span class="ident">Baud600</span>            <span class="op">=&gt;</span> <span class="ident">B600</span>,
+            <span class="ident">core</span>::<span class="ident">Baud1200</span>           <span class="op">=&gt;</span> <span class="ident">B1200</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1800</span>)    <span class="op">=&gt;</span> <span class="ident">B1800</span>,
+            <span class="ident">core</span>::<span class="ident">Baud2400</span>           <span class="op">=&gt;</span> <span class="ident">B2400</span>,
+            <span class="ident">core</span>::<span class="ident">Baud4800</span>           <span class="op">=&gt;</span> <span class="ident">B4800</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>))]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">7200</span>)    <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B7200</span>,
-            <span class="ident">core</span>::<span class="ident">Baud9600</span>           <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B9600</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">7200</span>)    <span class="op">=&gt;</span> <span class="ident">B7200</span>,
+            <span class="ident">core</span>::<span class="ident">Baud9600</span>           <span class="op">=&gt;</span> <span class="ident">B9600</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>))]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">14400</span>)   <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B14400</span>,
-            <span class="ident">core</span>::<span class="ident">Baud19200</span>          <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B19200</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">14400</span>)   <span class="op">=&gt;</span> <span class="ident">B14400</span>,
+            <span class="ident">core</span>::<span class="ident">Baud19200</span>          <span class="op">=&gt;</span> <span class="ident">B19200</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>))]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">28800</span>)   <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B28800</span>,
-            <span class="ident">core</span>::<span class="ident">Baud38400</span>          <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B38400</span>,
-            <span class="ident">core</span>::<span class="ident">Baud57600</span>          <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B57600</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">28800</span>)   <span class="op">=&gt;</span> <span class="ident">B28800</span>,
+            <span class="ident">core</span>::<span class="ident">Baud38400</span>          <span class="op">=&gt;</span> <span class="ident">B38400</span>,
+            <span class="ident">core</span>::<span class="ident">Baud57600</span>          <span class="op">=&gt;</span> <span class="ident">B57600</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>))]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">76800</span>)   <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B76800</span>,
-            <span class="ident">core</span>::<span class="ident">Baud115200</span>         <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B115200</span>,
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">230400</span>)  <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B230400</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">76800</span>)   <span class="op">=&gt;</span> <span class="ident">B76800</span>,
+            <span class="ident">core</span>::<span class="ident">Baud115200</span>         <span class="op">=&gt;</span> <span class="ident">B115200</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">230400</span>)  <span class="op">=&gt;</span> <span class="ident">B230400</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>))]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">460800</span>)  <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B460800</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">460800</span>)  <span class="op">=&gt;</span> <span class="ident">B460800</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">500000</span>)  <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B500000</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">500000</span>)  <span class="op">=&gt;</span> <span class="ident">B500000</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">576000</span>)  <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B576000</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">576000</span>)  <span class="op">=&gt;</span> <span class="ident">B576000</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>))]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">921600</span>)  <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B921600</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">921600</span>)  <span class="op">=&gt;</span> <span class="ident">B921600</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1000000</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B1000000</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1000000</span>) <span class="op">=&gt;</span> <span class="ident">B1000000</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1152000</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B1152000</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1152000</span>) <span class="op">=&gt;</span> <span class="ident">B1152000</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1500000</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B1500000</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">1500000</span>) <span class="op">=&gt;</span> <span class="ident">B1500000</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">2000000</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B2000000</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">2000000</span>) <span class="op">=&gt;</span> <span class="ident">B2000000</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">2500000</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B2500000</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">2500000</span>) <span class="op">=&gt;</span> <span class="ident">B2500000</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">3000000</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B3000000</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">3000000</span>) <span class="op">=&gt;</span> <span class="ident">B3000000</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">3500000</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B3500000</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">3500000</span>) <span class="op">=&gt;</span> <span class="ident">B3500000</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">4000000</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">B4000000</span>,
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="number">4000000</span>) <span class="op">=&gt;</span> <span class="ident">B4000000</span>,
 
-            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">from_raw_os_error</span>(<span class="ident">EINVAL</span>)),
+            <span class="ident">core</span>::<span class="ident">BaudOther</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">from_raw_os_error</span>(<span class="ident">EINVAL</span>)),
         };
 
         <span class="kw">match</span> <span class="ident">cfsetspeed</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">termios</span>, <span class="ident">baud</span>) {
-            <span class="prelude-val">Ok</span>(()) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
-            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">from_io_error</span>(<span class="ident">err</span>)),
+            <span class="prelude-val">Ok</span>(()) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(()),
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">from_io_error</span>(<span class="ident">err</span>)),
         }
     }
 
@@ -1122,35 +1123,35 @@
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">CSIZE</span>, <span class="ident">CS5</span>, <span class="ident">CS6</span>, <span class="ident">CS7</span>, <span class="ident">CS8</span>};
 
         <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">char_size</span> {
-            <span class="ident">core</span>::<span class="ident">Bits5</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CS5</span>,
-            <span class="ident">core</span>::<span class="ident">Bits6</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CS6</span>,
-            <span class="ident">core</span>::<span class="ident">Bits7</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CS7</span>,
-            <span class="ident">core</span>::<span class="ident">Bits8</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CS8</span>,
+            <span class="ident">core</span>::<span class="ident">Bits5</span> <span class="op">=&gt;</span> <span class="ident">CS5</span>,
+            <span class="ident">core</span>::<span class="ident">Bits6</span> <span class="op">=&gt;</span> <span class="ident">CS6</span>,
+            <span class="ident">core</span>::<span class="ident">Bits7</span> <span class="op">=&gt;</span> <span class="ident">CS7</span>,
+            <span class="ident">core</span>::<span class="ident">Bits8</span> <span class="op">=&gt;</span> <span class="ident">CS8</span>,
         };
 
-        <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span><span class="ident">CSIZE</span>;
-        <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">|</span><span class="op">=</span> <span class="ident">size</span>;
+        <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;=</span> <span class="op">!</span><span class="ident">CSIZE</span>;
+        <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">|=</span> <span class="ident">size</span>;
     }
 
     <span class="kw">fn</span> <span class="ident">set_parity</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">parity</span>: <span class="ident">core</span>::<span class="ident">Parity</span>) {
         <span class="kw">use</span> <span class="ident">termios</span>::{<span class="ident">PARENB</span>, <span class="ident">PARODD</span>, <span class="ident">INPCK</span>, <span class="ident">IGNPAR</span>};
 
         <span class="kw">match</span> <span class="ident">parity</span> {
-            <span class="ident">core</span>::<span class="ident">ParityNone</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span>(<span class="ident">PARENB</span> <span class="op">|</span> <span class="ident">PARODD</span>);
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span><span class="ident">INPCK</span>;
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">|</span><span class="op">=</span> <span class="ident">IGNPAR</span>;
+            <span class="ident">core</span>::<span class="ident">ParityNone</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;=</span> <span class="op">!</span>(<span class="ident">PARENB</span> <span class="op">|</span> <span class="ident">PARODD</span>);
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">&amp;=</span> <span class="op">!</span><span class="ident">INPCK</span>;
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">|=</span> <span class="ident">IGNPAR</span>;
             }
-            <span class="ident">core</span>::<span class="ident">ParityOdd</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">|</span><span class="op">=</span> <span class="ident">PARENB</span> <span class="op">|</span> <span class="ident">PARODD</span>;
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">|</span><span class="op">=</span> <span class="ident">INPCK</span>;
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span><span class="ident">IGNPAR</span>;
+            <span class="ident">core</span>::<span class="ident">ParityOdd</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">|=</span> <span class="ident">PARENB</span> <span class="op">|</span> <span class="ident">PARODD</span>;
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">|=</span> <span class="ident">INPCK</span>;
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">&amp;=</span> <span class="op">!</span><span class="ident">IGNPAR</span>;
             }
-            <span class="ident">core</span>::<span class="ident">ParityEven</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span><span class="ident">PARODD</span>;
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">|</span><span class="op">=</span> <span class="ident">PARENB</span>;
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">|</span><span class="op">=</span> <span class="ident">INPCK</span>;
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span><span class="ident">IGNPAR</span>;
+            <span class="ident">core</span>::<span class="ident">ParityEven</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;=</span> <span class="op">!</span><span class="ident">PARODD</span>;
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">|=</span> <span class="ident">PARENB</span>;
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">|=</span> <span class="ident">INPCK</span>;
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">&amp;=</span> <span class="op">!</span><span class="ident">IGNPAR</span>;
             }
         };
     }
@@ -1159,8 +1160,8 @@
         <span class="kw">use</span> <span class="ident">termios</span>::<span class="ident">CSTOPB</span>;
 
         <span class="kw">match</span> <span class="ident">stop_bits</span> {
-            <span class="ident">core</span>::<span class="ident">Stop1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span><span class="ident">CSTOPB</span>,
-            <span class="ident">core</span>::<span class="ident">Stop2</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">|</span><span class="op">=</span> <span class="ident">CSTOPB</span>,
+            <span class="ident">core</span>::<span class="ident">Stop1</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;=</span> <span class="op">!</span><span class="ident">CSTOPB</span>,
+            <span class="ident">core</span>::<span class="ident">Stop2</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">|=</span> <span class="ident">CSTOPB</span>,
         };
     }
 
@@ -1169,17 +1170,17 @@
         <span class="kw">use</span> <span class="ident">termios</span>::<span class="ident">os</span>::<span class="ident">target</span>::<span class="ident">CRTSCTS</span>;
 
         <span class="kw">match</span> <span class="ident">flow_control</span> {
-            <span class="ident">core</span>::<span class="ident">FlowNone</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span>(<span class="ident">IXON</span> <span class="op">|</span> <span class="ident">IXOFF</span>);
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span><span class="ident">CRTSCTS</span>;
+            <span class="ident">core</span>::<span class="ident">FlowNone</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">&amp;=</span> <span class="op">!</span>(<span class="ident">IXON</span> <span class="op">|</span> <span class="ident">IXOFF</span>);
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;=</span> <span class="op">!</span><span class="ident">CRTSCTS</span>;
             }
-            <span class="ident">core</span>::<span class="ident">FlowSoftware</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">|</span><span class="op">=</span> <span class="ident">IXON</span> <span class="op">|</span> <span class="ident">IXOFF</span>;
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span><span class="ident">CRTSCTS</span>;
+            <span class="ident">core</span>::<span class="ident">FlowSoftware</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">|=</span> <span class="ident">IXON</span> <span class="op">|</span> <span class="ident">IXOFF</span>;
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">&amp;=</span> <span class="op">!</span><span class="ident">CRTSCTS</span>;
             }
-            <span class="ident">core</span>::<span class="ident">FlowHardware</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="kw-2">&amp;</span><span class="op">=</span> <span class="op">!</span>(<span class="ident">IXON</span> <span class="op">|</span> <span class="ident">IXOFF</span>);
-                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">|</span><span class="op">=</span> <span class="ident">CRTSCTS</span>;
+            <span class="ident">core</span>::<span class="ident">FlowHardware</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_iflag</span> <span class="op">&amp;=</span> <span class="op">!</span>(<span class="ident">IXON</span> <span class="op">|</span> <span class="ident">IXOFF</span>);
+                <span class="self">self</span>.<span class="ident">termios</span>.<span class="ident">c_cflag</span> <span class="op">|=</span> <span class="ident">CRTSCTS</span>;
             }
         };
     }
@@ -1195,7 +1196,7 @@
     <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">TTYSettings</span>;
     <span class="kw">use</span> <span class="ident">core</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 
-    <span class="kw">fn</span> <span class="ident">default_settings</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TTYSettings</span> {
+    <span class="kw">fn</span> <span class="ident">default_settings</span>() <span class="op">-&gt;</span> <span class="ident">TTYSettings</span> {
         <span class="ident">TTYSettings</span> { <span class="ident">termios</span>: <span class="kw">unsafe</span> { <span class="ident">mem</span>::<span class="ident">uninitialized</span>() } }
     }
 

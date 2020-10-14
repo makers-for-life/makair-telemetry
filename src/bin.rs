@@ -153,9 +153,13 @@ struct Convert {
     #[clap(short = 'f')]
     format: Format,
 
-    /// [GTS] Value to use in a "source" label in every GTS line
+    /// [GTS] Value to use in a "source" label in every GTS line; uses the input filename if not specified
     #[clap(long)]
     gts_source_label: Option<String>,
+
+    /// [GTS] Do not put automatic or manual "source" label in every GTS line
+    #[clap(long)]
+    gts_disable_source_label: bool,
 }
 
 fn main() {
@@ -441,14 +445,26 @@ fn storm(cfg: Storm) {
 
 fn convert(cfg: Convert) {
     use std::io::Write;
+    use std::path::Path;
 
-    let input_file = File::open(cfg.input).expect("failed to play recorded file");
+    let input_file_name = cfg.input;
+    let input_file = File::open(&input_file_name).expect("failed to play recorded file");
     let output_file = OpenOptions::new()
         .write(true)
         .create_new(true)
         .open(&cfg.output)
         .expect("failed to create recording file");
     let mut output_buffer = BufWriter::new(output_file);
+
+    let gts_source_label = if cfg.format == Format::GTS && !cfg.gts_disable_source_label {
+        cfg.gts_source_label.or_else(|| {
+            Path::new(&input_file_name)
+                .file_name()
+                .map(|ostr| ostr.to_string_lossy().into_owned())
+        })
+    } else {
+        None
+    };
 
     let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
         std::sync::mpsc::channel();
@@ -461,7 +477,7 @@ fn convert(cfg: Convert) {
         match rx.try_recv() {
             Ok(Ok(msg)) => {
                 let output_payload = match cfg.format {
-                    Format::GTS => telemetry_to_gts(&msg, &cfg.gts_source_label),
+                    Format::GTS => telemetry_to_gts(&msg, &gts_source_label),
                 };
                 output_buffer
                     .write_all(output_payload.as_bytes())

@@ -5,7 +5,7 @@
 
 use crate::structures::*;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Format {
     GTS,
 }

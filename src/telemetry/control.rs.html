@@ -118,6 +118,7 @@
 <span id="117">117</span>
 <span id="118">118</span>
 <span id="119">119</span>
+<span id="120">120</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir</span>
 <span class="comment">//</span>
@@ -130,6 +131,7 @@
 
 <span class="doccomment">/// Available settings in the control protocol</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serialize-messages&quot;</span>, <span class="ident">derive</span>(<span class="ident">serde</span>::<span class="ident">Serialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ControlSetting</span> {
     <span class="doccomment">/// Peak pressure in mmH20 (value must be between 0 and 700)</span>
     <span class="ident">PeakPressure</span> <span class="op">=</span> <span class="number">1</span>,

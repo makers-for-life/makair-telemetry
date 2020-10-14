@@ -448,7 +448,7 @@ fn convert(cfg: Convert) {
     use std::path::Path;
 
     let input_file_name = cfg.input;
-    let input_file = File::open(&input_file_name).expect("failed to play recorded file");
+    let input_file = File::open(&input_file_name).expect("failed to open recorded file");
     let output_file = OpenOptions::new()
         .write(true)
         .create_new(true)

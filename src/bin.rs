@@ -6,6 +6,7 @@
 #[macro_use]
 extern crate log;
 
+mod convert;
 mod statistics;
 mod storm;
 
@@ -16,19 +17,20 @@ use std::io::BufWriter;
 use std::sync::mpsc::{Receiver, Sender, TryRecvError};
 
 use control::*;
+use convert::*;
 use statistics::*;
 use storm::*;
 use structures::*;
 use telemetry::*;
 
-#[derive(Clap)]
+#[derive(Debug, Clap)]
 #[clap(author, about, version)]
 struct Opts {
     #[clap(subcommand)]
     mode: Mode,
 }
 
-#[derive(Clap)]
+#[derive(Debug, Clap)]
 enum Mode {
     /// Reads telemetry from a serial port, parses it and streams result to stdout
     #[clap(author, about, version)]
@@ -53,9 +55,13 @@ enum Mode {
     /// Send a lot of control messages and/or bytes to a serial port
     #[clap(author, about, version)]
     Storm(Storm),
+
+    /// Reads telemetry from a recorded file, parses it and converts it to another format
+    #[clap(author, about, version)]
+    Convert(Convert),
 }
 
-#[derive(Clap)]
+#[derive(Debug, Clap)]
 struct Debug {
     /// Address of the port to use
     #[clap(short = 'p')]
@@ -66,7 +72,7 @@ struct Debug {
     random_control_messages: bool,
 }
 
-#[derive(Clap)]
+#[derive(Debug, Clap)]
 struct Record {
     /// Address of the port to use
     #[clap(short = 'p')]
@@ -77,7 +83,7 @@ struct Record {
     output: String,
 }
 
-#[derive(Clap)]
+#[derive(Debug, Clap)]
 struct Play {
     /// Path of the recorded file
     #[clap(short = 'i')]
@@ -88,14 +94,14 @@ struct Play {
     full_blast: bool,
 }
 
-#[derive(Clap)]
+#[derive(Debug, Clap)]
 struct Stats {
     /// Path of the recorded file
     #[clap(short = 'i')]
     input: String,
 }
 
-#[derive(Clap)]
+#[derive(Debug, Clap)]
 struct Control {
     /// Address of the port to use
     #[clap(short = 'p')]
@@ -110,7 +116,7 @@ struct Control {
     value: u16,
 }
 
-#[derive(Clap)]
+#[derive(Debug, Clap)]
 struct Storm {
     /// Address of the port to use
     #[clap(short = 'p')]
@@ -133,6 +139,29 @@ struct Storm {
     full_blast: bool,
 }
 
+#[derive(Debug, Clap)]
+struct Convert {
+    /// Path of the recorded file
+    #[clap(short = 'i')]
+    input: String,
+
+    /// Path of the converted file
+    #[clap(short = 'o')]
+    output: String,
+
+    /// Output format
+    #[clap(short = 'f')]
+    format: Format,
+
+    /// [GTS] Value to use in a "source" label in every GTS line; uses the input filename if not specified
+    #[clap(long)]
+    gts_source_label: Option<String>,
+
+    /// [GTS] Do not put automatic or manual "source" label in every GTS line
+    #[clap(long)]
+    gts_disable_source_label: bool,
+}
+
 fn main() {
     env_logger::init();
     let opts: Opts = Opts::parse();
@@ -144,6 +173,7 @@ fn main() {
         Mode::Stats(cfg) => stats(cfg),
         Mode::Control(cfg) => control(cfg),
         Mode::Storm(cfg) => storm(cfg),
+        Mode::Convert(cfg) => convert(cfg),
     }
 }
 
@@ -408,6 +438,63 @@ fn storm(cfg: Storm) {
                         Err(e) => panic!(e),
                     }
                 },
+            }
+        }
+    }
+}
+
+fn convert(cfg: Convert) {
+    use std::io::Write;
+    use std::path::Path;
+
+    let input_file_name = cfg.input;
+    let input_file = File::open(&input_file_name).expect("failed to open recorded file");
+    let output_file = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(&cfg.output)
+        .expect("failed to create recording file");
+    let mut output_buffer = BufWriter::new(output_file);
+
+    let gts_source_label = if cfg.format == Format::GTS && !cfg.gts_disable_source_label {
+        cfg.gts_source_label.or_else(|| {
+            Path::new(&input_file_name)
+                .file_name()
+                .map(|ostr| ostr.to_string_lossy().into_owned())
+        })
+    } else {
+        None
+    };
+
+    let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
+        std::sync::mpsc::channel();
+    std::thread::spawn(move || {
+        info!("start playing telemetry messages");
+        gather_telemetry_from_file(input_file, tx, false);
+    });
+
+    loop {
+        match rx.try_recv() {
+            Ok(Ok(msg)) => {
+                let output_payload = match cfg.format {
+                    Format::GTS => telemetry_to_gts(&msg, &gts_source_label),
+                };
+                output_buffer
+                    .write_all(output_payload.as_bytes())
+                    .expect("failed to write to output file");
+            }
+            Ok(msg) => {
+                display_message(msg);
+            }
+            Err(TryRecvError::Empty) => {
+                std::thread::sleep(std::time::Duration::from_millis(1));
+            }
+            Err(TryRecvError::Disconnected) => {
+                warn!("end of recording");
+                output_buffer
+                    .flush()
+                    .expect("failed to write to output file");
+                std::process::exit(0);
             }
         }
     }

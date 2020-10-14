@@ -201,7 +201,7 @@ fn create_gts_line<N: std::string::ToString>(
 ) -> String {
     let labels = match source_label {
         Some(source) => format!("{{source={}}}", source),
-        None => "".to_owned(),
+        None => "{}".to_owned(),
     };
     format!("{}// {}{} {}", ts, name, labels, value)
 }

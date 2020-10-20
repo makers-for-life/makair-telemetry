@@ -33,31 +33,24 @@ struct Opts {
 #[derive(Debug, Clap)]
 enum Mode {
     /// Reads telemetry from a serial port, parses it and streams result to stdout
-    #[clap(author, about, version)]
     Debug(Debug),
 
     /// Reads telemetry from a serial port and save bytes to a file
-    #[clap(author, about, version)]
     Record(Record),
 
     /// Reads telemetry from a recorded file, parses it and streams result to stdout
-    #[clap(author, about, version)]
     Play(Play),
 
     /// Reads telemetry from a recorded file, parses it and compute some statistics
-    #[clap(author, about, version)]
     Stats(Stats),
 
     /// Send one specific control message to a serial port, then run debug mode
-    #[clap(author, about, version)]
     Control(Control),
 
     /// Send a lot of control messages and/or bytes to a serial port
-    #[clap(author, about, version)]
     Storm(Storm),
 
     /// Reads telemetry from a recorded file, parses it and converts it to another format
-    #[clap(author, about, version)]
     Convert(Convert),
 }
 

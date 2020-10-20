@@ -14,8 +14,8 @@ nom = "5.1.2"
 rand = "0.7.3"
 serial = "0.4.0"
 clap = { version = "3.0.0-beta.2", optional = true }
-env_logger = { version = "0.7.1", optional = true }
-serde = { version = "1.0.116", features = ["derive"], optional = true }
+env_logger = { version = "0.8.1", optional = true }
+serde = { version = "1.0.117", features = ["derive"], optional = true }
 serde_json = { version = "1.0.59", optional = true }
 
 [dev-dependencies]

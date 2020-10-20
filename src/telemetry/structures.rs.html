@@ -298,6 +298,47 @@
 <span id="297">297</span>
 <span id="298">298</span>
 <span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir</span>
 <span class="comment">//</span>
@@ -536,6 +577,47 @@
     <span class="ident">MachineStateSnapshot</span>(<span class="ident">MachineStateSnapshot</span>),
     <span class="ident">AlarmTrap</span>(<span class="ident">AlarmTrap</span>),
     <span class="ident">ControlAck</span>(<span class="ident">ControlAck</span>),
+}
+
+<span class="kw">impl</span> <span class="ident">TelemetryMessage</span> {
+    <span class="doccomment">/// Version of the MCU firmware</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span> {
+            <span class="self">Self</span>::<span class="ident">BootMessage</span>(<span class="ident">BootMessage</span> { <span class="ident">version</span>, .. }) <span class="op">=&gt;</span> <span class="ident">version</span>,
+            <span class="self">Self</span>::<span class="ident">StoppedMessage</span>(<span class="ident">StoppedMessage</span> { <span class="ident">version</span>, .. }) <span class="op">=&gt;</span> <span class="ident">version</span>,
+            <span class="self">Self</span>::<span class="ident">DataSnapshot</span>(<span class="ident">DataSnapshot</span> { <span class="ident">version</span>, .. }) <span class="op">=&gt;</span> <span class="ident">version</span>,
+            <span class="self">Self</span>::<span class="ident">MachineStateSnapshot</span>(<span class="ident">MachineStateSnapshot</span> { <span class="ident">version</span>, .. }) <span class="op">=&gt;</span> <span class="ident">version</span>,
+            <span class="self">Self</span>::<span class="ident">AlarmTrap</span>(<span class="ident">AlarmTrap</span> { <span class="ident">version</span>, .. }) <span class="op">=&gt;</span> <span class="ident">version</span>,
+            <span class="self">Self</span>::<span class="ident">ControlAck</span>(<span class="ident">ControlAck</span> { <span class="ident">version</span>, .. }) <span class="op">=&gt;</span> <span class="ident">version</span>,
+        };
+        <span class="ident">val</span>.<span class="ident">clone</span>()
+    }
+
+    <span class="doccomment">/// Internal ID of the MCU</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span> {
+            <span class="self">Self</span>::<span class="ident">BootMessage</span>(<span class="ident">BootMessage</span> { <span class="ident">device_id</span>, .. }) <span class="op">=&gt;</span> <span class="ident">device_id</span>,
+            <span class="self">Self</span>::<span class="ident">StoppedMessage</span>(<span class="ident">StoppedMessage</span> { <span class="ident">device_id</span>, .. }) <span class="op">=&gt;</span> <span class="ident">device_id</span>,
+            <span class="self">Self</span>::<span class="ident">DataSnapshot</span>(<span class="ident">DataSnapshot</span> { <span class="ident">device_id</span>, .. }) <span class="op">=&gt;</span> <span class="ident">device_id</span>,
+            <span class="self">Self</span>::<span class="ident">MachineStateSnapshot</span>(<span class="ident">MachineStateSnapshot</span> { <span class="ident">device_id</span>, .. }) <span class="op">=&gt;</span> <span class="ident">device_id</span>,
+            <span class="self">Self</span>::<span class="ident">AlarmTrap</span>(<span class="ident">AlarmTrap</span> { <span class="ident">device_id</span>, .. }) <span class="op">=&gt;</span> <span class="ident">device_id</span>,
+            <span class="self">Self</span>::<span class="ident">ControlAck</span>(<span class="ident">ControlAck</span> { <span class="ident">device_id</span>, .. }) <span class="op">=&gt;</span> <span class="ident">device_id</span>,
+        };
+        <span class="ident">val</span>.<span class="ident">clone</span>()
+    }
+
+    <span class="doccomment">/// Number of microseconds since the MCU booted</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">systick</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u64</span> {
+        <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span> {
+            <span class="self">Self</span>::<span class="ident">BootMessage</span>(<span class="ident">BootMessage</span> { <span class="ident">systick</span>, .. }) <span class="op">=&gt;</span> <span class="ident">systick</span>,
+            <span class="self">Self</span>::<span class="ident">StoppedMessage</span>(<span class="ident">StoppedMessage</span> { <span class="ident">systick</span>, .. }) <span class="op">=&gt;</span> <span class="ident">systick</span>,
+            <span class="self">Self</span>::<span class="ident">DataSnapshot</span>(<span class="ident">DataSnapshot</span> { <span class="ident">systick</span>, .. }) <span class="op">=&gt;</span> <span class="ident">systick</span>,
+            <span class="self">Self</span>::<span class="ident">MachineStateSnapshot</span>(<span class="ident">MachineStateSnapshot</span> { <span class="ident">systick</span>, .. }) <span class="op">=&gt;</span> <span class="ident">systick</span>,
+            <span class="self">Self</span>::<span class="ident">AlarmTrap</span>(<span class="ident">AlarmTrap</span> { <span class="ident">systick</span>, .. }) <span class="op">=&gt;</span> <span class="ident">systick</span>,
+            <span class="self">Self</span>::<span class="ident">ControlAck</span>(<span class="ident">ControlAck</span> { <span class="ident">systick</span>, .. }) <span class="op">=&gt;</span> <span class="ident">systick</span>,
+        };
+        <span class="kw-2">*</span><span class="ident">val</span>
+    }
 }
 
 <span class="doccomment">/// Extension of Nom&#39;s `ErrorKind` to be able to represent CRC errors</span>

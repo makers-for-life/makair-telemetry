@@ -237,6 +237,47 @@ pub enum TelemetryMessage {
     ControlAck(ControlAck),
 }
 
+impl TelemetryMessage {
+    /// Version of the MCU firmware
+    pub fn version(&self) -> String {
+        let val = match self {
+            Self::BootMessage(BootMessage { version, .. }) => version,
+            Self::StoppedMessage(StoppedMessage { version, .. }) => version,
+            Self::DataSnapshot(DataSnapshot { version, .. }) => version,
+            Self::MachineStateSnapshot(MachineStateSnapshot { version, .. }) => version,
+            Self::AlarmTrap(AlarmTrap { version, .. }) => version,
+            Self::ControlAck(ControlAck { version, .. }) => version,
+        };
+        val.clone()
+    }
+
+    /// Internal ID of the MCU
+    pub fn device_id(&self) -> String {
+        let val = match self {
+            Self::BootMessage(BootMessage { device_id, .. }) => device_id,
+            Self::StoppedMessage(StoppedMessage { device_id, .. }) => device_id,
+            Self::DataSnapshot(DataSnapshot { device_id, .. }) => device_id,
+            Self::MachineStateSnapshot(MachineStateSnapshot { device_id, .. }) => device_id,
+            Self::AlarmTrap(AlarmTrap { device_id, .. }) => device_id,
+            Self::ControlAck(ControlAck { device_id, .. }) => device_id,
+        };
+        val.clone()
+    }
+
+    /// Number of microseconds since the MCU booted
+    pub fn systick(&self) -> u64 {
+        let val = match self {
+            Self::BootMessage(BootMessage { systick, .. }) => systick,
+            Self::StoppedMessage(StoppedMessage { systick, .. }) => systick,
+            Self::DataSnapshot(DataSnapshot { systick, .. }) => systick,
+            Self::MachineStateSnapshot(MachineStateSnapshot { systick, .. }) => systick,
+            Self::AlarmTrap(AlarmTrap { systick, .. }) => systick,
+            Self::ControlAck(ControlAck { systick, .. }) => systick,
+        };
+        *val
+    }
+}
+
 /// Extension of Nom's `ErrorKind` to be able to represent CRC errors
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TelemetryErrorKind {

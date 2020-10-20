@@ -142,6 +142,14 @@ struct Convert {
     #[clap(short = 'o')]
     output: String,
 
+    /// If a systick value is specified, only messages with a greater or equal systick will be included
+    #[clap(long)]
+    from: Option<u64>,
+
+    /// If a systick value is specified, only messages with a smaller or equal systick will be included
+    #[clap(long)]
+    to: Option<u64>,
+
     /// Output format
     #[clap(short = 'f')]
     format: Format,
@@ -440,6 +448,15 @@ fn convert(cfg: Convert) {
     use std::io::Write;
     use std::path::Path;
 
+    let from = cfg.from.unwrap_or(u64::MIN);
+    let to = cfg.to.unwrap_or(u64::MAX);
+    let mut skipped = 0u64;
+
+    if from > to {
+        error!("systick in --from cannot be greater than systick in --to");
+        std::process::exit(1);
+    }
+
     let input_file_name = cfg.input;
     let input_file = File::open(&input_file_name).expect("failed to open recorded file");
     let output_file = OpenOptions::new()
@@ -469,13 +486,17 @@ fn convert(cfg: Convert) {
     loop {
         match rx.try_recv() {
             Ok(Ok(msg)) => {
-                let output_payload = match cfg.format {
-                    Format::GTS => telemetry_to_gts(&msg, &gts_source_label),
-                    Format::JSON => telemetry_to_json(&msg),
-                };
-                output_buffer
-                    .write_all(output_payload.as_bytes())
-                    .expect("failed to write to output file");
+                if msg.systick() >= from && msg.systick() <= to {
+                    let output_payload = match cfg.format {
+                        Format::GTS => telemetry_to_gts(&msg, &gts_source_label),
+                        Format::JSON => telemetry_to_json(&msg),
+                    };
+                    output_buffer
+                        .write_all(output_payload.as_bytes())
+                        .expect("failed to write to output file");
+                } else {
+                    skipped += 1;
+                }
             }
             Ok(msg) => {
                 display_message(msg);
@@ -485,6 +506,9 @@ fn convert(cfg: Convert) {
             }
             Err(TryRecvError::Disconnected) => {
                 warn!("end of recording");
+                if skipped != 0 {
+                    info!("{} records were skipped", &skipped);
+                }
                 output_buffer
                     .flush()
                     .expect("failed to write to output file");

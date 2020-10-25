@@ -489,8 +489,9 @@ fn convert(cfg: Convert) {
                 if msg.systick() >= from && msg.systick() <= to {
                     let output_payload = match cfg.format {
                         Format::GTS => telemetry_to_gts(&msg, &gts_source_label),
-                        Format::JSON => telemetry_to_json(&msg)
-                            .expect("Failed to serialize a message to JSON")
+                        Format::JSON => {
+                            telemetry_to_json(&msg).expect("Failed to serialize a message to JSON")
+                        }
                     };
                     output_buffer
                         .write_all(output_payload.as_bytes())

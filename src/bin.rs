@@ -336,7 +336,7 @@ fn stats(cfg: Stats) {
 fn control(cfg: Control) {
     use std::convert::TryFrom;
 
-    let setting = ControlSetting::try_from(cfg.setting).unwrap();
+    let setting = ControlSetting::try_from(cfg.setting).expect("invalid control setting passed");
     let value = cfg.value;
 
     let (control_tx, control_rx): (Sender<ControlMessage>, Receiver<ControlMessage>) =

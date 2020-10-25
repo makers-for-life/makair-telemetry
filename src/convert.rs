@@ -202,9 +202,9 @@ fn create_gts_line<N: std::string::ToString>(
     format!("{}// {}{} {}", ts, name, labels, value)
 }
 
-pub fn telemetry_to_json(message: &TelemetryMessage) -> String {
-    let mut result =
-        serde_json::to_string(&message).expect("Failed to serialize a message to JSON");
-    result.push('\n');
-    result
+pub fn telemetry_to_json(message: &TelemetryMessage) -> Result<String, serde_json::Error> {
+    serde_json::to_string(&message).map(|mut result| {
+        result.push('\n');
+        result
+    })
 }

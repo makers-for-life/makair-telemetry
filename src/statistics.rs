@@ -1,4 +1,4 @@
-// MakAir
+// MakAir Telemetry
 //
 // Copyright: 2020, Makers For Life
 // License: Public Domain License

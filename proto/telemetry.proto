@@ -1,5 +1,5 @@
 //
-// MakAir
+// MakAir Telemetry
 //
 // Protocol Buffers message definitions for MakAir telemetry
 //
@@ -99,7 +99,7 @@ message MachineStateSnapshot {
   uint32 cpm_command = 9;
   uint32 previous_peak_pressure = 10;
   uint32 previous_plateau_pressure = 11;
-  uint32 previous_peep_pressure = 12;  
+  uint32 previous_peep_pressure = 12;
   repeated AlarmCode current_alarm_codes = 13;
   repeated AlarmCode previous_alarm_codes = 14;
 }

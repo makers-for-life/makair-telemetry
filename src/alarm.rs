@@ -28,7 +28,7 @@ pub enum AlarmCodeDescription {
     BatteryVeryLow,
     PowerCableUnplugged,
     PressureTooHigh,
-    Unknown(u8)
+    Unknown(u8),
 }
 
 impl AlarmCode {

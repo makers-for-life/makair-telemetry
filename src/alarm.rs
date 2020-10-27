@@ -20,21 +20,29 @@ pub struct AlarmCode {
     code: u8,
 }
 
+pub enum AlarmCodeDescription {
+    PlateauPressureNotReached,
+    PatientUnplugged,
+    PEEPPressureNotReached,
+    BatteryLow,
+    BatteryVeryLow,
+    PowerCableUnplugged,
+    PressureTooHigh,
+    Unknown(u8)
+}
+
 impl AlarmCode {
     /// Get a textual description of the inner alarm code
-    pub fn description(self) -> String {
+    pub fn description(self) -> AlarmCodeDescription {
         match self.code {
-            RMC_SW_1 => "Plateau pressure is not reached".to_string(),
-            RMC_SW_2 => "Patient is unplugged".to_string(),
-            RMC_SW_3 => "PEEP pressure is not reached".to_string(),
-            RMC_SW_11 => "Battery low".to_string(),
-            RMC_SW_12 => "Battery very low".to_string(),
-            RMC_SW_14 => "Plateau pressure is not reached".to_string(),
-            RMC_SW_15 => "PEEP pressure is not reached".to_string(),
-            RMC_SW_16 => "Power cable unplugged".to_string(),
-            RMC_SW_18 => "Pressure too high".to_string(),
-            RMC_SW_19 => "Patient is unplugged".to_string(),
-            _ => format!("Unknown alert {}", self.code),
+            RMC_SW_1 | RMC_SW_14 => AlarmCodeDescription::PlateauPressureNotReached,
+            RMC_SW_2 | RMC_SW_19 => AlarmCodeDescription::PatientUnplugged,
+            RMC_SW_3 | RMC_SW_15 => AlarmCodeDescription::PEEPPressureNotReached,
+            RMC_SW_11 => AlarmCodeDescription::BatteryLow,
+            RMC_SW_12 => AlarmCodeDescription::BatteryVeryLow,
+            RMC_SW_16 => AlarmCodeDescription::PowerCableUnplugged,
+            RMC_SW_18 => AlarmCodeDescription::PressureTooHigh,
+            _ => AlarmCodeDescription::Unknown(self.code),
         }
     }
 

@@ -51,6 +51,14 @@
 <span id="50">50</span>
 <span id="51">51</span>
 <span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir</span>
 <span class="comment">//</span>
@@ -74,21 +82,29 @@
     <span class="ident">code</span>: <span class="ident">u8</span>,
 }
 
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AlarmCodeDescription</span> {
+    <span class="ident">PlateauPressureNotReached</span>,
+    <span class="ident">PatientUnplugged</span>,
+    <span class="ident">PEEPPressureNotReached</span>,
+    <span class="ident">BatteryLow</span>,
+    <span class="ident">BatteryVeryLow</span>,
+    <span class="ident">PowerCableUnplugged</span>,
+    <span class="ident">PressureTooHigh</span>,
+    <span class="ident">Unknown</span>(<span class="ident">u8</span>)
+}
+
 <span class="kw">impl</span> <span class="ident">AlarmCode</span> {
     <span class="doccomment">/// Get a textual description of the inner alarm code</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">AlarmCodeDescription</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">code</span> {
-            <span class="ident">RMC_SW_1</span> <span class="op">=&gt;</span> <span class="string">&quot;Plateau pressure is not reached&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">RMC_SW_2</span> <span class="op">=&gt;</span> <span class="string">&quot;Patient is unplugged&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">RMC_SW_3</span> <span class="op">=&gt;</span> <span class="string">&quot;PEEP pressure is not reached&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">RMC_SW_11</span> <span class="op">=&gt;</span> <span class="string">&quot;Battery low&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">RMC_SW_12</span> <span class="op">=&gt;</span> <span class="string">&quot;Battery very low&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">RMC_SW_14</span> <span class="op">=&gt;</span> <span class="string">&quot;Plateau pressure is not reached&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">RMC_SW_15</span> <span class="op">=&gt;</span> <span class="string">&quot;PEEP pressure is not reached&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">RMC_SW_16</span> <span class="op">=&gt;</span> <span class="string">&quot;Power cable unplugged&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">RMC_SW_18</span> <span class="op">=&gt;</span> <span class="string">&quot;Pressure too high&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">RMC_SW_19</span> <span class="op">=&gt;</span> <span class="string">&quot;Patient is unplugged&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Unknown alert {}&quot;</span>, <span class="self">self</span>.<span class="ident">code</span>),
+            <span class="ident">RMC_SW_1</span> <span class="op">|</span> <span class="ident">RMC_SW_14</span> <span class="op">=&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">PlateauPressureNotReached</span>,
+            <span class="ident">RMC_SW_2</span> <span class="op">|</span> <span class="ident">RMC_SW_19</span> <span class="op">=&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">PatientUnplugged</span>,
+            <span class="ident">RMC_SW_3</span> <span class="op">|</span> <span class="ident">RMC_SW_15</span> <span class="op">=&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">PEEPPressureNotReached</span>,
+            <span class="ident">RMC_SW_11</span> <span class="op">=&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">BatteryLow</span>,
+            <span class="ident">RMC_SW_12</span> <span class="op">=&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">BatteryVeryLow</span>,
+            <span class="ident">RMC_SW_16</span> <span class="op">=&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">PowerCableUnplugged</span>,
+            <span class="ident">RMC_SW_18</span> <span class="op">=&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">PressureTooHigh</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">Unknown</span>(<span class="self">self</span>.<span class="ident">code</span>),
         }
     }
 

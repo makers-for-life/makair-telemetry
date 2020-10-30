@@ -136,6 +136,19 @@
 <span id="135">135</span>
 <span id="136">136</span>
 <span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -169,8 +182,21 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ControlSetting</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="comment">// Returns default value</span>
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="self">Self</span>::<span class="ident">PeakPressure</span> <span class="op">=&gt;</span> <span class="number">0</span>,
+            <span class="self">Self</span>::<span class="ident">PlateauPressure</span> <span class="op">=&gt;</span> <span class="number">0</span>,
+            <span class="self">Self</span>::<span class="ident">PEEP</span> <span class="op">=&gt;</span> <span class="number">0</span>,
+            <span class="self">Self</span>::<span class="ident">CyclesPerMinute</span> <span class="op">=&gt;</span> <span class="number">20</span>,
+            <span class="self">Self</span>::<span class="ident">ExpiratoryTerm</span> <span class="op">=&gt;</span> <span class="number">20</span>,
+            <span class="self">Self</span>::<span class="ident">TriggerEnabled</span> <span class="op">=&gt;</span> <span class="number">0</span>,
+            <span class="self">Self</span>::<span class="ident">TriggerOffset</span> <span class="op">=&gt;</span> <span class="number">20</span>,
+        }
+    }
+
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bounds</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">RangeInclusive</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="comment">// Returns range bounds</span>
+        <span class="comment">// Returns allowed value bounds</span>
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="self">Self</span>::<span class="ident">PeakPressure</span> <span class="op">=&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">700</span>),
             <span class="self">Self</span>::<span class="ident">PlateauPressure</span> <span class="op">=&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">100</span>, <span class="number">400</span>),

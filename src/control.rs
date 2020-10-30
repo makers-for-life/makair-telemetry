@@ -30,8 +30,21 @@ pub enum ControlSetting {
 }
 
 impl ControlSetting {
+    pub fn default(&self) -> usize {
+        // Returns default value
+        match self {
+            Self::PeakPressure => 0,
+            Self::PlateauPressure => 0,
+            Self::PEEP => 0,
+            Self::CyclesPerMinute => 20,
+            Self::ExpiratoryTerm => 20,
+            Self::TriggerEnabled => 0,
+            Self::TriggerOffset => 20,
+        }
+    }
+
     pub fn bounds(&self) -> RangeInclusive<usize> {
-        // Returns range bounds
+        // Returns allowed value bounds
         match self {
             Self::PeakPressure => RangeInclusive::new(0, 700),
             Self::PlateauPressure => RangeInclusive::new(100, 400),

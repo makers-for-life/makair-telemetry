@@ -5,26 +5,43 @@
 
 use rand::distributions::{Distribution, Standard};
 use rand::Rng;
+use std::ops::RangeInclusive;
 use std::convert::TryFrom;
 
 /// Available settings in the control protocol
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub enum ControlSetting {
-    /// Peak pressure in mmH20 (value must be between 0 and 700)
+    /// Peak pressure in mmH20 (value bounds must be between 0 and 700)
     PeakPressure = 1,
-    /// Plateau pressure in mmH2O (value must be between 100 and 400)
+    /// Plateau pressure in mmH2O (value bounds must be between 100 and 400)
     PlateauPressure = 2,
-    /// PEEP in mmH2O (value must be between 0 and 300)
+    /// PEEP in mmH2O (value bounds must be between 0 and 300)
     PEEP = 3,
-    /// Number of cycles per minute (value must be between 5 and 35)
+    /// Number of cycles per minute (value bounds must be between 5 and 35)
     CyclesPerMinute = 4,
-    /// Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10 (value must be between 10 and 60)
+    /// Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10 (value \
+    //    bounds must be between 10 and 60)
     ExpiratoryTerm = 5,
-    /// State of the trigger (value must be 1 if enabled and 0 if disabled)
+    /// State of the trigger (value bounds must be 1 if enabled and 0 if disabled)
     TriggerEnabled = 6,
-    /// Trigger offset in mmH2O (value must be between 0 and 100)
+    /// Trigger offset in mmH2O (value bounds must be between 0 and 100)
     TriggerOffset = 7,
+}
+
+impl ControlSetting {
+    pub fn bounds(&self) -> RangeInclusive<usize> {
+        // Returns range bounds
+        match self {
+            Self::PeakPressure => RangeInclusive::new(0, 700),
+            Self::PlateauPressure => RangeInclusive::new(100, 400),
+            Self::PEEP => RangeInclusive::new(0, 300),
+            Self::CyclesPerMinute => RangeInclusive::new(5, 35),
+            Self::ExpiratoryTerm => RangeInclusive::new(10, 60),
+            Self::TriggerEnabled => RangeInclusive::new(0, 1),
+            Self::TriggerOffset => RangeInclusive::new(0, 100),
+        }
+    }
 }
 
 impl std::convert::TryFrom<u8> for ControlSetting {

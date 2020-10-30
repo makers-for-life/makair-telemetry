@@ -1,6 +1,6 @@
 [package]
 name = "makair-telemetry"
-version = "1.2.0"
+version = "1.2.1"
 authors = ["David Sferruzza <david.sferruzza@gmail.com>", "Valerian Saliou <valerian@valeriansaliou.name>"]
 edition = "2018"
 

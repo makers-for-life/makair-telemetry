@@ -119,6 +119,23 @@
 <span id="118">118</span>
 <span id="119">119</span>
 <span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -127,26 +144,43 @@
 
 <span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">distributions</span>::{<span class="ident">Distribution</span>, <span class="ident">Standard</span>};
 <span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">Rng</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">RangeInclusive</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
 
 <span class="doccomment">/// Available settings in the control protocol</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serialize-messages&quot;</span>, <span class="ident">derive</span>(<span class="ident">serde</span>::<span class="ident">Serialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ControlSetting</span> {
-    <span class="doccomment">/// Peak pressure in mmH20 (value must be between 0 and 700)</span>
+    <span class="doccomment">/// Peak pressure in mmH20 (value bounds must be between 0 and 700)</span>
     <span class="ident">PeakPressure</span> <span class="op">=</span> <span class="number">1</span>,
-    <span class="doccomment">/// Plateau pressure in mmH2O (value must be between 100 and 400)</span>
+    <span class="doccomment">/// Plateau pressure in mmH2O (value bounds must be between 100 and 400)</span>
     <span class="ident">PlateauPressure</span> <span class="op">=</span> <span class="number">2</span>,
-    <span class="doccomment">/// PEEP in mmH2O (value must be between 0 and 300)</span>
+    <span class="doccomment">/// PEEP in mmH2O (value bounds must be between 0 and 300)</span>
     <span class="ident">PEEP</span> <span class="op">=</span> <span class="number">3</span>,
-    <span class="doccomment">/// Number of cycles per minute (value must be between 5 and 35)</span>
+    <span class="doccomment">/// Number of cycles per minute (value bounds must be between 5 and 35)</span>
     <span class="ident">CyclesPerMinute</span> <span class="op">=</span> <span class="number">4</span>,
-    <span class="doccomment">/// Expiration term in the &quot;Inspiration/Expiration&quot; ratio given that Inspiration = 10 (value must be between 10 and 60)</span>
+    <span class="doccomment">/// Expiration term in the &quot;Inspiration/Expiration&quot; ratio given that Inspiration = 10 (value \</span>
+    <span class="comment">//    bounds must be between 10 and 60)</span>
     <span class="ident">ExpiratoryTerm</span> <span class="op">=</span> <span class="number">5</span>,
-    <span class="doccomment">/// State of the trigger (value must be 1 if enabled and 0 if disabled)</span>
+    <span class="doccomment">/// State of the trigger (value bounds must be 1 if enabled and 0 if disabled)</span>
     <span class="ident">TriggerEnabled</span> <span class="op">=</span> <span class="number">6</span>,
-    <span class="doccomment">/// Trigger offset in mmH2O (value must be between 0 and 100)</span>
+    <span class="doccomment">/// Trigger offset in mmH2O (value bounds must be between 0 and 100)</span>
     <span class="ident">TriggerOffset</span> <span class="op">=</span> <span class="number">7</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">ControlSetting</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bounds</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">RangeInclusive</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="comment">// Returns range bounds</span>
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="self">Self</span>::<span class="ident">PeakPressure</span> <span class="op">=&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">700</span>),
+            <span class="self">Self</span>::<span class="ident">PlateauPressure</span> <span class="op">=&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">100</span>, <span class="number">400</span>),
+            <span class="self">Self</span>::<span class="ident">PEEP</span> <span class="op">=&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">300</span>),
+            <span class="self">Self</span>::<span class="ident">CyclesPerMinute</span> <span class="op">=&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">5</span>, <span class="number">35</span>),
+            <span class="self">Self</span>::<span class="ident">ExpiratoryTerm</span> <span class="op">=&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">10</span>, <span class="number">60</span>),
+            <span class="self">Self</span>::<span class="ident">TriggerEnabled</span> <span class="op">=&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">1</span>),
+            <span class="self">Self</span>::<span class="ident">TriggerOffset</span> <span class="op">=&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">100</span>),
+        }
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ControlSetting</span> {

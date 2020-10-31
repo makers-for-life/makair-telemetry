@@ -16,7 +16,7 @@ jobs:
             components: rustfmt, clippy
 
       - name: Lint
-        uses: actions-rs/clippy-check@v1.0.5
+        uses: actions-rs/clippy-check@v1.0.7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --all-targets --all-features -- -D warnings

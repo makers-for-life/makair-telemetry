@@ -127,23 +127,23 @@
         }
     }
 
-    <span class="comment">// Lists adjacent (similar) alarms</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">adjacents</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [(<span class="ident">u8</span>, <span class="ident">u8</span>)] {
-        <span class="comment">// The highest-priority alarm should be located first in the adjacency list</span>
-        <span class="kw-2">&amp;</span>[
+    <span class="comment">// Lists adjacent (similar) alarm (if any)</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">adjacent</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">code</span> {
             <span class="comment">// &#39;Battery very low&#39; high-priority alarm takes precedence over &#39;battery low&#39; \</span>
             <span class="comment">//   medium-priority alarm</span>
-            (<span class="ident">RMC_SW_12</span>, <span class="ident">RMC_SW_11</span>),
+            <span class="ident">RMC_SW_12</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">RMC_SW_11</span>),
             <span class="comment">// &#39;Patient unplugged&#39; high-priority alarm takes precedence over its medium-priority \</span>
             <span class="comment">//   counterpart</span>
-            (<span class="ident">RMC_SW_2</span>, <span class="ident">RMC_SW_19</span>),
+            <span class="ident">RMC_SW_2</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">RMC_SW_19</span>),
             <span class="comment">// &#39;Plateau pressure not reached&#39; high-priority alarm takes precedence over its \</span>
             <span class="comment">//   medium-priority counterpart</span>
-            (<span class="ident">RMC_SW_1</span>, <span class="ident">RMC_SW_14</span>),
+            <span class="ident">RMC_SW_1</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">RMC_SW_14</span>),
             <span class="comment">// &#39;PEEP pressure not reached&#39; high-priority alarm takes precedence over its \</span>
             <span class="comment">//   medium-priority counterpart</span>
-            (<span class="ident">RMC_SW_3</span>, <span class="ident">RMC_SW_15</span>),
-        ]
+            <span class="ident">RMC_SW_3</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">RMC_SW_15</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+        }
     }
 
     <span class="doccomment">/// Unwrap the inner alarm code</span>

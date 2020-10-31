@@ -47,23 +47,23 @@ impl AlarmCode {
     }
 
     // Lists adjacent (similar) alarm (if any)
-    pub fn adjacent(self) -> Option<u8> {
+    pub fn adjacent(self) -> Option<AlarmCode> {
         // Adjacent alarm codes always match from higher priority, to lower priority. This lets \
         //   a telemetry library consumer to de-duplicate alarms when a similar alarm is shown \
         //   at both medium and high level.
         match self.code {
             // 'Battery very low' high-priority alarm takes precedence over 'battery low' \
             //   medium-priority alarm
-            RMC_SW_12 => Some(RMC_SW_11),
+            RMC_SW_12 => Some(Self::from(RMC_SW_11)),
             // 'Patient unplugged' high-priority alarm takes precedence over its medium-priority \
             //   counterpart
-            RMC_SW_2 => Some(RMC_SW_19),
+            RMC_SW_2 => Some(Self::from(RMC_SW_19)),
             // 'Plateau pressure not reached' high-priority alarm takes precedence over its \
             //   medium-priority counterpart
-            RMC_SW_1 => Some(RMC_SW_14),
+            RMC_SW_1 => Some(Self::from(RMC_SW_14)),
             // 'PEEP pressure not reached' high-priority alarm takes precedence over its \
             //   medium-priority counterpart
-            RMC_SW_3 => Some(RMC_SW_15),
+            RMC_SW_3 => Some(Self::from(RMC_SW_15)),
             _ => None,
         }
     }

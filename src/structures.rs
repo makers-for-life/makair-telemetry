@@ -322,9 +322,9 @@ impl<I> nom::error::ParseError<I> for TelemetryError<I> {
     }
 }
 
-impl<I> From<(I, nom::error::ErrorKind)> for TelemetryError<I> {
-    fn from(error: (I, nom::error::ErrorKind)) -> Self {
-        TelemetryError(error.0, TelemetryErrorKind::ParserError(error.1))
+impl<I> From<nom::error::Error<I>> for TelemetryError<I> {
+    fn from(error: nom::error::Error<I>) -> Self {
+        TelemetryError(error.input, TelemetryErrorKind::ParserError(error.code))
     }
 }
 

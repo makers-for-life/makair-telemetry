@@ -48,6 +48,9 @@ impl AlarmCode {
 
     // Lists adjacent (similar) alarm (if any)
     pub fn adjacent(self) -> Option<u8> {
+        // Adjacent alarm codes always match from higher priority, to lower priority. This lets \
+        //   a telemetry library consumer to de-duplicate alarms when a similar alarm is shown \
+        //   at both medium and high level.
         match self.code {
             // 'Battery very low' high-priority alarm takes precedence over 'battery low' \
             //   medium-priority alarm

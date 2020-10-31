@@ -30,6 +30,7 @@ pub enum ControlSetting {
 }
 
 impl ControlSetting {
+    /// Default settings
     pub fn default(&self) -> usize {
         // Returns default value
         match self {
@@ -43,6 +44,7 @@ impl ControlSetting {
         }
     }
 
+    /// Allowed value bounds per setting
     pub fn bounds(&self) -> RangeInclusive<usize> {
         // Returns allowed value bounds
         match self {

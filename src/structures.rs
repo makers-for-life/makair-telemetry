@@ -13,8 +13,11 @@ pub use crate::control::ControlSetting;
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub enum Mode {
+    /// Production mode
     Production,
+    /// (obsolete) Qualification mode
     Qualification,
+    /// (obsolete) Integration test mode
     IntegrationTest,
 }
 
@@ -22,7 +25,9 @@ pub enum Mode {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub enum Phase {
+    /// Inhalation
     Inhalation,
+    /// Exhalation
     Exhalation,
 }
 
@@ -30,8 +35,11 @@ pub enum Phase {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub enum SubPhase {
+    /// Inspiration
     Inspiration,
+    /// HoldInspiration
     HoldInspiration,
+    /// Exhale
     Exhale,
 }
 
@@ -39,8 +47,11 @@ pub enum SubPhase {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub enum AlarmPriority {
+    /// High
     High,
+    /// Medium
     Medium,
+    /// Low
     Low,
 }
 
@@ -229,11 +240,17 @@ pub struct ControlAck {
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 #[cfg_attr(feature = "serialize-messages", serde(tag = "message_type"))]
 pub enum TelemetryMessage {
+    /// A telemetry message that is sent once every time the MCU boots
     BootMessage(BootMessage),
+    /// A telemetry message that is sent every 100 ms when the MCU is in "stop" mode
     StoppedMessage(StoppedMessage),
+    /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
     DataSnapshot(DataSnapshot),
+    /// A telemetry message that is sent at the end of every respiratory cycle
     MachineStateSnapshot(MachineStateSnapshot),
+    /// A telemetry message that is sent every time an alarm is triggered or stopped
     AlarmTrap(AlarmTrap),
+    /// An ACK message that is sent every time a setting is changed using the control protocol
     ControlAck(ControlAck),
 }
 

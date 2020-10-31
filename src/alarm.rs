@@ -46,23 +46,23 @@ impl AlarmCode {
         }
     }
 
-    // Lists adjacent (similar) alarms
-    pub fn adjacents(self) -> &'static [(u8, u8)] {
-        // The highest-priority alarm should be located first in the adjacency list
-        &[
+    // Lists adjacent (similar) alarm (if any)
+    pub fn adjacent(self) -> Option<u8> {
+        match self.code {
             // 'Battery very low' high-priority alarm takes precedence over 'battery low' \
             //   medium-priority alarm
-            (RMC_SW_12, RMC_SW_11),
+            RMC_SW_12 => Some(RMC_SW_11),
             // 'Patient unplugged' high-priority alarm takes precedence over its medium-priority \
             //   counterpart
-            (RMC_SW_2, RMC_SW_19),
+            RMC_SW_2 => Some(RMC_SW_19),
             // 'Plateau pressure not reached' high-priority alarm takes precedence over its \
             //   medium-priority counterpart
-            (RMC_SW_1, RMC_SW_14),
+            RMC_SW_1 => Some(RMC_SW_14),
             // 'PEEP pressure not reached' high-priority alarm takes precedence over its \
             //   medium-priority counterpart
-            (RMC_SW_3, RMC_SW_15),
-        ]
+            RMC_SW_3 => Some(RMC_SW_15),
+            _ => None,
+        }
     }
 
     /// Unwrap the inner alarm code

@@ -78,6 +78,9 @@
 <span id="77">77</span>
 <span id="78">78</span>
 <span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -129,6 +132,9 @@
 
     <span class="comment">// Lists adjacent (similar) alarm (if any)</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">adjacent</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+        <span class="comment">// Adjacent alarm codes always match from higher priority, to lower priority. This lets \</span>
+        <span class="comment">//   a telemetry library consumer to de-duplicate alarms when a similar alarm is shown \</span>
+        <span class="comment">//   at both medium and high level.</span>
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">code</span> {
             <span class="comment">// &#39;Battery very low&#39; high-priority alarm takes precedence over &#39;battery low&#39; \</span>
             <span class="comment">//   medium-priority alarm</span>

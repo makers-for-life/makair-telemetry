@@ -5,8 +5,8 @@
 
 use rand::distributions::{Distribution, Standard};
 use rand::Rng;
-use std::ops::RangeInclusive;
 use std::convert::TryFrom;
+use std::ops::RangeInclusive;
 
 /// Available settings in the control protocol
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]

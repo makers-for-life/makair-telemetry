@@ -314,6 +314,11 @@ named!(
     )
 );
 
+/// Transform bytes into a structured telemetry message
+///
+/// * `input` - Bytes to parse.
+///
+/// This only decodes the message body: header, CRC and footer must be stripped beforehand.
 pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
     nom::branch::alt((
         boot,

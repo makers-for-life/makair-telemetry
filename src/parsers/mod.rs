@@ -3,7 +3,8 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-mod v1;
+/// Parsers for the telemetry protocol version 1
+pub mod v1;
 
 use nom::number::streaming::be_u32;
 use nom::IResult;
@@ -18,11 +19,11 @@ fn footer(input: &[u8]) -> IResult<&[u8], &[u8], TelemetryError<&[u8]>> {
     nom::bytes::streaming::tag(b"\x30\xC0")(input)
 }
 
-pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
+fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
     nom::branch::alt((v1::message, v1::message))(input).map_err(nom::Err::convert)
 }
 
-pub fn with_input<
+fn with_input<
     I: Clone + nom::Offset + nom::Slice<nom::lib::std::ops::RangeTo<usize>>,
     O,
     E: nom::error::ParseError<I>,
@@ -45,6 +46,12 @@ where
     }
 }
 
+/// Transform bytes into a structured telemetry message
+///
+/// * `input` - Bytes to parse.
+///
+/// This requires every bytes of the message, including header, CRC and footer.
+/// CRC will be checked.
 pub fn parse_telemetry_message(
     input: &[u8],
 ) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {

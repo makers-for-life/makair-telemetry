@@ -339,6 +339,23 @@
 <span id="338">338</span>
 <span id="339">339</span>
 <span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -355,8 +372,11 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serialize-messages&quot;</span>, <span class="ident">derive</span>(<span class="ident">serde</span>::<span class="ident">Serialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Mode</span> {
+    <span class="doccomment">/// Production mode</span>
     <span class="ident">Production</span>,
+    <span class="doccomment">/// (obsolete) Qualification mode</span>
     <span class="ident">Qualification</span>,
+    <span class="doccomment">/// (obsolete) Integration test mode</span>
     <span class="ident">IntegrationTest</span>,
 }
 
@@ -364,7 +384,9 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serialize-messages&quot;</span>, <span class="ident">derive</span>(<span class="ident">serde</span>::<span class="ident">Serialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Phase</span> {
+    <span class="doccomment">/// Inhalation</span>
     <span class="ident">Inhalation</span>,
+    <span class="doccomment">/// Exhalation</span>
     <span class="ident">Exhalation</span>,
 }
 
@@ -372,8 +394,11 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serialize-messages&quot;</span>, <span class="ident">derive</span>(<span class="ident">serde</span>::<span class="ident">Serialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SubPhase</span> {
+    <span class="doccomment">/// Inspiration</span>
     <span class="ident">Inspiration</span>,
+    <span class="doccomment">/// HoldInspiration</span>
     <span class="ident">HoldInspiration</span>,
+    <span class="doccomment">/// Exhale</span>
     <span class="ident">Exhale</span>,
 }
 
@@ -381,8 +406,11 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serialize-messages&quot;</span>, <span class="ident">derive</span>(<span class="ident">serde</span>::<span class="ident">Serialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AlarmPriority</span> {
+    <span class="doccomment">/// High</span>
     <span class="ident">High</span>,
+    <span class="doccomment">/// Medium</span>
     <span class="ident">Medium</span>,
+    <span class="doccomment">/// Low</span>
     <span class="ident">Low</span>,
 }
 
@@ -571,11 +599,17 @@
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serialize-messages&quot;</span>, <span class="ident">derive</span>(<span class="ident">serde</span>::<span class="ident">Serialize</span>))]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serialize-messages&quot;</span>, <span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;message_type&quot;</span>))]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TelemetryMessage</span> {
+    <span class="doccomment">/// A telemetry message that is sent once every time the MCU boots</span>
     <span class="ident">BootMessage</span>(<span class="ident">BootMessage</span>),
+    <span class="doccomment">/// A telemetry message that is sent every 100 ms when the MCU is in &quot;stop&quot; mode</span>
     <span class="ident">StoppedMessage</span>(<span class="ident">StoppedMessage</span>),
+    <span class="doccomment">/// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)</span>
     <span class="ident">DataSnapshot</span>(<span class="ident">DataSnapshot</span>),
+    <span class="doccomment">/// A telemetry message that is sent at the end of every respiratory cycle</span>
     <span class="ident">MachineStateSnapshot</span>(<span class="ident">MachineStateSnapshot</span>),
+    <span class="doccomment">/// A telemetry message that is sent every time an alarm is triggered or stopped</span>
     <span class="ident">AlarmTrap</span>(<span class="ident">AlarmTrap</span>),
+    <span class="doccomment">/// An ACK message that is sent every time a setting is changed using the control protocol</span>
     <span class="ident">ControlAck</span>(<span class="ident">ControlAck</span>),
 }
 

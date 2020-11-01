@@ -681,9 +681,9 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">I</span>, <span class="ident">nom</span>::<span class="ident">error</span>::<span class="ident">ErrorKind</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">error</span>: (<span class="ident">I</span>, <span class="ident">nom</span>::<span class="ident">error</span>::<span class="ident">ErrorKind</span>)) <span class="op">-&gt;</span> <span class="self">Self</span> {
-        <span class="ident">TelemetryError</span>(<span class="ident">error</span>.<span class="number">0</span>, <span class="ident">TelemetryErrorKind</span>::<span class="ident">ParserError</span>(<span class="ident">error</span>.<span class="number">1</span>))
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">nom</span>::<span class="ident">error</span>::<span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;&gt;</span> <span class="kw">for</span> <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">error</span>: <span class="ident">nom</span>::<span class="ident">error</span>::<span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">TelemetryError</span>(<span class="ident">error</span>.<span class="ident">input</span>, <span class="ident">TelemetryErrorKind</span>::<span class="ident">ParserError</span>(<span class="ident">error</span>.<span class="ident">code</span>))
     }
 }
 

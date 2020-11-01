@@ -24,7 +24,7 @@ Given this transmission budget, an encoding needs to be designed which will enab
 
 # Available data
 
-The telemetry protocol of the STM32 MCU in the MakAir exports 5 types of messages, *Boot*, *Stopped*, *DataSnapshot*, *MachineStateSnapshot* and *AlarmTrap*. The *Boot* and *Stopped* messages are emitted when the device starts and stops. The *DataSnapshot* messages are emitted at a frequency of 100Hz and contain various sensor readings. The *MachineStateSnapshot* are emitted at the end of each cycle and contain summary informations about that cycle, the current setting of the MakAir and the current alarms. Lastly the *AlarmTrap* messages contain information about alarms whenever they are triggered.
+The telemetry protocol of the STM32 MCU in the MakAir exports 5 types of messages, *Boot*, *Stopped*, *DataSnapshot*, *MachineStateSnapshot* and *AlarmTrap*. The *Boot* and *Stopped* messages are emitted when the device starts and stops. The *DataSnapshot* messages are emitted at a frequency of 100Hz and contain various sensor readings. The *MachineStateSnapshot* are emitted at the end of each cycle and contain summary information about that cycle, the current setting of the MakAir and the current alarms. Lastly the *AlarmTrap* messages contain information about alarms whenever they are triggered.
 
 The messages of utmost importance are those of type *MachineStateSnapshot* and *AlarmTrap*, they allow the medical body to supervize the use of the MakAir and react to abnormal situations, these messages should be considered **MUST HAVEs**. The other types of messages can be considered **NICE TO HAVEs**.
 
@@ -90,4 +90,4 @@ The `MAKAIR_DELTA_OPTGZIP` format leads to messages which average 7.75 to 9.5 by
 
 In order to conform to `DATA-4` the packets will be limited to 200 bytes. After each `MachineStateSnsapshot` frame is received from the MCU, it is added to a in-memory buffer, if the number of frames in the buffer allows to respect the air time (`DATA-5`), the frames are encoded and the size of the resulting packet is checked. If that packet is over 200 bytes, the first frame of the buffer is discarded and the encoding is retried. If the packet is below 200 bytes, it is sent.
 
-The alarms are sent as soon as they are received from the MCU in a `MakAirTelemetry` message containing a single `AlarmTrap` message, thus respecting `DATA-1`. 
+The alarms are sent as soon as they are received from the MCU in a `MakAirTelemetry` message containing a single `AlarmTrap` message, thus respecting `DATA-1`.

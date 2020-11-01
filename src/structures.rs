@@ -165,6 +165,10 @@ pub struct DataSnapshot {
     pub blower_rpm: u8,
     /// Current battery level in volts
     pub battery_level: u8,
+    /// [protocol v2] Inspiratory flow
+    pub inspiratory_flow: Option<i16>,
+    /// [protocol v2] Expiratory flow
+    pub expiratory_flow: Option<i16>,
 }
 
 /// A telemetry message that is sent at the end of every respiratory cycle

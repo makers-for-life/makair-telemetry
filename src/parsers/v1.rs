@@ -162,6 +162,8 @@ named!(
                 patient_valve_position,
                 blower_rpm,
                 battery_level,
+                inspiratory_flow: None,
+                expiratory_flow: None,
             }))
     )
 );
@@ -504,6 +506,8 @@ mod tests {
                 patient_valve_position,
                 blower_rpm,
                 battery_level,
+                inspiratory_flow: None,
+                expiratory_flow: None,
             };
 
             // This needs to be consistent with sendDataSnapshot() defined in src/software/firmware/srcs/telemetry.cpp

@@ -1,4 +1,4 @@
-use nom::number::streaming::{be_u16, be_u32, be_u64, be_u8};
+use nom::number::streaming::{be_i16, be_u16, be_u32, be_u64, be_u8};
 use nom::IResult;
 use std::convert::TryFrom;
 
@@ -162,6 +162,10 @@ named!(
             >> blower_rpm: be_u8
             >> sep
             >> battery_level: be_u8
+            >> sep
+            >> inspiratory_flow: be_i16
+            >> sep
+            >> expiratory_flow: be_i16
             >> end
             >> (TelemetryMessage::DataSnapshot(DataSnapshot {
                 telemetry_version: 1,
@@ -176,6 +180,8 @@ named!(
                 patient_valve_position,
                 blower_rpm,
                 battery_level,
+                inspiratory_flow: Some(inspiratory_flow),
+                expiratory_flow: Some(expiratory_flow),
             }))
     )
 );
@@ -361,6 +367,7 @@ mod tests {
     use super::*;
     use proptest::bool;
     use proptest::collection;
+    use proptest::num;
     use proptest::option;
     use proptest::prelude::*;
 
@@ -527,6 +534,8 @@ mod tests {
             patient_valve_position in (0u8..),
             blower_rpm in (0u8..),
             battery_level in (0u8..),
+            inspiratory_flow in num::i16::ANY,
+            expiratory_flow in num::i16::ANY,
         ) {
             let msg = DataSnapshot {
                 telemetry_version: 1,
@@ -541,6 +550,8 @@ mod tests {
                 patient_valve_position,
                 blower_rpm,
                 battery_level,
+                inspiratory_flow: Some(inspiratory_flow),
+                expiratory_flow: Some(expiratory_flow),
             };
 
             // This needs to be consistent with sendDataSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -567,6 +578,10 @@ mod tests {
                 &[msg.blower_rpm],
                 b"\t",
                 &[msg.battery_level],
+                b"\t",
+                &msg.inspiratory_flow.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.expiratory_flow.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 

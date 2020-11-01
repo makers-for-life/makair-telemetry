@@ -85,6 +85,8 @@ mod tests {
             patient_valve_position: 0,
             blower_rpm: 0,
             battery_level: 0,
+            inspiratory_flow: None,
+            expiratory_flow: None,
         })];
 
         assert_eq!(compute_duration(vect), 10);
@@ -183,6 +185,8 @@ mod tests {
             patient_valve_position: 0,
             blower_rpm: 0,
             battery_level: 0,
+            inspiratory_flow: None,
+            expiratory_flow: None,
         }));
 
         vect.push(TelemetryMessage::MachineStateSnapshot(

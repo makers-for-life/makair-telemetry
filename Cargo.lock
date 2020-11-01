@@ -280,9 +280,9 @@ checksum = "0ee1c47aaa256ecabcaea351eae4a9b01ef39ed810004e298d2511ed284b1525"
 
 [[package]]
 name = "nom"
-version = "6.0.0-beta5"
+version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "abe842697f81ba07dca720047573ed87fb3bc9819f35b7e8a48581879889fac5"
+checksum = "4489ccc7d668957ddf64af7cd027c081728903afa6479d35da7e99bf5728f75f"
 dependencies = [
  "bitvec",
  "lexical-core",

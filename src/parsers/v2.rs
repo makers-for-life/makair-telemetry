@@ -4,6 +4,8 @@ use std::convert::TryFrom;
 
 use super::super::structures::*;
 
+const VERSION: u8 = 2;
+
 named!(sep, tag!("\t"));
 named!(end, tag!("\n"));
 
@@ -56,7 +58,7 @@ named!(
     boot<TelemetryMessage>,
     do_parse!(
         tag!("B:")
-            >> tag!([1u8])
+            >> tag!([VERSION])
             >> software_version_len: be_u8
             >> software_version:
                 map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
@@ -89,7 +91,7 @@ named!(
     stopped<TelemetryMessage>,
     do_parse!(
         tag!("O:")
-            >> tag!([1u8])
+            >> tag!([VERSION])
             >> software_version_len: be_u8
             >> software_version:
                 map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
@@ -137,7 +139,7 @@ named!(
     data_snapshot<TelemetryMessage>,
     do_parse!(
         tag!("D:")
-            >> tag!([1u8])
+            >> tag!([VERSION])
             >> software_version_len: be_u8
             >> software_version:
                 map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
@@ -190,7 +192,7 @@ named!(
     machine_state_snapshot<TelemetryMessage>,
     do_parse!(
         tag!("S:")
-            >> tag!([1u8])
+            >> tag!([VERSION])
             >> software_version_len: be_u8
             >> software_version:
                 map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
@@ -261,7 +263,7 @@ named!(
     alarm_trap<TelemetryMessage>,
     do_parse!(
         tag!("T:")
-            >> tag!([1u8])
+            >> tag!([VERSION])
             >> software_version_len: be_u8
             >> software_version:
                 map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
@@ -317,7 +319,7 @@ named!(
     control_ack<TelemetryMessage>,
     do_parse!(
         tag!("A:")
-            >> tag!([1u8])
+            >> tag!([VERSION])
             >> software_version_len: be_u8
             >> software_version:
                 map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
@@ -437,7 +439,8 @@ mod tests {
 
             // This needs to be consistent with sendBootMessage() defined in src/software/firmware/srcs/telemetry.cpp
             let input = &flat(&[
-                b"B:\x01",
+                b"B:",
+                &[VERSION],
                 &[msg.version.len() as u8],
                 &msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),
@@ -489,7 +492,8 @@ mod tests {
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
             let input = &flat(&[
-                b"O:\x01",
+                b"O:",
+                &[VERSION],
                 &[msg.version.len() as u8],
                 &msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),
@@ -556,7 +560,8 @@ mod tests {
 
             // This needs to be consistent with sendDataSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
             let input = &flat(&[
-                b"D:\x01",
+                b"D:",
+                &[VERSION],
                 &[msg.version.len() as u8],
                 &msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),
@@ -636,7 +641,8 @@ mod tests {
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
             let input = &flat(&[
-                b"S:\x01",
+                b"S:",
+                &[VERSION],
                 &[msg.version.len() as u8],
                 &msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),
@@ -720,7 +726,8 @@ mod tests {
 
             // This needs to be consistent with sendAlarmTrap() defined in src/software/firmware/srcs/telemetry.cpp
             let input = &flat(&[
-                b"T:\x01",
+                b"T:",
+                &[VERSION],
                 &[msg.version.len() as u8],
                 &msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),
@@ -778,7 +785,8 @@ mod tests {
 
             // This needs to be consistent with sendAlarmTrap() defined in src/software/firmware/srcs/telemetry.cpp
             let input = &flat(&[
-                b"A:\x01",
+                b"A:",
+                &[VERSION],
                 &[msg.version.len() as u8],
                 &msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),

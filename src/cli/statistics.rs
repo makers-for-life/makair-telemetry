@@ -111,6 +111,7 @@ mod tests {
                 expiratory_term: 0,
                 trigger_enabled: false,
                 trigger_offset: 0,
+                previous_cpm: None,
             },
         )];
 
@@ -203,6 +204,7 @@ mod tests {
                 expiratory_term: 0,
                 trigger_enabled: false,
                 trigger_offset: 0,
+                previous_cpm: None,
             },
         ));
 

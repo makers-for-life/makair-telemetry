@@ -230,6 +230,7 @@ named!(
                 expiratory_term,
                 trigger_enabled: trigger_enabled != 0,
                 trigger_offset,
+                previous_cpm: None,
             }))
     )
 );
@@ -577,6 +578,7 @@ mod tests {
                 expiratory_term,
                 trigger_enabled,
                 trigger_offset,
+                previous_cpm: None,
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp

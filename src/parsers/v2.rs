@@ -221,6 +221,8 @@ named!(
             >> trigger_enabled: be_u8
             >> sep
             >> trigger_offset: be_u8
+            >> sep
+            >> previous_cpm: be_u8
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: 1,
@@ -244,6 +246,7 @@ named!(
                 expiratory_term,
                 trigger_enabled: trigger_enabled != 0,
                 trigger_offset,
+                previous_cpm: Some(previous_cpm),
             }))
     )
 );
@@ -593,6 +596,7 @@ mod tests {
             expiratory_term in (0u8..),
             trigger_enabled in bool::ANY,
             trigger_offset in (0u8..),
+            previous_cpm in (0u8..),
         ) {
             let msg = MachineStateSnapshot {
                 telemetry_version: 1,
@@ -612,6 +616,7 @@ mod tests {
                 expiratory_term,
                 trigger_enabled,
                 trigger_offset,
+                previous_cpm: Some(previous_cpm),
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -651,6 +656,8 @@ mod tests {
                 if msg.trigger_enabled { b"\x01" } else { b"\x00" },
                 b"\t",
                 &msg.trigger_offset.to_be_bytes(),
+                b"\t",
+                &msg.previous_cpm.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 

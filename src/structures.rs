@@ -205,6 +205,8 @@ pub struct MachineStateSnapshot {
     pub trigger_enabled: bool,
     /// Trigger offset in mmH2O
     pub trigger_offset: u8,
+    /// [protocol v2] Measured number of cycles per minute
+    pub previous_cpm: Option<u8>,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped

@@ -31,5 +31,5 @@ serialize-messages = ["serde"]
 
 [[bin]]
 name = "makair_telemetry"
-path = "src/bin.rs"
+path = "src/cli/bin.rs"
 required-features = ["build-binary"]

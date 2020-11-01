@@ -3,6 +3,11 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+//! This crate is a library that handles reading and parsing the MakAir's telemetry binary protocol, and optionally sending new settings values using the Makair's control binary protocol.
+
+// Force exposed items to be documented
+#![deny(missing_docs)]
+
 #[macro_use]
 extern crate log;
 #[macro_use]
@@ -31,6 +36,7 @@ use control::*;
 use parsers::*;
 use structures::*;
 
+/// A decoded telemetry message
 pub type TelemetryChannelType = Result<TelemetryMessage, serial::core::Error>;
 
 /// Open a serial port, consume it endlessly and send back parsed telemetry messages through a channel

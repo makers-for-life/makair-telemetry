@@ -163,6 +163,8 @@ struct Convert {
     gts_disable_source_label: bool,
 }
 
+const THREAD_SLEEP_THROTTLE: std::time::Duration = std::time::Duration::from_millis(10);
+
 fn main() {
     env_logger::init();
     let opts: Opts = Opts::parse();
@@ -204,7 +206,7 @@ fn debug(cfg: Debug) {
                 display_message(msg);
             }
             Err(TryRecvError::Empty) => {
-                std::thread::sleep(std::time::Duration::from_millis(10));
+                std::thread::sleep(THREAD_SLEEP_THROTTLE);
             }
             Err(TryRecvError::Disconnected) => {
                 panic!("channel to serial port thread was closed");
@@ -232,7 +234,7 @@ fn record(cfg: Record) {
                 display_message(msg);
             }
             Err(TryRecvError::Empty) => {
-                std::thread::sleep(std::time::Duration::from_millis(10));
+                std::thread::sleep(THREAD_SLEEP_THROTTLE);
             }
             Err(TryRecvError::Disconnected) => {
                 panic!("channel to serial port thread was closed");
@@ -257,7 +259,7 @@ fn play(cfg: Play) {
                 display_message(msg);
             }
             Err(TryRecvError::Empty) => {
-                std::thread::sleep(std::time::Duration::from_millis(1));
+                std::thread::sleep(THREAD_SLEEP_THROTTLE);
             }
             Err(TryRecvError::Disconnected) => {
                 warn!("end of recording");
@@ -313,7 +315,7 @@ fn stats(cfg: Stats) {
                 }
             }
             Err(TryRecvError::Empty) => {
-                std::thread::sleep(std::time::Duration::from_millis(1));
+                std::thread::sleep(THREAD_SLEEP_THROTTLE);
             }
             Err(TryRecvError::Disconnected) => {
                 println!("Statistics");
@@ -359,7 +361,7 @@ fn control(cfg: Control) {
                 display_message(msg);
             }
             Err(TryRecvError::Empty) => {
-                std::thread::sleep(std::time::Duration::from_millis(10));
+                std::thread::sleep(THREAD_SLEEP_THROTTLE);
             }
             Err(TryRecvError::Disconnected) => {
                 panic!("channel to serial port thread was closed");
@@ -504,7 +506,7 @@ fn convert(cfg: Convert) {
                 display_message(msg);
             }
             Err(TryRecvError::Empty) => {
-                std::thread::sleep(std::time::Duration::from_millis(1));
+                std::thread::sleep(THREAD_SLEEP_THROTTLE);
             }
             Err(TryRecvError::Disconnected) => {
                 warn!("end of recording");

@@ -361,7 +361,7 @@ pub fn parse_telemetry_message(
 ) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
     use nom::sequence::{pair, preceded, terminated};
 
-    let parser = preceded(
+    let mut parser = preceded(
         header,
         terminated(pair(with_input(message), be_u32), footer),
     );

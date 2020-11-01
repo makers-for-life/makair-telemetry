@@ -126,6 +126,13 @@ mod tests {
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
+            peak_command: None,
+            plateau_command: None,
+            peep_command: None,
+            cpm_command: None,
+            expiratory_term: None,
+            trigger_enabled: None,
+            trigger_offset: None,
         }));
 
         assert_eq!(compute_duration(vect), 100);
@@ -204,6 +211,13 @@ mod tests {
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
+            peak_command: None,
+            plateau_command: None,
+            peep_command: None,
+            cpm_command: None,
+            expiratory_term: None,
+            trigger_enabled: None,
+            trigger_offset: None,
         }));
 
         assert_eq!(compute_duration(vect), 110);

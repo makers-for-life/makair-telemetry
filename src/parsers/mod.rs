@@ -5,6 +5,8 @@
 
 /// Parsers for the telemetry protocol version 1
 pub mod v1;
+/// Parsers for the telemetry protocol version 2
+pub mod v2;
 
 use nom::number::streaming::be_u32;
 use nom::IResult;
@@ -20,7 +22,7 @@ fn footer(input: &[u8]) -> IResult<&[u8], &[u8], TelemetryError<&[u8]>> {
 }
 
 fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
-    nom::branch::alt((v1::message, v1::message))(input).map_err(nom::Err::convert)
+    nom::branch::alt((v2::message, v1::message))(input).map_err(nom::Err::convert)
 }
 
 fn with_input<

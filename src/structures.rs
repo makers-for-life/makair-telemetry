@@ -121,6 +121,20 @@ pub struct StoppedMessage {
     pub device_id: String,
     /// Number of microseconds since the MCU booted
     pub systick: u64,
+    /// [protocol v2] Requested peak command in cmH2O
+    pub peak_command: Option<u8>,
+    /// [protocol v2] Requested plateau command in cmH2O
+    pub plateau_command: Option<u8>,
+    /// [protocol v2] Requested PEEP command in cmH2O
+    pub peep_command: Option<u8>,
+    /// [protocol v2] Requested number of cycles per minute
+    pub cpm_command: Option<u8>,
+    /// [protocol v2] Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
+    pub expiratory_term: Option<u8>,
+    /// [protocol v2] State of the trigger
+    pub trigger_enabled: Option<bool>,
+    /// [protocol v2] Trigger offset in mmH2O
+    pub trigger_offset: Option<u8>,
 }
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)

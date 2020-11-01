@@ -100,6 +100,20 @@ named!(
             >> device_id3: be_u32
             >> sep
             >> systick: be_u64
+            >> sep
+            >> peak_command: be_u8
+            >> sep
+            >> plateau_command: be_u8
+            >> sep
+            >> peep_command: be_u8
+            >> sep
+            >> cpm_command: be_u8
+            >> sep
+            >> expiratory_term: be_u8
+            >> sep
+            >> trigger_enabled: be_u8
+            >> sep
+            >> trigger_offset: be_u8
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
@@ -107,13 +121,13 @@ named!(
                     version: software_version.to_string(),
                     device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                     systick,
-                    peak_command: None,
-                    plateau_command: None,
-                    peep_command: None,
-                    cpm_command: None,
-                    expiratory_term: None,
-                    trigger_enabled: None,
-                    trigger_offset: None,
+                    peak_command: Some(peak_command),
+                    plateau_command: Some(plateau_command),
+                    peep_command: Some(peep_command),
+                    cpm_command: Some(cpm_command),
+                    expiratory_term: Some(expiratory_term),
+                    trigger_enabled: Some(trigger_enabled != 0),
+                    trigger_offset: Some(trigger_offset),
                 })
             })
     )
@@ -441,19 +455,26 @@ mod tests {
             device_id2 in (0u32..),
             device_id3 in (0u32..),
             systick in (0u64..),
+            peak_command in (0u8..),
+            plateau_command in (0u8..),
+            peep_command in (0u8..),
+            cpm_command in (0u8..),
+            expiratory_term in (0u8..),
+            trigger_enabled in bool::ANY,
+            trigger_offset in (0u8..),
         ) {
             let msg = StoppedMessage {
                 telemetry_version: 1,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
-                peak_command: None,
-                plateau_command: None,
-                peep_command: None,
-                cpm_command: None,
-                expiratory_term: None,
-                trigger_enabled: None,
-                trigger_offset: None,
+                peak_command: Some(peak_command),
+                plateau_command: Some(plateau_command),
+                peep_command: Some(peep_command),
+                cpm_command: Some(cpm_command),
+                expiratory_term: Some(expiratory_term),
+                trigger_enabled: Some(trigger_enabled),
+                trigger_offset: Some(trigger_offset),
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -466,6 +487,20 @@ mod tests {
                 &device_id3.to_be_bytes(),
                 b"\t",
                 &msg.systick.to_be_bytes(),
+                b"\t",
+                &[msg.peak_command.unwrap_or_default()],
+                b"\t",
+                &[msg.plateau_command.unwrap_or_default()],
+                b"\t",
+                &[msg.peep_command.unwrap_or_default()],
+                b"\t",
+                &[msg.cpm_command.unwrap_or_default()],
+                b"\t",
+                &msg.expiratory_term.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                if msg.trigger_enabled.unwrap_or_default() { b"\x01" } else { b"\x00" },
+                b"\t",
+                &msg.trigger_offset.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 

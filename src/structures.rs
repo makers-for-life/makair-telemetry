@@ -93,6 +93,8 @@ impl TryFrom<u8> for AlarmPriority {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct BootMessage {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
     /// Version of the MCU firmware
     pub version: String,
     /// Internal ID of the MCU
@@ -111,6 +113,8 @@ pub struct BootMessage {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct StoppedMessage {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
     /// Version of the MCU firmware
     pub version: String,
     /// Internal ID of the MCU
@@ -123,6 +127,8 @@ pub struct StoppedMessage {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct DataSnapshot {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
     /// Version of the MCU firmware
     pub version: String,
     /// Internal ID of the MCU
@@ -151,6 +157,8 @@ pub struct DataSnapshot {
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct MachineStateSnapshot {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
     /// Version of the MCU firmware
     pub version: String,
     /// Internal ID of the MCU
@@ -189,6 +197,8 @@ pub struct MachineStateSnapshot {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct AlarmTrap {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
     /// Version of the MCU firmware
     pub version: String,
     /// Internal ID of the MCU
@@ -223,6 +233,8 @@ pub struct AlarmTrap {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct ControlAck {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
     /// Version of the MCU firmware
     pub version: String,
     /// Internal ID of the MCU
@@ -255,6 +267,31 @@ pub enum TelemetryMessage {
 }
 
 impl TelemetryMessage {
+    /// Version of the telemetry protocol
+    pub fn telemetry_version(&self) -> u8 {
+        let val = match self {
+            Self::BootMessage(BootMessage {
+                telemetry_version, ..
+            }) => telemetry_version,
+            Self::StoppedMessage(StoppedMessage {
+                telemetry_version, ..
+            }) => telemetry_version,
+            Self::DataSnapshot(DataSnapshot {
+                telemetry_version, ..
+            }) => telemetry_version,
+            Self::MachineStateSnapshot(MachineStateSnapshot {
+                telemetry_version, ..
+            }) => telemetry_version,
+            Self::AlarmTrap(AlarmTrap {
+                telemetry_version, ..
+            }) => telemetry_version,
+            Self::ControlAck(ControlAck {
+                telemetry_version, ..
+            }) => telemetry_version,
+        };
+        *val
+    }
+
     /// Version of the MCU firmware
     pub fn version(&self) -> String {
         let val = match self {

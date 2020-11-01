@@ -87,6 +87,7 @@ named!(
             >> end
             >> ({
                 TelemetryMessage::BootMessage(BootMessage {
+                    telemetry_version: 1,
                     version: software_version.to_string(),
                     device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                     systick,
@@ -115,6 +116,7 @@ named!(
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
+                    telemetry_version: 1,
                     version: software_version.to_string(),
                     device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                     systick,
@@ -154,6 +156,7 @@ named!(
             >> battery_level: be_u8
             >> end
             >> (TelemetryMessage::DataSnapshot(DataSnapshot {
+                telemetry_version: 1,
                 version: software_version.to_string(),
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -212,6 +215,7 @@ named!(
             >> trigger_offset: be_u8
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
+                telemetry_version: 1,
                 version: software_version.to_string(),
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -273,6 +277,7 @@ named!(
             >> cycles_since_trigger: be_u32
             >> end
             >> (TelemetryMessage::AlarmTrap(AlarmTrap {
+                telemetry_version: 1,
                 version: software_version.to_string(),
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -312,6 +317,7 @@ named!(
             >> value: be_u16
             >> end
             >> (TelemetryMessage::ControlAck(ControlAck {
+                telemetry_version: 1,
                 version: software_version.to_string(),
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -468,6 +474,7 @@ mod tests {
             value128 in (0u8..),
         ) {
             let msg = BootMessage {
+                telemetry_version: 1,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -538,6 +545,7 @@ mod tests {
             value128 in (0u8..),
         ) {
             let msg = BootMessage {
+                telemetry_version: 1,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -577,6 +585,7 @@ mod tests {
             systick in (0u64..),
         ) {
             let msg = StoppedMessage {
+                telemetry_version: 1,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -617,6 +626,7 @@ mod tests {
             battery_level in (0u8..),
         ) {
             let msg = DataSnapshot {
+                telemetry_version: 1,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -685,6 +695,7 @@ mod tests {
             trigger_offset in (0u8..),
         ) {
             let msg = MachineStateSnapshot {
+                telemetry_version: 1,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -768,6 +779,7 @@ mod tests {
             cycles_since_trigger in (0u32..),
         ) {
             let msg = AlarmTrap {
+                telemetry_version: 1,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -834,6 +846,7 @@ mod tests {
             value in (0u16..),
         ) {
             let msg = ControlAck {
+                telemetry_version: 1,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,

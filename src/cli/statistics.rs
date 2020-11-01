@@ -36,6 +36,7 @@ mod tests {
     #[test]
     fn test_compute_duration_one_boot_message() {
         let vect: Vec<TelemetryMessage> = vec![TelemetryMessage::BootMessage(BootMessage {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -49,6 +50,7 @@ mod tests {
     #[test]
     fn test_compute_duration_one_alarm_trap() {
         let vect: Vec<TelemetryMessage> = vec![TelemetryMessage::AlarmTrap(AlarmTrap {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -71,6 +73,7 @@ mod tests {
     #[test]
     fn test_compute_duration_one_data_snapshot() {
         let vect: Vec<TelemetryMessage> = vec![TelemetryMessage::DataSnapshot(DataSnapshot {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -91,6 +94,7 @@ mod tests {
     fn test_compute_duration_one_machine_state_snapshot() {
         let vect: Vec<TelemetryMessage> = vec![TelemetryMessage::MachineStateSnapshot(
             MachineStateSnapshot {
+                telemetry_version: 1,
                 version: String::from(""),
                 device_id: String::from(""),
                 systick: 0,
@@ -118,6 +122,7 @@ mod tests {
         let mut vect: Vec<TelemetryMessage> = Vec::new();
 
         vect.push(TelemetryMessage::StoppedMessage(StoppedMessage {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -131,6 +136,7 @@ mod tests {
         let mut vect: Vec<TelemetryMessage> = Vec::new();
 
         vect.push(TelemetryMessage::BootMessage(BootMessage {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -139,6 +145,7 @@ mod tests {
         }));
 
         vect.push(TelemetryMessage::AlarmTrap(AlarmTrap {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -156,6 +163,7 @@ mod tests {
         }));
 
         vect.push(TelemetryMessage::DataSnapshot(DataSnapshot {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -171,6 +179,7 @@ mod tests {
 
         vect.push(TelemetryMessage::MachineStateSnapshot(
             MachineStateSnapshot {
+                telemetry_version: 1,
                 version: String::from(""),
                 device_id: String::from(""),
                 systick: 0,
@@ -191,6 +200,7 @@ mod tests {
         ));
 
         vect.push(TelemetryMessage::StoppedMessage(StoppedMessage {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,

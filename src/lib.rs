@@ -17,7 +17,8 @@ extern crate nom;
 pub mod alarm;
 /// Structures to represent control messages
 pub mod control;
-mod parsers;
+/// Underlying parsers for telemetry messages
+pub mod parsers;
 /// Structures to represent telemetry messages
 pub mod structures;
 

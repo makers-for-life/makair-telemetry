@@ -1,21 +1,10 @@
-// MakAir Telemetry
-//
-// Copyright: 2020, Makers For Life
-// License: Public Domain License
-
-use nom::number::streaming::{be_u16, be_u32, be_u64, be_u8};
+use nom::number::streaming::{be_i16, be_u16, be_u32, be_u64, be_u8};
 use nom::IResult;
 use std::convert::TryFrom;
 
-use crate::structures::*;
+use super::super::structures::*;
 
-fn header(input: &[u8]) -> IResult<&[u8], &[u8], TelemetryError<&[u8]>> {
-    nom::bytes::streaming::tag(b"\x03\x0C")(input)
-}
-
-fn footer(input: &[u8]) -> IResult<&[u8], &[u8], TelemetryError<&[u8]>> {
-    nom::bytes::streaming::tag(b"\x30\xC0")(input)
-}
+const VERSION: u8 = 2;
 
 named!(sep, tag!("\t"));
 named!(end, tag!("\n"));
@@ -69,7 +58,7 @@ named!(
     boot<TelemetryMessage>,
     do_parse!(
         tag!("B:")
-            >> tag!([1u8])
+            >> tag!([VERSION])
             >> software_version_len: be_u8
             >> software_version:
                 map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
@@ -87,6 +76,7 @@ named!(
             >> end
             >> ({
                 TelemetryMessage::BootMessage(BootMessage {
+                    telemetry_version: VERSION,
                     version: software_version.to_string(),
                     device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                     systick,
@@ -101,7 +91,7 @@ named!(
     stopped<TelemetryMessage>,
     do_parse!(
         tag!("O:")
-            >> tag!([1u8])
+            >> tag!([VERSION])
             >> software_version_len: be_u8
             >> software_version:
                 map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
@@ -112,12 +102,34 @@ named!(
             >> device_id3: be_u32
             >> sep
             >> systick: be_u64
+            >> sep
+            >> peak_command: be_u8
+            >> sep
+            >> plateau_command: be_u8
+            >> sep
+            >> peep_command: be_u8
+            >> sep
+            >> cpm_command: be_u8
+            >> sep
+            >> expiratory_term: be_u8
+            >> sep
+            >> trigger_enabled: be_u8
+            >> sep
+            >> trigger_offset: be_u8
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
+                    telemetry_version: VERSION,
                     version: software_version.to_string(),
                     device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                     systick,
+                    peak_command: Some(peak_command),
+                    plateau_command: Some(plateau_command),
+                    peep_command: Some(peep_command),
+                    cpm_command: Some(cpm_command),
+                    expiratory_term: Some(expiratory_term),
+                    trigger_enabled: Some(trigger_enabled != 0),
+                    trigger_offset: Some(trigger_offset),
                 })
             })
     )
@@ -127,7 +139,7 @@ named!(
     data_snapshot<TelemetryMessage>,
     do_parse!(
         tag!("D:")
-            >> tag!([1u8])
+            >> tag!([VERSION])
             >> software_version_len: be_u8
             >> software_version:
                 map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
@@ -152,8 +164,13 @@ named!(
             >> blower_rpm: be_u8
             >> sep
             >> battery_level: be_u8
+            >> sep
+            >> inspiratory_flow: be_i16
+            >> sep
+            >> expiratory_flow: be_i16
             >> end
             >> (TelemetryMessage::DataSnapshot(DataSnapshot {
+                telemetry_version: VERSION,
                 version: software_version.to_string(),
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -165,6 +182,8 @@ named!(
                 patient_valve_position,
                 blower_rpm,
                 battery_level,
+                inspiratory_flow: Some(inspiratory_flow),
+                expiratory_flow: Some(expiratory_flow),
             }))
     )
 );
@@ -173,7 +192,7 @@ named!(
     machine_state_snapshot<TelemetryMessage>,
     do_parse!(
         tag!("S:")
-            >> tag!([1u8])
+            >> tag!([VERSION])
             >> software_version_len: be_u8
             >> software_version:
                 map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
@@ -210,8 +229,11 @@ named!(
             >> trigger_enabled: be_u8
             >> sep
             >> trigger_offset: be_u8
+            >> sep
+            >> previous_cpm: be_u8
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
+                telemetry_version: VERSION,
                 version: software_version.to_string(),
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -232,6 +254,7 @@ named!(
                 expiratory_term,
                 trigger_enabled: trigger_enabled != 0,
                 trigger_offset,
+                previous_cpm: Some(previous_cpm),
             }))
     )
 );
@@ -240,7 +263,7 @@ named!(
     alarm_trap<TelemetryMessage>,
     do_parse!(
         tag!("T:")
-            >> tag!([1u8])
+            >> tag!([VERSION])
             >> software_version_len: be_u8
             >> software_version:
                 map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
@@ -273,6 +296,7 @@ named!(
             >> cycles_since_trigger: be_u32
             >> end
             >> (TelemetryMessage::AlarmTrap(AlarmTrap {
+                telemetry_version: VERSION,
                 version: software_version.to_string(),
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -295,7 +319,7 @@ named!(
     control_ack<TelemetryMessage>,
     do_parse!(
         tag!("A:")
-            >> tag!([1u8])
+            >> tag!([VERSION])
             >> software_version_len: be_u8
             >> software_version:
                 map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
@@ -312,6 +336,7 @@ named!(
             >> value: be_u16
             >> end
             >> (TelemetryMessage::ControlAck(ControlAck {
+                telemetry_version: VERSION,
                 version: software_version.to_string(),
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -321,6 +346,11 @@ named!(
     )
 );
 
+/// Transform bytes into a structured telemetry message
+///
+/// * `input` - Bytes to parse.
+///
+/// This only decodes the message body: header, CRC and footer must be stripped beforehand.
 pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
     nom::branch::alt((
         boot,
@@ -333,83 +363,15 @@ pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<
     .map_err(nom::Err::convert)
 }
 
-pub fn with_input<
-    I: Clone + nom::Offset + nom::Slice<nom::lib::std::ops::RangeTo<usize>>,
-    O,
-    E: nom::error::ParseError<I>,
-    F,
->(
-    parser: F,
-) -> impl Fn(I) -> nom::IResult<I, (I, O), E>
-where
-    F: Fn(I) -> nom::IResult<I, O, E>,
-{
-    move |input: I| {
-        let i = input.clone();
-        match parser(i) {
-            Ok((i, o)) => {
-                let index = input.offset(&i);
-                Ok((i, (input.slice(..index), o)))
-            }
-            Err(e) => Err(e),
-        }
-    }
-}
-
-pub fn parse_telemetry_message(
-    input: &[u8],
-) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
-    use nom::sequence::{pair, preceded, terminated};
-
-    let mut parser = preceded(
-        header,
-        terminated(pair(with_input(message), be_u32), footer),
-    );
-    parser(input).and_then(|(rest, ((msg_bytes, msg), expected_crc))| {
-        let mut crc = crc32fast::Hasher::new();
-        crc.update(msg_bytes);
-        let computed_crc = crc.finalize();
-        if expected_crc == computed_crc {
-            Ok((rest, msg))
-        } else {
-            Err(nom::Err::Failure(TelemetryError(
-                input,
-                TelemetryErrorKind::CrcError {
-                    expected: expected_crc,
-                    computed: computed_crc,
-                },
-            )))
-        }
-    })
-}
-
 #[cfg(test)]
 mod tests {
+    use super::super::tests::*;
     use super::*;
     use proptest::bool;
     use proptest::collection;
+    use proptest::num;
     use proptest::option;
     use proptest::prelude::*;
-
-    fn flat(v: &[&[u8]]) -> Vec<u8> {
-        v.iter().flat_map(|a| a.iter()).copied().collect()
-    }
-
-    fn mode_strategy() -> impl Strategy<Value = Mode> {
-        prop_oneof![
-            Just(Mode::Production),
-            Just(Mode::Qualification),
-            Just(Mode::IntegrationTest),
-        ]
-    }
-
-    fn mode_ordinal(m: &Mode) -> u8 {
-        match m {
-            Mode::Production => 1,
-            Mode::Qualification => 2,
-            Mode::IntegrationTest => 3,
-        }
-    }
 
     // TODO Generate all combinations (independent each other) ?
     fn phase_subphase_strategy() -> impl Strategy<Value = (Phase, SubPhase)> {
@@ -457,77 +419,6 @@ mod tests {
 
     proptest! {
         #[test]
-        fn test_crc_check(
-            random_crc in (0u32..),
-            version in ".*",
-            device_id1 in (0u32..),
-            device_id2 in (0u32..),
-            device_id3 in (0u32..),
-            systick in (0u64..),
-            mode in mode_strategy(),
-            value128 in (0u8..),
-        ) {
-            let msg = BootMessage {
-                version,
-                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
-                systick,
-                mode,
-                value128,
-            };
-
-            // This needs to be consistent with sendBootMessage() defined in src/software/firmware/srcs/telemetry.cpp
-            let input_message = &flat(&[
-                b"B:\x01",
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &[mode_ordinal(&msg.mode)],
-                b"\t",
-                &[msg.value128],
-                b"\n",
-            ]);
-            let mut crc = crc32fast::Hasher::new();
-            crc.update(input_message);
-            let expected_crc = crc.finalize();
-
-            let fake_crc = if random_crc == expected_crc {
-                if random_crc > 0 { random_crc - 1 } else { random_crc + 1 }
-            } else {
-                random_crc
-            };
-
-            let input = &flat(&[
-                b"\x03\x0C",
-                &input_message,
-                &expected_crc.to_be_bytes(),
-                b"\x30\xC0",
-            ]);
-            let fake_input = &flat(&[
-                b"\x03\x0C",
-                &input_message,
-                &fake_crc.to_be_bytes(),
-                b"\x30\xC0",
-            ]);
-
-            let expected = TelemetryMessage::BootMessage(msg);
-            assert_eq!(nom::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(input), Ok((&[][..], expected)));
-            assert_eq!(nom::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(fake_input), Err(nom::Err::Failure(TelemetryError(
-                &fake_input[..],
-                TelemetryErrorKind::CrcError{
-                    expected: fake_crc,
-                    computed: expected_crc,
-                }
-            ))));
-        }
-    }
-
-    proptest! {
-        #[test]
         fn test_boot_message_parser(
             version in ".*",
             device_id1 in (0u32..),
@@ -538,6 +429,7 @@ mod tests {
             value128 in (0u8..),
         ) {
             let msg = BootMessage {
+                telemetry_version: VERSION,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -547,7 +439,8 @@ mod tests {
 
             // This needs to be consistent with sendBootMessage() defined in src/software/firmware/srcs/telemetry.cpp
             let input = &flat(&[
-                b"B:\x01",
+                b"B:",
+                &[VERSION],
                 &[msg.version.len() as u8],
                 &msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),
@@ -575,16 +468,32 @@ mod tests {
             device_id2 in (0u32..),
             device_id3 in (0u32..),
             systick in (0u64..),
+            peak_command in (0u8..),
+            plateau_command in (0u8..),
+            peep_command in (0u8..),
+            cpm_command in (0u8..),
+            expiratory_term in (0u8..),
+            trigger_enabled in bool::ANY,
+            trigger_offset in (0u8..),
         ) {
             let msg = StoppedMessage {
+                telemetry_version: VERSION,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
+                peak_command: Some(peak_command),
+                plateau_command: Some(plateau_command),
+                peep_command: Some(peep_command),
+                cpm_command: Some(cpm_command),
+                expiratory_term: Some(expiratory_term),
+                trigger_enabled: Some(trigger_enabled),
+                trigger_offset: Some(trigger_offset),
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
             let input = &flat(&[
-                b"O:\x01",
+                b"O:",
+                &[VERSION],
                 &[msg.version.len() as u8],
                 &msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),
@@ -592,6 +501,20 @@ mod tests {
                 &device_id3.to_be_bytes(),
                 b"\t",
                 &msg.systick.to_be_bytes(),
+                b"\t",
+                &[msg.peak_command.unwrap_or_default()],
+                b"\t",
+                &[msg.plateau_command.unwrap_or_default()],
+                b"\t",
+                &[msg.peep_command.unwrap_or_default()],
+                b"\t",
+                &[msg.cpm_command.unwrap_or_default()],
+                b"\t",
+                &msg.expiratory_term.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                if msg.trigger_enabled.unwrap_or_default() { b"\x01" } else { b"\x00" },
+                b"\t",
+                &msg.trigger_offset.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 
@@ -615,8 +538,11 @@ mod tests {
             patient_valve_position in (0u8..),
             blower_rpm in (0u8..),
             battery_level in (0u8..),
+            inspiratory_flow in num::i16::ANY,
+            expiratory_flow in num::i16::ANY,
         ) {
             let msg = DataSnapshot {
+                telemetry_version: VERSION,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -628,11 +554,14 @@ mod tests {
                 patient_valve_position,
                 blower_rpm,
                 battery_level,
+                inspiratory_flow: Some(inspiratory_flow),
+                expiratory_flow: Some(expiratory_flow),
             };
 
             // This needs to be consistent with sendDataSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
             let input = &flat(&[
-                b"D:\x01",
+                b"D:",
+                &[VERSION],
                 &[msg.version.len() as u8],
                 &msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),
@@ -654,6 +583,10 @@ mod tests {
                 &[msg.blower_rpm],
                 b"\t",
                 &[msg.battery_level],
+                b"\t",
+                &msg.inspiratory_flow.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.expiratory_flow.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 
@@ -683,8 +616,10 @@ mod tests {
             expiratory_term in (0u8..),
             trigger_enabled in bool::ANY,
             trigger_offset in (0u8..),
+            previous_cpm in (0u8..),
         ) {
             let msg = MachineStateSnapshot {
+                telemetry_version: VERSION,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -700,12 +635,14 @@ mod tests {
                 previous_volume,
                 expiratory_term,
                 trigger_enabled,
-                trigger_offset
+                trigger_offset,
+                previous_cpm: Some(previous_cpm),
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
             let input = &flat(&[
-                b"S:\x01",
+                b"S:",
+                &[VERSION],
                 &[msg.version.len() as u8],
                 &msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),
@@ -740,6 +677,8 @@ mod tests {
                 if msg.trigger_enabled { b"\x01" } else { b"\x00" },
                 b"\t",
                 &msg.trigger_offset.to_be_bytes(),
+                b"\t",
+                &msg.previous_cpm.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 
@@ -768,6 +707,7 @@ mod tests {
             cycles_since_trigger in (0u32..),
         ) {
             let msg = AlarmTrap {
+                telemetry_version: VERSION,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -786,7 +726,8 @@ mod tests {
 
             // This needs to be consistent with sendAlarmTrap() defined in src/software/firmware/srcs/telemetry.cpp
             let input = &flat(&[
-                b"T:\x01",
+                b"T:",
+                &[VERSION],
                 &[msg.version.len() as u8],
                 &msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),
@@ -834,6 +775,7 @@ mod tests {
             value in (0u16..),
         ) {
             let msg = ControlAck {
+                telemetry_version: VERSION,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -843,7 +785,8 @@ mod tests {
 
             // This needs to be consistent with sendAlarmTrap() defined in src/software/firmware/srcs/telemetry.cpp
             let input = &flat(&[
-                b"A:\x01",
+                b"A:",
+                &[VERSION],
                 &[msg.version.len() as u8],
                 &msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),

@@ -93,6 +93,8 @@ impl TryFrom<u8> for AlarmPriority {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct BootMessage {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
     /// Version of the MCU firmware
     pub version: String,
     /// Internal ID of the MCU
@@ -111,18 +113,36 @@ pub struct BootMessage {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct StoppedMessage {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
     /// Version of the MCU firmware
     pub version: String,
     /// Internal ID of the MCU
     pub device_id: String,
     /// Number of microseconds since the MCU booted
     pub systick: u64,
+    /// [protocol v2] Requested peak command in cmH2O
+    pub peak_command: Option<u8>,
+    /// [protocol v2] Requested plateau command in cmH2O
+    pub plateau_command: Option<u8>,
+    /// [protocol v2] Requested PEEP command in cmH2O
+    pub peep_command: Option<u8>,
+    /// [protocol v2] Requested number of cycles per minute
+    pub cpm_command: Option<u8>,
+    /// [protocol v2] Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10
+    pub expiratory_term: Option<u8>,
+    /// [protocol v2] State of the trigger
+    pub trigger_enabled: Option<bool>,
+    /// [protocol v2] Trigger offset in mmH2O
+    pub trigger_offset: Option<u8>,
 }
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct DataSnapshot {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
     /// Version of the MCU firmware
     pub version: String,
     /// Internal ID of the MCU
@@ -145,12 +165,18 @@ pub struct DataSnapshot {
     pub blower_rpm: u8,
     /// Current battery level in volts
     pub battery_level: u8,
+    /// [protocol v2] Inspiratory flow in SLM * 100
+    pub inspiratory_flow: Option<i16>,
+    /// [protocol v2] Expiratory flow in SLM * 100
+    pub expiratory_flow: Option<i16>,
 }
 
 /// A telemetry message that is sent at the end of every respiratory cycle
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct MachineStateSnapshot {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
     /// Version of the MCU firmware
     pub version: String,
     /// Internal ID of the MCU
@@ -183,12 +209,16 @@ pub struct MachineStateSnapshot {
     pub trigger_enabled: bool,
     /// Trigger offset in mmH2O
     pub trigger_offset: u8,
+    /// [protocol v2] Measured number of cycles per minute
+    pub previous_cpm: Option<u8>,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct AlarmTrap {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
     /// Version of the MCU firmware
     pub version: String,
     /// Internal ID of the MCU
@@ -223,6 +253,8 @@ pub struct AlarmTrap {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct ControlAck {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
     /// Version of the MCU firmware
     pub version: String,
     /// Internal ID of the MCU
@@ -255,6 +287,31 @@ pub enum TelemetryMessage {
 }
 
 impl TelemetryMessage {
+    /// Version of the telemetry protocol
+    pub fn telemetry_version(&self) -> u8 {
+        let val = match self {
+            Self::BootMessage(BootMessage {
+                telemetry_version, ..
+            }) => telemetry_version,
+            Self::StoppedMessage(StoppedMessage {
+                telemetry_version, ..
+            }) => telemetry_version,
+            Self::DataSnapshot(DataSnapshot {
+                telemetry_version, ..
+            }) => telemetry_version,
+            Self::MachineStateSnapshot(MachineStateSnapshot {
+                telemetry_version, ..
+            }) => telemetry_version,
+            Self::AlarmTrap(AlarmTrap {
+                telemetry_version, ..
+            }) => telemetry_version,
+            Self::ControlAck(ControlAck {
+                telemetry_version, ..
+            }) => telemetry_version,
+        };
+        *val
+    }
+
     /// Version of the MCU firmware
     pub fn version(&self) -> String {
         let val = match self {

@@ -36,6 +36,7 @@ mod tests {
     #[test]
     fn test_compute_duration_one_boot_message() {
         let vect: Vec<TelemetryMessage> = vec![TelemetryMessage::BootMessage(BootMessage {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -49,6 +50,7 @@ mod tests {
     #[test]
     fn test_compute_duration_one_alarm_trap() {
         let vect: Vec<TelemetryMessage> = vec![TelemetryMessage::AlarmTrap(AlarmTrap {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -71,6 +73,7 @@ mod tests {
     #[test]
     fn test_compute_duration_one_data_snapshot() {
         let vect: Vec<TelemetryMessage> = vec![TelemetryMessage::DataSnapshot(DataSnapshot {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -82,6 +85,8 @@ mod tests {
             patient_valve_position: 0,
             blower_rpm: 0,
             battery_level: 0,
+            inspiratory_flow: None,
+            expiratory_flow: None,
         })];
 
         assert_eq!(compute_duration(vect), 10);
@@ -91,6 +96,7 @@ mod tests {
     fn test_compute_duration_one_machine_state_snapshot() {
         let vect: Vec<TelemetryMessage> = vec![TelemetryMessage::MachineStateSnapshot(
             MachineStateSnapshot {
+                telemetry_version: 1,
                 version: String::from(""),
                 device_id: String::from(""),
                 systick: 0,
@@ -107,6 +113,7 @@ mod tests {
                 expiratory_term: 0,
                 trigger_enabled: false,
                 trigger_offset: 0,
+                previous_cpm: None,
             },
         )];
 
@@ -118,9 +125,17 @@ mod tests {
         let mut vect: Vec<TelemetryMessage> = Vec::new();
 
         vect.push(TelemetryMessage::StoppedMessage(StoppedMessage {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
+            peak_command: None,
+            plateau_command: None,
+            peep_command: None,
+            cpm_command: None,
+            expiratory_term: None,
+            trigger_enabled: None,
+            trigger_offset: None,
         }));
 
         assert_eq!(compute_duration(vect), 100);
@@ -131,6 +146,7 @@ mod tests {
         let mut vect: Vec<TelemetryMessage> = Vec::new();
 
         vect.push(TelemetryMessage::BootMessage(BootMessage {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -139,6 +155,7 @@ mod tests {
         }));
 
         vect.push(TelemetryMessage::AlarmTrap(AlarmTrap {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -156,6 +173,7 @@ mod tests {
         }));
 
         vect.push(TelemetryMessage::DataSnapshot(DataSnapshot {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
@@ -167,10 +185,13 @@ mod tests {
             patient_valve_position: 0,
             blower_rpm: 0,
             battery_level: 0,
+            inspiratory_flow: None,
+            expiratory_flow: None,
         }));
 
         vect.push(TelemetryMessage::MachineStateSnapshot(
             MachineStateSnapshot {
+                telemetry_version: 1,
                 version: String::from(""),
                 device_id: String::from(""),
                 systick: 0,
@@ -187,13 +208,22 @@ mod tests {
                 expiratory_term: 0,
                 trigger_enabled: false,
                 trigger_offset: 0,
+                previous_cpm: None,
             },
         ));
 
         vect.push(TelemetryMessage::StoppedMessage(StoppedMessage {
+            telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
             systick: 0,
+            peak_command: None,
+            plateau_command: None,
+            peep_command: None,
+            cpm_command: None,
+            expiratory_term: None,
+            trigger_enabled: None,
+            trigger_offset: None,
         }));
 
         assert_eq!(compute_duration(vect), 110);

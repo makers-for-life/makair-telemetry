@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["parse_telemetry_message","Transform bytes into a structured telemetry message"]],"mod":[["v1","Parsers for the telemetry protocol version 1"],["v2","Parsers for the telemetry protocol version 2"]]});

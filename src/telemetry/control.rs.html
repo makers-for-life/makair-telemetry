@@ -151,6 +151,12 @@
 <span id="150">150</span>
 <span id="151">151</span>
 <span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -181,6 +187,8 @@
     <span class="ident">TriggerEnabled</span> <span class="op">=</span> <span class="number">6</span>,
     <span class="doccomment">/// Trigger offset in mmH2O (value bounds must be between 0 and 100)</span>
     <span class="ident">TriggerOffset</span> <span class="op">=</span> <span class="number">7</span>,
+    <span class="doccomment">/// State of the respiration (value bounds must be 1 if enabled and 0 if disabled)</span>
+    <span class="ident">RespirationEnabled</span> <span class="op">=</span> <span class="number">8</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">ControlSetting</span> {
@@ -195,6 +203,7 @@
             <span class="self">Self</span>::<span class="ident">ExpiratoryTerm</span> <span class="op">=&gt;</span> <span class="number">20</span>,
             <span class="self">Self</span>::<span class="ident">TriggerEnabled</span> <span class="op">=&gt;</span> <span class="number">0</span>,
             <span class="self">Self</span>::<span class="ident">TriggerOffset</span> <span class="op">=&gt;</span> <span class="number">20</span>,
+            <span class="self">Self</span>::<span class="ident">RespirationEnabled</span> <span class="op">=&gt;</span> <span class="number">0</span>,
         }
     }
 
@@ -209,6 +218,7 @@
             <span class="self">Self</span>::<span class="ident">ExpiratoryTerm</span> <span class="op">=&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">10</span>, <span class="number">60</span>),
             <span class="self">Self</span>::<span class="ident">TriggerEnabled</span> <span class="op">=&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">1</span>),
             <span class="self">Self</span>::<span class="ident">TriggerOffset</span> <span class="op">=&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">100</span>),
+            <span class="self">Self</span>::<span class="ident">RespirationEnabled</span> <span class="op">=&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">1</span>),
         }
     }
 }
@@ -225,6 +235,7 @@
             <span class="number">5</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting</span>::<span class="ident">ExpiratoryTerm</span>),
             <span class="number">6</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting</span>::<span class="ident">TriggerEnabled</span>),
             <span class="number">7</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting</span>::<span class="ident">TriggerOffset</span>),
+            <span class="number">8</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting</span>::<span class="ident">RespirationEnabled</span>),
             <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Invalid setting number&quot;</span>),
         }
     }
@@ -257,6 +268,7 @@
             <span class="ident">ControlSetting</span>::<span class="ident">ExpiratoryTerm</span> <span class="op">=&gt;</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">500</span>, <span class="number">5001</span>),
             <span class="ident">ControlSetting</span>::<span class="ident">TriggerEnabled</span> <span class="op">=&gt;</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0</span>, <span class="number">2</span>),
             <span class="ident">ControlSetting</span>::<span class="ident">TriggerOffset</span> <span class="op">=&gt;</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0</span>, <span class="number">101</span>),
+            <span class="ident">ControlSetting</span>::<span class="ident">RespirationEnabled</span> <span class="op">=&gt;</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0</span>, <span class="number">2</span>),
         };
         <span class="ident">ControlMessage</span> { <span class="ident">setting</span>, <span class="ident">value</span> }
     }

@@ -13,6 +13,8 @@ use nom::IResult;
 
 use super::structures::*;
 
+const MAXIMUM_SUPPORTED_VERSION: u8 = 2;
+
 fn header(input: &[u8]) -> IResult<&[u8], &[u8], TelemetryError<&[u8]>> {
     nom::bytes::streaming::tag(b"\x03\x0C")(input)
 }
@@ -48,6 +50,21 @@ where
     }
 }
 
+/// Try to extract protocol version from message bytes
+///
+/// * `input` - Bytes of the message.
+///
+/// This requires the message header and the 3 first bytes of the message body.
+/// CRC will not be checked.
+pub fn protocol_version(input: &[u8]) -> IResult<&[u8], u8, TelemetryError<&[u8]>> {
+    use nom::bytes::streaming::{tag, take};
+    use nom::number::streaming::be_u8;
+    use nom::sequence::{pair, preceded};
+
+    let mut parser = preceded(header, preceded(pair(take(1usize), tag(":")), be_u8));
+    parser(input)
+}
+
 /// Transform bytes into a structured telemetry message
 ///
 /// * `input` - Bytes to parse.
@@ -63,22 +80,39 @@ pub fn parse_telemetry_message(
         header,
         terminated(pair(with_input(message), be_u32), footer),
     );
-    parser(input).and_then(|(rest, ((msg_bytes, msg), expected_crc))| {
-        let mut crc = crc32fast::Hasher::new();
-        crc.update(msg_bytes);
-        let computed_crc = crc.finalize();
-        if expected_crc == computed_crc {
-            Ok((rest, msg))
-        } else {
-            Err(nom::Err::Failure(TelemetryError(
-                input,
-                TelemetryErrorKind::CrcError {
-                    expected: expected_crc,
-                    computed: computed_crc,
-                },
-            )))
-        }
-    })
+    parser(input)
+        .and_then(|(rest, ((msg_bytes, msg), expected_crc))| {
+            let mut crc = crc32fast::Hasher::new();
+            crc.update(msg_bytes);
+            let computed_crc = crc.finalize();
+            if expected_crc == computed_crc {
+                Ok((rest, msg))
+            } else {
+                Err(nom::Err::Failure(TelemetryError(
+                    input,
+                    TelemetryErrorKind::CrcError {
+                        expected: expected_crc,
+                        computed: computed_crc,
+                    },
+                )))
+            }
+        })
+        .or_else(|e| match e {
+            nom::Err::Error(TelemetryError(
+                _,
+                TelemetryErrorKind::ParserError(nom::error::ErrorKind::Tag),
+            )) => protocol_version(input).and_then(|(_rest, version)| {
+                if version > MAXIMUM_SUPPORTED_VERSION {
+                    Err(nom::Err::Failure(TelemetryError(
+                        input,
+                        TelemetryErrorKind::UnsupportedProtocolVersion(version),
+                    )))
+                } else {
+                    Err(e)
+                }
+            }),
+            _ => Err(e),
+        })
 }
 
 #[cfg(test)]
@@ -176,5 +210,19 @@ mod tests {
                 }
             ))));
         }
+    }
+
+    #[test]
+    fn unsuported_protocol_version() {
+        let version = MAXIMUM_SUPPORTED_VERSION + 1;
+        let input = &flat(&[b"\x03\x0C", b"B:", &[version]]);
+        let expected = TelemetryError(
+            &input[..],
+            TelemetryErrorKind::UnsupportedProtocolVersion(version),
+        );
+        assert_eq!(
+            nom::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(input),
+            Err(nom::Err::Failure(expected))
+        );
     }
 }

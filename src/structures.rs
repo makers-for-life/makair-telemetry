@@ -364,6 +364,8 @@ pub enum TelemetryErrorKind {
         /// Computed CRC (from the actual message)
         computed: u32,
     },
+    /// Unsupported protocol (message header contains an unsupported protocol version)
+    UnsupportedProtocolVersion(u8),
 }
 
 /// Custom parser error type to leverage `TelemetryErrorKind`

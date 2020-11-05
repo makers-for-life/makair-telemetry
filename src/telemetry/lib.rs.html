@@ -292,6 +292,48 @@
 <span id="291">291</span>
 <span id="292">292</span>
 <span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -333,7 +375,7 @@
 <span class="kw">use</span> <span class="ident">structures</span>::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// A decoded telemetry message</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">TelemetryChannelType</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TelemetryMessage</span>, <span class="ident">serial</span>::<span class="ident">core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">TelemetryChannelType</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TelemetryMessageOrError</span>, <span class="ident">serial</span>::<span class="ident">core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
 <span class="doccomment">/// Open a serial port, consume it endlessly and send back parsed telemetry messages through a channel</span>
 <span class="doccomment">///</span>
@@ -400,7 +442,7 @@
                                                 <span class="ident">file_buffer</span>.<span class="ident">flush</span>().<span class="ident">expect</span>(<span class="string">&quot;[tx channel] failed flushing buffer flush to file&quot;</span>);
                                             }
 
-                                            <span class="ident">tx</span>.<span class="ident">send</span>(<span class="prelude-val">Ok</span>(<span class="ident">message</span>))
+                                            <span class="ident">tx</span>.<span class="ident">send</span>(<span class="prelude-val">Ok</span>(<span class="ident">message</span>.<span class="ident">into</span>()))
                                                 .<span class="ident">expect</span>(<span class="string">&quot;[tx channel] failed sending message&quot;</span>);
 
                                             <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">from</span>(<span class="ident">rest</span>);
@@ -414,6 +456,35 @@
                                                 <span class="string">&quot;[CRC error]\texpected={}\tcomputed={}&quot;</span>,
                                                 <span class="ident">expected</span>, <span class="ident">computed</span>
                                             );
+
+                                            <span class="ident">tx</span>.<span class="ident">send</span>(<span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessageOrError</span>::<span class="ident">Error</span>(
+                                                <span class="ident">HighLevelError</span>::<span class="ident">CrcError</span> { <span class="ident">expected</span>, <span class="ident">computed</span> },
+                                            )))
+                                            .<span class="ident">expect</span>(<span class="string">&quot;[tx channel] failed sending message&quot;</span>);
+
+                                            <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">clone</span>().<span class="ident">split_off</span>(<span class="ident">msg_bytes</span>.<span class="ident">len</span>());
+                                        }
+                                        <span class="comment">// Message was built using an unsupported protocol version</span>
+                                        <span class="prelude-val">Err</span>(<span class="ident">nom</span>::<span class="prelude-val">Err</span>::<span class="ident">Failure</span>(<span class="ident">TelemetryError</span>(
+                                            <span class="ident">msg_bytes</span>,
+                                            <span class="ident">TelemetryErrorKind</span>::<span class="ident">UnsupportedProtocolVersion</span> {
+                                                <span class="ident">maximum_supported</span>,
+                                                <span class="ident">found</span>,
+                                            },
+                                        ))) <span class="op">=&gt;</span> {
+                                            <span class="macro">warn</span><span class="macro">!</span>(
+                                                <span class="string">&quot;[unsupported protocol version]\tmaximum_supported={}\tfound={}&quot;</span>,
+                                                <span class="ident">maximum_supported</span>, <span class="ident">found</span>
+                                            );
+
+                                            <span class="ident">tx</span>.<span class="ident">send</span>(<span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessageOrError</span>::<span class="ident">Error</span>(
+                                                <span class="ident">HighLevelError</span>::<span class="ident">UnsupportedProtocolVersion</span> {
+                                                    <span class="ident">maximum_supported</span>,
+                                                    <span class="ident">found</span>,
+                                                },
+                                            )))
+                                            .<span class="ident">expect</span>(<span class="string">&quot;[tx channel] failed sending message&quot;</span>);
+
                                             <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">clone</span>().<span class="ident">split_off</span>(<span class="ident">msg_bytes</span>.<span class="ident">len</span>());
                                         }
                                         <span class="comment">// There are not enough bytes, let&#39;s wait until we get more</span>
@@ -477,7 +548,10 @@
 <span class="doccomment">/// Helper to display telemetry messages</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">display_message</span>(<span class="ident">message</span>: <span class="ident">TelemetryChannelType</span>) {
     <span class="kw">match</span> <span class="ident">message</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">BootMessage</span>(<span class="ident">BootMessage</span> { <span class="ident">value128</span>, .. })) <span class="op">=&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessageOrError</span>::<span class="ident">Message</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">BootMessage</span>(<span class="ident">BootMessage</span> {
+            <span class="ident">value128</span>,
+            ..
+        }))) <span class="op">=&gt;</span> {
             <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;####################################################################################&quot;</span>);
             <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;######### CONTROLLER STARTED #########&quot;</span>);
             <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;####################################################################################&quot;</span>);
@@ -490,16 +564,16 @@
                 <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;value128 should be equal to 128 (found {:b} = {}); check serial port configuration&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">value128</span>, <span class="kw-2">&amp;</span><span class="ident">value128</span>);
             }
         }
-        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">StoppedMessage</span>(<span class="kw">_</span>)) <span class="op">=&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessageOrError</span>::<span class="ident">Message</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">StoppedMessage</span>(<span class="kw">_</span>))) <span class="op">=&gt;</span> {
             <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;stopped&quot;</span>);
         }
-        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">DataSnapshot</span>(<span class="kw">_</span>)) <span class="op">=&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessageOrError</span>::<span class="ident">Message</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">DataSnapshot</span>(<span class="kw">_</span>))) <span class="op">=&gt;</span> {
             <span class="macro">info</span><span class="macro">!</span>(
                 <span class="string">&quot;    {:?}&quot;</span>,
                 <span class="kw-2">&amp;</span><span class="ident">message</span>.<span class="ident">expect</span>(<span class="string">&quot;failed unwrapping message for data snapshot&quot;</span>)
             );
         }
-        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">MachineStateSnapshot</span>(<span class="kw">_</span>)) <span class="op">=&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessageOrError</span>::<span class="ident">Message</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">MachineStateSnapshot</span>(<span class="kw">_</span>))) <span class="op">=&gt;</span> {
             <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;------------------------------------------------------------------------------------&quot;</span>);
             <span class="macro">info</span><span class="macro">!</span>(
                 <span class="string">&quot;{:?}&quot;</span>,
@@ -507,7 +581,10 @@
             );
             <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;------------------------------------------------------------------------------------&quot;</span>);
         }
-        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">AlarmTrap</span>(<span class="ident">AlarmTrap</span> { <span class="ident">triggered</span>, .. })) <span class="op">=&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessageOrError</span>::<span class="ident">Message</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">AlarmTrap</span>(<span class="ident">AlarmTrap</span> {
+            <span class="ident">triggered</span>,
+            ..
+        }))) <span class="op">=&gt;</span> {
             <span class="kw">let</span> <span class="ident">prefix</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">triggered</span> { <span class="string">&quot;NEW ALARM&quot;</span> } <span class="kw">else</span> { <span class="string">&quot;STOPPED&quot;</span> };
             <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>);
             <span class="macro">info</span><span class="macro">!</span>(
@@ -517,8 +594,15 @@
             );
             <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>);
         }
-        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">ControlAck</span>(<span class="ident">ControlAck</span> { <span class="ident">setting</span>, <span class="ident">value</span>, .. })) <span class="op">=&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessageOrError</span>::<span class="ident">Message</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">ControlAck</span>(<span class="ident">ControlAck</span> {
+            <span class="ident">setting</span>,
+            <span class="ident">value</span>,
+            ..
+        }))) <span class="op">=&gt;</span> {
             <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;← {:?} = {}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">setting</span>, <span class="kw-2">&amp;</span><span class="ident">value</span>);
+        }
+        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessageOrError</span>::<span class="ident">Error</span>(<span class="ident">e</span>)) <span class="op">=&gt;</span> {
+            <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;a high-level error occurred: {:?}&quot;</span>, <span class="ident">e</span>);
         }
         <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> {
             <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;an error occurred: {:?}&quot;</span>, <span class="ident">e</span>);
@@ -565,7 +649,7 @@
                                     <span class="kw">_</span> <span class="op">=&gt;</span> (),
                                 }
                             }
-                            <span class="ident">tx</span>.<span class="ident">send</span>(<span class="prelude-val">Ok</span>(<span class="ident">message</span>))
+                            <span class="ident">tx</span>.<span class="ident">send</span>(<span class="prelude-val">Ok</span>(<span class="ident">message</span>.<span class="ident">into</span>()))
                                 .<span class="ident">expect</span>(<span class="string">&quot;failed sending message to tx channel&quot;</span>);
                             <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">from</span>(<span class="ident">rest</span>);
                         }

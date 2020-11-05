@@ -29,6 +29,8 @@ pub enum ControlSetting {
     TriggerOffset = 7,
     /// State of the respiration (value bounds must be 1 if enabled and 0 if disabled)
     RespirationEnabled = 8,
+    /// Alarm snooze (value must be 0)
+    AlarmSnooze = 9,
 }
 
 impl ControlSetting {
@@ -44,6 +46,7 @@ impl ControlSetting {
             Self::TriggerEnabled => 0,
             Self::TriggerOffset => 20,
             Self::RespirationEnabled => 0,
+            Self::AlarmSnooze => 0,
         }
     }
 
@@ -59,6 +62,7 @@ impl ControlSetting {
             Self::TriggerEnabled => RangeInclusive::new(0, 1),
             Self::TriggerOffset => RangeInclusive::new(0, 100),
             Self::RespirationEnabled => RangeInclusive::new(0, 1),
+            Self::AlarmSnooze => RangeInclusive::new(0, 0),
         }
     }
 }
@@ -76,6 +80,7 @@ impl std::convert::TryFrom<u8> for ControlSetting {
             6 => Ok(ControlSetting::TriggerEnabled),
             7 => Ok(ControlSetting::TriggerOffset),
             8 => Ok(ControlSetting::RespirationEnabled),
+            9 => Ok(ControlSetting::AlarmSnooze),
             _ => Err("Invalid setting number"),
         }
     }
@@ -109,6 +114,7 @@ impl Distribution<ControlMessage> for Standard {
             ControlSetting::TriggerEnabled => rng.gen_range(0, 2),
             ControlSetting::TriggerOffset => rng.gen_range(0, 101),
             ControlSetting::RespirationEnabled => rng.gen_range(0, 2),
+            ControlSetting::AlarmSnooze => rng.gen_range(0, 0),
         };
         ControlMessage { setting, value }
     }

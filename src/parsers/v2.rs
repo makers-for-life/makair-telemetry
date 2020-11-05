@@ -116,6 +116,8 @@ named!(
             >> trigger_enabled: be_u8
             >> sep
             >> trigger_offset: be_u8
+            >> sep
+            >> alarm_snoozed: be_u8
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
@@ -130,6 +132,7 @@ named!(
                     expiratory_term: Some(expiratory_term),
                     trigger_enabled: Some(trigger_enabled != 0),
                     trigger_offset: Some(trigger_offset),
+                    alarm_snoozed: Some(alarm_snoozed != 0),
                 })
             })
     )
@@ -231,6 +234,8 @@ named!(
             >> trigger_offset: be_u8
             >> sep
             >> previous_cpm: be_u8
+            >> sep
+            >> alarm_snoozed: be_u8
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -255,6 +260,7 @@ named!(
                 trigger_enabled: trigger_enabled != 0,
                 trigger_offset,
                 previous_cpm: Some(previous_cpm),
+                alarm_snoozed: Some(alarm_snoozed != 0),
             }))
     )
 );
@@ -475,6 +481,7 @@ mod tests {
             expiratory_term in (0u8..),
             trigger_enabled in bool::ANY,
             trigger_offset in (0u8..),
+            alarm_snoozed in bool::ANY,
         ) {
             let msg = StoppedMessage {
                 telemetry_version: VERSION,
@@ -488,6 +495,7 @@ mod tests {
                 expiratory_term: Some(expiratory_term),
                 trigger_enabled: Some(trigger_enabled),
                 trigger_offset: Some(trigger_offset),
+                alarm_snoozed: Some(alarm_snoozed),
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -515,6 +523,8 @@ mod tests {
                 if msg.trigger_enabled.unwrap_or_default() { b"\x01" } else { b"\x00" },
                 b"\t",
                 &msg.trigger_offset.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                if msg.alarm_snoozed.unwrap_or_default() { b"\x01" } else { b"\x00" },
                 b"\n",
             ]);
 
@@ -617,6 +627,7 @@ mod tests {
             trigger_enabled in bool::ANY,
             trigger_offset in (0u8..),
             previous_cpm in (0u8..),
+            alarm_snoozed in bool::ANY,
         ) {
             let msg = MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -637,6 +648,7 @@ mod tests {
                 trigger_enabled,
                 trigger_offset,
                 previous_cpm: Some(previous_cpm),
+                alarm_snoozed: Some(alarm_snoozed),
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -679,6 +691,8 @@ mod tests {
                 &msg.trigger_offset.to_be_bytes(),
                 b"\t",
                 &msg.previous_cpm.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                if msg.alarm_snoozed.unwrap_or_default() { b"\x01" } else { b"\x00" },
                 b"\n",
             ]);
 

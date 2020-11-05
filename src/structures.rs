@@ -135,6 +135,8 @@ pub struct StoppedMessage {
     pub trigger_enabled: Option<bool>,
     /// [protocol v2] Trigger offset in mmH2O
     pub trigger_offset: Option<u8>,
+    /// [protocol v2] State of the alarm snooze
+    pub alarm_snoozed: Option<bool>,
 }
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
@@ -211,6 +213,8 @@ pub struct MachineStateSnapshot {
     pub trigger_offset: u8,
     /// [protocol v2] Measured number of cycles per minute
     pub previous_cpm: Option<u8>,
+    /// [protocol v2] State of the alarm snooze
+    pub alarm_snoozed: Option<bool>,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped

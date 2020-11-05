@@ -116,6 +116,7 @@ named!(
                     expiratory_term: None,
                     trigger_enabled: None,
                     trigger_offset: None,
+                    alarm_snoozed: None,
                 })
             })
     )
@@ -235,6 +236,7 @@ named!(
                 trigger_enabled: trigger_enabled != 0,
                 trigger_offset,
                 previous_cpm: None,
+                alarm_snoozed: None,
             }))
     )
 );
@@ -459,6 +461,7 @@ mod tests {
                 expiratory_term: None,
                 trigger_enabled: None,
                 trigger_offset: None,
+                alarm_snoozed: None,
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -586,6 +589,7 @@ mod tests {
                 trigger_enabled,
                 trigger_offset,
                 previous_cpm: None,
+                alarm_snoozed: None,
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp

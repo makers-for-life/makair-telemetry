@@ -114,6 +114,7 @@ mod tests {
                 trigger_enabled: false,
                 trigger_offset: 0,
                 previous_cpm: None,
+                alarm_snoozed: None,
             },
         )];
 
@@ -136,6 +137,7 @@ mod tests {
             expiratory_term: None,
             trigger_enabled: None,
             trigger_offset: None,
+            alarm_snoozed: None,
         }));
 
         assert_eq!(compute_duration(vect), 100);
@@ -209,6 +211,7 @@ mod tests {
                 trigger_enabled: false,
                 trigger_offset: 0,
                 previous_cpm: None,
+                alarm_snoozed: None,
             },
         ));
 
@@ -224,6 +227,7 @@ mod tests {
             expiratory_term: None,
             trigger_enabled: None,
             trigger_offset: None,
+            alarm_snoozed: None,
         }));
 
         assert_eq!(compute_duration(vect), 110);

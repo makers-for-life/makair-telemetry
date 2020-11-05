@@ -164,6 +164,7 @@ struct Convert {
 }
 
 const THREAD_SLEEP_THROTTLE: std::time::Duration = std::time::Duration::from_millis(10);
+const HEARTBEAT_PERIOD: std::time::Duration = std::time::Duration::from_secs(30);
 
 fn main() {
     env_logger::init();
@@ -181,24 +182,33 @@ fn main() {
 }
 
 fn debug(cfg: Debug) {
-    let control_rx = if cfg.random_control_messages {
-        let (control_tx, control_rx): (Sender<ControlMessage>, Receiver<ControlMessage>) =
-            std::sync::mpsc::channel();
+    let (control_tx, control_rx): (Sender<ControlMessage>, Receiver<ControlMessage>) =
+        std::sync::mpsc::channel();
+
+    let heartbeat_tx = control_tx.clone();
+    std::thread::spawn(move || loop {
+        heartbeat_tx
+            .send(ControlMessage {
+                setting: ControlSetting::Heartbeat,
+                value: 0,
+            })
+            .expect("[heartbeat tx] failed to send heartbeat message");
+        std::thread::sleep(HEARTBEAT_PERIOD);
+    });
+
+    if cfg.random_control_messages {
         std::thread::spawn(move || loop {
             std::thread::sleep(std::time::Duration::from_secs(3));
             control_tx
                 .send(gen_random_message())
                 .expect("[control tx] failed to send control message");
         });
-        Some(control_rx)
-    } else {
-        None
     };
 
     let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
         std::sync::mpsc::channel();
     std::thread::spawn(move || {
-        gather_telemetry(&cfg.port, tx, None, control_rx);
+        gather_telemetry(&cfg.port, tx, None, Some(control_rx));
     });
     loop {
         match rx.try_recv() {
@@ -223,10 +233,22 @@ fn record(cfg: Record) {
         .expect("failed to create recording file");
     let file_buffer = BufWriter::new(file);
 
+    let (heartbeat_tx, control_rx): (Sender<ControlMessage>, Receiver<ControlMessage>) =
+        std::sync::mpsc::channel();
+    std::thread::spawn(move || loop {
+        heartbeat_tx
+            .send(ControlMessage {
+                setting: ControlSetting::Heartbeat,
+                value: 0,
+            })
+            .expect("[heartbeat tx] failed to send heartbeat message");
+        std::thread::sleep(HEARTBEAT_PERIOD);
+    });
+
     let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
         std::sync::mpsc::channel();
     std::thread::spawn(move || {
-        gather_telemetry(&cfg.port, tx, Some(file_buffer), None);
+        gather_telemetry(&cfg.port, tx, Some(file_buffer), Some(control_rx));
     });
     loop {
         match rx.try_recv() {

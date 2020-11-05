@@ -12,6 +12,8 @@ use std::ops::RangeInclusive;
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub enum ControlSetting {
+    /// Heartbeat used for the RPi watchdog feature (value is ignored except for the special value 127 which disables watchdog)
+    Heartbeat = 0,
     /// Peak pressure in mmH20 (value bounds must be between 0 and 700)
     PeakPressure = 1,
     /// Plateau pressure in mmH2O (value bounds must be between 100 and 400)
@@ -38,6 +40,7 @@ impl ControlSetting {
     pub fn default(&self) -> usize {
         // Returns default value
         match self {
+            Self::Heartbeat => 0,
             Self::PeakPressure => 0,
             Self::PlateauPressure => 0,
             Self::PEEP => 0,
@@ -54,6 +57,7 @@ impl ControlSetting {
     pub fn bounds(&self) -> RangeInclusive<usize> {
         // Returns allowed value bounds
         match self {
+            Self::Heartbeat => RangeInclusive::new(0, 255),
             Self::PeakPressure => RangeInclusive::new(0, 700),
             Self::PlateauPressure => RangeInclusive::new(100, 400),
             Self::PEEP => RangeInclusive::new(0, 300),
@@ -72,6 +76,7 @@ impl std::convert::TryFrom<u8> for ControlSetting {
 
     fn try_from(value: u8) -> Result<Self, Self::Error> {
         match value {
+            0 => Ok(ControlSetting::Heartbeat),
             1 => Ok(ControlSetting::PeakPressure),
             2 => Ok(ControlSetting::PlateauPressure),
             3 => Ok(ControlSetting::PEEP),
@@ -106,6 +111,7 @@ impl Distribution<ControlMessage> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> ControlMessage {
         let setting: ControlSetting = rng.gen();
         let value = match setting {
+            ControlSetting::Heartbeat => rng.gen_range(0, 255),
             ControlSetting::PeakPressure => rng.gen_range(0, 71),
             ControlSetting::PlateauPressure => rng.gen_range(10, 41),
             ControlSetting::PEEP => rng.gen_range(0, 31),

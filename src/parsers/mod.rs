@@ -105,7 +105,10 @@ pub fn parse_telemetry_message(
                 if version > MAXIMUM_SUPPORTED_VERSION {
                     Err(nom::Err::Failure(TelemetryError(
                         input,
-                        TelemetryErrorKind::UnsupportedProtocolVersion(version),
+                        TelemetryErrorKind::UnsupportedProtocolVersion {
+                            maximum_supported: MAXIMUM_SUPPORTED_VERSION,
+                            found: version,
+                        },
                     )))
                 } else {
                     Err(e)
@@ -218,7 +221,10 @@ mod tests {
         let input = &flat(&[b"\x03\x0C", b"B:", &[version]]);
         let expected = TelemetryError(
             &input[..],
-            TelemetryErrorKind::UnsupportedProtocolVersion(version),
+            TelemetryErrorKind::UnsupportedProtocolVersion {
+                maximum_supported: MAXIMUM_SUPPORTED_VERSION,
+                found: version,
+            },
         );
         assert_eq!(
             nom::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(input),

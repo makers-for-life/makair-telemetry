@@ -290,7 +290,7 @@ fn stats(cfg: Stats) {
     loop {
         match rx.try_recv() {
             Ok(channel_message) => {
-                if let Ok(message) = channel_message {
+                if let Ok(TelemetryMessageOrError::Message(message)) = channel_message {
                     match message {
                         TelemetryMessage::BootMessage(_) => {
                             nb_boot_messages += 1;
@@ -487,7 +487,7 @@ fn convert(cfg: Convert) {
 
     loop {
         match rx.try_recv() {
-            Ok(Ok(msg)) => {
+            Ok(Ok(TelemetryMessageOrError::Message(msg))) => {
                 if msg.systick() >= from && msg.systick() <= to {
                     let output_payload = match cfg.format {
                         Format::GTS => telemetry_to_gts(&msg, &gts_source_label),

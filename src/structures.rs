@@ -364,6 +364,13 @@ pub enum TelemetryErrorKind {
         /// Computed CRC (from the actual message)
         computed: u32,
     },
+    /// Unsupported protocol (message header contains an unsupported protocol version)
+    UnsupportedProtocolVersion {
+        /// Maximum supported version of the telemetry protocol
+        maximum_supported: u8,
+        /// Found version of the telemetry protocol
+        found: u8,
+    },
 }
 
 /// Custom parser error type to leverage `TelemetryErrorKind`
@@ -382,6 +389,42 @@ impl<I> nom::error::ParseError<I> for TelemetryError<I> {
 impl<I> From<nom::error::Error<I>> for TelemetryError<I> {
     fn from(error: nom::error::Error<I>) -> Self {
         TelemetryError(error.input, TelemetryErrorKind::ParserError(error.code))
+    }
+}
+
+/// Errors that need to be reported to the UI
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+pub enum HighLevelError {
+    /// CRC error
+    CrcError {
+        /// Expected CRC (included in the message)
+        expected: u32,
+        /// Computed CRC (from the actual message)
+        computed: u32,
+    },
+    /// Unsupported protocol (message header contains an unsupported protocol version)
+    UnsupportedProtocolVersion {
+        /// Maximum supported version of the telemetry protocol
+        maximum_supported: u8,
+        /// Found version of the telemetry protocol
+        found: u8,
+    },
+}
+
+/// A telemetry message or a high-level error
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+pub enum TelemetryMessageOrError {
+    /// A telemetry message
+    Message(TelemetryMessage),
+    /// A high-level error
+    Error(HighLevelError),
+}
+
+impl From<TelemetryMessage> for TelemetryMessageOrError {
+    fn from(message: TelemetryMessage) -> Self {
+        TelemetryMessageOrError::Message(message)
     }
 }
 

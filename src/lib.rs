@@ -38,7 +38,7 @@ use parsers::*;
 use structures::*;
 
 /// A decoded telemetry message
-pub type TelemetryChannelType = Result<TelemetryMessage, serial::core::Error>;
+pub type TelemetryChannelType = Result<TelemetryMessageOrError, serial::core::Error>;
 
 /// Open a serial port, consume it endlessly and send back parsed telemetry messages through a channel
 ///
@@ -105,7 +105,7 @@ pub fn gather_telemetry(
                                                 file_buffer.flush().expect("[tx channel] failed flushing buffer flush to file");
                                             }
 
-                                            tx.send(Ok(message))
+                                            tx.send(Ok(message.into()))
                                                 .expect("[tx channel] failed sending message");
 
                                             buffer = Vec::from(rest);
@@ -119,6 +119,35 @@ pub fn gather_telemetry(
                                                 "[CRC error]\texpected={}\tcomputed={}",
                                                 expected, computed
                                             );
+
+                                            tx.send(Ok(TelemetryMessageOrError::Error(
+                                                HighLevelError::CrcError { expected, computed },
+                                            )))
+                                            .expect("[tx channel] failed sending message");
+
+                                            buffer = buffer.clone().split_off(msg_bytes.len());
+                                        }
+                                        // Message was built using an unsupported protocol version
+                                        Err(nom::Err::Failure(TelemetryError(
+                                            msg_bytes,
+                                            TelemetryErrorKind::UnsupportedProtocolVersion {
+                                                maximum_supported,
+                                                found,
+                                            },
+                                        ))) => {
+                                            warn!(
+                                                "[unsupported protocol version]\tmaximum_supported={}\tfound={}",
+                                                maximum_supported, found
+                                            );
+
+                                            tx.send(Ok(TelemetryMessageOrError::Error(
+                                                HighLevelError::UnsupportedProtocolVersion {
+                                                    maximum_supported,
+                                                    found,
+                                                },
+                                            )))
+                                            .expect("[tx channel] failed sending message");
+
                                             buffer = buffer.clone().split_off(msg_bytes.len());
                                         }
                                         // There are not enough bytes, let's wait until we get more
@@ -182,7 +211,10 @@ pub fn gather_telemetry(
 /// Helper to display telemetry messages
 pub fn display_message(message: TelemetryChannelType) {
     match message {
-        Ok(TelemetryMessage::BootMessage(BootMessage { value128, .. })) => {
+        Ok(TelemetryMessageOrError::Message(TelemetryMessage::BootMessage(BootMessage {
+            value128,
+            ..
+        }))) => {
             debug!("####################################################################################");
             debug!("######### CONTROLLER STARTED #########");
             debug!("####################################################################################");
@@ -195,16 +227,16 @@ pub fn display_message(message: TelemetryChannelType) {
                 error!("value128 should be equal to 128 (found {:b} = {}); check serial port configuration", &value128, &value128);
             }
         }
-        Ok(TelemetryMessage::StoppedMessage(_)) => {
+        Ok(TelemetryMessageOrError::Message(TelemetryMessage::StoppedMessage(_))) => {
             debug!("stopped");
         }
-        Ok(TelemetryMessage::DataSnapshot(_)) => {
+        Ok(TelemetryMessageOrError::Message(TelemetryMessage::DataSnapshot(_))) => {
             info!(
                 "    {:?}",
                 &message.expect("failed unwrapping message for data snapshot")
             );
         }
-        Ok(TelemetryMessage::MachineStateSnapshot(_)) => {
+        Ok(TelemetryMessageOrError::Message(TelemetryMessage::MachineStateSnapshot(_))) => {
             debug!("------------------------------------------------------------------------------------");
             info!(
                 "{:?}",
@@ -212,7 +244,10 @@ pub fn display_message(message: TelemetryChannelType) {
             );
             debug!("------------------------------------------------------------------------------------");
         }
-        Ok(TelemetryMessage::AlarmTrap(AlarmTrap { triggered, .. })) => {
+        Ok(TelemetryMessageOrError::Message(TelemetryMessage::AlarmTrap(AlarmTrap {
+            triggered,
+            ..
+        }))) => {
             let prefix = if triggered { "NEW ALARM" } else { "STOPPED" };
             debug!("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             info!(
@@ -222,8 +257,15 @@ pub fn display_message(message: TelemetryChannelType) {
             );
             debug!("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }
-        Ok(TelemetryMessage::ControlAck(ControlAck { setting, value, .. })) => {
+        Ok(TelemetryMessageOrError::Message(TelemetryMessage::ControlAck(ControlAck {
+            setting,
+            value,
+            ..
+        }))) => {
             info!("← {:?} = {}", &setting, &value);
+        }
+        Ok(TelemetryMessageOrError::Error(e)) => {
+            warn!("a high-level error occurred: {:?}", e);
         }
         Err(e) => {
             warn!("an error occurred: {:?}", e);
@@ -270,7 +312,7 @@ pub fn gather_telemetry_from_file(
                                     _ => (),
                                 }
                             }
-                            tx.send(Ok(message))
+                            tx.send(Ok(message.into()))
                                 .expect("failed sending message to tx channel");
                             buffer = Vec::from(rest);
                         }

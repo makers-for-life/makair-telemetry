@@ -8,7 +8,6 @@ pub mod v1;
 /// Parsers for the telemetry protocol version 2
 pub mod v2;
 
-use nom::number::streaming::be_u32;
 use nom::IResult;
 
 use super::structures::*;
@@ -25,29 +24,6 @@ fn footer(input: &[u8]) -> IResult<&[u8], &[u8], TelemetryError<&[u8]>> {
 
 fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
     nom::branch::alt((v2::message, v1::message))(input).map_err(nom::Err::convert)
-}
-
-fn with_input<
-    I: Clone + nom::Offset + nom::Slice<nom::lib::std::ops::RangeTo<usize>>,
-    O,
-    E: nom::error::ParseError<I>,
-    F,
->(
-    parser: F,
-) -> impl Fn(I) -> nom::IResult<I, (I, O), E>
-where
-    F: Fn(I) -> nom::IResult<I, O, E>,
-{
-    move |input: I| {
-        let i = input.clone();
-        match parser(i) {
-            Ok((i, o)) => {
-                let index = input.offset(&i);
-                Ok((i, (input.slice(..index), o)))
-            }
-            Err(e) => Err(e),
-        }
-    }
 }
 
 /// Try to extract protocol version from message bytes
@@ -74,12 +50,11 @@ pub fn protocol_version(input: &[u8]) -> IResult<&[u8], u8, TelemetryError<&[u8]
 pub fn parse_telemetry_message(
     input: &[u8],
 ) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
+    use nom::combinator::consumed;
+    use nom::number::streaming::be_u32;
     use nom::sequence::{pair, preceded, terminated};
 
-    let mut parser = preceded(
-        header,
-        terminated(pair(with_input(message), be_u32), footer),
-    );
+    let mut parser = preceded(header, terminated(pair(consumed(message), be_u32), footer));
     parser(input)
         .and_then(|(rest, ((msg_bytes, msg), expected_crc))| {
             let mut crc = crc32fast::Hasher::new();

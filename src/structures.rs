@@ -31,7 +31,7 @@ pub enum Phase {
     Exhalation,
 }
 
-/// Sub-phases of the respiratory cycle
+/// [obsolete in protocol v2] Sub-phases of the respiratory cycle
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub enum SubPhase {
@@ -157,8 +157,8 @@ pub struct DataSnapshot {
     pub pressure: u16,
     /// Current phase
     pub phase: Phase,
-    /// Current sub-phase
-    pub subphase: SubPhase,
+    /// [obsolete in protocol v2] Current sub-phase
+    pub subphase: Option<SubPhase>,
     /// Current angle of the blower valve
     pub blower_valve_position: u8,
     /// Current angle of the patient valve
@@ -235,8 +235,8 @@ pub struct AlarmTrap {
     pub pressure: u16,
     /// Current phase
     pub phase: Phase,
-    /// Current sub-phase
-    pub subphase: SubPhase,
+    /// [obsolete in protocol v2] Current sub-phase
+    pub subphase: Option<SubPhase>,
     /// Number of the current breathing cycle since MCU booted
     pub cycle: u32,
     /// Code of the alarm

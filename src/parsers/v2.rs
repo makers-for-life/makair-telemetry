@@ -19,15 +19,8 @@ named!(
 );
 
 named!(
-    phase_and_subphase<(Phase, SubPhase)>,
-    alt!(
-        map!(tag!([17u8]), |_| (Phase::Inhalation, SubPhase::Inspiration))
-            | map!(tag!([18u8]), |_| (
-                Phase::Inhalation,
-                SubPhase::HoldInspiration
-            ))
-            | map!(tag!([68u8]), |_| (Phase::Exhalation, SubPhase::Exhale))
-    )
+    phase<Phase>,
+    alt!(map!(tag!([17u8]), |_| Phase::Inhalation) | map!(tag!([68u8]), |_| Phase::Exhalation))
 );
 
 named!(
@@ -158,7 +151,7 @@ named!(
             >> sep
             >> pressure: be_u16
             >> sep
-            >> phase_and_subphase: phase_and_subphase
+            >> phase: phase
             >> sep
             >> blower_valve_position: be_u8
             >> sep
@@ -179,8 +172,8 @@ named!(
                 systick,
                 centile,
                 pressure,
-                phase: phase_and_subphase.0,
-                subphase: phase_and_subphase.1,
+                phase,
+                subphase: None,
                 blower_valve_position,
                 patient_valve_position,
                 blower_rpm,
@@ -285,7 +278,7 @@ named!(
             >> sep
             >> pressure: be_u16
             >> sep
-            >> phase_and_subphase: phase_and_subphase
+            >> phase: phase
             >> sep
             >> cycle: be_u32
             >> sep
@@ -308,8 +301,8 @@ named!(
                 systick,
                 centile,
                 pressure,
-                phase: phase_and_subphase.0,
-                subphase: phase_and_subphase.1,
+                phase,
+                subphase: None,
                 cycle,
                 alarm_code,
                 alarm_priority,
@@ -379,21 +372,14 @@ mod tests {
     use proptest::option;
     use proptest::prelude::*;
 
-    // TODO Generate all combinations (independent each other) ?
-    fn phase_subphase_strategy() -> impl Strategy<Value = (Phase, SubPhase)> {
-        prop_oneof![
-            (Just(Phase::Inhalation), Just(SubPhase::Inspiration)),
-            (Just(Phase::Inhalation), Just(SubPhase::HoldInspiration)),
-            (Just(Phase::Exhalation), Just(SubPhase::Exhale)),
-        ]
+    fn phase_strategy() -> impl Strategy<Value = Phase> {
+        prop_oneof![Just(Phase::Inhalation), Just(Phase::Exhalation)]
     }
 
-    fn phase_value(phase: Phase, subphase: SubPhase) -> u8 {
-        match (phase, subphase) {
-            (Phase::Inhalation, SubPhase::Inspiration) => 17,
-            (Phase::Inhalation, SubPhase::HoldInspiration) => 18,
-            (Phase::Exhalation, SubPhase::Exhale) => 68,
-            _ => 0,
+    fn phase_value(phase: Phase) -> u8 {
+        match phase {
+            Phase::Inhalation => 17,
+            Phase::Exhalation => 68,
         }
     }
 
@@ -543,7 +529,7 @@ mod tests {
             systick in (0u64..),
             centile in (0u16..),
             pressure in (0u16..),
-            phase_subphase in phase_subphase_strategy(),
+            phase in phase_strategy(),
             blower_valve_position in (0u8..),
             patient_valve_position in (0u8..),
             blower_rpm in (0u8..),
@@ -558,8 +544,8 @@ mod tests {
                 systick,
                 centile,
                 pressure,
-                phase: phase_subphase.0.clone(),
-                subphase: phase_subphase.1.clone(),
+                phase: phase.clone(),
+                subphase: None,
                 blower_valve_position,
                 patient_valve_position,
                 blower_rpm,
@@ -584,7 +570,7 @@ mod tests {
                 b"\t",
                 &msg.pressure.to_be_bytes(),
                 b"\t",
-                &[phase_value(phase_subphase.0, phase_subphase.1)],
+                &[phase_value(phase)],
                 b"\t",
                 &[msg.blower_valve_position],
                 b"\t",
@@ -711,7 +697,7 @@ mod tests {
             systick in (0u64..),
             centile in (0u16..),
             pressure in (0u16..),
-            phase_subphase in phase_subphase_strategy(),
+            phase in phase_strategy(),
             cycle in (0u32..),
             alarm_code in (0u8..),
             alarm_priority in alarm_priority_strategy(),
@@ -727,8 +713,8 @@ mod tests {
                 systick,
                 centile,
                 pressure,
-                phase: phase_subphase.0.clone(),
-                subphase: phase_subphase.1.clone(),
+                phase: phase.clone(),
+                subphase: None,
                 cycle,
                 alarm_code,
                 alarm_priority,
@@ -754,7 +740,7 @@ mod tests {
                 b"\t",
                 &msg.pressure.to_be_bytes(),
                 b"\t",
-                &[phase_value(phase_subphase.0, phase_subphase.1)],
+                &[phase_value(phase)],
                 b"\t",
                 &msg.cycle.to_be_bytes(),
                 b"\t",

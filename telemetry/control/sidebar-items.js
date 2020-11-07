@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ControlSetting","Available settings in the control protocol"]],"struct":[["ControlMessage","A control message"]]});
+initSidebarItems({"constant":[["DISABLE_RPI_WATCHDOG","Special value that can be used in a heartbeat control message to disable RPi watchdog"]],"enum":[["ControlSetting","Available settings in the control protocol"]],"struct":[["ControlMessage","A control message"]]});

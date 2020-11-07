@@ -169,6 +169,9 @@
 <span id="168">168</span>
 <span id="169">169</span>
 <span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -180,11 +183,14 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">RangeInclusive</span>;
 
+<span class="doccomment">/// Special value that can be used in a heartbeat control message to disable RPi watchdog</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DISABLE_RPI_WATCHDOG</span>: <span class="ident">u16</span> <span class="op">=</span> <span class="number">43_690</span>;
+
 <span class="doccomment">/// Available settings in the control protocol</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serialize-messages&quot;</span>, <span class="ident">derive</span>(<span class="ident">serde</span>::<span class="ident">Serialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ControlSetting</span> {
-    <span class="doccomment">/// Heartbeat used for the RPi watchdog feature (value is ignored except for the special value 127 which disables watchdog)</span>
+    <span class="doccomment">/// Heartbeat used for the RPi watchdog feature (value is ignored except for the special value `DISABLE_RPI_WATCHDOG` which disables watchdog)</span>
     <span class="ident">Heartbeat</span> <span class="op">=</span> <span class="number">0</span>,
     <span class="doccomment">/// Peak pressure in mmH20 (value bounds must be between 0 and 700)</span>
     <span class="ident">PeakPressure</span> <span class="op">=</span> <span class="number">1</span>,

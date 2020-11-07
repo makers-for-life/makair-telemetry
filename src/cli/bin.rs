@@ -32,16 +32,16 @@ struct Opts {
 
 #[derive(Debug, Clap)]
 enum Mode {
-    /// Reads telemetry from a serial port, parses it and streams result to stdout
+    /// Read telemetry from a serial port, parse it and stream result to stdout
     Debug(Debug),
 
-    /// Reads telemetry from a serial port and save bytes to a file
+    /// Read telemetry from a serial port and save bytes to a file
     Record(Record),
 
-    /// Reads telemetry from a recorded file, parses it and streams result to stdout
+    /// Read telemetry from a recorded file, parse it and stream result to stdout
     Play(Play),
 
-    /// Reads telemetry from a recorded file, parses it and compute some statistics
+    /// Read telemetry from a recorded file, parse it and compute some statistics
     Stats(Stats),
 
     /// Send one specific control message to a serial port, then run debug mode
@@ -50,7 +50,7 @@ enum Mode {
     /// Send a lot of control messages and/or bytes to a serial port
     Storm(Storm),
 
-    /// Reads telemetry from a recorded file, parses it and converts it to another format
+    /// Read telemetry from a recorded file, parse it and convert it to another format
     Convert(Convert),
 
     /// Send a control message to disable the RPi watchdog (until MCU is restarted)

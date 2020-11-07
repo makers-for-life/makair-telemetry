@@ -25,12 +25,12 @@ It has the following commands:
 | Command | Description |
 | --- | --- |
 | control | Send one specific control message to a serial port, then run debug mode |
-| convert | Reads telemetry from a recorded file, parses it and converts it to another format (Warp10 GTS, JSON Text Sequences) |
-| disable-rpi-watchdog | Sends a control message to disable the RPi watchdog (until MCU is restarted) |
-| debug | Reads telemetry from a serial port, parses it and streams result to stdout |
-| play | Reads telemetry from a recorded file, parses it and streams result to stdout |
-| record | Reads telemetry from a serial port and save bytes to a file |
-| stats | Reads telemetry from a recorded file, parses it and compute some statistics |
+| convert | Read telemetry from a recorded file, parse it and convert it to another format (Warp10 GTS, JSON Text Sequences) |
+| disable-rpi-watchdog | Send a control message to disable the RPi watchdog (until MCU is restarted) |
+| debug | Read telemetry from a serial port, parse it and stream result to stdout |
+| play | Read telemetry from a recorded file, parse it and stream result to stdout |
+| record | Read telemetry from a serial port and save bytes to a file |
+| stats | Read telemetry from a recorded file, parse it and compute some statistics |
 | storm | Send a lot of control messages and/or bytes to a serial port |
 
 You can use the scripts provided in the `scripts/` directory to run it through Cargo (you need a working Rust development environment).

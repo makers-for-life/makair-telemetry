@@ -494,7 +494,7 @@
     <span class="ident">Exhalation</span>,
 }
 
-<span class="doccomment">/// Sub-phases of the respiratory cycle</span>
+<span class="doccomment">/// [obsolete in protocol v2] Sub-phases of the respiratory cycle</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serialize-messages&quot;</span>, <span class="ident">derive</span>(<span class="ident">serde</span>::<span class="ident">Serialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SubPhase</span> {
@@ -620,8 +620,8 @@
     <span class="kw">pub</span> <span class="ident">pressure</span>: <span class="ident">u16</span>,
     <span class="doccomment">/// Current phase</span>
     <span class="kw">pub</span> <span class="ident">phase</span>: <span class="ident">Phase</span>,
-    <span class="doccomment">/// Current sub-phase</span>
-    <span class="kw">pub</span> <span class="ident">subphase</span>: <span class="ident">SubPhase</span>,
+    <span class="doccomment">/// [obsolete in protocol v2] Current sub-phase</span>
+    <span class="kw">pub</span> <span class="ident">subphase</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SubPhase</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Current angle of the blower valve</span>
     <span class="kw">pub</span> <span class="ident">blower_valve_position</span>: <span class="ident">u8</span>,
     <span class="doccomment">/// Current angle of the patient valve</span>
@@ -698,8 +698,8 @@
     <span class="kw">pub</span> <span class="ident">pressure</span>: <span class="ident">u16</span>,
     <span class="doccomment">/// Current phase</span>
     <span class="kw">pub</span> <span class="ident">phase</span>: <span class="ident">Phase</span>,
-    <span class="doccomment">/// Current sub-phase</span>
-    <span class="kw">pub</span> <span class="ident">subphase</span>: <span class="ident">SubPhase</span>,
+    <span class="doccomment">/// [obsolete in protocol v2] Current sub-phase</span>
+    <span class="kw">pub</span> <span class="ident">subphase</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SubPhase</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Number of the current breathing cycle since MCU booted</span>
     <span class="kw">pub</span> <span class="ident">cycle</span>: <span class="ident">u32</span>,
     <span class="doccomment">/// Code of the alarm</span>

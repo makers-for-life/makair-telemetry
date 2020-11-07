@@ -34,3 +34,8 @@ It has the following commands:
 | storm | Send a lot of control messages and/or bytes to a serial port |
 
 You can use the scripts provided in the `scripts/` directory to run it through Cargo (you need a working Rust development environment).
+
+To see documentation, you can run:
+
+- `makair_telemetry --help` to see a list of available commands
+- `makair_telemetry [COMMAND] --help` to see a list of flags and options for a given `[COMMAND]`

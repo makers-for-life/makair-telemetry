@@ -52,6 +52,9 @@ enum Mode {
 
     /// Reads telemetry from a recorded file, parses it and converts it to another format
     Convert(Convert),
+
+    /// Send a control message to disable the RPi watchdog (until MCU is restarted)
+    DisableRpiWatchdog(DisableRpiWatchdog),
 }
 
 #[derive(Debug, Clap)]
@@ -163,6 +166,13 @@ struct Convert {
     gts_disable_source_label: bool,
 }
 
+#[derive(Debug, Clap)]
+struct DisableRpiWatchdog {
+    /// Address of the port to use
+    #[clap(short = 'p')]
+    port: String,
+}
+
 const THREAD_SLEEP_THROTTLE: std::time::Duration = std::time::Duration::from_millis(10);
 const HEARTBEAT_PERIOD: std::time::Duration = std::time::Duration::from_secs(30);
 
@@ -178,6 +188,7 @@ fn main() {
         Mode::Control(cfg) => control(cfg),
         Mode::Storm(cfg) => storm(cfg),
         Mode::Convert(cfg) => convert(cfg),
+        Mode::DisableRpiWatchdog(cfg) => disable_rpi_watchdog(cfg),
     }
 }
 
@@ -542,4 +553,12 @@ fn convert(cfg: Convert) {
             }
         }
     }
+}
+
+fn disable_rpi_watchdog(cfg: DisableRpiWatchdog) {
+    control(Control {
+        port: cfg.port,
+        setting: ControlSetting::Heartbeat as u8,
+        value: DISABLE_RPI_WATCHDOG,
+    })
 }

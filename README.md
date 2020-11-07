@@ -26,6 +26,7 @@ It has the following commands:
 | --- | --- |
 | control | Send one specific control message to a serial port, then run debug mode |
 | convert | Reads telemetry from a recorded file, parses it and converts it to another format (Warp10 GTS, JSON Text Sequences) |
+| disable-rpi-watchdog | Sends a control message to disable the RPi watchdog (until MCU is restarted) |
 | debug | Reads telemetry from a serial port, parses it and streams result to stdout |
 | play | Reads telemetry from a recorded file, parses it and streams result to stdout |
 | record | Reads telemetry from a serial port and save bytes to a file |

@@ -8,11 +8,14 @@ use rand::Rng;
 use std::convert::TryFrom;
 use std::ops::RangeInclusive;
 
+/// Special value that can be used in a heartbeat control message to disable RPi watchdog
+pub const DISABLE_RPI_WATCHDOG: u16 = 43_690;
+
 /// Available settings in the control protocol
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub enum ControlSetting {
-    /// Heartbeat used for the RPi watchdog feature (value is ignored except for the special value 127 which disables watchdog)
+    /// Heartbeat used for the RPi watchdog feature (value is ignored except for the special value `DISABLE_RPI_WATCHDOG` which disables watchdog)
     Heartbeat = 0,
     /// Peak pressure in mmH20 (value bounds must be between 0 and 700)
     PeakPressure = 1,

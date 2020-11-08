@@ -34,7 +34,7 @@ pub enum ControlSetting {
     TriggerOffset = 7,
     /// State of the respiration (value must be 1 if enabled and 0 if disabled)
     RespirationEnabled = 8,
-    /// Alarm snooze (value must be 0)
+    /// Alarm snooze (value must be 1 to snooze and 0 to unsnooze)
     AlarmSnooze = 9,
 }
 
@@ -69,7 +69,7 @@ impl ControlSetting {
             Self::TriggerEnabled => RangeInclusive::new(0, 1),
             Self::TriggerOffset => RangeInclusive::new(0, 100),
             Self::RespirationEnabled => RangeInclusive::new(0, 1),
-            Self::AlarmSnooze => RangeInclusive::new(0, 0),
+            Self::AlarmSnooze => RangeInclusive::new(0, 1),
         }
     }
 }
@@ -123,7 +123,7 @@ impl Distribution<ControlMessage> for Standard {
             ControlSetting::TriggerEnabled => rng.gen_range(0, 2),
             ControlSetting::TriggerOffset => rng.gen_range(0, 101),
             ControlSetting::RespirationEnabled => rng.gen_range(0, 2),
-            ControlSetting::AlarmSnooze => rng.gen_range(0, 0),
+            ControlSetting::AlarmSnooze => rng.gen_range(0, 2),
         };
         ControlMessage { setting, value }
     }

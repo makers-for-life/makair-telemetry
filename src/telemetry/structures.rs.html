@@ -636,8 +636,6 @@
     <span class="kw">pub</span> <span class="ident">inspiratory_flow</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i16</span><span class="op">&gt;</span>,
     <span class="doccomment">/// [protocol v2] Expiratory flow in SLM * 100</span>
     <span class="kw">pub</span> <span class="ident">expiratory_flow</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i16</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// [protocol v2] CPU load in percent</span>
-    <span class="kw">pub</span> <span class="ident">cpu_load</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// A telemetry message that is sent at the end of every respiratory cycle</span>
@@ -682,6 +680,8 @@
     <span class="kw">pub</span> <span class="ident">previous_cpm</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="doccomment">/// [protocol v2] State of the alarm snooze</span>
     <span class="kw">pub</span> <span class="ident">alarm_snoozed</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] CPU load in percent</span>
+    <span class="kw">pub</span> <span class="ident">cpu_load</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// A telemetry message that is sent every time an alarm is triggered or stopped</span>

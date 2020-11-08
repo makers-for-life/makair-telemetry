@@ -253,7 +253,7 @@ pub struct AlarmTrap {
     pub cycles_since_trigger: u32,
 }
 
-/// An ACK message that is sent every time a setting is changed using the control protocol
+/// An ACK message that is sent every time a setting is changed on the MCU side
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct ControlAck {

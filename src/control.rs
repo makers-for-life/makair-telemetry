@@ -28,11 +28,11 @@ pub enum ControlSetting {
     /// Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10 (value \
     //    bounds must be between 10 and 60)
     ExpiratoryTerm = 5,
-    /// State of the trigger (value bounds must be 1 if enabled and 0 if disabled)
+    /// State of the trigger (value must be 1 if enabled and 0 if disabled)
     TriggerEnabled = 6,
     /// Trigger offset in mmH2O (value bounds must be between 0 and 100)
     TriggerOffset = 7,
-    /// State of the respiration (value bounds must be 1 if enabled and 0 if disabled)
+    /// State of the respiration (value must be 1 if enabled and 0 if disabled)
     RespirationEnabled = 8,
     /// Alarm snooze (value must be 0)
     AlarmSnooze = 9,

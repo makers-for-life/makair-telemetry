@@ -171,6 +171,8 @@ pub struct DataSnapshot {
     pub inspiratory_flow: Option<i16>,
     /// [protocol v2] Expiratory flow in SLM * 100
     pub expiratory_flow: Option<i16>,
+    /// [protocol v2] CPU load in percent
+    pub cpu_load: Option<u8>,
 }
 
 /// A telemetry message that is sent at the end of every respiratory cycle

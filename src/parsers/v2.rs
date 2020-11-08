@@ -164,6 +164,8 @@ named!(
             >> inspiratory_flow: be_i16
             >> sep
             >> expiratory_flow: be_i16
+            >> sep
+            >> cpu_load: be_u8
             >> end
             >> (TelemetryMessage::DataSnapshot(DataSnapshot {
                 telemetry_version: VERSION,
@@ -180,6 +182,7 @@ named!(
                 battery_level,
                 inspiratory_flow: Some(inspiratory_flow),
                 expiratory_flow: Some(expiratory_flow),
+                cpu_load: Some(cpu_load),
             }))
     )
 );
@@ -536,6 +539,7 @@ mod tests {
             battery_level in (0u8..),
             inspiratory_flow in num::i16::ANY,
             expiratory_flow in num::i16::ANY,
+            cpu_load in num::u8::ANY,
         ) {
             let msg = DataSnapshot {
                 telemetry_version: VERSION,
@@ -552,6 +556,7 @@ mod tests {
                 battery_level,
                 inspiratory_flow: Some(inspiratory_flow),
                 expiratory_flow: Some(expiratory_flow),
+                cpu_load: Some(cpu_load),
             };
 
             // This needs to be consistent with sendDataSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -583,6 +588,8 @@ mod tests {
                 &msg.inspiratory_flow.unwrap_or_default().to_be_bytes(),
                 b"\t",
                 &msg.expiratory_flow.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.cpu_load.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 

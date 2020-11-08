@@ -167,6 +167,7 @@ named!(
                 battery_level,
                 inspiratory_flow: None,
                 expiratory_flow: None,
+                cpu_load: None,
             }))
     )
 );
@@ -513,6 +514,7 @@ mod tests {
                 battery_level,
                 inspiratory_flow: None,
                 expiratory_flow: None,
+                cpu_load: None,
             };
 
             // This needs to be consistent with sendDataSnapshot() defined in src/software/firmware/srcs/telemetry.cpp

@@ -167,7 +167,6 @@ named!(
                 battery_level,
                 inspiratory_flow: None,
                 expiratory_flow: None,
-                cpu_load: None,
             }))
     )
 );
@@ -238,6 +237,7 @@ named!(
                 trigger_offset,
                 previous_cpm: None,
                 alarm_snoozed: None,
+                cpu_load: None,
             }))
     )
 );
@@ -514,7 +514,6 @@ mod tests {
                 battery_level,
                 inspiratory_flow: None,
                 expiratory_flow: None,
-                cpu_load: None,
             };
 
             // This needs to be consistent with sendDataSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -592,6 +591,7 @@ mod tests {
                 trigger_offset,
                 previous_cpm: None,
                 alarm_snoozed: None,
+                cpu_load: None,
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp

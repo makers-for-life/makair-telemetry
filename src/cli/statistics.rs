@@ -87,7 +87,6 @@ mod tests {
             battery_level: 0,
             inspiratory_flow: None,
             expiratory_flow: None,
-            cpu_load: None,
         })];
 
         assert_eq!(compute_duration(vect), 10);
@@ -116,6 +115,7 @@ mod tests {
                 trigger_offset: 0,
                 previous_cpm: None,
                 alarm_snoozed: None,
+                cpu_load: None,
             },
         )];
 
@@ -190,7 +190,6 @@ mod tests {
             battery_level: 0,
             inspiratory_flow: None,
             expiratory_flow: None,
-            cpu_load: None,
         }));
 
         vect.push(TelemetryMessage::MachineStateSnapshot(
@@ -214,6 +213,7 @@ mod tests {
                 trigger_offset: 0,
                 previous_cpm: None,
                 alarm_snoozed: None,
+                cpu_load: None,
             },
         ));
 

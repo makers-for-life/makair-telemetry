@@ -758,6 +758,8 @@
 <span id="757">757</span>
 <span id="758">758</span>
 <span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">number</span>::<span class="ident">streaming</span>::{<span class="ident">be_u16</span>, <span class="ident">be_u32</span>, <span class="ident">be_u64</span>, <span class="ident">be_u8</span>};
 <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">IResult</span>;
@@ -928,6 +930,7 @@
                 <span class="ident">battery_level</span>,
                 <span class="ident">inspiratory_flow</span>: <span class="prelude-val">None</span>,
                 <span class="ident">expiratory_flow</span>: <span class="prelude-val">None</span>,
+                <span class="ident">cpu_load</span>: <span class="prelude-val">None</span>,
             }))
     )
 );
@@ -1274,6 +1277,7 @@
                 <span class="ident">battery_level</span>,
                 <span class="ident">inspiratory_flow</span>: <span class="prelude-val">None</span>,
                 <span class="ident">expiratory_flow</span>: <span class="prelude-val">None</span>,
+                <span class="ident">cpu_load</span>: <span class="prelude-val">None</span>,
             };
 
             <span class="comment">// This needs to be consistent with sendDataSnapshot() defined in src/software/firmware/srcs/telemetry.cpp</span>

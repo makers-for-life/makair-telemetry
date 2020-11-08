@@ -807,6 +807,13 @@
 <span id="806">806</span>
 <span id="807">807</span>
 <span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">number</span>::<span class="ident">streaming</span>::{<span class="ident">be_i16</span>, <span class="ident">be_u16</span>, <span class="ident">be_u32</span>, <span class="ident">be_u64</span>, <span class="ident">be_u8</span>};
 <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">IResult</span>;
@@ -974,6 +981,8 @@
             <span class="op">&gt;&gt;</span> <span class="ident">inspiratory_flow</span>: <span class="ident">be_i16</span>
             <span class="op">&gt;&gt;</span> <span class="ident">sep</span>
             <span class="op">&gt;&gt;</span> <span class="ident">expiratory_flow</span>: <span class="ident">be_i16</span>
+            <span class="op">&gt;&gt;</span> <span class="ident">sep</span>
+            <span class="op">&gt;&gt;</span> <span class="ident">cpu_load</span>: <span class="ident">be_u8</span>
             <span class="op">&gt;&gt;</span> <span class="ident">end</span>
             <span class="op">&gt;&gt;</span> (<span class="ident">TelemetryMessage</span>::<span class="ident">DataSnapshot</span>(<span class="ident">DataSnapshot</span> {
                 <span class="ident">telemetry_version</span>: <span class="ident">VERSION</span>,
@@ -990,6 +999,7 @@
                 <span class="ident">battery_level</span>,
                 <span class="ident">inspiratory_flow</span>: <span class="prelude-val">Some</span>(<span class="ident">inspiratory_flow</span>),
                 <span class="ident">expiratory_flow</span>: <span class="prelude-val">Some</span>(<span class="ident">expiratory_flow</span>),
+                <span class="ident">cpu_load</span>: <span class="prelude-val">Some</span>(<span class="ident">cpu_load</span>),
             }))
     )
 );
@@ -1346,6 +1356,7 @@
             <span class="ident">battery_level</span> <span class="kw">in</span> (<span class="number">0u8</span>..),
             <span class="ident">inspiratory_flow</span> <span class="kw">in</span> <span class="ident">num</span>::<span class="ident">i16</span>::<span class="ident">ANY</span>,
             <span class="ident">expiratory_flow</span> <span class="kw">in</span> <span class="ident">num</span>::<span class="ident">i16</span>::<span class="ident">ANY</span>,
+            <span class="ident">cpu_load</span> <span class="kw">in</span> <span class="ident">num</span>::<span class="ident">u8</span>::<span class="ident">ANY</span>,
         ) {
             <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">DataSnapshot</span> {
                 <span class="ident">telemetry_version</span>: <span class="ident">VERSION</span>,
@@ -1362,6 +1373,7 @@
                 <span class="ident">battery_level</span>,
                 <span class="ident">inspiratory_flow</span>: <span class="prelude-val">Some</span>(<span class="ident">inspiratory_flow</span>),
                 <span class="ident">expiratory_flow</span>: <span class="prelude-val">Some</span>(<span class="ident">expiratory_flow</span>),
+                <span class="ident">cpu_load</span>: <span class="prelude-val">Some</span>(<span class="ident">cpu_load</span>),
             };
 
             <span class="comment">// This needs to be consistent with sendDataSnapshot() defined in src/software/firmware/srcs/telemetry.cpp</span>
@@ -1393,6 +1405,8 @@
                 <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">inspiratory_flow</span>.<span class="ident">unwrap_or_default</span>().<span class="ident">to_be_bytes</span>(),
                 <span class="string">b&quot;\t&quot;</span>,
                 <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">expiratory_flow</span>.<span class="ident">unwrap_or_default</span>().<span class="ident">to_be_bytes</span>(),
+                <span class="string">b&quot;\t&quot;</span>,
+                <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">cpu_load</span>.<span class="ident">unwrap_or_default</span>().<span class="ident">to_be_bytes</span>(),
                 <span class="string">b&quot;\n&quot;</span>,
             ]);
 

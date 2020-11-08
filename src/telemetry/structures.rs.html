@@ -460,6 +460,8 @@
 <span id="459">459</span>
 <span id="460">460</span>
 <span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -634,6 +636,8 @@
     <span class="kw">pub</span> <span class="ident">inspiratory_flow</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i16</span><span class="op">&gt;</span>,
     <span class="doccomment">/// [protocol v2] Expiratory flow in SLM * 100</span>
     <span class="kw">pub</span> <span class="ident">expiratory_flow</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] CPU load in percent</span>
+    <span class="kw">pub</span> <span class="ident">cpu_load</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// A telemetry message that is sent at the end of every respiratory cycle</span>
@@ -716,7 +720,7 @@
     <span class="kw">pub</span> <span class="ident">cycles_since_trigger</span>: <span class="ident">u32</span>,
 }
 
-<span class="doccomment">/// An ACK message that is sent every time a setting is changed using the control protocol</span>
+<span class="doccomment">/// An ACK message that is sent every time a setting is changed on the MCU side</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serialize-messages&quot;</span>, <span class="ident">derive</span>(<span class="ident">serde</span>::<span class="ident">Serialize</span>))]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ControlAck</span> {

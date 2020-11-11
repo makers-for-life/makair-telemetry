@@ -382,13 +382,9 @@ mod tests {
     }
 
     fn control_setting_strategy() -> impl Strategy<Value = ControlSetting> {
-        prop_oneof![
-            Just(ControlSetting::PeakPressure),
-            Just(ControlSetting::PlateauPressure),
-            Just(ControlSetting::PEEP),
-            Just(ControlSetting::CyclesPerMinute),
-            Just(ControlSetting::ExpiratoryTerm),
-        ]
+        proptest::num::u8::ANY.prop_filter_map("Invalid control setting", |n| {
+            ControlSetting::try_from(n).ok()
+        })
     }
 
     fn alarm_priority_value(m: &AlarmPriority) -> u8 {

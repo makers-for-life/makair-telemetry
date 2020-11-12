@@ -7,6 +7,8 @@
 
 // Force exposed items to be documented
 #![deny(missing_docs)]
+// Required for the parsers to compile
+#![recursion_limit = "256"]
 
 #[macro_use]
 extern crate log;

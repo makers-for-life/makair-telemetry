@@ -238,6 +238,17 @@ named!(
                 previous_cpm: None,
                 alarm_snoozed: None,
                 cpu_load: None,
+                ventilation_mode: VentilationMode::default(),
+                inspiratory_trigger_flow: None,
+                expiratory_trigger_flow: None,
+                ti_min: None,
+                ti_max: None,
+                low_inspiratory_minute_volume_alarm_threshold: None,
+                high_inspiratory_minute_volume_alarm_threshold: None,
+                low_expiratory_minute_volume_alarm_threshold: None,
+                high_expiratory_minute_volume_alarm_threshold: None,
+                low_expiratory_rate_alarm_threshold: None,
+                high_expiratory_rate_alarm_threshold: None,
             }))
     )
 );
@@ -588,6 +599,17 @@ mod tests {
                 previous_cpm: None,
                 alarm_snoozed: None,
                 cpu_load: None,
+                ventilation_mode: VentilationMode::default(),
+                inspiratory_trigger_flow: None,
+                expiratory_trigger_flow: None,
+                ti_min: None,
+                ti_max: None,
+                low_inspiratory_minute_volume_alarm_threshold: None,
+                high_inspiratory_minute_volume_alarm_threshold: None,
+                low_expiratory_minute_volume_alarm_threshold: None,
+                high_expiratory_minute_volume_alarm_threshold: None,
+                low_expiratory_rate_alarm_threshold: None,
+                high_expiratory_rate_alarm_threshold: None,
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp

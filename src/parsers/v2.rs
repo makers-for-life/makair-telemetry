@@ -48,6 +48,11 @@ named!(
 );
 
 named!(
+    ventilation_mode<VentilationMode>,
+    map_res!(be_u8, |num| VentilationMode::try_from(num))
+);
+
+named!(
     boot<TelemetryMessage>,
     do_parse!(
         tag!("B:")
@@ -231,6 +236,28 @@ named!(
             >> alarm_snoozed: be_u8
             >> sep
             >> cpu_load: be_u8
+            >> sep
+            >> ventilation_mode: ventilation_mode
+            >> sep
+            >> inspiratory_trigger_flow: be_u8
+            >> sep
+            >> expiratory_trigger_flow: be_u8
+            >> sep
+            >> ti_min: be_u16
+            >> sep
+            >> ti_max: be_u16
+            >> sep
+            >> low_inspiratory_minute_volume_alarm_threshold: be_u8
+            >> sep
+            >> high_inspiratory_minute_volume_alarm_threshold: be_u8
+            >> sep
+            >> low_expiratory_minute_volume_alarm_threshold: be_u8
+            >> sep
+            >> high_expiratory_minute_volume_alarm_threshold: be_u8
+            >> sep
+            >> low_expiratory_rate_alarm_threshold: be_u8
+            >> sep
+            >> high_expiratory_rate_alarm_threshold: be_u8
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -257,6 +284,25 @@ named!(
                 previous_cpm: Some(previous_cpm),
                 alarm_snoozed: Some(alarm_snoozed != 0),
                 cpu_load: Some(cpu_load),
+                ventilation_mode,
+                inspiratory_trigger_flow: Some(inspiratory_trigger_flow),
+                expiratory_trigger_flow: Some(expiratory_trigger_flow),
+                ti_min: Some(ti_min),
+                ti_max: Some(ti_max),
+                low_inspiratory_minute_volume_alarm_threshold: Some(
+                    low_inspiratory_minute_volume_alarm_threshold
+                ),
+                high_inspiratory_minute_volume_alarm_threshold: Some(
+                    high_inspiratory_minute_volume_alarm_threshold
+                ),
+                low_expiratory_minute_volume_alarm_threshold: Some(
+                    low_expiratory_minute_volume_alarm_threshold
+                ),
+                high_expiratory_minute_volume_alarm_threshold: Some(
+                    high_expiratory_minute_volume_alarm_threshold
+                ),
+                low_expiratory_rate_alarm_threshold: Some(low_expiratory_rate_alarm_threshold),
+                high_expiratory_rate_alarm_threshold: Some(high_expiratory_rate_alarm_threshold),
             }))
     )
 );
@@ -406,6 +452,19 @@ mod tests {
             AlarmPriority::Medium => 2,
             AlarmPriority::Low => 1,
         }
+    }
+
+    fn ventilation_mode_strategy() -> impl Strategy<Value = VentilationMode> {
+        prop_oneof![
+            Just(VentilationMode::PC_CMV),
+            Just(VentilationMode::PC_AC),
+            Just(VentilationMode::VC_CMV),
+            Just(VentilationMode::PC_BIPAP),
+        ]
+    }
+
+    fn ventilation_mode_value(m: &VentilationMode) -> u8 {
+        m.into()
     }
 
     proptest! {
@@ -614,6 +673,17 @@ mod tests {
             previous_cpm in (0u8..),
             alarm_snoozed in bool::ANY,
             cpu_load in num::u8::ANY,
+            ventilation_mode in ventilation_mode_strategy(),
+            inspiratory_trigger_flow in num::u8::ANY,
+            expiratory_trigger_flow in num::u8::ANY,
+            ti_min in num::u16::ANY,
+            ti_max in num::u16::ANY,
+            low_inspiratory_minute_volume_alarm_threshold in num::u8::ANY,
+            high_inspiratory_minute_volume_alarm_threshold in num::u8::ANY,
+            low_expiratory_minute_volume_alarm_threshold in num::u8::ANY,
+            high_expiratory_minute_volume_alarm_threshold in num::u8::ANY,
+            low_expiratory_rate_alarm_threshold in num::u8::ANY,
+            high_expiratory_rate_alarm_threshold in num::u8::ANY,
         ) {
             let msg = MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -636,6 +706,17 @@ mod tests {
                 previous_cpm: Some(previous_cpm),
                 alarm_snoozed: Some(alarm_snoozed),
                 cpu_load: Some(cpu_load),
+                ventilation_mode,
+                inspiratory_trigger_flow: Some(inspiratory_trigger_flow),
+                expiratory_trigger_flow: Some(expiratory_trigger_flow),
+                ti_min: Some(ti_min),
+                ti_max: Some(ti_max),
+                low_inspiratory_minute_volume_alarm_threshold: Some(low_inspiratory_minute_volume_alarm_threshold),
+                high_inspiratory_minute_volume_alarm_threshold: Some(high_inspiratory_minute_volume_alarm_threshold),
+                low_expiratory_minute_volume_alarm_threshold: Some(low_expiratory_minute_volume_alarm_threshold),
+                high_expiratory_minute_volume_alarm_threshold: Some(high_expiratory_minute_volume_alarm_threshold),
+                low_expiratory_rate_alarm_threshold: Some(low_expiratory_rate_alarm_threshold),
+                high_expiratory_rate_alarm_threshold: Some(high_expiratory_rate_alarm_threshold),
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -682,6 +763,28 @@ mod tests {
                 if msg.alarm_snoozed.unwrap_or_default() { b"\x01" } else { b"\x00" },
                 b"\t",
                 &msg.cpu_load.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &[ventilation_mode_value(&msg.ventilation_mode)],
+                b"\t",
+                &msg.inspiratory_trigger_flow.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.expiratory_trigger_flow.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.ti_min.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.ti_max.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.low_inspiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.high_inspiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.low_expiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.high_expiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.low_expiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.high_expiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 

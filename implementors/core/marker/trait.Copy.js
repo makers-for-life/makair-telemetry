@@ -12,6 +12,6 @@ implementors["rand_core"] = [{"text":"impl Copy for OsRng","synthetic":false,"ty
 implementors["ryu"] = [{"text":"impl Copy for Buffer","synthetic":false,"types":[]}];
 implementors["serial_core"] = [{"text":"impl Copy for ErrorKind","synthetic":false,"types":[]},{"text":"impl Copy for BaudRate","synthetic":false,"types":[]},{"text":"impl Copy for CharSize","synthetic":false,"types":[]},{"text":"impl Copy for Parity","synthetic":false,"types":[]},{"text":"impl Copy for StopBits","synthetic":false,"types":[]},{"text":"impl Copy for FlowControl","synthetic":false,"types":[]},{"text":"impl Copy for PortSettings","synthetic":false,"types":[]}];
 implementors["serial_unix"] = [{"text":"impl Copy for TTYSettings","synthetic":false,"types":[]}];
-implementors["telemetry"] = [{"text":"impl Copy for AlarmCode","synthetic":false,"types":[]},{"text":"impl Copy for ControlSetting","synthetic":false,"types":[]}];
+implementors["telemetry"] = [{"text":"impl Copy for AlarmCode","synthetic":false,"types":[]},{"text":"impl Copy for ControlSetting","synthetic":false,"types":[]},{"text":"impl Copy for VentilationMode","synthetic":false,"types":[]}];
 implementors["termios"] = [{"text":"impl Copy for termios","synthetic":false,"types":[]},{"text":"impl Copy for Termios","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

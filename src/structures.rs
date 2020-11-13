@@ -197,8 +197,10 @@ pub struct DataSnapshot {
     pub systick: u64,
     /// Number of hundredth of seconds since the begining of the current breathing cycle
     pub centile: u16,
-    /// Current pressure in mmH2O
-    pub pressure: u16,
+    /// Current pressure in mmH2O (can be negative)
+    ///
+    /// _[protocol v2] Changed from u16 to i16 (values above i16::MAX will be assigned the value i16::MAX, but this should not happen)_
+    pub pressure: i16,
     /// Current phase
     pub phase: Phase,
     /// [obsolete in protocol v2] Current sub-phase
@@ -299,8 +301,10 @@ pub struct AlarmTrap {
     pub systick: u64,
     /// Number of hundredth of seconds since the begining of the current breathing cycle
     pub centile: u16,
-    /// Current pressure in mmH2O
-    pub pressure: u16,
+    /// Current pressure in mmH2O (can be negative)
+    ///
+    /// _[protocol v2] Changed from u16 to i16 (values above i16::MAX will be assigned the value i16::MAX, but this should not happen)_
+    pub pressure: i16,
     /// Current phase
     pub phase: Phase,
     /// [obsolete in protocol v2] Current sub-phase

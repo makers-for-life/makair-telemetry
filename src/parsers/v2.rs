@@ -154,7 +154,7 @@ named!(
             >> sep
             >> centile: be_u16
             >> sep
-            >> pressure: be_u16
+            >> pressure: be_i16
             >> sep
             >> phase: phase
             >> sep
@@ -325,7 +325,7 @@ named!(
             >> sep
             >> centile: be_u16
             >> sep
-            >> pressure: be_u16
+            >> pressure: be_i16
             >> sep
             >> phase: phase
             >> sep
@@ -586,7 +586,7 @@ mod tests {
             device_id3 in (0u32..),
             systick in (0u64..),
             centile in (0u16..),
-            pressure in (0u16..),
+            pressure in (0i16..),
             phase in phase_strategy(),
             blower_valve_position in (0u8..),
             patient_valve_position in (0u8..),
@@ -802,7 +802,7 @@ mod tests {
             device_id3 in (0u32..),
             systick in (0u64..),
             centile in (0u16..),
-            pressure in (0u16..),
+            pressure in (0i16..),
             phase in phase_strategy(),
             cycle in (0u32..),
             alarm_code in (0u8..),

@@ -612,7 +612,7 @@ mod tests {
                 high_expiratory_rate_alarm_threshold: None,
             };
 
-            // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
+            // This needs to be consistent with sendMachineStateSnapshot() defined in makair-firmware/srcs/telemetry.cpp
             let input = &flat(&[
                 b"S:",
                 &[VERSION],

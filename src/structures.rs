@@ -63,10 +63,10 @@ impl PartialOrd for AlarmPriority {
 
 impl Ord for AlarmPriority {
     fn cmp(&self, other: &Self) -> Ordering {
-        let priority_to_int = |priority: &AlarmPriority| match priority {
-            AlarmPriority::High => 3,
-            AlarmPriority::Medium => 2,
-            AlarmPriority::Low => 1,
+        let priority_to_int = |priority: &Self| match priority {
+            Self::High => 3,
+            Self::Medium => 2,
+            Self::Low => 1,
         };
 
         priority_to_int(self).cmp(&priority_to_int(other))
@@ -76,16 +76,60 @@ impl Ord for AlarmPriority {
 impl TryFrom<u8> for AlarmPriority {
     type Error = io::Error;
 
-    fn try_from(value: u8) -> Result<AlarmPriority, Self::Error> {
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
         match value {
-            10..=19 => Ok(AlarmPriority::High),
-            20..=29 => Ok(AlarmPriority::Medium),
-            30..=39 => Ok(AlarmPriority::Low),
+            10..=19 => Ok(Self::High),
+            20..=29 => Ok(Self::Medium),
+            30..=39 => Ok(Self::Low),
             _ => Err(io::Error::new(
                 io::ErrorKind::InvalidData,
                 format!("Invalid priority {}", value),
             )),
         }
+    }
+}
+
+/// Supported ventilation modes
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[allow(non_camel_case_types)]
+pub enum VentilationMode {
+    /// PC-CMV (default)
+    PC_CMV = 1,
+    /// PC-AC
+    PC_AC = 2,
+    /// VC-CMV
+    VC_CMV = 3,
+    /// PC-BIPAP
+    PC_BIPAP = 4,
+}
+
+impl TryFrom<u8> for VentilationMode {
+    type Error = io::Error;
+
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        match value {
+            1 => Ok(Self::PC_CMV),
+            2 => Ok(Self::PC_AC),
+            3 => Ok(Self::VC_CMV),
+            4 => Ok(Self::PC_BIPAP),
+            _ => Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                format!("Invalid ventilation mode {}", value),
+            )),
+        }
+    }
+}
+
+impl Default for VentilationMode {
+    fn default() -> Self {
+        Self::PC_CMV
+    }
+}
+
+impl From<&VentilationMode> for u8 {
+    fn from(mode: &VentilationMode) -> u8 {
+        *mode as u8
     }
 }
 
@@ -217,6 +261,28 @@ pub struct MachineStateSnapshot {
     pub alarm_snoozed: Option<bool>,
     /// [protocol v2] CPU load in percent
     pub cpu_load: Option<u8>,
+    /// Ventilation mode
+    pub ventilation_mode: VentilationMode,
+    /// [protocol v2] Inspiratory trigger flow in percent
+    pub inspiratory_trigger_flow: Option<u8>,
+    /// [protocol v2] Expiratory trigger flow in percent
+    pub expiratory_trigger_flow: Option<u8>,
+    /// [protocol v2] Minimum duration of inhalation in ms
+    pub ti_min: Option<u16>,
+    /// [protocol v2] Maximum duration of inhalation in ms
+    pub ti_max: Option<u16>,
+    /// [protocol v2] Threshold for low inspiratory minute volume alarm in L/min
+    pub low_inspiratory_minute_volume_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for high inspiratory minute volume alarm in L/min
+    pub high_inspiratory_minute_volume_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for low expiratory minute volume alarm in L/min
+    pub low_expiratory_minute_volume_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for high expiratory minute volume alarm in L/min
+    pub high_expiratory_minute_volume_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for low expiratory rate alarm in cycle per minute
+    pub low_expiratory_rate_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for high expiratory rate alarm in cycle per minute
+    pub high_expiratory_rate_alarm_threshold: Option<u8>,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped

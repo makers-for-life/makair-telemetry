@@ -238,6 +238,17 @@ named!(
                 previous_cpm: None,
                 alarm_snoozed: None,
                 cpu_load: None,
+                ventilation_mode: VentilationMode::default(),
+                inspiratory_trigger_flow: None,
+                expiratory_trigger_flow: None,
+                ti_min: None,
+                ti_max: None,
+                low_inspiratory_minute_volume_alarm_threshold: None,
+                high_inspiratory_minute_volume_alarm_threshold: None,
+                low_expiratory_minute_volume_alarm_threshold: None,
+                high_expiratory_minute_volume_alarm_threshold: None,
+                low_expiratory_rate_alarm_threshold: None,
+                high_expiratory_rate_alarm_threshold: None,
             }))
     )
 );
@@ -382,13 +393,9 @@ mod tests {
     }
 
     fn control_setting_strategy() -> impl Strategy<Value = ControlSetting> {
-        prop_oneof![
-            Just(ControlSetting::PeakPressure),
-            Just(ControlSetting::PlateauPressure),
-            Just(ControlSetting::PEEP),
-            Just(ControlSetting::CyclesPerMinute),
-            Just(ControlSetting::ExpiratoryTerm),
-        ]
+        proptest::num::u8::ANY.prop_filter_map("Invalid control setting", |n| {
+            ControlSetting::try_from(n).ok()
+        })
     }
 
     fn alarm_priority_value(m: &AlarmPriority) -> u8 {
@@ -592,9 +599,20 @@ mod tests {
                 previous_cpm: None,
                 alarm_snoozed: None,
                 cpu_load: None,
+                ventilation_mode: VentilationMode::default(),
+                inspiratory_trigger_flow: None,
+                expiratory_trigger_flow: None,
+                ti_min: None,
+                ti_max: None,
+                low_inspiratory_minute_volume_alarm_threshold: None,
+                high_inspiratory_minute_volume_alarm_threshold: None,
+                low_expiratory_minute_volume_alarm_threshold: None,
+                high_expiratory_minute_volume_alarm_threshold: None,
+                low_expiratory_rate_alarm_threshold: None,
+                high_expiratory_rate_alarm_threshold: None,
             };
 
-            // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
+            // This needs to be consistent with sendMachineStateSnapshot() defined in makair-firmware/srcs/telemetry.cpp
             let input = &flat(&[
                 b"S:",
                 &[VERSION],

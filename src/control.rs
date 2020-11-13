@@ -17,16 +17,19 @@ pub const DISABLE_RPI_WATCHDOG: u16 = 43_690;
 pub enum ControlSetting {
     /// Heartbeat used for the RPi watchdog feature (value is ignored except for the special value `DISABLE_RPI_WATCHDOG` which disables watchdog)
     Heartbeat = 0,
-    /// Peak pressure in mmH20 (value bounds must be between 0 and 700)
-    PeakPressure = 1,
+    /// Ventilation mode, must be one of the following:
+    /// - `1` → PC-CMV (default)
+    /// - `2` → PC-AC
+    /// - `3` → VC-CMV
+    /// - `4` → PC-BIPAP
+    VentilationMode = 1,
     /// Plateau pressure in mmH2O (value bounds must be between 100 and 400)
     PlateauPressure = 2,
     /// PEEP in mmH2O (value bounds must be between 0 and 300)
     PEEP = 3,
     /// Number of cycles per minute (value bounds must be between 5 and 35)
     CyclesPerMinute = 4,
-    /// Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10 (value \
-    //    bounds must be between 10 and 60)
+    /// Expiration term in the "Inspiration/Expiration" ratio given that Inspiration = 10 (value bounds must be between 10 and 60)
     ExpiratoryTerm = 5,
     /// State of the trigger (value must be 1 if enabled and 0 if disabled)
     TriggerEnabled = 6,
@@ -36,6 +39,26 @@ pub enum ControlSetting {
     RespirationEnabled = 8,
     /// Alarm snooze (value must be 1 to snooze and 0 to unsnooze)
     AlarmSnooze = 9,
+    /// Inspiratory trigger flow in percent
+    InspiratoryTriggerFlow = 10,
+    /// Expiratory trigger flow in percent
+    ExpiratoryTriggerFlow = 11,
+    /// Minimum duration of inhalation in ms (value bounds must be between 100 and 3000)
+    TiMin = 12,
+    /// Maximum duration of inhalation in ms (value bounds must be between 200 and 5000)
+    TiMax = 13,
+    /// Threshold for low inspiratory minute volume alarm in L/min (value bounds must be between 0 and 20)
+    LowInspiratoryMinuteVolumeAlarmThreshold = 14,
+    /// Threshold for high inspiratory minute volume alarm in L/min (value bounds must be between 10 and 40)
+    HighInspiratoryMinuteVolumeAlarmThreshold = 15,
+    /// Threshold for low expiratory minute volume alarm in L/min (value bounds must be between 0 and 20)
+    LowExpiratoryMinuteVolumeAlarmThreshold = 16,
+    /// Threshold for high expiratory minute volume alarm in L/min (value bounds must be between 10 and 40)
+    HighExpiratoryMinuteVolumeAlarmThreshold = 17,
+    /// Threshold for low expiratory rate alarm in cycle per minute (value bounds must be between 5 and 25)
+    LowExpiratoryRateAlarmThreshold = 18,
+    /// Threshold for high expiratory rate alarm in cycle per minute (value bounds must be between 20 and 35)
+    HighExpiratoryRateAlarmThreshold = 19,
 }
 
 impl ControlSetting {
@@ -44,7 +67,7 @@ impl ControlSetting {
         // Returns default value
         match self {
             Self::Heartbeat => 0,
-            Self::PeakPressure => 0,
+            Self::VentilationMode => 1,
             Self::PlateauPressure => 0,
             Self::PEEP => 0,
             Self::CyclesPerMinute => 20,
@@ -53,6 +76,16 @@ impl ControlSetting {
             Self::TriggerOffset => 20,
             Self::RespirationEnabled => 0,
             Self::AlarmSnooze => 0,
+            Self::InspiratoryTriggerFlow => 10,
+            Self::ExpiratoryTriggerFlow => 30,
+            Self::TiMin => 200,
+            Self::TiMax => 1500,
+            Self::LowInspiratoryMinuteVolumeAlarmThreshold => 3,
+            Self::HighInspiratoryMinuteVolumeAlarmThreshold => 20,
+            Self::LowExpiratoryMinuteVolumeAlarmThreshold => 3,
+            Self::HighExpiratoryMinuteVolumeAlarmThreshold => 20,
+            Self::LowExpiratoryRateAlarmThreshold => 10,
+            Self::HighExpiratoryRateAlarmThreshold => 30,
         }
     }
 
@@ -61,7 +94,7 @@ impl ControlSetting {
         // Returns allowed value bounds
         match self {
             Self::Heartbeat => RangeInclusive::new(0, 255),
-            Self::PeakPressure => RangeInclusive::new(0, 700),
+            Self::VentilationMode => RangeInclusive::new(1, 4),
             Self::PlateauPressure => RangeInclusive::new(100, 400),
             Self::PEEP => RangeInclusive::new(0, 300),
             Self::CyclesPerMinute => RangeInclusive::new(5, 35),
@@ -70,6 +103,16 @@ impl ControlSetting {
             Self::TriggerOffset => RangeInclusive::new(0, 100),
             Self::RespirationEnabled => RangeInclusive::new(0, 1),
             Self::AlarmSnooze => RangeInclusive::new(0, 1),
+            Self::InspiratoryTriggerFlow => RangeInclusive::new(0, 100),
+            Self::ExpiratoryTriggerFlow => RangeInclusive::new(0, 100),
+            Self::TiMin => RangeInclusive::new(100, 3_000),
+            Self::TiMax => RangeInclusive::new(200, 5_000),
+            Self::LowInspiratoryMinuteVolumeAlarmThreshold => RangeInclusive::new(0, 20),
+            Self::HighInspiratoryMinuteVolumeAlarmThreshold => RangeInclusive::new(10, 40),
+            Self::LowExpiratoryMinuteVolumeAlarmThreshold => RangeInclusive::new(0, 20),
+            Self::HighExpiratoryMinuteVolumeAlarmThreshold => RangeInclusive::new(10, 40),
+            Self::LowExpiratoryRateAlarmThreshold => RangeInclusive::new(5, 25),
+            Self::HighExpiratoryRateAlarmThreshold => RangeInclusive::new(20, 35),
         }
     }
 }
@@ -80,7 +123,7 @@ impl std::convert::TryFrom<u8> for ControlSetting {
     fn try_from(value: u8) -> Result<Self, Self::Error> {
         match value {
             0 => Ok(ControlSetting::Heartbeat),
-            1 => Ok(ControlSetting::PeakPressure),
+            1 => Ok(ControlSetting::VentilationMode),
             2 => Ok(ControlSetting::PlateauPressure),
             3 => Ok(ControlSetting::PEEP),
             4 => Ok(ControlSetting::CyclesPerMinute),
@@ -89,6 +132,16 @@ impl std::convert::TryFrom<u8> for ControlSetting {
             7 => Ok(ControlSetting::TriggerOffset),
             8 => Ok(ControlSetting::RespirationEnabled),
             9 => Ok(ControlSetting::AlarmSnooze),
+            10 => Ok(ControlSetting::InspiratoryTriggerFlow),
+            11 => Ok(ControlSetting::ExpiratoryTriggerFlow),
+            12 => Ok(ControlSetting::TiMin),
+            13 => Ok(ControlSetting::TiMax),
+            14 => Ok(ControlSetting::LowInspiratoryMinuteVolumeAlarmThreshold),
+            15 => Ok(ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold),
+            16 => Ok(ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold),
+            17 => Ok(ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold),
+            18 => Ok(ControlSetting::LowExpiratoryRateAlarmThreshold),
+            19 => Ok(ControlSetting::HighExpiratoryRateAlarmThreshold),
             _ => Err("Invalid setting number"),
         }
     }
@@ -115,15 +168,25 @@ impl Distribution<ControlMessage> for Standard {
         let setting: ControlSetting = rng.gen();
         let value = match setting {
             ControlSetting::Heartbeat => rng.gen_range(0, 255),
-            ControlSetting::PeakPressure => rng.gen_range(0, 71),
+            ControlSetting::VentilationMode => rng.gen_range(0, 5),
             ControlSetting::PlateauPressure => rng.gen_range(10, 41),
             ControlSetting::PEEP => rng.gen_range(0, 31),
             ControlSetting::CyclesPerMinute => rng.gen_range(5, 36),
-            ControlSetting::ExpiratoryTerm => rng.gen_range(500, 5001),
+            ControlSetting::ExpiratoryTerm => rng.gen_range(10, 61),
             ControlSetting::TriggerEnabled => rng.gen_range(0, 2),
             ControlSetting::TriggerOffset => rng.gen_range(0, 101),
             ControlSetting::RespirationEnabled => rng.gen_range(0, 2),
             ControlSetting::AlarmSnooze => rng.gen_range(0, 2),
+            ControlSetting::InspiratoryTriggerFlow => rng.gen_range(0, 101),
+            ControlSetting::ExpiratoryTriggerFlow => rng.gen_range(0, 101),
+            ControlSetting::TiMin => rng.gen_range(100, 3_001),
+            ControlSetting::TiMax => rng.gen_range(200, 5_001),
+            ControlSetting::LowInspiratoryMinuteVolumeAlarmThreshold => rng.gen_range(0, 21),
+            ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold => rng.gen_range(10, 41),
+            ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold => rng.gen_range(0, 21),
+            ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold => rng.gen_range(10, 41),
+            ControlSetting::LowExpiratoryRateAlarmThreshold => rng.gen_range(5, 26),
+            ControlSetting::HighExpiratoryRateAlarmThreshold => rng.gen_range(20, 36),
         };
         ControlMessage { setting, value }
     }

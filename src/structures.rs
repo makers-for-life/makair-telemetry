@@ -213,9 +213,9 @@ pub struct DataSnapshot {
     pub blower_rpm: u8,
     /// Current battery level in volts
     pub battery_level: u8,
-    /// [protocol v2] Inspiratory flow in SLM * 100
+    /// [protocol v2] Inspiratory flow in cL/min (SLM * 100)
     pub inspiratory_flow: Option<i16>,
-    /// [protocol v2] Expiratory flow in SLM * 100
+    /// [protocol v2] Expiratory flow in cL/min (SLM * 100)
     pub expiratory_flow: Option<i16>,
 }
 

@@ -168,7 +168,7 @@ pub fn telemetry_to_gts<'a>(
     };
     output.iter().fold(String::new(), |mut acc, cur| {
         acc.push_str(cur);
-        acc.push_str("\n");
+        acc.push('\n');
         acc
     })
 }

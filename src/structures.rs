@@ -104,6 +104,26 @@ pub enum VentilationMode {
     PC_BIPAP = 4,
 }
 
+/// Ventilation mode class
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum VentilationModeClass {
+    /// PC
+    Pressure,
+    /// VC
+    Volume,
+}
+
+/// Ventilation mode kind
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum VentilationModeKind {
+    /// CMV
+    Cmv,
+    /// AC
+    Ac,
+    /// BIPAP
+    Bipap,
+}
+
 impl TryFrom<u8> for VentilationMode {
     type Error = io::Error;
 
@@ -130,6 +150,25 @@ impl Default for VentilationMode {
 impl From<&VentilationMode> for u8 {
     fn from(mode: &VentilationMode) -> u8 {
         *mode as u8
+    }
+}
+
+impl VentilationMode {
+    /// Get the class of the ventilation mode
+    pub fn class(&self) -> VentilationModeClass {
+        match self {
+            Self::PC_CMV | Self::PC_AC | Self::PC_BIPAP => VentilationModeClass::Pressure,
+            Self::VC_CMV => VentilationModeClass::Volume,
+        }
+    }
+
+    /// Get the kind of the ventilation mode
+    pub fn kind(&self) -> VentilationModeKind {
+        match self {
+            Self::PC_CMV | Self::VC_CMV => VentilationModeKind::Cmv,
+            Self::PC_AC => VentilationModeKind::Ac,
+            Self::PC_BIPAP => VentilationModeKind::Bipap,
+        }
     }
 }
 

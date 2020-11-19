@@ -31,6 +31,7 @@ pub struct AlarmCode {
 }
 
 /// Possible alarms causes
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AlarmCodeDescription {
     /// Plateau pressure was not reached
     PlateauPressureNotReached,

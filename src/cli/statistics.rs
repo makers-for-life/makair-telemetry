@@ -150,6 +150,18 @@ mod tests {
             trigger_enabled: None,
             trigger_offset: None,
             alarm_snoozed: None,
+            cpu_load: None,
+            ventilation_mode: VentilationMode::default(),
+            inspiratory_trigger_flow: None,
+            expiratory_trigger_flow: None,
+            ti_min: None,
+            ti_max: None,
+            low_inspiratory_minute_volume_alarm_threshold: None,
+            high_inspiratory_minute_volume_alarm_threshold: None,
+            low_expiratory_minute_volume_alarm_threshold: None,
+            high_expiratory_minute_volume_alarm_threshold: None,
+            low_expiratory_rate_alarm_threshold: None,
+            high_expiratory_rate_alarm_threshold: None,
         }));
 
         assert_eq!(compute_duration(vect), 100);
@@ -252,6 +264,18 @@ mod tests {
             trigger_enabled: None,
             trigger_offset: None,
             alarm_snoozed: None,
+            cpu_load: None,
+            ventilation_mode: VentilationMode::default(),
+            inspiratory_trigger_flow: None,
+            expiratory_trigger_flow: None,
+            ti_min: None,
+            ti_max: None,
+            low_inspiratory_minute_volume_alarm_threshold: None,
+            high_inspiratory_minute_volume_alarm_threshold: None,
+            low_expiratory_minute_volume_alarm_threshold: None,
+            high_expiratory_minute_volume_alarm_threshold: None,
+            low_expiratory_rate_alarm_threshold: None,
+            high_expiratory_rate_alarm_threshold: None,
         }));
 
         assert_eq!(compute_duration(vect), 110);

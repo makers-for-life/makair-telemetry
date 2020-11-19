@@ -220,6 +220,30 @@ pub struct StoppedMessage {
     pub trigger_offset: Option<u8>,
     /// [protocol v2] State of the alarm snooze
     pub alarm_snoozed: Option<bool>,
+    /// [protocol v2] CPU load in percent
+    pub cpu_load: Option<u8>,
+    /// Ventilation mode
+    pub ventilation_mode: VentilationMode,
+    /// [protocol v2] Inspiratory trigger flow in percent
+    pub inspiratory_trigger_flow: Option<u8>,
+    /// [protocol v2] Expiratory trigger flow in percent
+    pub expiratory_trigger_flow: Option<u8>,
+    /// [protocol v2] Minimum duration of inhalation in ms
+    pub ti_min: Option<u16>,
+    /// [protocol v2] Maximum duration of inhalation in ms
+    pub ti_max: Option<u16>,
+    /// [protocol v2] Threshold for low inspiratory minute volume alarm in L/min
+    pub low_inspiratory_minute_volume_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for high inspiratory minute volume alarm in L/min
+    pub high_inspiratory_minute_volume_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for low expiratory minute volume alarm in L/min
+    pub low_expiratory_minute_volume_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for high expiratory minute volume alarm in L/min
+    pub high_expiratory_minute_volume_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for low expiratory rate alarm in cycle per minute
+    pub low_expiratory_rate_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for high expiratory rate alarm in cycle per minute
+    pub high_expiratory_rate_alarm_threshold: Option<u8>,
 }
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)

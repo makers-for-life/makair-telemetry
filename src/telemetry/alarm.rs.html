@@ -100,6 +100,7 @@
 <span id="99"> 99</span>
 <span id="100">100</span>
 <span id="101">101</span>
+<span id="102">102</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -134,6 +135,7 @@
 }
 
 <span class="doccomment">/// Possible alarms causes</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AlarmCodeDescription</span> {
     <span class="doccomment">/// Plateau pressure was not reached</span>
     <span class="ident">PlateauPressureNotReached</span>,

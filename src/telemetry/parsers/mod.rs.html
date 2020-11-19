@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/parsers/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../telemetry/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><span class="help-button">?</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/parsers/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../telemetry/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><span class="help-button">?</span>
                 <a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
@@ -225,15 +227,15 @@
 
 <span class="kw">const</span> <span class="ident">MAXIMUM_SUPPORTED_VERSION</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">2</span>;
 
-<span class="kw">fn</span> <span class="ident">header</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;&gt;</span> {
+<span class="kw">fn</span> <span class="ident">header</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">nom</span>::<span class="ident">bytes</span>::<span class="ident">streaming</span>::<span class="ident">tag</span>(<span class="string">b&quot;\x03\x0C&quot;</span>)(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">footer</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;&gt;</span> {
+<span class="kw">fn</span> <span class="ident">footer</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">nom</span>::<span class="ident">bytes</span>::<span class="ident">streaming</span>::<span class="ident">tag</span>(<span class="string">b&quot;\x30\xC0&quot;</span>)(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">message</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;&gt;</span> {
+<span class="kw">fn</span> <span class="ident">message</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">nom</span>::<span class="ident">branch</span>::<span class="ident">alt</span>((<span class="ident">v2</span>::<span class="ident">message</span>, <span class="ident">v1</span>::<span class="ident">message</span>))(<span class="ident">input</span>).<span class="ident">map_err</span>(<span class="ident">nom</span>::<span class="prelude-val">Err</span>::<span class="ident">convert</span>)
 }
 
@@ -243,7 +245,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// This requires the message header and the 3 first bytes of the message body.</span>
 <span class="doccomment">/// CRC will not be checked.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">protocol_version</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">u8</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">protocol_version</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">u8</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">bytes</span>::<span class="ident">streaming</span>::{<span class="ident">tag</span>, <span class="ident">take</span>};
     <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">number</span>::<span class="ident">streaming</span>::<span class="ident">be_u8</span>;
     <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">sequence</span>::{<span class="ident">pair</span>, <span class="ident">preceded</span>};
@@ -260,7 +262,7 @@
 <span class="doccomment">/// CRC will be checked.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_telemetry_message</span>(
     <span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-) <span class="op">-&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;&gt;</span> {
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">combinator</span>::<span class="ident">consumed</span>;
     <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">number</span>::<span class="ident">streaming</span>::<span class="ident">be_u32</span>;
     <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">sequence</span>::{<span class="ident">pair</span>, <span class="ident">preceded</span>, <span class="ident">terminated</span>};
@@ -271,7 +273,7 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">crc</span> <span class="op">=</span> <span class="ident">crc32fast</span>::<span class="ident">Hasher</span>::<span class="ident">new</span>();
             <span class="ident">crc</span>.<span class="ident">update</span>(<span class="ident">msg_bytes</span>);
             <span class="kw">let</span> <span class="ident">computed_crc</span> <span class="op">=</span> <span class="ident">crc</span>.<span class="ident">finalize</span>();
-            <span class="kw">if</span> <span class="ident">expected_crc</span> <span class="op">==</span> <span class="ident">computed_crc</span> {
+            <span class="kw">if</span> <span class="ident">expected_crc</span> <span class="op">=</span><span class="op">=</span> <span class="ident">computed_crc</span> {
                 <span class="prelude-val">Ok</span>((<span class="ident">rest</span>, <span class="ident">msg</span>))
             } <span class="kw">else</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">nom</span>::<span class="prelude-val">Err</span>::<span class="ident">Failure</span>(<span class="ident">TelemetryError</span>(
@@ -287,7 +289,7 @@
             <span class="ident">nom</span>::<span class="prelude-val">Err</span>::<span class="ident">Error</span>(<span class="ident">TelemetryError</span>(
                 <span class="kw">_</span>,
                 <span class="ident">TelemetryErrorKind</span>::<span class="ident">ParserError</span>(<span class="ident">nom</span>::<span class="ident">error</span>::<span class="ident">ErrorKind</span>::<span class="ident">Tag</span>),
-            )) <span class="op">=&gt;</span> <span class="ident">protocol_version</span>(<span class="ident">input</span>).<span class="ident">and_then</span>(<span class="op">|</span>(<span class="ident">_rest</span>, <span class="ident">version</span>)<span class="op">|</span> {
+            )) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">protocol_version</span>(<span class="ident">input</span>).<span class="ident">and_then</span>(<span class="op">|</span>(<span class="ident">_rest</span>, <span class="ident">version</span>)<span class="op">|</span> {
                 <span class="kw">if</span> <span class="ident">version</span> <span class="op">&gt;</span> <span class="ident">MAXIMUM_SUPPORTED_VERSION</span> {
                     <span class="prelude-val">Err</span>(<span class="ident">nom</span>::<span class="prelude-val">Err</span>::<span class="ident">Failure</span>(<span class="ident">TelemetryError</span>(
                         <span class="ident">input</span>,
@@ -300,7 +302,7 @@
                     <span class="prelude-val">Err</span>(<span class="ident">e</span>)
                 }
             }),
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>),
         })
 }
 
@@ -309,11 +311,11 @@
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="ident">proptest</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flat</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]]) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flat</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="ident">v</span>.<span class="ident">iter</span>().<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>()).<span class="ident">copied</span>().<span class="ident">collect</span>()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mode_strategy</span>() <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">Value</span> <span class="op">=</span> <span class="ident">Mode</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mode_strategy</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">Value</span> <span class="op">=</span> <span class="ident">Mode</span><span class="op">&gt;</span> {
         <span class="macro">prop_oneof</span><span class="macro">!</span>[
             <span class="ident">Just</span>(<span class="ident">Mode</span>::<span class="ident">Production</span>),
             <span class="ident">Just</span>(<span class="ident">Mode</span>::<span class="ident">Qualification</span>),
@@ -321,11 +323,11 @@
         ]
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mode_ordinal</span>(<span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">Mode</span>) <span class="op">-&gt;</span> <span class="ident">u8</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mode_ordinal</span>(<span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">Mode</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span> {
         <span class="kw">match</span> <span class="ident">m</span> {
-            <span class="ident">Mode</span>::<span class="ident">Production</span> <span class="op">=&gt;</span> <span class="number">1</span>,
-            <span class="ident">Mode</span>::<span class="ident">Qualification</span> <span class="op">=&gt;</span> <span class="number">2</span>,
-            <span class="ident">Mode</span>::<span class="ident">IntegrationTest</span> <span class="op">=&gt;</span> <span class="number">3</span>,
+            <span class="ident">Mode</span>::<span class="ident">Production</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1</span>,
+            <span class="ident">Mode</span>::<span class="ident">Qualification</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">2</span>,
+            <span class="ident">Mode</span>::<span class="ident">IntegrationTest</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">3</span>,
         }
     }
 
@@ -370,7 +372,7 @@
             <span class="ident">crc</span>.<span class="ident">update</span>(<span class="ident">input_message</span>);
             <span class="kw">let</span> <span class="ident">expected_crc</span> <span class="op">=</span> <span class="ident">crc</span>.<span class="ident">finalize</span>();
 
-            <span class="kw">let</span> <span class="ident">fake_crc</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">random_crc</span> <span class="op">==</span> <span class="ident">expected_crc</span> {
+            <span class="kw">let</span> <span class="ident">fake_crc</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">random_crc</span> <span class="op">=</span><span class="op">=</span> <span class="ident">expected_crc</span> {
                 <span class="kw">if</span> <span class="ident">random_crc</span> <span class="op">&gt;</span> <span class="number">0</span> { <span class="ident">random_crc</span> <span class="op">-</span> <span class="number">1</span> } <span class="kw">else</span> { <span class="ident">random_crc</span> <span class="op">+</span> <span class="number">1</span> }
             } <span class="kw">else</span> {
                 <span class="ident">random_crc</span>

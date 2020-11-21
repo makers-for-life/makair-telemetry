@@ -505,7 +505,8 @@ mod tests {
             Just(VentilationMode::PC_CMV),
             Just(VentilationMode::PC_AC),
             Just(VentilationMode::VC_CMV),
-            Just(VentilationMode::PC_BIPAP),
+            Just(VentilationMode::PC_VSAI),
+            Just(VentilationMode::VC_AC),
         ]
     }
 

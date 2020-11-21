@@ -100,8 +100,10 @@ pub enum VentilationMode {
     PC_AC = 2,
     /// VC-CMV
     VC_CMV = 3,
-    /// PC-BIPAP
-    PC_BIPAP = 4,
+    /// PC-VSAI
+    PC_VSAI = 4,
+    /// VC-AC
+    VC_AC = 5,
 }
 
 /// Ventilation mode class
@@ -120,8 +122,8 @@ pub enum VentilationModeKind {
     Cmv,
     /// AC
     Ac,
-    /// BIPAP
-    Bipap,
+    /// VSAI
+    Vsai,
 }
 
 impl TryFrom<u8> for VentilationMode {
@@ -132,7 +134,8 @@ impl TryFrom<u8> for VentilationMode {
             1 => Ok(Self::PC_CMV),
             2 => Ok(Self::PC_AC),
             3 => Ok(Self::VC_CMV),
-            4 => Ok(Self::PC_BIPAP),
+            4 => Ok(Self::PC_VSAI),
+            5 => Ok(Self::VC_AC),
             _ => Err(io::Error::new(
                 io::ErrorKind::InvalidData,
                 format!("Invalid ventilation mode {}", value),
@@ -157,8 +160,8 @@ impl VentilationMode {
     /// Get the class of the ventilation mode
     pub fn class(&self) -> VentilationModeClass {
         match self {
-            Self::PC_CMV | Self::PC_AC | Self::PC_BIPAP => VentilationModeClass::Pressure,
-            Self::VC_CMV => VentilationModeClass::Volume,
+            Self::PC_CMV | Self::PC_AC | Self::PC_VSAI => VentilationModeClass::Pressure,
+            Self::VC_CMV | Self::VC_AC => VentilationModeClass::Volume,
         }
     }
 
@@ -166,8 +169,8 @@ impl VentilationMode {
     pub fn kind(&self) -> VentilationModeKind {
         match self {
             Self::PC_CMV | Self::VC_CMV => VentilationModeKind::Cmv,
-            Self::PC_AC => VentilationModeKind::Ac,
-            Self::PC_BIPAP => VentilationModeKind::Bipap,
+            Self::PC_AC | Self::VC_AC => VentilationModeKind::Ac,
+            Self::PC_VSAI => VentilationModeKind::Vsai,
         }
     }
 }

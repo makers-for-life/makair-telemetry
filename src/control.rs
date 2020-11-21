@@ -21,7 +21,8 @@ pub enum ControlSetting {
     /// - `1` → PC-CMV (default)
     /// - `2` → PC-AC
     /// - `3` → VC-CMV
-    /// - `4` → PC-BIPAP
+    /// - `4` → PC-VSAI
+    /// - `5` → VC-AC
     VentilationMode = 1,
     /// Plateau pressure in mmH2O (value bounds must be between 100 and 400)
     PlateauPressure = 2,

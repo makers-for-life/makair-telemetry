@@ -597,6 +597,29 @@
 <span id="594">594</span>
 <span id="595">595</span>
 <span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -700,8 +723,10 @@
     <span class="ident">PC_AC</span> <span class="op">=</span> <span class="number">2</span>,
     <span class="doccomment">/// VC-CMV</span>
     <span class="ident">VC_CMV</span> <span class="op">=</span> <span class="number">3</span>,
-    <span class="doccomment">/// PC-BIPAP</span>
-    <span class="ident">PC_BIPAP</span> <span class="op">=</span> <span class="number">4</span>,
+    <span class="doccomment">/// PC-VSAI</span>
+    <span class="ident">PC_VSAI</span> <span class="op">=</span> <span class="number">4</span>,
+    <span class="doccomment">/// VC-AC</span>
+    <span class="ident">VC_AC</span> <span class="op">=</span> <span class="number">5</span>,
 }
 
 <span class="doccomment">/// Ventilation mode class</span>
@@ -720,8 +745,8 @@
     <span class="ident">Cmv</span>,
     <span class="doccomment">/// AC</span>
     <span class="ident">Ac</span>,
-    <span class="doccomment">/// BIPAP</span>
-    <span class="ident">Bipap</span>,
+    <span class="doccomment">/// VSAI</span>
+    <span class="ident">Vsai</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VentilationMode</span> {
@@ -732,7 +757,8 @@
             <span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">PC_CMV</span>),
             <span class="number">2</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">PC_AC</span>),
             <span class="number">3</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">VC_CMV</span>),
-            <span class="number">4</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">PC_BIPAP</span>),
+            <span class="number">4</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">PC_VSAI</span>),
+            <span class="number">5</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">VC_AC</span>),
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(
                 <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">InvalidData</span>,
                 <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Invalid ventilation mode {}&quot;</span>, <span class="ident">value</span>),
@@ -757,8 +783,8 @@
     <span class="doccomment">/// Get the class of the ventilation mode</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">class</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">VentilationModeClass</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="self">Self</span>::<span class="ident">PC_CMV</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">PC_AC</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">PC_BIPAP</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VentilationModeClass</span>::<span class="ident">Pressure</span>,
-            <span class="self">Self</span>::<span class="ident">VC_CMV</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VentilationModeClass</span>::<span class="ident">Volume</span>,
+            <span class="self">Self</span>::<span class="ident">PC_CMV</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">PC_AC</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">PC_VSAI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VentilationModeClass</span>::<span class="ident">Pressure</span>,
+            <span class="self">Self</span>::<span class="ident">VC_CMV</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">VC_AC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VentilationModeClass</span>::<span class="ident">Volume</span>,
         }
     }
 
@@ -766,8 +792,8 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">VentilationModeKind</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="self">Self</span>::<span class="ident">PC_CMV</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">VC_CMV</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VentilationModeKind</span>::<span class="ident">Cmv</span>,
-            <span class="self">Self</span>::<span class="ident">PC_AC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VentilationModeKind</span>::<span class="ident">Ac</span>,
-            <span class="self">Self</span>::<span class="ident">PC_BIPAP</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VentilationModeKind</span>::<span class="ident">Bipap</span>,
+            <span class="self">Self</span>::<span class="ident">PC_AC</span> <span class="op">|</span> <span class="self">Self</span>::<span class="ident">VC_AC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VentilationModeKind</span>::<span class="ident">Ac</span>,
+            <span class="self">Self</span>::<span class="ident">PC_VSAI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VentilationModeKind</span>::<span class="ident">Vsai</span>,
         }
     }
 }
@@ -844,6 +870,16 @@
     <span class="kw">pub</span> <span class="ident">low_expiratory_rate_alarm_threshold</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="doccomment">/// [protocol v2] Threshold for high expiratory rate alarm in cycle per minute</span>
     <span class="kw">pub</span> <span class="ident">high_expiratory_rate_alarm_threshold</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Target tidal volume in mL</span>
+    <span class="kw">pub</span> <span class="ident">target_tidal_volume</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Threshold for low tidal volume in mL</span>
+    <span class="kw">pub</span> <span class="ident">low_tidal_volume_alarm_treshold</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Threshold for high tidal volume in mL</span>
+    <span class="kw">pub</span> <span class="ident">high_tidal_volume_alarm_treshold</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Duration in ms of closing both valves to effectively measure plateau pressure in volume control modes</span>
+    <span class="kw">pub</span> <span class="ident">plateau_duration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Threshold for leak alarm in cL/min</span>
+    <span class="kw">pub</span> <span class="ident">leak_alarm_threshold</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)</span>
@@ -948,6 +984,16 @@
     <span class="kw">pub</span> <span class="ident">low_expiratory_rate_alarm_threshold</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="doccomment">/// [protocol v2] Threshold for high expiratory rate alarm in cycle per minute</span>
     <span class="kw">pub</span> <span class="ident">high_expiratory_rate_alarm_threshold</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Target tidal volume in mL</span>
+    <span class="kw">pub</span> <span class="ident">target_tidal_volume</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Threshold for low tidal volume in mL</span>
+    <span class="kw">pub</span> <span class="ident">low_tidal_volume_alarm_treshold</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Threshold for high tidal volume in mL</span>
+    <span class="kw">pub</span> <span class="ident">high_tidal_volume_alarm_treshold</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Duration in ms of closing both valves to effectively measure plateau pressure in volume control modes</span>
+    <span class="kw">pub</span> <span class="ident">plateau_duration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Threshold for leak alarm in cL/min</span>
+    <span class="kw">pub</span> <span class="ident">leak_alarm_threshold</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// A telemetry message that is sent every time an alarm is triggered or stopped</span>

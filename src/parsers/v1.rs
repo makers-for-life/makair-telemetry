@@ -129,6 +129,11 @@ named!(
                     high_expiratory_minute_volume_alarm_threshold: None,
                     low_expiratory_rate_alarm_threshold: None,
                     high_expiratory_rate_alarm_threshold: None,
+                    target_tidal_volume: None,
+                    low_tidal_volume_alarm_treshold: None,
+                    high_tidal_volume_alarm_treshold: None,
+                    plateau_duration: None,
+                    leak_alarm_threshold: None,
                 })
             })
     )
@@ -261,6 +266,11 @@ named!(
                 high_expiratory_minute_volume_alarm_threshold: None,
                 low_expiratory_rate_alarm_threshold: None,
                 high_expiratory_rate_alarm_threshold: None,
+                target_tidal_volume: None,
+                low_tidal_volume_alarm_treshold: None,
+                high_tidal_volume_alarm_treshold: None,
+                plateau_duration: None,
+                leak_alarm_threshold: None,
             }))
     )
 );
@@ -494,6 +504,11 @@ mod tests {
                 high_expiratory_minute_volume_alarm_threshold: None,
                 low_expiratory_rate_alarm_threshold: None,
                 high_expiratory_rate_alarm_threshold: None,
+                target_tidal_volume: None,
+                low_tidal_volume_alarm_treshold: None,
+                high_tidal_volume_alarm_treshold: None,
+                plateau_duration: None,
+                leak_alarm_threshold: None,
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -634,6 +649,11 @@ mod tests {
                 high_expiratory_minute_volume_alarm_threshold: None,
                 low_expiratory_rate_alarm_threshold: None,
                 high_expiratory_rate_alarm_threshold: None,
+                target_tidal_volume: None,
+                low_tidal_volume_alarm_treshold: None,
+                high_tidal_volume_alarm_treshold: None,
+                plateau_duration: None,
+                leak_alarm_threshold: None,
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in makair-firmware/srcs/telemetry.cpp

@@ -247,6 +247,16 @@ pub struct StoppedMessage {
     pub low_expiratory_rate_alarm_threshold: Option<u8>,
     /// [protocol v2] Threshold for high expiratory rate alarm in cycle per minute
     pub high_expiratory_rate_alarm_threshold: Option<u8>,
+    /// [protocol v2] Target tidal volume in mL
+    pub target_tidal_volume: Option<u16>,
+    /// [protocol v2] Threshold for low tidal volume in mL
+    pub low_tidal_volume_alarm_treshold: Option<u16>,
+    /// [protocol v2] Threshold for high tidal volume in mL
+    pub high_tidal_volume_alarm_treshold: Option<u16>,
+    /// [protocol v2] Duration in ms of closing both valves to effectively measure plateau pressure in volume control modes
+    pub plateau_duration: Option<u16>,
+    /// [protocol v2] Threshold for leak alarm in cL/min
+    pub leak_alarm_threshold: Option<u16>,
 }
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
@@ -351,6 +361,16 @@ pub struct MachineStateSnapshot {
     pub low_expiratory_rate_alarm_threshold: Option<u8>,
     /// [protocol v2] Threshold for high expiratory rate alarm in cycle per minute
     pub high_expiratory_rate_alarm_threshold: Option<u8>,
+    /// [protocol v2] Target tidal volume in mL
+    pub target_tidal_volume: Option<u16>,
+    /// [protocol v2] Threshold for low tidal volume in mL
+    pub low_tidal_volume_alarm_treshold: Option<u16>,
+    /// [protocol v2] Threshold for high tidal volume in mL
+    pub high_tidal_volume_alarm_treshold: Option<u16>,
+    /// [protocol v2] Duration in ms of closing both valves to effectively measure plateau pressure in volume control modes
+    pub plateau_duration: Option<u16>,
+    /// [protocol v2] Threshold for leak alarm in cL/min
+    pub leak_alarm_threshold: Option<u16>,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped

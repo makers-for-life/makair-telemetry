@@ -59,6 +59,16 @@ pub enum ControlSetting {
     LowExpiratoryRateAlarmThreshold = 18,
     /// Threshold for high expiratory rate alarm in cycle per minute (value bounds must be between 20 and 35)
     HighExpiratoryRateAlarmThreshold = 19,
+    /// Target tidal volume in mL (value bounds must be between 50 and 2000)
+    TargetTidalVolume = 20,
+    /// Threshold for low tidal volume in mL (value bounds must be between 0 and 1000)
+    LowTidalVolumeAlarmTreshold = 21,
+    /// Threshold for high tidal volume in mL (value bounds must be between 50 and 2000)
+    HighTidalVolumeAlarmTreshold = 22,
+    /// Duration in ms of closing both valves to effectively measure plateau pressure in volume control modes (value bounds must be between 100 and 1000)
+    PlateauDuration = 23,
+    /// Threshold for leak alarm in cL/min (value bounds must be between 0 and 10000)
+    LeakAlarmThreshold = 24,
 }
 
 impl ControlSetting {
@@ -79,13 +89,18 @@ impl ControlSetting {
             Self::InspiratoryTriggerFlow => 10,
             Self::ExpiratoryTriggerFlow => 30,
             Self::TiMin => 200,
-            Self::TiMax => 1500,
+            Self::TiMax => 1_500,
             Self::LowInspiratoryMinuteVolumeAlarmThreshold => 3,
             Self::HighInspiratoryMinuteVolumeAlarmThreshold => 20,
             Self::LowExpiratoryMinuteVolumeAlarmThreshold => 3,
             Self::HighExpiratoryMinuteVolumeAlarmThreshold => 20,
             Self::LowExpiratoryRateAlarmThreshold => 10,
             Self::HighExpiratoryRateAlarmThreshold => 30,
+            Self::TargetTidalVolume => 500,
+            Self::LowTidalVolumeAlarmTreshold => 200,
+            Self::HighTidalVolumeAlarmTreshold => 1_000,
+            Self::PlateauDuration => 200,
+            Self::LeakAlarmThreshold => 200,
         }
     }
 
@@ -113,6 +128,11 @@ impl ControlSetting {
             Self::HighExpiratoryMinuteVolumeAlarmThreshold => RangeInclusive::new(10, 40),
             Self::LowExpiratoryRateAlarmThreshold => RangeInclusive::new(5, 25),
             Self::HighExpiratoryRateAlarmThreshold => RangeInclusive::new(20, 35),
+            Self::TargetTidalVolume => RangeInclusive::new(50, 2_000),
+            Self::LowTidalVolumeAlarmTreshold => RangeInclusive::new(0, 1_000),
+            Self::HighTidalVolumeAlarmTreshold => RangeInclusive::new(50, 2_000),
+            Self::PlateauDuration => RangeInclusive::new(100, 1_000),
+            Self::LeakAlarmThreshold => RangeInclusive::new(0, 10_000),
         }
     }
 }
@@ -142,6 +162,11 @@ impl std::convert::TryFrom<u8> for ControlSetting {
             17 => Ok(ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold),
             18 => Ok(ControlSetting::LowExpiratoryRateAlarmThreshold),
             19 => Ok(ControlSetting::HighExpiratoryRateAlarmThreshold),
+            20 => Ok(ControlSetting::TargetTidalVolume),
+            21 => Ok(ControlSetting::LowTidalVolumeAlarmTreshold),
+            22 => Ok(ControlSetting::HighTidalVolumeAlarmTreshold),
+            23 => Ok(ControlSetting::PlateauDuration),
+            24 => Ok(ControlSetting::LeakAlarmThreshold),
             _ => Err("Invalid setting number"),
         }
     }
@@ -187,6 +212,11 @@ impl Distribution<ControlMessage> for Standard {
             ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold => rng.gen_range(10, 41),
             ControlSetting::LowExpiratoryRateAlarmThreshold => rng.gen_range(5, 26),
             ControlSetting::HighExpiratoryRateAlarmThreshold => rng.gen_range(20, 36),
+            ControlSetting::TargetTidalVolume => rng.gen_range(50, 2_001),
+            ControlSetting::LowTidalVolumeAlarmTreshold => rng.gen_range(0, 1_001),
+            ControlSetting::HighTidalVolumeAlarmTreshold => rng.gen_range(50, 2_001),
+            ControlSetting::PlateauDuration => rng.gen_range(100, 1_001),
+            ControlSetting::LeakAlarmThreshold => rng.gen_range(0, 10_001),
         };
         ControlMessage { setting, value }
     }

@@ -140,6 +140,16 @@ named!(
             >> low_expiratory_rate_alarm_threshold: be_u8
             >> sep
             >> high_expiratory_rate_alarm_threshold: be_u8
+            >> sep
+            >> target_tidal_volume: be_u16
+            >> sep
+            >> low_tidal_volume_alarm_treshold: be_u16
+            >> sep
+            >> high_tidal_volume_alarm_treshold: be_u16
+            >> sep
+            >> plateau_duration: be_u16
+            >> sep
+            >> leak_alarm_threshold: be_u16
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
@@ -177,6 +187,11 @@ named!(
                     high_expiratory_rate_alarm_threshold: Some(
                         high_expiratory_rate_alarm_threshold,
                     ),
+                    target_tidal_volume: Some(target_tidal_volume),
+                    low_tidal_volume_alarm_treshold: Some(low_tidal_volume_alarm_treshold),
+                    high_tidal_volume_alarm_treshold: Some(high_tidal_volume_alarm_treshold),
+                    plateau_duration: Some(plateau_duration),
+                    leak_alarm_threshold: Some(leak_alarm_threshold),
                 })
             })
     )
@@ -304,6 +319,16 @@ named!(
             >> low_expiratory_rate_alarm_threshold: be_u8
             >> sep
             >> high_expiratory_rate_alarm_threshold: be_u8
+            >> sep
+            >> target_tidal_volume: be_u16
+            >> sep
+            >> low_tidal_volume_alarm_treshold: be_u16
+            >> sep
+            >> high_tidal_volume_alarm_treshold: be_u16
+            >> sep
+            >> plateau_duration: be_u16
+            >> sep
+            >> leak_alarm_threshold: be_u16
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -349,6 +374,11 @@ named!(
                 ),
                 low_expiratory_rate_alarm_threshold: Some(low_expiratory_rate_alarm_threshold),
                 high_expiratory_rate_alarm_threshold: Some(high_expiratory_rate_alarm_threshold),
+                target_tidal_volume: Some(target_tidal_volume),
+                low_tidal_volume_alarm_treshold: Some(low_tidal_volume_alarm_treshold),
+                high_tidal_volume_alarm_treshold: Some(high_tidal_volume_alarm_treshold),
+                plateau_duration: Some(plateau_duration),
+                leak_alarm_threshold: Some(leak_alarm_threshold),
             }))
     )
 );
@@ -585,6 +615,11 @@ mod tests {
             high_expiratory_minute_volume_alarm_threshold in num::u8::ANY,
             low_expiratory_rate_alarm_threshold in num::u8::ANY,
             high_expiratory_rate_alarm_threshold in num::u8::ANY,
+            target_tidal_volume in num::u16::ANY,
+            low_tidal_volume_alarm_treshold in num::u16::ANY,
+            high_tidal_volume_alarm_treshold in num::u16::ANY,
+            plateau_duration in num::u16::ANY,
+            leak_alarm_threshold in num::u16::ANY,
         ) {
             let msg = StoppedMessage {
                 telemetry_version: VERSION,
@@ -611,6 +646,11 @@ mod tests {
                 high_expiratory_minute_volume_alarm_threshold: Some(high_expiratory_minute_volume_alarm_threshold),
                 low_expiratory_rate_alarm_threshold: Some(low_expiratory_rate_alarm_threshold),
                 high_expiratory_rate_alarm_threshold: Some(high_expiratory_rate_alarm_threshold),
+                target_tidal_volume: Some(target_tidal_volume),
+                low_tidal_volume_alarm_treshold: Some(low_tidal_volume_alarm_treshold),
+                high_tidal_volume_alarm_treshold: Some(high_tidal_volume_alarm_treshold),
+                plateau_duration: Some(plateau_duration),
+                leak_alarm_threshold: Some(leak_alarm_threshold),
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -664,6 +704,16 @@ mod tests {
                 &msg.low_expiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
                 b"\t",
                 &msg.high_expiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.target_tidal_volume.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.low_tidal_volume_alarm_treshold.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.high_tidal_volume_alarm_treshold.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.plateau_duration.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.leak_alarm_threshold.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 
@@ -779,6 +829,11 @@ mod tests {
             high_expiratory_minute_volume_alarm_threshold in num::u8::ANY,
             low_expiratory_rate_alarm_threshold in num::u8::ANY,
             high_expiratory_rate_alarm_threshold in num::u8::ANY,
+            target_tidal_volume in num::u16::ANY,
+            low_tidal_volume_alarm_treshold in num::u16::ANY,
+            high_tidal_volume_alarm_treshold in num::u16::ANY,
+            plateau_duration in num::u16::ANY,
+            leak_alarm_threshold in num::u16::ANY,
         ) {
             let msg = MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -812,6 +867,11 @@ mod tests {
                 high_expiratory_minute_volume_alarm_threshold: Some(high_expiratory_minute_volume_alarm_threshold),
                 low_expiratory_rate_alarm_threshold: Some(low_expiratory_rate_alarm_threshold),
                 high_expiratory_rate_alarm_threshold: Some(high_expiratory_rate_alarm_threshold),
+                target_tidal_volume: Some(target_tidal_volume),
+                low_tidal_volume_alarm_treshold: Some(low_tidal_volume_alarm_treshold),
+                high_tidal_volume_alarm_treshold: Some(high_tidal_volume_alarm_treshold),
+                plateau_duration: Some(plateau_duration),
+                leak_alarm_threshold: Some(leak_alarm_threshold),
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -880,6 +940,16 @@ mod tests {
                 &msg.low_expiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
                 b"\t",
                 &msg.high_expiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.target_tidal_volume.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.low_tidal_volume_alarm_treshold.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.high_tidal_volume_alarm_treshold.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.plateau_duration.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.leak_alarm_threshold.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 

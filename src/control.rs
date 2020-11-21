@@ -110,7 +110,7 @@ impl ControlSetting {
         // Returns allowed value bounds
         match self {
             Self::Heartbeat => RangeInclusive::new(0, 255),
-            Self::VentilationMode => RangeInclusive::new(1, 4),
+            Self::VentilationMode => RangeInclusive::new(1, 5),
             Self::PlateauPressure => RangeInclusive::new(100, 400),
             Self::PEEP => RangeInclusive::new(0, 300),
             Self::CyclesPerMinute => RangeInclusive::new(5, 35),
@@ -194,7 +194,7 @@ impl Distribution<ControlMessage> for Standard {
         let setting: ControlSetting = rng.gen();
         let value = match setting {
             ControlSetting::Heartbeat => rng.gen_range(0, 255),
-            ControlSetting::VentilationMode => rng.gen_range(0, 5),
+            ControlSetting::VentilationMode => rng.gen_range(0, 6),
             ControlSetting::PlateauPressure => rng.gen_range(10, 41),
             ControlSetting::PEEP => rng.gen_range(0, 31),
             ControlSetting::CyclesPerMinute => rng.gen_range(5, 36),

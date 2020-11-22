@@ -268,6 +268,18 @@
 <span id="265">265</span>
 <span id="266">266</span>
 <span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -337,10 +349,14 @@
     <span class="ident">LowTidalVolumeAlarmTreshold</span> <span class="op">=</span> <span class="number">21</span>,
     <span class="doccomment">/// Threshold for high tidal volume in mL (value bounds must be between 50 and 2000)</span>
     <span class="ident">HighTidalVolumeAlarmTreshold</span> <span class="op">=</span> <span class="number">22</span>,
-    <span class="doccomment">/// Duration in ms of closing both valves to effectively measure plateau pressure in volume control modes (value bounds must be between 100 and 1000)</span>
+    <span class="doccomment">/// Duration in ms of closing both valves to effectively measure plateau pressure in volume control modes (value bounds must be between 100 and 2000)</span>
     <span class="ident">PlateauDuration</span> <span class="op">=</span> <span class="number">23</span>,
     <span class="doccomment">/// Threshold for leak alarm in cL/min (value bounds must be between 0 and 10000)</span>
     <span class="ident">LeakAlarmThreshold</span> <span class="op">=</span> <span class="number">24</span>,
+    <span class="doccomment">/// Target flow during inspiration in L/min (value bounds must be between 5 and 80)</span>
+    <span class="ident">TargetInspiratoryFlow</span> <span class="op">=</span> <span class="number">25</span>,
+    <span class="doccomment">/// Duration of inspiration in ms (value bounds must be between 200 and 3000)</span>
+    <span class="ident">InspiratoryDuration</span> <span class="op">=</span> <span class="number">26</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">ControlSetting</span> {
@@ -361,18 +377,20 @@
             <span class="self">Self</span>::<span class="ident">InspiratoryTriggerFlow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">10</span>,
             <span class="self">Self</span>::<span class="ident">ExpiratoryTriggerFlow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">30</span>,
             <span class="self">Self</span>::<span class="ident">TiMin</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">200</span>,
-            <span class="self">Self</span>::<span class="ident">TiMax</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1_500</span>,
+            <span class="self">Self</span>::<span class="ident">TiMax</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1_000</span>,
             <span class="self">Self</span>::<span class="ident">LowInspiratoryMinuteVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">3</span>,
             <span class="self">Self</span>::<span class="ident">HighInspiratoryMinuteVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">20</span>,
             <span class="self">Self</span>::<span class="ident">LowExpiratoryMinuteVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">3</span>,
             <span class="self">Self</span>::<span class="ident">HighExpiratoryMinuteVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">20</span>,
             <span class="self">Self</span>::<span class="ident">LowExpiratoryRateAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">10</span>,
             <span class="self">Self</span>::<span class="ident">HighExpiratoryRateAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">30</span>,
-            <span class="self">Self</span>::<span class="ident">TargetTidalVolume</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">500</span>,
+            <span class="self">Self</span>::<span class="ident">TargetTidalVolume</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">400</span>,
             <span class="self">Self</span>::<span class="ident">LowTidalVolumeAlarmTreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">200</span>,
             <span class="self">Self</span>::<span class="ident">HighTidalVolumeAlarmTreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1_000</span>,
             <span class="self">Self</span>::<span class="ident">PlateauDuration</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">200</span>,
             <span class="self">Self</span>::<span class="ident">LeakAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">200</span>,
+            <span class="self">Self</span>::<span class="ident">TargetInspiratoryFlow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">40</span>,
+            <span class="self">Self</span>::<span class="ident">InspiratoryDuration</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">800</span>,
         }
     }
 
@@ -403,8 +421,10 @@
             <span class="self">Self</span>::<span class="ident">TargetTidalVolume</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">50</span>, <span class="number">2_000</span>),
             <span class="self">Self</span>::<span class="ident">LowTidalVolumeAlarmTreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">1_000</span>),
             <span class="self">Self</span>::<span class="ident">HighTidalVolumeAlarmTreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">50</span>, <span class="number">2_000</span>),
-            <span class="self">Self</span>::<span class="ident">PlateauDuration</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">100</span>, <span class="number">1_000</span>),
+            <span class="self">Self</span>::<span class="ident">PlateauDuration</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">100</span>, <span class="number">2_000</span>),
             <span class="self">Self</span>::<span class="ident">LeakAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">10_000</span>),
+            <span class="self">Self</span>::<span class="ident">TargetInspiratoryFlow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">5</span>, <span class="number">80</span>),
+            <span class="self">Self</span>::<span class="ident">InspiratoryDuration</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">200</span>, <span class="number">3_000</span>),
         }
     }
 }
@@ -439,6 +459,8 @@
             <span class="number">22</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting</span>::<span class="ident">HighTidalVolumeAlarmTreshold</span>),
             <span class="number">23</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting</span>::<span class="ident">PlateauDuration</span>),
             <span class="number">24</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting</span>::<span class="ident">LeakAlarmThreshold</span>),
+            <span class="number">25</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting</span>::<span class="ident">TargetInspiratoryFlow</span>),
+            <span class="number">26</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting</span>::<span class="ident">InspiratoryDuration</span>),
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Invalid setting number&quot;</span>),
         }
     }
@@ -487,8 +509,10 @@
             <span class="ident">ControlSetting</span>::<span class="ident">TargetTidalVolume</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">50</span>, <span class="number">2_001</span>),
             <span class="ident">ControlSetting</span>::<span class="ident">LowTidalVolumeAlarmTreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0</span>, <span class="number">1_001</span>),
             <span class="ident">ControlSetting</span>::<span class="ident">HighTidalVolumeAlarmTreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">50</span>, <span class="number">2_001</span>),
-            <span class="ident">ControlSetting</span>::<span class="ident">PlateauDuration</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">100</span>, <span class="number">1_001</span>),
+            <span class="ident">ControlSetting</span>::<span class="ident">PlateauDuration</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">100</span>, <span class="number">2_001</span>),
             <span class="ident">ControlSetting</span>::<span class="ident">LeakAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0</span>, <span class="number">10_001</span>),
+            <span class="ident">ControlSetting</span>::<span class="ident">TargetInspiratoryFlow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">5</span>, <span class="number">81</span>),
+            <span class="ident">ControlSetting</span>::<span class="ident">InspiratoryDuration</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">200</span>, <span class="number">3_001</span>),
         };
         <span class="ident">ControlMessage</span> { <span class="ident">setting</span>, <span class="ident">value</span> }
     }

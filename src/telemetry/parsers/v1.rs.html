@@ -824,6 +824,14 @@
 <span id="821">821</span>
 <span id="822">822</span>
 <span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">number</span>::<span class="ident">streaming</span>::{<span class="ident">be_u16</span>, <span class="ident">be_u32</span>, <span class="ident">be_u64</span>, <span class="ident">be_u8</span>};
 <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">IResult</span>;
@@ -961,6 +969,8 @@
                     <span class="ident">high_tidal_volume_alarm_treshold</span>: <span class="prelude-val">None</span>,
                     <span class="ident">plateau_duration</span>: <span class="prelude-val">None</span>,
                     <span class="ident">leak_alarm_threshold</span>: <span class="prelude-val">None</span>,
+                    <span class="ident">target_inspiratory_flow</span>: <span class="prelude-val">None</span>,
+                    <span class="ident">inspiratory_duration</span>: <span class="prelude-val">None</span>,
                 })
             })
     )
@@ -1098,6 +1108,8 @@
                 <span class="ident">high_tidal_volume_alarm_treshold</span>: <span class="prelude-val">None</span>,
                 <span class="ident">plateau_duration</span>: <span class="prelude-val">None</span>,
                 <span class="ident">leak_alarm_threshold</span>: <span class="prelude-val">None</span>,
+                <span class="ident">target_inspiratory_flow</span>: <span class="prelude-val">None</span>,
+                <span class="ident">inspiratory_duration</span>: <span class="prelude-val">None</span>,
             }))
     )
 );
@@ -1336,6 +1348,8 @@
                 <span class="ident">high_tidal_volume_alarm_treshold</span>: <span class="prelude-val">None</span>,
                 <span class="ident">plateau_duration</span>: <span class="prelude-val">None</span>,
                 <span class="ident">leak_alarm_threshold</span>: <span class="prelude-val">None</span>,
+                <span class="ident">target_inspiratory_flow</span>: <span class="prelude-val">None</span>,
+                <span class="ident">inspiratory_duration</span>: <span class="prelude-val">None</span>,
             };
 
             <span class="comment">// This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp</span>
@@ -1481,6 +1495,8 @@
                 <span class="ident">high_tidal_volume_alarm_treshold</span>: <span class="prelude-val">None</span>,
                 <span class="ident">plateau_duration</span>: <span class="prelude-val">None</span>,
                 <span class="ident">leak_alarm_threshold</span>: <span class="prelude-val">None</span>,
+                <span class="ident">target_inspiratory_flow</span>: <span class="prelude-val">None</span>,
+                <span class="ident">inspiratory_duration</span>: <span class="prelude-val">None</span>,
             };
 
             <span class="comment">// This needs to be consistent with sendMachineStateSnapshot() defined in makair-firmware/srcs/telemetry.cpp</span>

@@ -620,6 +620,14 @@
 <span id="617">617</span>
 <span id="618">618</span>
 <span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -880,6 +888,10 @@
     <span class="kw">pub</span> <span class="ident">plateau_duration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
     <span class="doccomment">/// [protocol v2] Threshold for leak alarm in cL/min</span>
     <span class="kw">pub</span> <span class="ident">leak_alarm_threshold</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Target flow during inspiration in L/min</span>
+    <span class="kw">pub</span> <span class="ident">target_inspiratory_flow</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Duration of inspiration in ms</span>
+    <span class="kw">pub</span> <span class="ident">inspiratory_duration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)</span>
@@ -994,6 +1006,10 @@
     <span class="kw">pub</span> <span class="ident">plateau_duration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
     <span class="doccomment">/// [protocol v2] Threshold for leak alarm in cL/min</span>
     <span class="kw">pub</span> <span class="ident">leak_alarm_threshold</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Target flow during inspiration in L/min</span>
+    <span class="kw">pub</span> <span class="ident">target_inspiratory_flow</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Duration of inspiration in ms</span>
+    <span class="kw">pub</span> <span class="ident">inspiratory_duration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// A telemetry message that is sent every time an alarm is triggered or stopped</span>

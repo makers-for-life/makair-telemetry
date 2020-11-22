@@ -134,6 +134,8 @@ named!(
                     high_tidal_volume_alarm_treshold: None,
                     plateau_duration: None,
                     leak_alarm_threshold: None,
+                    target_inspiratory_flow: None,
+                    inspiratory_duration: None,
                 })
             })
     )
@@ -271,6 +273,8 @@ named!(
                 high_tidal_volume_alarm_treshold: None,
                 plateau_duration: None,
                 leak_alarm_threshold: None,
+                target_inspiratory_flow: None,
+                inspiratory_duration: None,
             }))
     )
 );
@@ -509,6 +513,8 @@ mod tests {
                 high_tidal_volume_alarm_treshold: None,
                 plateau_duration: None,
                 leak_alarm_threshold: None,
+                target_inspiratory_flow: None,
+                inspiratory_duration: None,
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -654,6 +660,8 @@ mod tests {
                 high_tidal_volume_alarm_treshold: None,
                 plateau_duration: None,
                 leak_alarm_threshold: None,
+                target_inspiratory_flow: None,
+                inspiratory_duration: None,
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in makair-firmware/srcs/telemetry.cpp

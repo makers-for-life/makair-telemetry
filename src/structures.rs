@@ -257,6 +257,10 @@ pub struct StoppedMessage {
     pub plateau_duration: Option<u16>,
     /// [protocol v2] Threshold for leak alarm in cL/min
     pub leak_alarm_threshold: Option<u16>,
+    /// [protocol v2] Target flow during inspiration in L/min
+    pub target_inspiratory_flow: Option<u8>,
+    /// [protocol v2] Duration of inspiration in ms
+    pub inspiratory_duration: Option<u16>,
 }
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
@@ -371,6 +375,10 @@ pub struct MachineStateSnapshot {
     pub plateau_duration: Option<u16>,
     /// [protocol v2] Threshold for leak alarm in cL/min
     pub leak_alarm_threshold: Option<u16>,
+    /// [protocol v2] Target flow during inspiration in L/min
+    pub target_inspiratory_flow: Option<u8>,
+    /// [protocol v2] Duration of inspiration in ms
+    pub inspiratory_duration: Option<u16>,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped

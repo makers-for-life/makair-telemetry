@@ -150,6 +150,10 @@ named!(
             >> plateau_duration: be_u16
             >> sep
             >> leak_alarm_threshold: be_u16
+            >> sep
+            >> target_inspiratory_flow: be_u8
+            >> sep
+            >> inspiratory_duration: be_u16
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
@@ -192,6 +196,8 @@ named!(
                     high_tidal_volume_alarm_treshold: Some(high_tidal_volume_alarm_treshold),
                     plateau_duration: Some(plateau_duration),
                     leak_alarm_threshold: Some(leak_alarm_threshold),
+                    target_inspiratory_flow: Some(target_inspiratory_flow),
+                    inspiratory_duration: Some(inspiratory_duration),
                 })
             })
     )
@@ -329,6 +335,10 @@ named!(
             >> plateau_duration: be_u16
             >> sep
             >> leak_alarm_threshold: be_u16
+            >> sep
+            >> target_inspiratory_flow: be_u8
+            >> sep
+            >> inspiratory_duration: be_u16
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -379,6 +389,8 @@ named!(
                 high_tidal_volume_alarm_treshold: Some(high_tidal_volume_alarm_treshold),
                 plateau_duration: Some(plateau_duration),
                 leak_alarm_threshold: Some(leak_alarm_threshold),
+                target_inspiratory_flow: Some(target_inspiratory_flow),
+                inspiratory_duration: Some(inspiratory_duration),
             }))
     )
 );
@@ -620,6 +632,8 @@ mod tests {
             high_tidal_volume_alarm_treshold in num::u16::ANY,
             plateau_duration in num::u16::ANY,
             leak_alarm_threshold in num::u16::ANY,
+            target_inspiratory_flow in num::u8::ANY,
+            inspiratory_duration in num::u16::ANY,
         ) {
             let msg = StoppedMessage {
                 telemetry_version: VERSION,
@@ -651,6 +665,8 @@ mod tests {
                 high_tidal_volume_alarm_treshold: Some(high_tidal_volume_alarm_treshold),
                 plateau_duration: Some(plateau_duration),
                 leak_alarm_threshold: Some(leak_alarm_threshold),
+                target_inspiratory_flow: Some(target_inspiratory_flow),
+                inspiratory_duration: Some(inspiratory_duration),
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -714,6 +730,10 @@ mod tests {
                 &msg.plateau_duration.unwrap_or_default().to_be_bytes(),
                 b"\t",
                 &msg.leak_alarm_threshold.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.target_inspiratory_flow.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.inspiratory_duration.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 
@@ -834,6 +854,8 @@ mod tests {
             high_tidal_volume_alarm_treshold in num::u16::ANY,
             plateau_duration in num::u16::ANY,
             leak_alarm_threshold in num::u16::ANY,
+            target_inspiratory_flow in num::u8::ANY,
+            inspiratory_duration in num::u16::ANY,
         ) {
             let msg = MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -872,6 +894,8 @@ mod tests {
                 high_tidal_volume_alarm_treshold: Some(high_tidal_volume_alarm_treshold),
                 plateau_duration: Some(plateau_duration),
                 leak_alarm_threshold: Some(leak_alarm_threshold),
+                target_inspiratory_flow: Some(target_inspiratory_flow),
+                inspiratory_duration: Some(inspiratory_duration),
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -950,6 +974,10 @@ mod tests {
                 &msg.plateau_duration.unwrap_or_default().to_be_bytes(),
                 b"\t",
                 &msg.leak_alarm_threshold.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.target_inspiratory_flow.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.inspiratory_duration.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 

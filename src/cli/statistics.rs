@@ -132,6 +132,8 @@ mod tests {
                 high_tidal_volume_alarm_treshold: None,
                 plateau_duration: None,
                 leak_alarm_threshold: None,
+                target_inspiratory_flow: None,
+                inspiratory_duration: None,
             },
         )];
 
@@ -172,6 +174,8 @@ mod tests {
             high_tidal_volume_alarm_treshold: None,
             plateau_duration: None,
             leak_alarm_threshold: None,
+            target_inspiratory_flow: None,
+            inspiratory_duration: None,
         }));
 
         assert_eq!(compute_duration(vect), 100);
@@ -263,6 +267,8 @@ mod tests {
                 high_tidal_volume_alarm_treshold: None,
                 plateau_duration: None,
                 leak_alarm_threshold: None,
+                target_inspiratory_flow: None,
+                inspiratory_duration: None,
             },
         ));
 
@@ -296,6 +302,8 @@ mod tests {
             high_tidal_volume_alarm_treshold: None,
             plateau_duration: None,
             leak_alarm_threshold: None,
+            target_inspiratory_flow: None,
+            inspiratory_duration: None,
         }));
 
         assert_eq!(compute_duration(vect), 110);

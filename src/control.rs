@@ -70,6 +70,10 @@ pub enum ControlSetting {
     PlateauDuration = 23,
     /// Threshold for leak alarm in cL/min (value bounds must be between 0 and 10000)
     LeakAlarmThreshold = 24,
+    /// Target flow during inspiration in L/min (value bounds must be between 5 and 80)
+    TargetInspiratoryFlow = 25,
+    /// Duration of inspiration in ms (value bounds must be between 200 and 3000)
+    InspiratoryDuration = 26,
 }
 
 impl ControlSetting {
@@ -102,6 +106,8 @@ impl ControlSetting {
             Self::HighTidalVolumeAlarmTreshold => 1_000,
             Self::PlateauDuration => 200,
             Self::LeakAlarmThreshold => 200,
+            Self::TargetInspiratoryFlow => 40,
+            Self::InspiratoryDuration => 800,
         }
     }
 
@@ -134,6 +140,8 @@ impl ControlSetting {
             Self::HighTidalVolumeAlarmTreshold => RangeInclusive::new(50, 2_000),
             Self::PlateauDuration => RangeInclusive::new(100, 2_000),
             Self::LeakAlarmThreshold => RangeInclusive::new(0, 10_000),
+            Self::TargetInspiratoryFlow => RangeInclusive::new(5, 80),
+            Self::InspiratoryDuration => RangeInclusive::new(200, 3_000),
         }
     }
 }
@@ -168,6 +176,8 @@ impl std::convert::TryFrom<u8> for ControlSetting {
             22 => Ok(ControlSetting::HighTidalVolumeAlarmTreshold),
             23 => Ok(ControlSetting::PlateauDuration),
             24 => Ok(ControlSetting::LeakAlarmThreshold),
+            25 => Ok(ControlSetting::TargetInspiratoryFlow),
+            26 => Ok(ControlSetting::InspiratoryDuration),
             _ => Err("Invalid setting number"),
         }
     }
@@ -218,6 +228,8 @@ impl Distribution<ControlMessage> for Standard {
             ControlSetting::HighTidalVolumeAlarmTreshold => rng.gen_range(50, 2_001),
             ControlSetting::PlateauDuration => rng.gen_range(100, 2_001),
             ControlSetting::LeakAlarmThreshold => rng.gen_range(0, 10_001),
+            ControlSetting::TargetInspiratoryFlow => rng.gen_range(5, 81),
+            ControlSetting::InspiratoryDuration => rng.gen_range(200, 3_001),
         };
         ControlMessage { setting, value }
     }

@@ -66,7 +66,7 @@ pub enum ControlSetting {
     LowTidalVolumeAlarmTreshold = 21,
     /// Threshold for high tidal volume in mL (value bounds must be between 50 and 2000)
     HighTidalVolumeAlarmTreshold = 22,
-    /// Duration in ms of closing both valves to effectively measure plateau pressure in volume control modes (value bounds must be between 100 and 1000)
+    /// Duration in ms of closing both valves to effectively measure plateau pressure in volume control modes (value bounds must be between 100 and 2000)
     PlateauDuration = 23,
     /// Threshold for leak alarm in cL/min (value bounds must be between 0 and 10000)
     LeakAlarmThreshold = 24,
@@ -90,14 +90,14 @@ impl ControlSetting {
             Self::InspiratoryTriggerFlow => 10,
             Self::ExpiratoryTriggerFlow => 30,
             Self::TiMin => 200,
-            Self::TiMax => 1_500,
+            Self::TiMax => 1_000,
             Self::LowInspiratoryMinuteVolumeAlarmThreshold => 3,
             Self::HighInspiratoryMinuteVolumeAlarmThreshold => 20,
             Self::LowExpiratoryMinuteVolumeAlarmThreshold => 3,
             Self::HighExpiratoryMinuteVolumeAlarmThreshold => 20,
             Self::LowExpiratoryRateAlarmThreshold => 10,
             Self::HighExpiratoryRateAlarmThreshold => 30,
-            Self::TargetTidalVolume => 500,
+            Self::TargetTidalVolume => 400,
             Self::LowTidalVolumeAlarmTreshold => 200,
             Self::HighTidalVolumeAlarmTreshold => 1_000,
             Self::PlateauDuration => 200,
@@ -132,7 +132,7 @@ impl ControlSetting {
             Self::TargetTidalVolume => RangeInclusive::new(50, 2_000),
             Self::LowTidalVolumeAlarmTreshold => RangeInclusive::new(0, 1_000),
             Self::HighTidalVolumeAlarmTreshold => RangeInclusive::new(50, 2_000),
-            Self::PlateauDuration => RangeInclusive::new(100, 1_000),
+            Self::PlateauDuration => RangeInclusive::new(100, 2_000),
             Self::LeakAlarmThreshold => RangeInclusive::new(0, 10_000),
         }
     }
@@ -216,7 +216,7 @@ impl Distribution<ControlMessage> for Standard {
             ControlSetting::TargetTidalVolume => rng.gen_range(50, 2_001),
             ControlSetting::LowTidalVolumeAlarmTreshold => rng.gen_range(0, 1_001),
             ControlSetting::HighTidalVolumeAlarmTreshold => rng.gen_range(50, 2_001),
-            ControlSetting::PlateauDuration => rng.gen_range(100, 1_001),
+            ControlSetting::PlateauDuration => rng.gen_range(100, 2_001),
             ControlSetting::LeakAlarmThreshold => rng.gen_range(0, 10_001),
         };
         ControlMessage { setting, value }

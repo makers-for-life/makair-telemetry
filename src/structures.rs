@@ -250,9 +250,9 @@ pub struct StoppedMessage {
     /// [protocol v2] Target tidal volume in mL
     pub target_tidal_volume: Option<u16>,
     /// [protocol v2] Threshold for low tidal volume in mL
-    pub low_tidal_volume_alarm_treshold: Option<u16>,
+    pub low_tidal_volume_alarm_threshold: Option<u16>,
     /// [protocol v2] Threshold for high tidal volume in mL
-    pub high_tidal_volume_alarm_treshold: Option<u16>,
+    pub high_tidal_volume_alarm_threshold: Option<u16>,
     /// [protocol v2] Duration in ms of closing both valves to effectively measure plateau pressure in volume control modes
     pub plateau_duration: Option<u16>,
     /// [protocol v2] Threshold for leak alarm in cL/min
@@ -368,9 +368,9 @@ pub struct MachineStateSnapshot {
     /// [protocol v2] Target tidal volume in mL
     pub target_tidal_volume: Option<u16>,
     /// [protocol v2] Threshold for low tidal volume in mL
-    pub low_tidal_volume_alarm_treshold: Option<u16>,
+    pub low_tidal_volume_alarm_threshold: Option<u16>,
     /// [protocol v2] Threshold for high tidal volume in mL
-    pub high_tidal_volume_alarm_treshold: Option<u16>,
+    pub high_tidal_volume_alarm_threshold: Option<u16>,
     /// [protocol v2] Duration in ms of closing both valves to effectively measure plateau pressure in volume control modes
     pub plateau_duration: Option<u16>,
     /// [protocol v2] Threshold for leak alarm in cL/min

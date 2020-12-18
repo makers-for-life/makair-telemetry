@@ -137,9 +137,9 @@ named!(
             >> sep
             >> high_expiratory_minute_volume_alarm_threshold: be_u8
             >> sep
-            >> low_expiratory_rate_alarm_threshold: be_u8
+            >> low_respiratory_rate_alarm_threshold: be_u8
             >> sep
-            >> high_expiratory_rate_alarm_threshold: be_u8
+            >> high_respiratory_rate_alarm_threshold: be_u8
             >> sep
             >> target_tidal_volume: be_u16
             >> sep
@@ -187,9 +187,11 @@ named!(
                     high_expiratory_minute_volume_alarm_threshold: Some(
                         high_expiratory_minute_volume_alarm_threshold,
                     ),
-                    low_expiratory_rate_alarm_threshold: Some(low_expiratory_rate_alarm_threshold),
-                    high_expiratory_rate_alarm_threshold: Some(
-                        high_expiratory_rate_alarm_threshold,
+                    low_respiratory_rate_alarm_threshold: Some(
+                        low_respiratory_rate_alarm_threshold,
+                    ),
+                    high_respiratory_rate_alarm_threshold: Some(
+                        high_respiratory_rate_alarm_threshold,
                     ),
                     target_tidal_volume: Some(target_tidal_volume),
                     low_tidal_volume_alarm_threshold: Some(low_tidal_volume_alarm_threshold),
@@ -322,9 +324,9 @@ named!(
             >> sep
             >> high_expiratory_minute_volume_alarm_threshold: be_u8
             >> sep
-            >> low_expiratory_rate_alarm_threshold: be_u8
+            >> low_respiratory_rate_alarm_threshold: be_u8
             >> sep
-            >> high_expiratory_rate_alarm_threshold: be_u8
+            >> high_respiratory_rate_alarm_threshold: be_u8
             >> sep
             >> target_tidal_volume: be_u16
             >> sep
@@ -382,8 +384,8 @@ named!(
                 high_expiratory_minute_volume_alarm_threshold: Some(
                     high_expiratory_minute_volume_alarm_threshold
                 ),
-                low_expiratory_rate_alarm_threshold: Some(low_expiratory_rate_alarm_threshold),
-                high_expiratory_rate_alarm_threshold: Some(high_expiratory_rate_alarm_threshold),
+                low_respiratory_rate_alarm_threshold: Some(low_respiratory_rate_alarm_threshold),
+                high_respiratory_rate_alarm_threshold: Some(high_respiratory_rate_alarm_threshold),
                 target_tidal_volume: Some(target_tidal_volume),
                 low_tidal_volume_alarm_threshold: Some(low_tidal_volume_alarm_threshold),
                 high_tidal_volume_alarm_threshold: Some(high_tidal_volume_alarm_threshold),
@@ -625,8 +627,8 @@ mod tests {
             high_inspiratory_minute_volume_alarm_threshold in num::u8::ANY,
             low_expiratory_minute_volume_alarm_threshold in num::u8::ANY,
             high_expiratory_minute_volume_alarm_threshold in num::u8::ANY,
-            low_expiratory_rate_alarm_threshold in num::u8::ANY,
-            high_expiratory_rate_alarm_threshold in num::u8::ANY,
+            low_respiratory_rate_alarm_threshold in num::u8::ANY,
+            high_respiratory_rate_alarm_threshold in num::u8::ANY,
             target_tidal_volume in num::u16::ANY,
             low_tidal_volume_alarm_threshold in num::u16::ANY,
             high_tidal_volume_alarm_threshold in num::u16::ANY,
@@ -658,8 +660,8 @@ mod tests {
                 high_inspiratory_minute_volume_alarm_threshold: Some(high_inspiratory_minute_volume_alarm_threshold),
                 low_expiratory_minute_volume_alarm_threshold: Some(low_expiratory_minute_volume_alarm_threshold),
                 high_expiratory_minute_volume_alarm_threshold: Some(high_expiratory_minute_volume_alarm_threshold),
-                low_expiratory_rate_alarm_threshold: Some(low_expiratory_rate_alarm_threshold),
-                high_expiratory_rate_alarm_threshold: Some(high_expiratory_rate_alarm_threshold),
+                low_respiratory_rate_alarm_threshold: Some(low_respiratory_rate_alarm_threshold),
+                high_respiratory_rate_alarm_threshold: Some(high_respiratory_rate_alarm_threshold),
                 target_tidal_volume: Some(target_tidal_volume),
                 low_tidal_volume_alarm_threshold: Some(low_tidal_volume_alarm_threshold),
                 high_tidal_volume_alarm_threshold: Some(high_tidal_volume_alarm_threshold),
@@ -717,9 +719,9 @@ mod tests {
                 b"\t",
                 &msg.high_expiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
                 b"\t",
-                &msg.low_expiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
+                &msg.low_respiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
                 b"\t",
-                &msg.high_expiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
+                &msg.high_respiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
                 b"\t",
                 &msg.target_tidal_volume.unwrap_or_default().to_be_bytes(),
                 b"\t",
@@ -847,8 +849,8 @@ mod tests {
             high_inspiratory_minute_volume_alarm_threshold in num::u8::ANY,
             low_expiratory_minute_volume_alarm_threshold in num::u8::ANY,
             high_expiratory_minute_volume_alarm_threshold in num::u8::ANY,
-            low_expiratory_rate_alarm_threshold in num::u8::ANY,
-            high_expiratory_rate_alarm_threshold in num::u8::ANY,
+            low_respiratory_rate_alarm_threshold in num::u8::ANY,
+            high_respiratory_rate_alarm_threshold in num::u8::ANY,
             target_tidal_volume in num::u16::ANY,
             low_tidal_volume_alarm_threshold in num::u16::ANY,
             high_tidal_volume_alarm_threshold in num::u16::ANY,
@@ -887,8 +889,8 @@ mod tests {
                 high_inspiratory_minute_volume_alarm_threshold: Some(high_inspiratory_minute_volume_alarm_threshold),
                 low_expiratory_minute_volume_alarm_threshold: Some(low_expiratory_minute_volume_alarm_threshold),
                 high_expiratory_minute_volume_alarm_threshold: Some(high_expiratory_minute_volume_alarm_threshold),
-                low_expiratory_rate_alarm_threshold: Some(low_expiratory_rate_alarm_threshold),
-                high_expiratory_rate_alarm_threshold: Some(high_expiratory_rate_alarm_threshold),
+                low_respiratory_rate_alarm_threshold: Some(low_respiratory_rate_alarm_threshold),
+                high_respiratory_rate_alarm_threshold: Some(high_respiratory_rate_alarm_threshold),
                 target_tidal_volume: Some(target_tidal_volume),
                 low_tidal_volume_alarm_threshold: Some(low_tidal_volume_alarm_threshold),
                 high_tidal_volume_alarm_threshold: Some(high_tidal_volume_alarm_threshold),
@@ -961,9 +963,9 @@ mod tests {
                 b"\t",
                 &msg.high_expiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
                 b"\t",
-                &msg.low_expiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
+                &msg.low_respiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
                 b"\t",
-                &msg.high_expiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
+                &msg.high_respiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
                 b"\t",
                 &msg.target_tidal_volume.unwrap_or_default().to_be_bytes(),
                 b"\t",

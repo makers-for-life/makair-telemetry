@@ -243,10 +243,10 @@ pub struct StoppedMessage {
     pub low_expiratory_minute_volume_alarm_threshold: Option<u8>,
     /// [protocol v2] Threshold for high expiratory minute volume alarm in L/min
     pub high_expiratory_minute_volume_alarm_threshold: Option<u8>,
-    /// [protocol v2] Threshold for low expiratory rate alarm in cycle per minute
-    pub low_expiratory_rate_alarm_threshold: Option<u8>,
-    /// [protocol v2] Threshold for high expiratory rate alarm in cycle per minute
-    pub high_expiratory_rate_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for low respiratory rate alarm in cycle per minute
+    pub low_respiratory_rate_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for high respiratory rate alarm in cycle per minute
+    pub high_respiratory_rate_alarm_threshold: Option<u8>,
     /// [protocol v2] Target tidal volume in mL
     pub target_tidal_volume: Option<u16>,
     /// [protocol v2] Threshold for low tidal volume in mL
@@ -361,10 +361,10 @@ pub struct MachineStateSnapshot {
     pub low_expiratory_minute_volume_alarm_threshold: Option<u8>,
     /// [protocol v2] Threshold for high expiratory minute volume alarm in L/min
     pub high_expiratory_minute_volume_alarm_threshold: Option<u8>,
-    /// [protocol v2] Threshold for low expiratory rate alarm in cycle per minute
-    pub low_expiratory_rate_alarm_threshold: Option<u8>,
-    /// [protocol v2] Threshold for high expiratory rate alarm in cycle per minute
-    pub high_expiratory_rate_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for low respiratory rate alarm in cycle per minute
+    pub low_respiratory_rate_alarm_threshold: Option<u8>,
+    /// [protocol v2] Threshold for high respiratory rate alarm in cycle per minute
+    pub high_respiratory_rate_alarm_threshold: Option<u8>,
     /// [protocol v2] Target tidal volume in mL
     pub target_tidal_volume: Option<u16>,
     /// [protocol v2] Threshold for low tidal volume in mL

@@ -56,10 +56,10 @@ pub enum ControlSetting {
     LowExpiratoryMinuteVolumeAlarmThreshold = 16,
     /// Threshold for high expiratory minute volume alarm in L/min (value bounds must be between 10 and 40)
     HighExpiratoryMinuteVolumeAlarmThreshold = 17,
-    /// Threshold for low expiratory rate alarm in cycle per minute (value bounds must be between 5 and 25)
-    LowExpiratoryRateAlarmThreshold = 18,
-    /// Threshold for high expiratory rate alarm in cycle per minute (value bounds must be between 20 and 35)
-    HighExpiratoryRateAlarmThreshold = 19,
+    /// Threshold for low respiratory rate alarm in cycle per minute (value bounds must be between 5 and 25)
+    LowRespiratoryRateAlarmThreshold = 18,
+    /// Threshold for high respiratory rate alarm in cycle per minute (value bounds must be between 15 and 35)
+    HighRespiratoryRateAlarmThreshold = 19,
     /// Target tidal volume in mL (value bounds must be between 50 and 2000)
     TargetTidalVolume = 20,
     /// Threshold for low tidal volume in mL (value bounds must be between 0 and 1000)
@@ -99,8 +99,8 @@ impl ControlSetting {
             Self::HighInspiratoryMinuteVolumeAlarmThreshold => 20,
             Self::LowExpiratoryMinuteVolumeAlarmThreshold => 3,
             Self::HighExpiratoryMinuteVolumeAlarmThreshold => 20,
-            Self::LowExpiratoryRateAlarmThreshold => 10,
-            Self::HighExpiratoryRateAlarmThreshold => 30,
+            Self::LowRespiratoryRateAlarmThreshold => 10,
+            Self::HighRespiratoryRateAlarmThreshold => 30,
             Self::TargetTidalVolume => 400,
             Self::LowTidalVolumeAlarmThreshold => 200,
             Self::HighTidalVolumeAlarmThreshold => 1_000,
@@ -133,8 +133,8 @@ impl ControlSetting {
             Self::HighInspiratoryMinuteVolumeAlarmThreshold => RangeInclusive::new(10, 40),
             Self::LowExpiratoryMinuteVolumeAlarmThreshold => RangeInclusive::new(0, 20),
             Self::HighExpiratoryMinuteVolumeAlarmThreshold => RangeInclusive::new(10, 40),
-            Self::LowExpiratoryRateAlarmThreshold => RangeInclusive::new(5, 25),
-            Self::HighExpiratoryRateAlarmThreshold => RangeInclusive::new(20, 35),
+            Self::LowRespiratoryRateAlarmThreshold => RangeInclusive::new(5, 25),
+            Self::HighRespiratoryRateAlarmThreshold => RangeInclusive::new(15, 35),
             Self::TargetTidalVolume => RangeInclusive::new(50, 2_000),
             Self::LowTidalVolumeAlarmThreshold => RangeInclusive::new(0, 1_000),
             Self::HighTidalVolumeAlarmThreshold => RangeInclusive::new(50, 2_000),
@@ -169,8 +169,8 @@ impl std::convert::TryFrom<u8> for ControlSetting {
             15 => Ok(ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold),
             16 => Ok(ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold),
             17 => Ok(ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold),
-            18 => Ok(ControlSetting::LowExpiratoryRateAlarmThreshold),
-            19 => Ok(ControlSetting::HighExpiratoryRateAlarmThreshold),
+            18 => Ok(ControlSetting::LowRespiratoryRateAlarmThreshold),
+            19 => Ok(ControlSetting::HighRespiratoryRateAlarmThreshold),
             20 => Ok(ControlSetting::TargetTidalVolume),
             21 => Ok(ControlSetting::LowTidalVolumeAlarmThreshold),
             22 => Ok(ControlSetting::HighTidalVolumeAlarmThreshold),
@@ -221,8 +221,8 @@ impl Distribution<ControlMessage> for Standard {
             ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold => rng.gen_range(10, 41),
             ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold => rng.gen_range(0, 21),
             ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold => rng.gen_range(10, 41),
-            ControlSetting::LowExpiratoryRateAlarmThreshold => rng.gen_range(5, 26),
-            ControlSetting::HighExpiratoryRateAlarmThreshold => rng.gen_range(20, 36),
+            ControlSetting::LowRespiratoryRateAlarmThreshold => rng.gen_range(5, 26),
+            ControlSetting::HighRespiratoryRateAlarmThreshold => rng.gen_range(15, 36),
             ControlSetting::TargetTidalVolume => rng.gen_range(50, 2_001),
             ControlSetting::LowTidalVolumeAlarmThreshold => rng.gen_range(0, 1_001),
             ControlSetting::HighTidalVolumeAlarmThreshold => rng.gen_range(50, 2_001),

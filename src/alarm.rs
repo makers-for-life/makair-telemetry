@@ -9,6 +9,14 @@ pub const RMC_SW_1: u8 = 12;
 pub const RMC_SW_2: u8 = 11;
 /// Error code of RMC SW 3
 pub const RMC_SW_3: u8 = 14;
+/// Error code of RMC SW 4
+pub const RMC_SW_4: u8 = 40;
+/// Error code of RMC SW 5
+pub const RMC_SW_5: u8 = 41;
+/// Error code of RMC SW 6
+pub const RMC_SW_6: u8 = 42;
+/// Error code of RMC SW 7
+pub const RMC_SW_7: u8 = 43;
 /// Error code of RMC SW 11
 pub const RMC_SW_11: u8 = 21;
 /// Error code of RMC SW 12
@@ -47,6 +55,14 @@ pub enum AlarmCodeDescription {
     PowerCableUnplugged,
     /// Pressure is too high
     PressureTooHigh,
+    /// Inspiratory minute volume is too low
+    InspiratoryMinuteVolumeLow,
+    /// Inspiratory minute volume is too high
+    InspiratoryMinuteVolumeHigh,
+    /// Expiratory minute volume is too low
+    ExpiratoryMinuteVolumeLow,
+    /// Expiratory minute volume is too high
+    ExpiratoryMinuteVolumeHigh,
     /// Unknown cause
     Unknown(u8),
 }
@@ -58,6 +74,10 @@ impl AlarmCode {
             RMC_SW_1 | RMC_SW_14 => AlarmCodeDescription::PlateauPressureNotReached,
             RMC_SW_2 | RMC_SW_19 => AlarmCodeDescription::PatientUnplugged,
             RMC_SW_3 | RMC_SW_15 => AlarmCodeDescription::PEEPPressureNotReached,
+            RMC_SW_4 => AlarmCodeDescription::InspiratoryMinuteVolumeLow,
+            RMC_SW_5 => AlarmCodeDescription::InspiratoryMinuteVolumeHigh,
+            RMC_SW_6 => AlarmCodeDescription::ExpiratoryMinuteVolumeLow,
+            RMC_SW_7 => AlarmCodeDescription::ExpiratoryMinuteVolumeHigh,
             RMC_SW_11 => AlarmCodeDescription::BatteryLow,
             RMC_SW_12 => AlarmCodeDescription::BatteryVeryLow,
             RMC_SW_16 => AlarmCodeDescription::PowerCableUnplugged,

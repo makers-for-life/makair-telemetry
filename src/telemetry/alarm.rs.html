@@ -103,6 +103,26 @@
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -115,6 +135,14 @@
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_2</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">11</span>;
 <span class="doccomment">/// Error code of RMC SW 3</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_3</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">14</span>;
+<span class="doccomment">/// Error code of RMC SW 4</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_4</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">40</span>;
+<span class="doccomment">/// Error code of RMC SW 5</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_5</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">41</span>;
+<span class="doccomment">/// Error code of RMC SW 6</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_6</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">42</span>;
+<span class="doccomment">/// Error code of RMC SW 7</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_7</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">43</span>;
 <span class="doccomment">/// Error code of RMC SW 11</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_11</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">21</span>;
 <span class="doccomment">/// Error code of RMC SW 12</span>
@@ -153,6 +181,14 @@
     <span class="ident">PowerCableUnplugged</span>,
     <span class="doccomment">/// Pressure is too high</span>
     <span class="ident">PressureTooHigh</span>,
+    <span class="doccomment">/// Inspiratory minute volume is too low</span>
+    <span class="ident">InspiratoryMinuteVolumeLow</span>,
+    <span class="doccomment">/// Inspiratory minute volume is too high</span>
+    <span class="ident">InspiratoryMinuteVolumeHigh</span>,
+    <span class="doccomment">/// Expiratory minute volume is too low</span>
+    <span class="ident">ExpiratoryMinuteVolumeLow</span>,
+    <span class="doccomment">/// Expiratory minute volume is too high</span>
+    <span class="ident">ExpiratoryMinuteVolumeHigh</span>,
     <span class="doccomment">/// Unknown cause</span>
     <span class="ident">Unknown</span>(<span class="ident">u8</span>),
 }
@@ -164,6 +200,10 @@
             <span class="ident">RMC_SW_1</span> <span class="op">|</span> <span class="ident">RMC_SW_14</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">PlateauPressureNotReached</span>,
             <span class="ident">RMC_SW_2</span> <span class="op">|</span> <span class="ident">RMC_SW_19</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">PatientUnplugged</span>,
             <span class="ident">RMC_SW_3</span> <span class="op">|</span> <span class="ident">RMC_SW_15</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">PEEPPressureNotReached</span>,
+            <span class="ident">RMC_SW_4</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">InspiratoryMinuteVolumeLow</span>,
+            <span class="ident">RMC_SW_5</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">InspiratoryMinuteVolumeHigh</span>,
+            <span class="ident">RMC_SW_6</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">ExpiratoryMinuteVolumeLow</span>,
+            <span class="ident">RMC_SW_7</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">ExpiratoryMinuteVolumeHigh</span>,
             <span class="ident">RMC_SW_11</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">BatteryLow</span>,
             <span class="ident">RMC_SW_12</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">BatteryVeryLow</span>,
             <span class="ident">RMC_SW_16</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">PowerCableUnplugged</span>,

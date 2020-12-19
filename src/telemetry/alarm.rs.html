@@ -123,6 +123,31 @@
 <span id="120">120</span>
 <span id="121">121</span>
 <span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -143,6 +168,12 @@
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_6</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">42</span>;
 <span class="doccomment">/// Error code of RMC SW 7</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_7</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">43</span>;
+<span class="doccomment">/// Error code of RMC SW 8</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_8</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">44</span>;
+<span class="doccomment">/// Error code of RMC SW 9</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_9</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">45</span>;
+<span class="doccomment">/// Error code of RMC SW 10</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_10</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">46</span>;
 <span class="doccomment">/// Error code of RMC SW 11</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_11</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">21</span>;
 <span class="doccomment">/// Error code of RMC SW 12</span>
@@ -157,6 +188,10 @@
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_18</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">17</span>;
 <span class="doccomment">/// Error code of RMC SW 19</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_19</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">24</span>;
+<span class="doccomment">/// Error code of RMC SW 20</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_20</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">47</span>;
+<span class="doccomment">/// Error code of RMC SW 21</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RMC_SW_21</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">48</span>;
 
 <span class="doccomment">/// Wrapper arround an alarm code</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Hash</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
@@ -189,6 +224,16 @@
     <span class="ident">ExpiratoryMinuteVolumeLow</span>,
     <span class="doccomment">/// Expiratory minute volume is too high</span>
     <span class="ident">ExpiratoryMinuteVolumeHigh</span>,
+    <span class="doccomment">/// Respiratory rate is too low</span>
+    <span class="ident">RespiratoryRateLow</span>,
+    <span class="doccomment">/// Respiratory rate is too high</span>
+    <span class="ident">RespiratoryRateHigh</span>,
+    <span class="doccomment">/// Leak is too high</span>
+    <span class="ident">LeakHigh</span>,
+    <span class="doccomment">/// Tidal Volume is too low</span>
+    <span class="ident">TidalVolumeLow</span>,
+    <span class="doccomment">/// Tidal Volume is too high</span>
+    <span class="ident">TidalVolumeHigh</span>,
     <span class="doccomment">/// Unknown cause</span>
     <span class="ident">Unknown</span>(<span class="ident">u8</span>),
 }
@@ -204,10 +249,15 @@
             <span class="ident">RMC_SW_5</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">InspiratoryMinuteVolumeHigh</span>,
             <span class="ident">RMC_SW_6</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">ExpiratoryMinuteVolumeLow</span>,
             <span class="ident">RMC_SW_7</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">ExpiratoryMinuteVolumeHigh</span>,
+            <span class="ident">RMC_SW_8</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">RespiratoryRateLow</span>,
+            <span class="ident">RMC_SW_9</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">RespiratoryRateHigh</span>,
+            <span class="ident">RMC_SW_10</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">LeakHigh</span>,
             <span class="ident">RMC_SW_11</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">BatteryLow</span>,
             <span class="ident">RMC_SW_12</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">BatteryVeryLow</span>,
             <span class="ident">RMC_SW_16</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">PowerCableUnplugged</span>,
             <span class="ident">RMC_SW_18</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">PressureTooHigh</span>,
+            <span class="ident">RMC_SW_20</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">TidalVolumeLow</span>,
+            <span class="ident">RMC_SW_21</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">TidalVolumeHigh</span>,
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span>::<span class="ident">Unknown</span>(<span class="self">self</span>.<span class="ident">code</span>),
         }
     }

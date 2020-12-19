@@ -15,6 +15,15 @@ jobs:
             override: true
             components: rustfmt, clippy
 
+      - name: Cache build artifacts
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-check
+
       - name: Lint
         uses: actions-rs/clippy-check@v1.0.7
         with:
@@ -51,6 +60,15 @@ jobs:
             override: true
             components: rustfmt, clippy
 
+      - name: Cache build artifacts
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-build
+
       - name: Build debug tool
         uses: actions-rs/cargo@v1.0.1
         with:
@@ -74,6 +92,15 @@ jobs:
             toolchain: stable
             override: true
             components: rustfmt, clippy
+
+      - name: Cache build artifacts
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-docs
 
       - name: Build documentation
         uses: actions-rs/cargo@v1.0.1

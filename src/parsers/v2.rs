@@ -153,7 +153,9 @@ named!(
             >> sep
             >> target_inspiratory_flow: be_u8
             >> sep
-            >> inspiratory_duration: be_u16
+            >> inspiratory_duration_command: be_u16
+            >> sep
+            >> previous_inspiratory_duration: be_u16
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
@@ -199,7 +201,8 @@ named!(
                     plateau_duration: Some(plateau_duration),
                     leak_alarm_threshold: Some(leak_alarm_threshold),
                     target_inspiratory_flow: Some(target_inspiratory_flow),
-                    inspiratory_duration: Some(inspiratory_duration),
+                    inspiratory_duration_command: Some(inspiratory_duration_command),
+                    previous_inspiratory_duration: Some(previous_inspiratory_duration),
                 })
             })
     )
@@ -340,7 +343,9 @@ named!(
             >> sep
             >> target_inspiratory_flow: be_u8
             >> sep
-            >> inspiratory_duration: be_u16
+            >> inspiratory_duration_command: be_u16
+            >> sep
+            >> previous_inspiratory_duration: be_u16
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -392,7 +397,8 @@ named!(
                 plateau_duration: Some(plateau_duration),
                 leak_alarm_threshold: Some(leak_alarm_threshold),
                 target_inspiratory_flow: Some(target_inspiratory_flow),
-                inspiratory_duration: Some(inspiratory_duration),
+                inspiratory_duration_command: Some(inspiratory_duration_command),
+                previous_inspiratory_duration: Some(previous_inspiratory_duration),
             }))
     )
 );
@@ -635,7 +641,8 @@ mod tests {
             plateau_duration in num::u16::ANY,
             leak_alarm_threshold in num::u16::ANY,
             target_inspiratory_flow in num::u8::ANY,
-            inspiratory_duration in num::u16::ANY,
+            inspiratory_duration_command in num::u16::ANY,
+            previous_inspiratory_duration in num::u16::ANY,
         ) {
             let msg = StoppedMessage {
                 telemetry_version: VERSION,
@@ -668,7 +675,8 @@ mod tests {
                 plateau_duration: Some(plateau_duration),
                 leak_alarm_threshold: Some(leak_alarm_threshold),
                 target_inspiratory_flow: Some(target_inspiratory_flow),
-                inspiratory_duration: Some(inspiratory_duration),
+                inspiratory_duration_command: Some(inspiratory_duration_command),
+                previous_inspiratory_duration: Some(previous_inspiratory_duration),
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -735,7 +743,9 @@ mod tests {
                 b"\t",
                 &msg.target_inspiratory_flow.unwrap_or_default().to_be_bytes(),
                 b"\t",
-                &msg.inspiratory_duration.unwrap_or_default().to_be_bytes(),
+                &msg.inspiratory_duration_command.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.previous_inspiratory_duration.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 
@@ -857,7 +867,8 @@ mod tests {
             plateau_duration in num::u16::ANY,
             leak_alarm_threshold in num::u16::ANY,
             target_inspiratory_flow in num::u8::ANY,
-            inspiratory_duration in num::u16::ANY,
+            inspiratory_duration_command in num::u16::ANY,
+            previous_inspiratory_duration in num::u16::ANY,
         ) {
             let msg = MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -897,7 +908,8 @@ mod tests {
                 plateau_duration: Some(plateau_duration),
                 leak_alarm_threshold: Some(leak_alarm_threshold),
                 target_inspiratory_flow: Some(target_inspiratory_flow),
-                inspiratory_duration: Some(inspiratory_duration),
+                inspiratory_duration_command: Some(inspiratory_duration_command),
+                previous_inspiratory_duration: Some(previous_inspiratory_duration),
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -979,7 +991,9 @@ mod tests {
                 b"\t",
                 &msg.target_inspiratory_flow.unwrap_or_default().to_be_bytes(),
                 b"\t",
-                &msg.inspiratory_duration.unwrap_or_default().to_be_bytes(),
+                &msg.inspiratory_duration_command.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.previous_inspiratory_duration.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 

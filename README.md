@@ -1,5 +1,7 @@
 # MakAir Telemetry
 
+[![Telemetry All](https://github.com/makers-for-life/makair-telemetry/workflows/Telemetry%20All/badge.svg)](https://github.com/makers-for-life/makair-telemetry/actions?query=workflow%3A%22Telemetry+All%22)
+
 **ℹ️ Telemetry tools are intended to be used as a library of the Control UI runtime, or as a CLI (eg. to test the telemetry protocol with the firmware).**
 
 ## Versions

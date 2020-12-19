@@ -17,6 +17,12 @@ pub const RMC_SW_5: u8 = 41;
 pub const RMC_SW_6: u8 = 42;
 /// Error code of RMC SW 7
 pub const RMC_SW_7: u8 = 43;
+/// Error code of RMC SW 8
+pub const RMC_SW_8: u8 = 44;
+/// Error code of RMC SW 9
+pub const RMC_SW_9: u8 = 45;
+/// Error code of RMC SW 10
+pub const RMC_SW_10: u8 = 46;
 /// Error code of RMC SW 11
 pub const RMC_SW_11: u8 = 21;
 /// Error code of RMC SW 12
@@ -31,6 +37,10 @@ pub const RMC_SW_16: u8 = 31;
 pub const RMC_SW_18: u8 = 17;
 /// Error code of RMC SW 19
 pub const RMC_SW_19: u8 = 24;
+/// Error code of RMC SW 20
+pub const RMC_SW_20: u8 = 47;
+/// Error code of RMC SW 21
+pub const RMC_SW_21: u8 = 48;
 
 /// Wrapper arround an alarm code
 #[derive(Debug, Eq, PartialEq, Hash, Clone, Copy, PartialOrd, Ord)]
@@ -63,6 +73,16 @@ pub enum AlarmCodeDescription {
     ExpiratoryMinuteVolumeLow,
     /// Expiratory minute volume is too high
     ExpiratoryMinuteVolumeHigh,
+    /// Respiratory rate is too low
+    RespiratoryRateLow,
+    /// Respiratory rate is too high
+    RespiratoryRateHigh,
+    /// Leak is too high
+    LeakHigh,
+    /// Tidal Volume is too low
+    TidalVolumeLow,
+    /// Tidal Volume is too high
+    TidalVolumeHigh,
     /// Unknown cause
     Unknown(u8),
 }
@@ -78,10 +98,15 @@ impl AlarmCode {
             RMC_SW_5 => AlarmCodeDescription::InspiratoryMinuteVolumeHigh,
             RMC_SW_6 => AlarmCodeDescription::ExpiratoryMinuteVolumeLow,
             RMC_SW_7 => AlarmCodeDescription::ExpiratoryMinuteVolumeHigh,
+            RMC_SW_8 => AlarmCodeDescription::RespiratoryRateLow,
+            RMC_SW_9 => AlarmCodeDescription::RespiratoryRateHigh,
+            RMC_SW_10 => AlarmCodeDescription::LeakHigh,
             RMC_SW_11 => AlarmCodeDescription::BatteryLow,
             RMC_SW_12 => AlarmCodeDescription::BatteryVeryLow,
             RMC_SW_16 => AlarmCodeDescription::PowerCableUnplugged,
             RMC_SW_18 => AlarmCodeDescription::PressureTooHigh,
+            RMC_SW_20 => AlarmCodeDescription::TidalVolumeLow,
+            RMC_SW_21 => AlarmCodeDescription::TidalVolumeHigh,
             _ => AlarmCodeDescription::Unknown(self.code),
         }
     }

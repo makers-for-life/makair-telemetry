@@ -10,11 +10,6 @@
 // Required for the parsers to compile
 #![recursion_limit = "256"]
 
-#[macro_use]
-extern crate log;
-#[macro_use]
-extern crate nom;
-
 /// Utilities related to alarms
 pub mod alarm;
 /// Structures to represent control messages
@@ -24,22 +19,38 @@ pub mod parsers;
 /// Structures to represent telemetry messages
 pub mod structures;
 
+#[cfg(feature = "serial")]
+use log::{debug, error, info, warn};
+#[cfg(feature = "serial")]
 pub use serial;
+#[cfg(feature = "serial")]
 use serial::prelude::*;
+#[cfg(feature = "serial")]
 use std::fs::File;
+#[cfg(feature = "serial")]
 use std::io::BufRead;
+#[cfg(feature = "serial")]
 use std::io::BufReader;
+#[cfg(feature = "serial")]
 use std::io::BufWriter;
+#[cfg(feature = "serial")]
 use std::io::Read;
+#[cfg(feature = "serial")]
 use std::io::Write;
+#[cfg(feature = "serial")]
 use std::sync::mpsc::{Receiver, Sender};
+#[cfg(feature = "serial")]
 use std::sync::{Arc, Mutex};
 
+#[cfg(feature = "serial")]
 use control::*;
+#[cfg(feature = "serial")]
 use parsers::*;
+#[cfg(feature = "serial")]
 use structures::*;
 
 /// A decoded telemetry message
+#[cfg(feature = "serial")]
 pub type TelemetryChannelType = Result<TelemetryMessageOrError, serial::core::Error>;
 
 /// Open a serial port, consume it endlessly and send back parsed telemetry messages through a channel
@@ -50,6 +61,7 @@ pub type TelemetryChannelType = Result<TelemetryMessageOrError, serial::core::Er
 /// * `control_rx` - Optional receiver of a channel used to send control messages through the serial port.
 ///
 /// This is meant to be run in a dedicated thread.
+#[cfg(feature = "serial")]
 pub fn gather_telemetry(
     port_id: &str,
     tx: Sender<TelemetryChannelType>,
@@ -211,6 +223,7 @@ pub fn gather_telemetry(
 }
 
 /// Helper to display telemetry messages
+#[cfg(feature = "serial")]
 pub fn display_message(message: TelemetryChannelType) {
     match message {
         Ok(TelemetryMessageOrError::Message(TelemetryMessage::BootMessage(BootMessage {
@@ -282,6 +295,7 @@ pub fn display_message(message: TelemetryChannelType) {
 /// * `enable_time_simulation` - If `true`, telemetry messages will be sent in a realistic timing; if `false`, they will be read as fast as possible.
 ///
 /// This is meant to be run in a dedicated thread.
+#[cfg(feature = "serial")]
 pub fn gather_telemetry_from_file(
     file: File,
     tx: Sender<TelemetryChannelType>,

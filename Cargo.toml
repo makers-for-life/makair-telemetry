@@ -11,12 +11,12 @@ base64 = "0.13.0"
 crc32fast = "1.2.0"
 log = "0.4.11"
 nom = "6.0.1"
-rand = "0.8.0"
-serial = "0.4.0"
 clap = { version = "3.0.0-beta.2", optional = true }
 env_logger = { version = "0.8.2", optional = true }
+rand = { version = "0.8.0", optional = true }
 serde = { version = "1.0.118", features = ["derive"], optional = true }
 serde_json = { version = "1.0.60", optional = true }
+serial = { version = "0.4.0", optional = true }
 
 [dev-dependencies]
 proptest = "0.10.1"
@@ -26,7 +26,8 @@ name = "telemetry"
 path = "src/lib.rs"
 
 [features]
-build-binary = ["clap", "env_logger", "serde_json", "serialize-messages"]
+default = ["rand", "serial"]
+build-binary = ["clap", "env_logger", "rand", "serde_json", "serial", "serialize-messages"]
 serialize-messages = ["serde"]
 
 [[bin]]

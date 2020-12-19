@@ -3,9 +3,6 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
-use rand::distributions::{Distribution, Standard};
-use rand::Rng;
-use std::convert::TryFrom;
 use std::ops::RangeInclusive;
 
 /// Special value that can be used in a heartbeat control message to disable RPi watchdog
@@ -183,8 +180,11 @@ impl std::convert::TryFrom<u8> for ControlSetting {
     }
 }
 
-impl Distribution<ControlSetting> for Standard {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> ControlSetting {
+#[cfg(feature = "rand")]
+impl rand::distributions::Distribution<ControlSetting> for rand::distributions::Standard {
+    fn sample<R: rand::Rng + ?Sized>(&self, rng: &mut R) -> ControlSetting {
+        use std::convert::TryFrom;
+
         let number = rng.gen_range(1..=5);
         ControlSetting::try_from(number).unwrap()
     }
@@ -199,8 +199,11 @@ pub struct ControlMessage {
     pub value: u16,
 }
 
-impl Distribution<ControlMessage> for Standard {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> ControlMessage {
+#[cfg(feature = "rand")]
+impl rand::distributions::Distribution<ControlMessage> for rand::distributions::Standard {
+    fn sample<R: rand::Rng + ?Sized>(&self, rng: &mut R) -> ControlMessage {
+        use std::convert::TryFrom;
+
         let setting: ControlSetting = rng.gen();
         let value = u16::try_from(rng.gen_range(setting.bounds())).unwrap_or(u16::MAX);
         ControlMessage { setting, value }

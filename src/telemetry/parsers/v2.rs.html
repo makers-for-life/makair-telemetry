@@ -1117,9 +1117,11 @@
 <span id="1114">1114</span>
 <span id="1115">1115</span>
 <span id="1116">1116</span>
+<span id="1117">1117</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">number</span>::<span class="ident">streaming</span>::{<span class="ident">be_i16</span>, <span class="ident">be_u16</span>, <span class="ident">be_u32</span>, <span class="ident">be_u64</span>, <span class="ident">be_u8</span>};
 <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">IResult</span>;
+<span class="kw">use</span> <span class="ident">nom</span>::{<span class="ident">alt</span>, <span class="ident">do_parse</span>, <span class="ident">length_data</span>, <span class="ident">map</span>, <span class="ident">map_res</span>, <span class="ident">named</span>, <span class="ident">tag</span>, <span class="ident">take</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
 
 <span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">structures</span>::<span class="kw-2">*</span>;

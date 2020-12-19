@@ -136,7 +136,6 @@ named!(
                     leak_alarm_threshold: None,
                     target_inspiratory_flow: None,
                     inspiratory_duration_command: None,
-                    previous_inspiratory_duration: None,
                 })
             })
     )
@@ -517,7 +516,6 @@ mod tests {
                 leak_alarm_threshold: None,
                 target_inspiratory_flow: None,
                 inspiratory_duration_command: None,
-                previous_inspiratory_duration: None,
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp

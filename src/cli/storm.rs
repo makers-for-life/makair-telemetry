@@ -19,7 +19,7 @@ pub fn gen_random_message_bytes() -> Vec<u8> {
 
 pub fn gen_random_bytes() -> Vec<u8> {
     let mut rng = rand::thread_rng();
-    let len = rng.gen_range(1, 10);
+    let len = rng.gen_range(1..=10);
     let mut bytes: Vec<u8> = vec![];
     for _ in 0..len {
         bytes.push(rng.gen());

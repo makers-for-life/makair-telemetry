@@ -185,7 +185,7 @@ impl std::convert::TryFrom<u8> for ControlSetting {
 
 impl Distribution<ControlSetting> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> ControlSetting {
-        let number = rng.gen_range(1, 6);
+        let number = rng.gen_range(1..=5);
         ControlSetting::try_from(number).unwrap()
     }
 }
@@ -202,35 +202,7 @@ pub struct ControlMessage {
 impl Distribution<ControlMessage> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> ControlMessage {
         let setting: ControlSetting = rng.gen();
-        let value = match setting {
-            ControlSetting::Heartbeat => rng.gen_range(0, 255),
-            ControlSetting::VentilationMode => rng.gen_range(0, 6),
-            ControlSetting::PlateauPressure => rng.gen_range(10, 41),
-            ControlSetting::PEEP => rng.gen_range(0, 31),
-            ControlSetting::CyclesPerMinute => rng.gen_range(5, 36),
-            ControlSetting::ExpiratoryTerm => rng.gen_range(10, 61),
-            ControlSetting::TriggerEnabled => rng.gen_range(0, 2),
-            ControlSetting::TriggerOffset => rng.gen_range(0, 101),
-            ControlSetting::RespirationEnabled => rng.gen_range(0, 2),
-            ControlSetting::AlarmSnooze => rng.gen_range(0, 2),
-            ControlSetting::InspiratoryTriggerFlow => rng.gen_range(0, 101),
-            ControlSetting::ExpiratoryTriggerFlow => rng.gen_range(0, 101),
-            ControlSetting::TiMin => rng.gen_range(100, 3_001),
-            ControlSetting::TiMax => rng.gen_range(200, 5_001),
-            ControlSetting::LowInspiratoryMinuteVolumeAlarmThreshold => rng.gen_range(0, 21),
-            ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold => rng.gen_range(10, 41),
-            ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold => rng.gen_range(0, 21),
-            ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold => rng.gen_range(10, 41),
-            ControlSetting::LowRespiratoryRateAlarmThreshold => rng.gen_range(5, 26),
-            ControlSetting::HighRespiratoryRateAlarmThreshold => rng.gen_range(15, 36),
-            ControlSetting::TargetTidalVolume => rng.gen_range(50, 2_001),
-            ControlSetting::LowTidalVolumeAlarmThreshold => rng.gen_range(0, 1_001),
-            ControlSetting::HighTidalVolumeAlarmThreshold => rng.gen_range(50, 2_001),
-            ControlSetting::PlateauDuration => rng.gen_range(100, 2_001),
-            ControlSetting::LeakAlarmThreshold => rng.gen_range(0, 10_001),
-            ControlSetting::TargetInspiratoryFlow => rng.gen_range(5, 81),
-            ControlSetting::InspiratoryDuration => rng.gen_range(200, 3_001),
-        };
+        let value = u16::try_from(rng.gen_range(setting.bounds())).unwrap_or(u16::MAX);
         ControlMessage { setting, value }
     }
 }

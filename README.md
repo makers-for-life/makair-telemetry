@@ -11,6 +11,7 @@
 | V1.0.x | Working serial parsing from firmware | ✅
 | V1.1.x | Extend telemetry protocol and add control protocol | ✅
 | V1.2.x | Alarm code management has been reworked to use ENUMs (interoperability) | ✅
+| V2.0.x | Protocol V2, with ventilation modes and new alarms | ❌
 
 ## Telemetry Library
 

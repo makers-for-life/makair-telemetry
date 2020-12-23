@@ -78,7 +78,7 @@ impl TryFrom<u8> for AlarmPriority {
 
     fn try_from(value: u8) -> Result<Self, Self::Error> {
         match value {
-            10..=19 => Ok(Self::High),
+            10..=19 | 40..=49 => Ok(Self::High),
             20..=29 => Ok(Self::Medium),
             30..=39 => Ok(Self::Low),
             _ => Err(io::Error::new(

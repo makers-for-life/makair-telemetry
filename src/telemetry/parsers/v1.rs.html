@@ -839,6 +839,8 @@
 <span id="836">836</span>
 <span id="837">837</span>
 <span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">number</span>::<span class="ident">streaming</span>::{<span class="ident">be_u16</span>, <span class="ident">be_u32</span>, <span class="ident">be_u64</span>, <span class="ident">be_u8</span>};
 <span class="kw">use</span> <span class="ident">nom</span>::<span class="ident">IResult</span>;
@@ -980,6 +982,7 @@
                     <span class="ident">target_inspiratory_flow</span>: <span class="prelude-val">None</span>,
                     <span class="ident">inspiratory_duration_command</span>: <span class="prelude-val">None</span>,
                     <span class="ident">battery_level</span>: <span class="prelude-val">None</span>,
+                    <span class="ident">current_alarm_codes</span>: <span class="prelude-val">None</span>,
                 })
             })
     )
@@ -1362,6 +1365,7 @@
                 <span class="ident">target_inspiratory_flow</span>: <span class="prelude-val">None</span>,
                 <span class="ident">inspiratory_duration_command</span>: <span class="prelude-val">None</span>,
                 <span class="ident">battery_level</span>: <span class="prelude-val">None</span>,
+                <span class="ident">current_alarm_codes</span>: <span class="prelude-val">None</span>,
             };
 
             <span class="comment">// This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp</span>

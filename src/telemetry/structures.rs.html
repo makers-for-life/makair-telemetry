@@ -634,6 +634,8 @@
 <span id="631">631</span>
 <span id="632">632</span>
 <span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -900,6 +902,8 @@
     <span class="kw">pub</span> <span class="ident">inspiratory_duration_command</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
     <span class="doccomment">/// [protocol v2] Measured battery level value in decivolts (precise value)</span>
     <span class="kw">pub</span> <span class="ident">battery_level</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Codes of the alarms that are currently triggered</span>
+    <span class="kw">pub</span> <span class="ident">current_alarm_codes</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)</span>

@@ -898,8 +898,8 @@
     <span class="kw">pub</span> <span class="ident">target_inspiratory_flow</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="doccomment">/// [protocol v2] Requested duration of inspiration in ms</span>
     <span class="kw">pub</span> <span class="ident">inspiratory_duration_command</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// [protocol v2] Measured battery level value in decivolts</span>
-    <span class="kw">pub</span> <span class="ident">battery_level_value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Measured battery level value in decivolts (precise value)</span>
+    <span class="kw">pub</span> <span class="ident">battery_level</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)</span>
@@ -930,7 +930,7 @@
     <span class="kw">pub</span> <span class="ident">patient_valve_position</span>: <span class="ident">u8</span>,
     <span class="doccomment">/// Current blower speed (no unit)</span>
     <span class="kw">pub</span> <span class="ident">blower_rpm</span>: <span class="ident">u8</span>,
-    <span class="doccomment">/// Current battery level in volts</span>
+    <span class="doccomment">/// Current battery level in volts (imprecise value)</span>
     <span class="kw">pub</span> <span class="ident">battery_level</span>: <span class="ident">u8</span>,
     <span class="doccomment">/// [protocol v2] Inspiratory flow in cL/min (SLM * 100)</span>
     <span class="kw">pub</span> <span class="ident">inspiratory_flow</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i16</span><span class="op">&gt;</span>,
@@ -1020,8 +1020,8 @@
     <span class="kw">pub</span> <span class="ident">inspiratory_duration_command</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
     <span class="doccomment">/// [protocol v2] Measured duration of inspiration in ms</span>
     <span class="kw">pub</span> <span class="ident">previous_inspiratory_duration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// [protocol v2] Measured battery level value in decivolts</span>
-    <span class="kw">pub</span> <span class="ident">battery_level_value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// [protocol v2] Measured battery level value in decivolts (precise value)</span>
+    <span class="kw">pub</span> <span class="ident">battery_level</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// A telemetry message that is sent every time an alarm is triggered or stopped</span>

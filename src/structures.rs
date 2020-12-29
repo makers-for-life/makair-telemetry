@@ -261,8 +261,8 @@ pub struct StoppedMessage {
     pub target_inspiratory_flow: Option<u8>,
     /// [protocol v2] Requested duration of inspiration in ms
     pub inspiratory_duration_command: Option<u16>,
-    /// [protocol v2] Measured battery level value in decivolts
-    pub battery_level_value: Option<u16>,
+    /// [protocol v2] Measured battery level value in decivolts (precise value)
+    pub battery_level: Option<u16>,
 }
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
@@ -293,7 +293,7 @@ pub struct DataSnapshot {
     pub patient_valve_position: u8,
     /// Current blower speed (no unit)
     pub blower_rpm: u8,
-    /// Current battery level in volts
+    /// Current battery level in volts (imprecise value)
     pub battery_level: u8,
     /// [protocol v2] Inspiratory flow in cL/min (SLM * 100)
     pub inspiratory_flow: Option<i16>,
@@ -383,8 +383,8 @@ pub struct MachineStateSnapshot {
     pub inspiratory_duration_command: Option<u16>,
     /// [protocol v2] Measured duration of inspiration in ms
     pub previous_inspiratory_duration: Option<u16>,
-    /// [protocol v2] Measured battery level value in decivolts
-    pub battery_level_value: Option<u16>,
+    /// [protocol v2] Measured battery level value in decivolts (precise value)
+    pub battery_level: Option<u16>,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped

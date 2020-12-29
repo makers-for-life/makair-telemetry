@@ -156,7 +156,7 @@ named!(
             >> sep
             >> inspiratory_duration_command: be_u16
             >> sep
-            >> battery_level_value: be_u16
+            >> battery_level: be_u16
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
@@ -203,7 +203,7 @@ named!(
                     leak_alarm_threshold: Some(leak_alarm_threshold),
                     target_inspiratory_flow: Some(target_inspiratory_flow),
                     inspiratory_duration_command: Some(inspiratory_duration_command),
-                    battery_level_value: Some(battery_level_value),
+                    battery_level: Some(battery_level),
                 })
             })
     )
@@ -348,7 +348,7 @@ named!(
             >> sep
             >> previous_inspiratory_duration: be_u16
             >> sep
-            >> battery_level_value: be_u16
+            >> battery_level: be_u16
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -402,7 +402,7 @@ named!(
                 target_inspiratory_flow: Some(target_inspiratory_flow),
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 previous_inspiratory_duration: Some(previous_inspiratory_duration),
-                battery_level_value: Some(battery_level_value),
+                battery_level: Some(battery_level),
             }))
     )
 );
@@ -646,7 +646,7 @@ mod tests {
             leak_alarm_threshold in num::u16::ANY,
             target_inspiratory_flow in num::u8::ANY,
             inspiratory_duration_command in num::u16::ANY,
-            battery_level_value in num::u16::ANY,
+            battery_level in num::u16::ANY,
         ) {
             let msg = StoppedMessage {
                 telemetry_version: VERSION,
@@ -680,7 +680,7 @@ mod tests {
                 leak_alarm_threshold: Some(leak_alarm_threshold),
                 target_inspiratory_flow: Some(target_inspiratory_flow),
                 inspiratory_duration_command: Some(inspiratory_duration_command),
-                battery_level_value: Some(battery_level_value),
+                battery_level: Some(battery_level),
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -749,7 +749,7 @@ mod tests {
                 b"\t",
                 &msg.inspiratory_duration_command.unwrap_or_default().to_be_bytes(),
                 b"\t",
-                &msg.battery_level_value.unwrap_or_default().to_be_bytes(),
+                &msg.battery_level.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 
@@ -873,7 +873,7 @@ mod tests {
             target_inspiratory_flow in num::u8::ANY,
             inspiratory_duration_command in num::u16::ANY,
             previous_inspiratory_duration in num::u16::ANY,
-            battery_level_value in num::u16::ANY,
+            battery_level in num::u16::ANY,
         ) {
             let msg = MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -915,7 +915,7 @@ mod tests {
                 target_inspiratory_flow: Some(target_inspiratory_flow),
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 previous_inspiratory_duration: Some(previous_inspiratory_duration),
-                battery_level_value: Some(battery_level_value),
+                battery_level: Some(battery_level),
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -1001,7 +1001,7 @@ mod tests {
                 b"\t",
                 &msg.previous_inspiratory_duration.unwrap_or_default().to_be_bytes(),
                 b"\t",
-                &msg.battery_level_value.unwrap_or_default().to_be_bytes(),
+                &msg.battery_level.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 

@@ -157,6 +157,8 @@ named!(
             >> inspiratory_duration_command: be_u16
             >> sep
             >> battery_level: be_u16
+            >> sep
+            >> current_alarm_codes: u8_array
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
@@ -204,6 +206,7 @@ named!(
                     target_inspiratory_flow: Some(target_inspiratory_flow),
                     inspiratory_duration_command: Some(inspiratory_duration_command),
                     battery_level: Some(battery_level),
+                    current_alarm_codes: Some(current_alarm_codes),
                 })
             })
     )
@@ -647,6 +650,7 @@ mod tests {
             target_inspiratory_flow in num::u8::ANY,
             inspiratory_duration_command in num::u16::ANY,
             battery_level in num::u16::ANY,
+            current_alarm_codes in collection::vec(0u8.., 0..100),
         ) {
             let msg = StoppedMessage {
                 telemetry_version: VERSION,
@@ -681,6 +685,7 @@ mod tests {
                 target_inspiratory_flow: Some(target_inspiratory_flow),
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 battery_level: Some(battery_level),
+                current_alarm_codes: Some(current_alarm_codes),
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -750,6 +755,9 @@ mod tests {
                 &msg.inspiratory_duration_command.unwrap_or_default().to_be_bytes(),
                 b"\t",
                 &msg.battery_level.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &[msg.current_alarm_codes.clone().unwrap_or_default().len() as u8],
+                &msg.current_alarm_codes.clone().unwrap_or_default(),
                 b"\n",
             ]);
 

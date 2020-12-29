@@ -263,6 +263,8 @@ pub struct StoppedMessage {
     pub inspiratory_duration_command: Option<u16>,
     /// [protocol v2] Measured battery level value in decivolts (precise value)
     pub battery_level: Option<u16>,
+    /// [protocol v2] Codes of the alarms that are currently triggered
+    pub current_alarm_codes: Option<Vec<u8>>,
 }
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)

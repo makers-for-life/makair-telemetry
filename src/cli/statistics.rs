@@ -179,6 +179,7 @@ mod tests {
             target_inspiratory_flow: None,
             inspiratory_duration_command: None,
             battery_level: None,
+            current_alarm_codes: None,
         }));
 
         assert_eq!(compute_duration(vect), 100);
@@ -310,6 +311,7 @@ mod tests {
             target_inspiratory_flow: None,
             inspiratory_duration_command: None,
             battery_level: None,
+            current_alarm_codes: None,
         }));
 
         assert_eq!(compute_duration(vect), 110);

@@ -138,6 +138,7 @@ named!(
                     target_inspiratory_flow: None,
                     inspiratory_duration_command: None,
                     battery_level: None,
+                    current_alarm_codes: None,
                 })
             })
     )
@@ -520,6 +521,7 @@ mod tests {
                 target_inspiratory_flow: None,
                 inspiratory_duration_command: None,
                 battery_level: None,
+                current_alarm_codes: None,
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp

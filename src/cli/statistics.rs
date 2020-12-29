@@ -135,6 +135,7 @@ mod tests {
                 target_inspiratory_flow: None,
                 inspiratory_duration_command: None,
                 previous_inspiratory_duration: None,
+                battery_level_value: None,
             },
         )];
 
@@ -177,6 +178,7 @@ mod tests {
             leak_alarm_threshold: None,
             target_inspiratory_flow: None,
             inspiratory_duration_command: None,
+            battery_level_value: None,
         }));
 
         assert_eq!(compute_duration(vect), 100);
@@ -271,6 +273,7 @@ mod tests {
                 target_inspiratory_flow: None,
                 inspiratory_duration_command: None,
                 previous_inspiratory_duration: None,
+                battery_level_value: None,
             },
         ));
 
@@ -306,6 +309,7 @@ mod tests {
             leak_alarm_threshold: None,
             target_inspiratory_flow: None,
             inspiratory_duration_command: None,
+            battery_level_value: None,
         }));
 
         assert_eq!(compute_duration(vect), 110);

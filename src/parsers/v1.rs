@@ -137,6 +137,7 @@ named!(
                     leak_alarm_threshold: None,
                     target_inspiratory_flow: None,
                     inspiratory_duration_command: None,
+                    battery_level_value: None,
                 })
             })
     )
@@ -277,6 +278,7 @@ named!(
                 target_inspiratory_flow: None,
                 inspiratory_duration_command: None,
                 previous_inspiratory_duration: None,
+                battery_level_value: None,
             }))
     )
 );
@@ -517,6 +519,7 @@ mod tests {
                 leak_alarm_threshold: None,
                 target_inspiratory_flow: None,
                 inspiratory_duration_command: None,
+                battery_level_value: None,
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -665,6 +668,7 @@ mod tests {
                 target_inspiratory_flow: None,
                 inspiratory_duration_command: None,
                 previous_inspiratory_duration: None,
+                battery_level_value: None,
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in makair-firmware/srcs/telemetry.cpp

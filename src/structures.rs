@@ -261,7 +261,7 @@ pub struct StoppedMessage {
     pub target_inspiratory_flow: Option<u8>,
     /// [protocol v2] Requested duration of inspiration in ms
     pub inspiratory_duration_command: Option<u16>,
-    /// [protocol v2] Measured battery level value in decivolts (precise value)
+    /// [protocol v2] Measured battery level value in centivolts (precise value)
     pub battery_level: Option<u16>,
     /// [protocol v2] Codes of the alarms that are currently triggered
     pub current_alarm_codes: Option<Vec<u8>>,
@@ -385,7 +385,7 @@ pub struct MachineStateSnapshot {
     pub inspiratory_duration_command: Option<u16>,
     /// [protocol v2] Measured duration of inspiration in ms
     pub previous_inspiratory_duration: Option<u16>,
-    /// [protocol v2] Measured battery level value in decivolts (precise value)
+    /// [protocol v2] Measured battery level value in centivolts (precise value)
     pub battery_level: Option<u16>,
 }
 

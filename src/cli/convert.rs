@@ -23,10 +23,7 @@ impl std::str::FromStr for Format {
     }
 }
 
-pub fn telemetry_to_gts<'a>(
-    message: &'a TelemetryMessage,
-    source_label: &Option<String>,
-) -> String {
+pub fn telemetry_to_gts(message: &TelemetryMessage, source_label: &Option<String>) -> String {
     let mut output = vec![];
     match message {
         TelemetryMessage::BootMessage(msg) => {

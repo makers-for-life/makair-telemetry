@@ -94,9 +94,9 @@ impl TryFrom<u8> for AlarmPriority {
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 #[allow(non_camel_case_types)]
 pub enum VentilationMode {
-    /// PC-CMV (default)
+    /// PC-CMV
     PC_CMV = 1,
-    /// PC-AC
+    /// PC-AC (default)
     PC_AC = 2,
     /// VC-CMV
     VC_CMV = 3,
@@ -146,7 +146,7 @@ impl TryFrom<u8> for VentilationMode {
 
 impl Default for VentilationMode {
     fn default() -> Self {
-        Self::PC_CMV
+        Self::PC_AC
     }
 }
 

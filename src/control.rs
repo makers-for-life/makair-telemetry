@@ -15,8 +15,8 @@ pub enum ControlSetting {
     /// Heartbeat used for the RPi watchdog feature (value is ignored except for the special value `DISABLE_RPI_WATCHDOG` which disables watchdog)
     Heartbeat = 0,
     /// Ventilation mode, must be one of the following:
-    /// - `1` → PC-CMV (default)
-    /// - `2` → PC-AC
+    /// - `1` → PC-CMV
+    /// - `2` → PC-AC (default)
     /// - `3` → VC-CMV
     /// - `4` → PC-VSAI
     /// - `5` → VC-AC

@@ -6,11 +6,11 @@
 use std::convert::TryFrom;
 use std::ops::RangeInclusive;
 
-/// An ISO 639-1 language code to be used to choose language for the ControlUI
+/// An ISO 639-1 language code to be used to choose language for the whole system
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct UiLocale(u16);
+pub struct Locale(u16);
 
-impl UiLocale {
+impl Locale {
     /// Language code as a u16
     pub fn as_u16(&self) -> u16 {
         self.0
@@ -30,27 +30,27 @@ impl UiLocale {
     }
 }
 
-impl TryFrom<&str> for UiLocale {
+impl TryFrom<&str> for Locale {
     type Error = &'static str;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         if value.len() == 2 {
             let bytes = value.as_bytes();
             let w = ((bytes[0] as u16) << 8) | bytes[1] as u16;
-            Ok(UiLocale(w))
+            Ok(Locale(w))
         } else {
             Err("language code must be exactly 2 characters, according to ISO 639-1")
         }
     }
 }
 
-impl Default for UiLocale {
+impl Default for Locale {
     fn default() -> Self {
-        UiLocale::try_from("en").unwrap()
+        Locale::try_from("en").unwrap()
     }
 }
 
-impl std::fmt::Display for UiLocale {
+impl std::fmt::Display for Locale {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let bytes = self.0.to_be_bytes();
         let str = String::from_utf8_lossy(&bytes);
@@ -60,16 +60,16 @@ impl std::fmt::Display for UiLocale {
 
 #[cfg(test)]
 mod tests {
-    use super::UiLocale;
+    use super::Locale;
 
     use proptest::prelude::*;
     use std::convert::TryFrom;
 
     const FR: u16 = 0x6672;
 
-    fn ui_locale_strategy() -> impl Strategy<Value = UiLocale> {
+    fn ui_locale_strategy() -> impl Strategy<Value = Locale> {
         proptest::num::u16::ANY.prop_filter_map("Invalid UI locale code", |code| {
-            let ui_locale = UiLocale(code);
+            let ui_locale = Locale(code);
             if ui_locale.to_string().is_ascii() {
                 Some(ui_locale)
             } else {
@@ -80,29 +80,29 @@ mod tests {
 
     #[test]
     fn from_str_fr() {
-        assert_eq!(UiLocale::try_from("fr").map(|code| code.as_u16()), Ok(FR));
+        assert_eq!(Locale::try_from("fr").map(|code| code.as_u16()), Ok(FR));
     }
 
     #[test]
     fn from_str_empty() {
-        assert!(UiLocale::try_from("").is_err())
+        assert!(Locale::try_from("").is_err())
     }
 
     #[test]
     fn from_str_too_long() {
-        assert!(UiLocale::try_from("fra").is_err())
+        assert!(Locale::try_from("fra").is_err())
     }
 
     #[test]
     fn to_str() {
-        assert_eq!(UiLocale(FR).to_string().as_str(), "fr")
+        assert_eq!(Locale(FR).to_string().as_str(), "fr")
     }
 
     proptest! {
         #[test]
         fn back_and_forth(ui_locale in ui_locale_strategy()) {
             let str = ui_locale.to_string();
-            assert_eq!(UiLocale::try_from(str.as_str()).map(|code| code.as_u16()), Ok(ui_locale.as_u16()))
+            assert_eq!(Locale::try_from(str.as_str()).map(|code| code.as_u16()), Ok(ui_locale.as_u16()))
         }
     }
 }

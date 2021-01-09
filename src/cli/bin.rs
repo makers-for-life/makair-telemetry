@@ -320,6 +320,7 @@ fn stats(cfg: Stats) {
     let mut nb_stopped_messages: u32 = 0;
     let mut nb_control_ack: u32 = 0;
     let mut nb_fatal_error: u32 = 0;
+    let mut nb_eol_test_snapshots: u32 = 0;
 
     loop {
         match rx.try_recv() {
@@ -347,6 +348,9 @@ fn stats(cfg: Stats) {
                         TelemetryMessage::FatalError(_) => {
                             nb_fatal_error += 1;
                         }
+                        TelemetryMessage::EolTestSnapshot(_) => {
+                            nb_eol_test_snapshots += 1;
+                        }
                     }
                     telemetry_messages.push(message);
                 }
@@ -363,6 +367,7 @@ fn stats(cfg: Stats) {
                 println!("Nb StoppedMessage: {}", nb_stopped_messages);
                 println!("Nb ControlAck: {}", nb_control_ack);
                 println!("Nb FatalError: {}", nb_fatal_error);
+                println!("Nb EolTestSnapshot: {}", nb_eol_test_snapshots);
                 println!(
                     "Estimated duration: {:.3} seconds",
                     compute_duration(telemetry_messages) as f32 / 1000_f32

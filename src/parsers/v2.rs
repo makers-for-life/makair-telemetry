@@ -108,6 +108,30 @@ fn fatal_error_details(input: &[u8]) -> IResult<&[u8], FatalErrorDetails> {
 }
 
 named!(
+    eol_test_step<EolTestStep>,
+    map_res!(be_u8, |step| EolTestStep::try_from(step))
+);
+
+fn eol_test_snapshot_content(input: &[u8]) -> IResult<&[u8], EolTestSnapshotContent> {
+    use nom::error::{Error, ErrorKind};
+    use nom::Err::Failure;
+    use EolTestSnapshotContent::*;
+
+    let (input, content_type) = be_u8(input)?;
+    match content_type {
+        0 => Ok((input, InProgress)),
+        1 => {
+            do_parse!(
+                input,
+                sep >> error: u8_array >> (Error(String::from_utf8_lossy(&error).into_owned()))
+            )
+        }
+        2 => Ok((input, Success)),
+        _ => Err(Failure(Error::new(input, ErrorKind::Switch))),
+    }
+}
+
+named!(
     boot<TelemetryMessage>,
     do_parse!(
         tag!("B:")
@@ -579,6 +603,37 @@ named!(
     )
 );
 
+named!(
+    eol_test_snapshot<TelemetryMessage>,
+    do_parse!(
+        tag!("L:")
+            >> tag!([VERSION])
+            >> software_version_len: be_u8
+            >> software_version:
+                map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
+                    bytes
+                ))
+            >> device_id1: be_u32
+            >> device_id2: be_u32
+            >> device_id3: be_u32
+            >> sep
+            >> systick: be_u64
+            >> sep
+            >> current_step: eol_test_step
+            >> sep
+            >> content: eol_test_snapshot_content
+            >> end
+            >> (TelemetryMessage::EolTestSnapshot(EolTestSnapshot {
+                telemetry_version: VERSION,
+                version: software_version.to_string(),
+                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                systick,
+                current_step,
+                content,
+            }))
+    )
+);
+
 /// Transform bytes into a structured telemetry message
 ///
 /// * `input` - Bytes to parse.
@@ -593,6 +648,7 @@ pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<
         alarm_trap,
         control_ack,
         fatal_error,
+        eol_test_snapshot,
     ))(input)
     .map_err(nom::Err::convert)
 }
@@ -686,6 +742,26 @@ mod tests {
     prop_compose! {
         fn fatal_error_details_inconsistent_pressure_strategy()(pressure in num::u16::ANY) -> FatalErrorDetails {
             FatalErrorDetails::InconsistentPressure { pressure }
+        }
+    }
+
+    fn eol_test_step_strategy() -> impl Strategy<Value = EolTestStep> {
+        proptest::num::u8::ANY
+            .prop_filter_map("Invalid test step", |n| EolTestStep::try_from(n).ok())
+    }
+
+    fn eol_test_snapshot_content_strategy() -> BoxedStrategy<EolTestSnapshotContent> {
+        prop_oneof![
+            Just(EolTestSnapshotContent::InProgress),
+            eol_test_snapshot_content_error_strategy(),
+            Just(EolTestSnapshotContent::Success),
+        ]
+        .boxed()
+    }
+
+    prop_compose! {
+        fn eol_test_snapshot_content_error_strategy()(reason in ".+") -> EolTestSnapshotContent {
+            EolTestSnapshotContent::Error(reason)
         }
     }
 
@@ -1324,6 +1400,59 @@ mod tests {
 
             let expected = TelemetryMessage::FatalError(msg);
             assert_eq!(nom::dbg_dmp(fatal_error, "fatal_error")(input), Ok((&[][..], expected)));
+        }
+    }
+
+    proptest! {
+        #[test]
+        fn test_eol_test_snapshot_message_parser(
+            version in ".*",
+            device_id1 in (0u32..),
+            device_id2 in (0u32..),
+            device_id3 in (0u32..),
+            systick in (0u64..),
+            current_step in eol_test_step_strategy(),
+            content in eol_test_snapshot_content_strategy(),
+        ) {
+            let msg = EolTestSnapshot {
+                telemetry_version: VERSION,
+                version,
+                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                systick,
+                current_step,
+                content,
+            };
+
+            let eol_test_snapshot_content: Vec<u8> = match msg.content {
+                EolTestSnapshotContent::InProgress => vec![0],
+                EolTestSnapshotContent::Error(ref reason) => flat(&[
+                    &[1],
+                    b"\t",
+                    &[reason.len() as u8],
+                    &reason.as_bytes(),
+                ]),
+                EolTestSnapshotContent::Success => vec![2],
+            };
+
+            let input = &flat(&[
+                b"L:",
+                &[VERSION],
+                &[msg.version.len() as u8],
+                &msg.version.as_bytes(),
+                &device_id1.to_be_bytes(),
+                &device_id2.to_be_bytes(),
+                &device_id3.to_be_bytes(),
+                b"\t",
+                &msg.systick.to_be_bytes(),
+                b"\t",
+                &[current_step as u8],
+                b"\t",
+                &eol_test_snapshot_content,
+                b"\n",
+            ]);
+
+            let expected = TelemetryMessage::EolTestSnapshot(msg);
+            assert_eq!(nom::dbg_dmp(eol_test_snapshot, "eol_test_snapshot")(input), Ok((&[][..], expected)));
         }
     }
 }

@@ -287,6 +287,12 @@ pub fn display_message(message: TelemetryChannelType) {
         }))) => {
             info!("***** FATAL ERROR ***** {:?}", &error);
         }
+        Ok(TelemetryMessageOrError::Message(TelemetryMessage::EolTestSnapshot(_))) => {
+            info!(
+                "    {:?}",
+                &message.expect("failed unwrapping message for EOL test snapshot")
+            );
+        }
         Ok(TelemetryMessageOrError::Error(e)) => {
             warn!("a high-level error occurred: {:?}", e);
         }

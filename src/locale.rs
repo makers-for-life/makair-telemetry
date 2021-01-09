@@ -21,7 +21,7 @@ impl UiLocale {
         self.0.into()
     }
 
-    /// Allowed value bounds
+    /// Allowed value bounds (this is not really correct/useful)
     pub fn bounds() -> RangeInclusive<usize> {
         RangeInclusive::new(
             Self::try_from("aa").unwrap().as_usize(),
@@ -50,28 +50,59 @@ impl Default for UiLocale {
     }
 }
 
+impl std::fmt::Display for UiLocale {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let bytes = self.0.to_be_bytes();
+        let str = String::from_utf8_lossy(&bytes);
+        f.write_str(&str)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::UiLocale;
 
+    use proptest::prelude::*;
     use std::convert::TryFrom;
 
-    #[test]
-    fn fr() {
-        let expected: u16 = 0x6672;
-        assert_eq!(
-            UiLocale::try_from("fr").map(|code| code.as_u16()),
-            Ok(expected)
-        );
+    const FR: u16 = 0x6672;
+
+    fn ui_locale_strategy() -> impl Strategy<Value = UiLocale> {
+        proptest::num::u16::ANY.prop_filter_map("Invalid UI locale code", |code| {
+            let ui_locale = UiLocale(code);
+            if ui_locale.to_string().is_ascii() {
+                Some(ui_locale)
+            } else {
+                None
+            }
+        })
     }
 
     #[test]
-    fn empty() {
+    fn from_str_fr() {
+        assert_eq!(UiLocale::try_from("fr").map(|code| code.as_u16()), Ok(FR));
+    }
+
+    #[test]
+    fn from_str_empty() {
         assert!(UiLocale::try_from("").is_err())
     }
 
     #[test]
-    fn too_long() {
+    fn from_str_too_long() {
         assert!(UiLocale::try_from("fra").is_err())
+    }
+
+    #[test]
+    fn to_str() {
+        assert_eq!(UiLocale(FR).to_string().as_str(), "fr")
+    }
+
+    proptest! {
+        #[test]
+        fn back_and_forth(ui_locale in ui_locale_strategy()) {
+            let str = ui_locale.to_string();
+            assert_eq!(UiLocale::try_from(str.as_str()).map(|code| code.as_u16()), Ok(ui_locale.as_u16()))
+        }
     }
 }

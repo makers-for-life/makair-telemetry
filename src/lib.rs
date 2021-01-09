@@ -14,6 +14,8 @@
 pub mod alarm;
 /// Structures to represent control messages
 pub mod control;
+/// Tools to manipulate ISO 639-1 language codes to be used in the control protocol
+pub mod locale;
 /// Underlying parsers for telemetry messages
 pub mod parsers;
 /// Structures to represent telemetry messages

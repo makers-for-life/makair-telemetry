@@ -5,6 +5,8 @@
 
 use std::ops::RangeInclusive;
 
+use crate::locale::UiLocale;
+
 /// Special value that can be used in a heartbeat control message to disable RPi watchdog
 pub const DISABLE_RPI_WATCHDOG: u16 = 43_690;
 
@@ -71,6 +73,8 @@ pub enum ControlSetting {
     TargetInspiratoryFlow = 25,
     /// Duration of inspiration in ms (value bounds must be between 200 and 3000)
     InspiratoryDuration = 26,
+    /// Language of the UI; this should be two letters (see [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1)) in ASCII representation as two u8
+    UiLocale = 27,
 }
 
 impl ControlSetting {
@@ -105,6 +109,7 @@ impl ControlSetting {
             Self::LeakAlarmThreshold => 200,
             Self::TargetInspiratoryFlow => 40,
             Self::InspiratoryDuration => 800,
+            Self::UiLocale => UiLocale::default().as_usize(),
         }
     }
 
@@ -139,6 +144,7 @@ impl ControlSetting {
             Self::LeakAlarmThreshold => RangeInclusive::new(0, 10_000),
             Self::TargetInspiratoryFlow => RangeInclusive::new(5, 80),
             Self::InspiratoryDuration => RangeInclusive::new(200, 3_000),
+            Self::UiLocale => UiLocale::bounds(),
         }
     }
 }
@@ -175,6 +181,7 @@ impl std::convert::TryFrom<u8> for ControlSetting {
             24 => Ok(ControlSetting::LeakAlarmThreshold),
             25 => Ok(ControlSetting::TargetInspiratoryFlow),
             26 => Ok(ControlSetting::InspiratoryDuration),
+            27 => Ok(ControlSetting::UiLocale),
             _ => Err("Invalid setting number"),
         }
     }

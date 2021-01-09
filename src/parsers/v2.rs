@@ -53,6 +53,60 @@ named!(
     map_res!(be_u8, |num| VentilationMode::try_from(num))
 );
 
+fn fatal_error_details(input: &[u8]) -> IResult<&[u8], FatalErrorDetails> {
+    use nom::error::{Error, ErrorKind};
+    use nom::Err::Failure;
+    use FatalErrorDetails::*;
+
+    let (input, error_type) = be_u8(input)?;
+    match error_type {
+        1 => Ok((input, WatchdogRestart)),
+        2 => {
+            do_parse!(
+                input,
+                sep >> pressure_offset: be_i16
+                    >> sep
+                    >> min_pressure: be_i16
+                    >> sep
+                    >> max_pressure: be_i16
+                    >> sep
+                    >> flow_at_starting: be_i16
+                    >> sep
+                    >> flow_with_blower_on: be_i16
+                    >> (CalibrationError {
+                        pressure_offset,
+                        min_pressure,
+                        max_pressure,
+                        flow_at_starting: if flow_at_starting == i16::MAX {
+                            None
+                        } else {
+                            Some(flow_at_starting)
+                        },
+                        flow_with_blower_on: if flow_with_blower_on == i16::MAX {
+                            None
+                        } else {
+                            Some(flow_with_blower_on)
+                        },
+                    })
+            )
+        }
+        3 => {
+            do_parse!(
+                input,
+                sep >> battery_level: be_u16 >> (BatteryDeeplyDischarged { battery_level })
+            )
+        }
+        4 => Ok((input, MassFlowMeterError)),
+        5 => {
+            do_parse!(
+                input,
+                sep >> pressure: be_u16 >> (InconsistentPressure { pressure })
+            )
+        }
+        _ => Err(Failure(Error::new(input, ErrorKind::Switch))),
+    }
+}
+
 named!(
     boot<TelemetryMessage>,
     do_parse!(
@@ -497,6 +551,34 @@ named!(
     )
 );
 
+named!(
+    fatal_error<TelemetryMessage>,
+    do_parse!(
+        tag!("E:")
+            >> tag!([VERSION])
+            >> software_version_len: be_u8
+            >> software_version:
+                map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
+                    bytes
+                ))
+            >> device_id1: be_u32
+            >> device_id2: be_u32
+            >> device_id3: be_u32
+            >> sep
+            >> systick: be_u64
+            >> sep
+            >> error: fatal_error_details
+            >> end
+            >> (TelemetryMessage::FatalError(FatalError {
+                telemetry_version: VERSION,
+                version: software_version.to_string(),
+                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                systick,
+                error,
+            }))
+    )
+);
+
 /// Transform bytes into a structured telemetry message
 ///
 /// * `input` - Bytes to parse.
@@ -510,6 +592,7 @@ pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<
         machine_state_snapshot,
         alarm_trap,
         control_ack,
+        fatal_error,
     ))(input)
     .map_err(nom::Err::convert)
 }
@@ -569,6 +652,41 @@ mod tests {
 
     fn ventilation_mode_value(m: &VentilationMode) -> u8 {
         m.into()
+    }
+
+    fn fatal_error_details_strategy() -> BoxedStrategy<FatalErrorDetails> {
+        prop_oneof![
+            Just(FatalErrorDetails::WatchdogRestart),
+            fatal_error_details_calibration_error_strategy(),
+            fatal_error_details_battery_deeply_discharged_strategy(),
+            Just(FatalErrorDetails::MassFlowMeterError),
+            fatal_error_details_inconsistent_pressure_strategy(),
+        ]
+        .boxed()
+    }
+
+    prop_compose! {
+        fn fatal_error_details_calibration_error_strategy()(
+            pressure_offset in num::i16::ANY,
+            min_pressure in num::i16::ANY,
+            max_pressure in num::i16::ANY,
+            flow_at_starting in option::of(num::i16::ANY),
+            flow_with_blower_on in option::of(num::i16::ANY),
+        ) -> FatalErrorDetails {
+            FatalErrorDetails::CalibrationError { pressure_offset, min_pressure, max_pressure, flow_at_starting, flow_with_blower_on }
+        }
+    }
+
+    prop_compose! {
+        fn fatal_error_details_battery_deeply_discharged_strategy()(battery_level in num::u16::ANY) -> FatalErrorDetails {
+            FatalErrorDetails::BatteryDeeplyDischarged { battery_level }
+        }
+    }
+
+    prop_compose! {
+        fn fatal_error_details_inconsistent_pressure_strategy()(pressure in num::u16::ANY) -> FatalErrorDetails {
+            FatalErrorDetails::InconsistentPressure { pressure }
+        }
     }
 
     proptest! {
@@ -1134,6 +1252,78 @@ mod tests {
 
             let expected = TelemetryMessage::ControlAck(msg);
             assert_eq!(nom::dbg_dmp(control_ack, "control_ack")(input), Ok((&[][..], expected)));
+        }
+    }
+
+    proptest! {
+        #[test]
+        fn test_fatal_error_message_parser(
+            version in ".*",
+            device_id1 in (0u32..),
+            device_id2 in (0u32..),
+            device_id3 in (0u32..),
+            systick in (0u64..),
+            error in fatal_error_details_strategy(),
+        ) {
+            let msg = FatalError {
+                telemetry_version: VERSION,
+                version,
+                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                systick,
+                error,
+            };
+
+            let fatal_error_details: Vec<u8> = match msg.error {
+                FatalErrorDetails::WatchdogRestart => vec![1],
+                FatalErrorDetails::CalibrationError {
+                    pressure_offset,
+                    min_pressure,
+                    max_pressure,
+                    flow_at_starting,
+                    flow_with_blower_on
+                }  => flat(&[
+                    &[2],
+                    b"\t",
+                    &pressure_offset.to_be_bytes(),
+                    b"\t",
+                    &min_pressure.to_be_bytes(),
+                    b"\t",
+                    &max_pressure.to_be_bytes(),
+                    b"\t",
+                    &flow_at_starting.unwrap_or(i16::MAX).to_be_bytes(),
+                    b"\t",
+                    &flow_with_blower_on.unwrap_or(i16::MAX).to_be_bytes(),
+                ]),
+                FatalErrorDetails::BatteryDeeplyDischarged { battery_level } => flat(&[
+                    &[3],
+                    b"\t",
+                    &battery_level.to_be_bytes(),
+                ]),
+                FatalErrorDetails::MassFlowMeterError => vec![4],
+                FatalErrorDetails::InconsistentPressure { pressure } => flat(&[
+                    &[5],
+                    b"\t",
+                    &pressure.to_be_bytes(),
+                ]),
+            };
+
+            let input = &flat(&[
+                b"E:",
+                &[VERSION],
+                &[msg.version.len() as u8],
+                &msg.version.as_bytes(),
+                &device_id1.to_be_bytes(),
+                &device_id2.to_be_bytes(),
+                &device_id3.to_be_bytes(),
+                b"\t",
+                &msg.systick.to_be_bytes(),
+                b"\t",
+                &fatal_error_details,
+                b"\n",
+            ]);
+
+            let expected = TelemetryMessage::FatalError(msg);
+            assert_eq!(nom::dbg_dmp(fatal_error, "fatal_error")(input), Ok((&[][..], expected)));
         }
     }
 }

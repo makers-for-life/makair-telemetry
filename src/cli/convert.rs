@@ -162,6 +162,9 @@ pub fn telemetry_to_gts(message: &TelemetryMessage, source_label: &Option<String
         TelemetryMessage::ControlAck(_) => {
             // Do nothing: we don't want this kind of messages
         }
+        TelemetryMessage::FatalError(_) => {
+            // Do nothing: we don't want this kind of messages
+        }
     };
     output.iter().fold(String::new(), |mut acc, cur| {
         acc.push_str(cur);

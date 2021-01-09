@@ -175,6 +175,39 @@ impl VentilationMode {
     }
 }
 
+/// Details of fatal errors
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+pub enum FatalErrorDetails {
+    /// MCU was restarted by watchdog
+    WatchdogRestart,
+    /// Calibration failed
+    CalibrationError {
+        /// Measured pressure offset in mmH2O
+        pressure_offset: i16,
+        /// Minimum presure measured during calibration in mmH2O
+        min_pressure: i16,
+        /// Maximum presure measured during calibration in mmH2O
+        max_pressure: i16,
+        /// Air flow measured at starting in cL/min (SLM * 100)
+        flow_at_starting: Option<i16>,
+        /// Air flow measured with blower ON in cL/min (SLM * 100)
+        flow_with_blower_on: Option<i16>,
+    },
+    /// Battery is too discharged
+    BatteryDeeplyDischarged {
+        /// Battery level in centivolts
+        battery_level: u16,
+    },
+    /// Could not read mass flow meter
+    MassFlowMeterError,
+    /// Read an inconsistent pressure
+    InconsistentPressure {
+        /// Measured pressure in ùùH2O
+        pressure: u16,
+    },
+}
+
 /// A telemetry message that is sent once every time the MCU boots
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
@@ -445,6 +478,22 @@ pub struct ControlAck {
     pub value: u16,
 }
 
+/// [protocol v2] A message sent when a fatal error occurs
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+pub struct FatalError {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
+    /// Version of the MCU firmware
+    pub version: String,
+    /// Internal ID of the MCU
+    pub device_id: String,
+    /// Number of microseconds since the MCU booted
+    pub systick: u64,
+    /// Details of the error
+    pub error: FatalErrorDetails,
+}
+
 /// Supported telemetry messages
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
@@ -462,6 +511,8 @@ pub enum TelemetryMessage {
     AlarmTrap(AlarmTrap),
     /// An ACK message that is sent every time a setting is changed using the control protocol
     ControlAck(ControlAck),
+    /// [protocol v2] A message sent when a fatal error occurs
+    FatalError(FatalError),
 }
 
 impl TelemetryMessage {
@@ -486,6 +537,9 @@ impl TelemetryMessage {
             Self::ControlAck(ControlAck {
                 telemetry_version, ..
             }) => telemetry_version,
+            Self::FatalError(FatalError {
+                telemetry_version, ..
+            }) => telemetry_version,
         };
         *val
     }
@@ -499,6 +553,7 @@ impl TelemetryMessage {
             Self::MachineStateSnapshot(MachineStateSnapshot { version, .. }) => version,
             Self::AlarmTrap(AlarmTrap { version, .. }) => version,
             Self::ControlAck(ControlAck { version, .. }) => version,
+            Self::FatalError(FatalError { version, .. }) => version,
         };
         val.clone()
     }
@@ -512,6 +567,7 @@ impl TelemetryMessage {
             Self::MachineStateSnapshot(MachineStateSnapshot { device_id, .. }) => device_id,
             Self::AlarmTrap(AlarmTrap { device_id, .. }) => device_id,
             Self::ControlAck(ControlAck { device_id, .. }) => device_id,
+            Self::FatalError(FatalError { device_id, .. }) => device_id,
         };
         val.clone()
     }
@@ -525,6 +581,7 @@ impl TelemetryMessage {
             Self::MachineStateSnapshot(MachineStateSnapshot { systick, .. }) => systick,
             Self::AlarmTrap(AlarmTrap { systick, .. }) => systick,
             Self::ControlAck(ControlAck { systick, .. }) => systick,
+            Self::FatalError(FatalError { systick, .. }) => systick,
         };
         *val
     }

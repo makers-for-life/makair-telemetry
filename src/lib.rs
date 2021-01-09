@@ -281,6 +281,12 @@ pub fn display_message(message: TelemetryChannelType) {
         }))) => {
             info!("← {:?} = {}", &setting, &value);
         }
+        Ok(TelemetryMessageOrError::Message(TelemetryMessage::FatalError(FatalError {
+            error,
+            ..
+        }))) => {
+            info!("***** FATAL ERROR ***** {:?}", &error);
+        }
         Ok(TelemetryMessageOrError::Error(e)) => {
             warn!("a high-level error occurred: {:?}", e);
         }

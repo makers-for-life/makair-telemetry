@@ -386,6 +386,8 @@ pub struct StoppedMessage {
     pub battery_level: Option<u16>,
     /// [protocol v2] Codes of the alarms that are currently triggered
     pub current_alarm_codes: Option<Vec<u8>>,
+    /// [protocol v2] Patient's height in centimeters
+    pub patient_height: Option<u8>,
 }
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
@@ -508,6 +510,8 @@ pub struct MachineStateSnapshot {
     pub previous_inspiratory_duration: Option<u16>,
     /// [protocol v2] Measured battery level value in centivolts (precise value)
     pub battery_level: Option<u16>,
+    /// [protocol v2] Patient's height in centimeters
+    pub patient_height: Option<u8>,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped

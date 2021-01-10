@@ -75,6 +75,8 @@ pub enum ControlSetting {
     InspiratoryDuration = 26,
     /// Language of the UI; this should be two letters (see [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1)) in ASCII representation as two u8
     Locale = 27,
+    /// Patient's height in centimeters
+    PatientHeight = 28,
 }
 
 impl ControlSetting {
@@ -110,6 +112,7 @@ impl ControlSetting {
             Self::TargetInspiratoryFlow => 40,
             Self::InspiratoryDuration => 800,
             Self::Locale => Locale::default().as_usize(),
+            Self::PatientHeight => 160,
         }
     }
 
@@ -145,6 +148,7 @@ impl ControlSetting {
             Self::TargetInspiratoryFlow => RangeInclusive::new(5, 80),
             Self::InspiratoryDuration => RangeInclusive::new(200, 3_000),
             Self::Locale => Locale::bounds(),
+            Self::PatientHeight => RangeInclusive::new(100, 250),
         }
     }
 }
@@ -182,6 +186,7 @@ impl std::convert::TryFrom<u8> for ControlSetting {
             25 => Ok(ControlSetting::TargetInspiratoryFlow),
             26 => Ok(ControlSetting::InspiratoryDuration),
             27 => Ok(ControlSetting::Locale),
+            28 => Ok(ControlSetting::PatientHeight),
             _ => Err("Invalid setting number"),
         }
     }

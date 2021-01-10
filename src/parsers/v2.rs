@@ -237,6 +237,8 @@ named!(
             >> battery_level: be_u16
             >> sep
             >> current_alarm_codes: u8_array
+            >> sep
+            >> patient_height: be_u8
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
@@ -285,6 +287,7 @@ named!(
                     inspiratory_duration_command: Some(inspiratory_duration_command),
                     battery_level: Some(battery_level),
                     current_alarm_codes: Some(current_alarm_codes),
+                    patient_height: Some(patient_height),
                 })
             })
     )
@@ -430,6 +433,8 @@ named!(
             >> previous_inspiratory_duration: be_u16
             >> sep
             >> battery_level: be_u16
+            >> sep
+            >> patient_height: be_u8
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -484,6 +489,7 @@ named!(
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 previous_inspiratory_duration: Some(previous_inspiratory_duration),
                 battery_level: Some(battery_level),
+                patient_height: Some(patient_height),
             }))
     )
 );
@@ -845,6 +851,7 @@ mod tests {
             inspiratory_duration_command in num::u16::ANY,
             battery_level in num::u16::ANY,
             current_alarm_codes in collection::vec(0u8.., 0..100),
+            patient_height in num::u8::ANY,
         ) {
             let msg = StoppedMessage {
                 telemetry_version: VERSION,
@@ -880,6 +887,7 @@ mod tests {
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 battery_level: Some(battery_level),
                 current_alarm_codes: Some(current_alarm_codes),
+                patient_height: Some(patient_height),
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -952,6 +960,8 @@ mod tests {
                 b"\t",
                 &[msg.current_alarm_codes.clone().unwrap_or_default().len() as u8],
                 &msg.current_alarm_codes.clone().unwrap_or_default(),
+                b"\t",
+                &msg.patient_height.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 
@@ -1076,6 +1086,7 @@ mod tests {
             inspiratory_duration_command in num::u16::ANY,
             previous_inspiratory_duration in num::u16::ANY,
             battery_level in num::u16::ANY,
+            patient_height in num::u8::ANY,
         ) {
             let msg = MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -1118,6 +1129,7 @@ mod tests {
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 previous_inspiratory_duration: Some(previous_inspiratory_duration),
                 battery_level: Some(battery_level),
+                patient_height: Some(patient_height),
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -1204,6 +1216,8 @@ mod tests {
                 &msg.previous_inspiratory_duration.unwrap_or_default().to_be_bytes(),
                 b"\t",
                 &msg.battery_level.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.patient_height.unwrap_or_default().to_be_bytes(),
                 b"\n",
             ]);
 

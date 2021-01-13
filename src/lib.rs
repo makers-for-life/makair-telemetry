@@ -20,6 +20,8 @@ pub mod error;
 pub mod locale;
 /// Underlying parsers for telemetry messages
 pub mod parsers;
+/// Binary representation of telemtry messages
+pub mod serializers;
 /// Structures to represent telemetry messages
 pub mod structures;
 

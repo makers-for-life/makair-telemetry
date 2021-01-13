@@ -396,6 +396,7 @@ pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<
 mod tests {
     use super::super::tests::*;
     use super::*;
+    use crate::serializers::ToBytes;
     use proptest::bool;
     use proptest::collection;
     use proptest::option;
@@ -460,25 +461,9 @@ mod tests {
                 mode,
                 value128,
             };
-
-            // This needs to be consistent with sendBootMessage() defined in src/software/firmware/srcs/telemetry.cpp
-            let input = &flat(&[
-                b"B:\x01",
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &[mode_ordinal(&msg.mode)],
-                b"\t",
-                &[msg.value128],
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::BootMessage(msg);
+
             assert_eq!(nom::dbg_dmp(boot, "boot")(input), Ok((&[][..], expected)));
         }
     }
@@ -571,8 +556,8 @@ mod tests {
                 systick,
                 centile,
                 pressure: i16::try_from(pressure).unwrap_or(i16::MAX),
-                phase: phase_subphase.0.clone(),
-                subphase: Some(phase_subphase.1.clone()),
+                phase: phase_subphase.0,
+                subphase: Some(phase_subphase.1),
                 blower_valve_position,
                 patient_valve_position,
                 blower_rpm,
@@ -753,8 +738,8 @@ mod tests {
                 systick,
                 centile,
                 pressure: i16::try_from(pressure).unwrap_or(i16::MAX),
-                phase: phase_subphase.0.clone(),
-                subphase: Some(phase_subphase.1.clone()),
+                phase: phase_subphase.0,
+                subphase: Some(phase_subphase.1),
                 cycle,
                 alarm_code,
                 alarm_priority,

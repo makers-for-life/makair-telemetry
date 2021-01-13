@@ -670,6 +670,7 @@ pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<
 mod tests {
     use super::super::tests::*;
     use super::*;
+    use crate::serializers::ToBytes;
     use proptest::bool;
     use proptest::collection;
     use proptest::num;
@@ -797,26 +798,9 @@ mod tests {
                 mode,
                 value128,
             };
-
-            // This needs to be consistent with sendBootMessage() defined in src/software/firmware/srcs/telemetry.cpp
-            let input = &flat(&[
-                b"B:",
-                &[VERSION],
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &[mode_ordinal(&msg.mode)],
-                b"\t",
-                &[msg.value128],
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v2();
             let expected = TelemetryMessage::BootMessage(msg);
+
             assert_eq!(nom::dbg_dmp(boot, "boot")(input), Ok((&[][..], expected)));
         }
     }
@@ -1005,7 +989,7 @@ mod tests {
                 systick,
                 centile,
                 pressure,
-                phase: phase.clone(),
+                phase,
                 subphase: None,
                 blower_valve_position,
                 patient_valve_position,
@@ -1265,7 +1249,7 @@ mod tests {
                 systick,
                 centile,
                 pressure,
-                phase: phase.clone(),
+                phase,
                 subphase: None,
                 cycle,
                 alarm_code,

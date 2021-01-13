@@ -11,22 +11,22 @@ pub use crate::control::ControlSetting;
 use crate::locale::Locale;
 
 /// Variants of the MakAir firmware
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde-messages",
     derive(serde::Serialize, serde::Deserialize)
 )]
 pub enum Mode {
     /// Production mode
-    Production,
+    Production = 1,
     /// (obsolete) Qualification mode
-    Qualification,
+    Qualification = 2,
     /// (obsolete) Integration test mode
-    IntegrationTest,
+    IntegrationTest = 3,
 }
 
 /// Phases of the respiratory cycle
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde-messages",
     derive(serde::Serialize, serde::Deserialize)
@@ -39,7 +39,7 @@ pub enum Phase {
 }
 
 /// [obsolete in protocol v2] Sub-phases of the respiratory cycle
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde-messages",
     derive(serde::Serialize, serde::Deserialize)
@@ -54,7 +54,7 @@ pub enum SubPhase {
 }
 
 /// Supported alarm priorities
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde-messages",
     derive(serde::Serialize, serde::Deserialize)

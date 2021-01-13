@@ -5,6 +5,8 @@
 
 use std::ops::RangeInclusive;
 
+use crate::locale::Locale;
+
 /// Special value that can be used in a heartbeat control message to disable RPi watchdog
 pub const DISABLE_RPI_WATCHDOG: u16 = 43_690;
 
@@ -71,6 +73,10 @@ pub enum ControlSetting {
     TargetInspiratoryFlow = 25,
     /// Duration of inspiration in ms (value bounds must be between 200 and 3000)
     InspiratoryDuration = 26,
+    /// Language of the system; this should be two letters (see [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1)) in ASCII representation as two u8
+    Locale = 27,
+    /// Patient's height in centimeters
+    PatientHeight = 28,
 }
 
 impl ControlSetting {
@@ -105,6 +111,8 @@ impl ControlSetting {
             Self::LeakAlarmThreshold => 200,
             Self::TargetInspiratoryFlow => 40,
             Self::InspiratoryDuration => 800,
+            Self::Locale => Locale::default().as_usize(),
+            Self::PatientHeight => 160,
         }
     }
 
@@ -139,6 +147,8 @@ impl ControlSetting {
             Self::LeakAlarmThreshold => RangeInclusive::new(0, 10_000),
             Self::TargetInspiratoryFlow => RangeInclusive::new(5, 80),
             Self::InspiratoryDuration => RangeInclusive::new(200, 3_000),
+            Self::Locale => Locale::bounds(),
+            Self::PatientHeight => RangeInclusive::new(100, 250),
         }
     }
 }
@@ -175,6 +185,8 @@ impl std::convert::TryFrom<u8> for ControlSetting {
             24 => Ok(ControlSetting::LeakAlarmThreshold),
             25 => Ok(ControlSetting::TargetInspiratoryFlow),
             26 => Ok(ControlSetting::InspiratoryDuration),
+            27 => Ok(ControlSetting::Locale),
+            28 => Ok(ControlSetting::PatientHeight),
             _ => Err("Invalid setting number"),
         }
     }

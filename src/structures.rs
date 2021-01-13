@@ -8,6 +8,7 @@ use std::convert::TryFrom;
 use std::io;
 
 pub use crate::control::ControlSetting;
+use crate::locale::Locale;
 
 /// Variants of the MakAir firmware
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -175,6 +176,127 @@ impl VentilationMode {
     }
 }
 
+/// Details of fatal errors
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+pub enum FatalErrorDetails {
+    /// MCU was restarted by watchdog
+    WatchdogRestart,
+    /// Calibration failed
+    CalibrationError {
+        /// Measured pressure offset in mmH2O
+        pressure_offset: i16,
+        /// Minimum presure measured during calibration in mmH2O
+        min_pressure: i16,
+        /// Maximum presure measured during calibration in mmH2O
+        max_pressure: i16,
+        /// Air flow measured at starting in cL/min (SLM * 100)
+        flow_at_starting: Option<i16>,
+        /// Air flow measured with blower ON in cL/min (SLM * 100)
+        flow_with_blower_on: Option<i16>,
+    },
+    /// Battery is too discharged
+    BatteryDeeplyDischarged {
+        /// Battery level in centivolts
+        battery_level: u16,
+    },
+    /// Could not read mass flow meter
+    MassFlowMeterError,
+    /// Read an inconsistent pressure
+    InconsistentPressure {
+        /// Measured pressure in mmH2O
+        pressure: u16,
+    },
+}
+
+/// Step of the end of line test
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[allow(non_camel_case_types, missing_docs)]
+pub enum EolTestStep {
+    START,
+    SUPPLY_TO_EXPANDER_NOT_CONNECTED,
+    CHECK_FAN,
+    TEST_BAT_DEAD,
+    BATTERY_DEEP_DISCHARGE,
+    DISCONNECT_MAINS,
+    CONNECT_MAINS,
+    CHECK_BUZZER,
+    CHECK_ALL_BUTTONS,
+    CHECK_UI_SCREEN,
+    PLUG_AIR_TEST_SYTEM,
+    REACH_MAX_PRESSURE,
+    MAX_PRESSURE_REACHED_OK,
+    MAX_PRESSURE_NOT_REACHED,
+    START_LEAK_MESURE,
+    LEAK_IS_TOO_HIGH,
+    REACH_NULL_PRESSURE,
+    MIN_PRESSURE_NOT_REACHED,
+    USER_CONFIRMATION_BEFORE_O2_TEST,
+    START_O2_TEST,
+    O2_PRESSURE_NOT_REACH,
+    WAIT_USER_BEFORE_LONG_RUN,
+    START_LONG_RUN_BLOWER,
+    PRESSURE_NOT_STABLE,
+    FLOW_NOT_STABLE,
+    END_SUCCESS,
+    DISPLAY_PRESSURE,
+    DISPLAY_FLOW,
+}
+
+impl TryFrom<u8> for EolTestStep {
+    type Error = io::Error;
+
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::START),
+            1 => Ok(Self::SUPPLY_TO_EXPANDER_NOT_CONNECTED),
+            2 => Ok(Self::CHECK_FAN),
+            3 => Ok(Self::TEST_BAT_DEAD),
+            4 => Ok(Self::BATTERY_DEEP_DISCHARGE),
+            5 => Ok(Self::DISCONNECT_MAINS),
+            6 => Ok(Self::CONNECT_MAINS),
+            7 => Ok(Self::CHECK_BUZZER),
+            8 => Ok(Self::CHECK_ALL_BUTTONS),
+            9 => Ok(Self::CHECK_UI_SCREEN),
+            10 => Ok(Self::PLUG_AIR_TEST_SYTEM),
+            11 => Ok(Self::REACH_MAX_PRESSURE),
+            12 => Ok(Self::MAX_PRESSURE_REACHED_OK),
+            13 => Ok(Self::MAX_PRESSURE_NOT_REACHED),
+            14 => Ok(Self::START_LEAK_MESURE),
+            15 => Ok(Self::LEAK_IS_TOO_HIGH),
+            16 => Ok(Self::REACH_NULL_PRESSURE),
+            17 => Ok(Self::MIN_PRESSURE_NOT_REACHED),
+            18 => Ok(Self::USER_CONFIRMATION_BEFORE_O2_TEST),
+            19 => Ok(Self::START_O2_TEST),
+            20 => Ok(Self::O2_PRESSURE_NOT_REACH),
+            21 => Ok(Self::WAIT_USER_BEFORE_LONG_RUN),
+            22 => Ok(Self::START_LONG_RUN_BLOWER),
+            23 => Ok(Self::PRESSURE_NOT_STABLE),
+            24 => Ok(Self::FLOW_NOT_STABLE),
+            25 => Ok(Self::END_SUCCESS),
+            26 => Ok(Self::DISPLAY_PRESSURE),
+            27 => Ok(Self::DISPLAY_FLOW),
+            _ => Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                format!("Invalid EOL test step {}", value),
+            )),
+        }
+    }
+}
+
+/// Content of end of line test snapshots
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+pub enum EolTestSnapshotContent {
+    /// Test is in progress
+    InProgress,
+    /// There was an error during test
+    Error(String),
+    /// End of line test succeeded
+    Success,
+}
+
 /// A telemetry message that is sent once every time the MCU boots
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
@@ -265,6 +387,10 @@ pub struct StoppedMessage {
     pub battery_level: Option<u16>,
     /// [protocol v2] Codes of the alarms that are currently triggered
     pub current_alarm_codes: Option<Vec<u8>>,
+    /// [protocol v2] Patient's height in centimeters
+    pub patient_height: Option<u8>,
+    /// [protocol v2] Language of the system
+    pub locale: Option<Locale>,
 }
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
@@ -387,6 +513,10 @@ pub struct MachineStateSnapshot {
     pub previous_inspiratory_duration: Option<u16>,
     /// [protocol v2] Measured battery level value in centivolts (precise value)
     pub battery_level: Option<u16>,
+    /// [protocol v2] Patient's height in centimeters
+    pub patient_height: Option<u8>,
+    /// [protocol v2] Language of the system
+    pub locale: Option<Locale>,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped
@@ -445,6 +575,40 @@ pub struct ControlAck {
     pub value: u16,
 }
 
+/// [protocol v2] A message sent when a fatal error occurs
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+pub struct FatalError {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
+    /// Version of the MCU firmware
+    pub version: String,
+    /// Internal ID of the MCU
+    pub device_id: String,
+    /// Number of microseconds since the MCU booted
+    pub systick: u64,
+    /// Details of the error
+    pub error: FatalErrorDetails,
+}
+
+/// [protocol v2] A message sent during end of line tests
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+pub struct EolTestSnapshot {
+    /// Version of the telemetry protocol
+    pub telemetry_version: u8,
+    /// Version of the MCU firmware
+    pub version: String,
+    /// Internal ID of the MCU
+    pub device_id: String,
+    /// Number of microseconds since the MCU booted
+    pub systick: u64,
+    /// Current step
+    pub current_step: EolTestStep,
+    /// Content of the snapshot
+    pub content: EolTestSnapshotContent,
+}
+
 /// Supported telemetry messages
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
@@ -462,6 +626,10 @@ pub enum TelemetryMessage {
     AlarmTrap(AlarmTrap),
     /// An ACK message that is sent every time a setting is changed using the control protocol
     ControlAck(ControlAck),
+    /// [protocol v2] A message sent when a fatal error occurs
+    FatalError(FatalError),
+    /// [protocol v2] A message sent during end of line tests
+    EolTestSnapshot(EolTestSnapshot),
 }
 
 impl TelemetryMessage {
@@ -486,6 +654,12 @@ impl TelemetryMessage {
             Self::ControlAck(ControlAck {
                 telemetry_version, ..
             }) => telemetry_version,
+            Self::FatalError(FatalError {
+                telemetry_version, ..
+            }) => telemetry_version,
+            Self::EolTestSnapshot(EolTestSnapshot {
+                telemetry_version, ..
+            }) => telemetry_version,
         };
         *val
     }
@@ -499,6 +673,8 @@ impl TelemetryMessage {
             Self::MachineStateSnapshot(MachineStateSnapshot { version, .. }) => version,
             Self::AlarmTrap(AlarmTrap { version, .. }) => version,
             Self::ControlAck(ControlAck { version, .. }) => version,
+            Self::FatalError(FatalError { version, .. }) => version,
+            Self::EolTestSnapshot(EolTestSnapshot { version, .. }) => version,
         };
         val.clone()
     }
@@ -512,6 +688,8 @@ impl TelemetryMessage {
             Self::MachineStateSnapshot(MachineStateSnapshot { device_id, .. }) => device_id,
             Self::AlarmTrap(AlarmTrap { device_id, .. }) => device_id,
             Self::ControlAck(ControlAck { device_id, .. }) => device_id,
+            Self::FatalError(FatalError { device_id, .. }) => device_id,
+            Self::EolTestSnapshot(EolTestSnapshot { device_id, .. }) => device_id,
         };
         val.clone()
     }
@@ -525,6 +703,8 @@ impl TelemetryMessage {
             Self::MachineStateSnapshot(MachineStateSnapshot { systick, .. }) => systick,
             Self::AlarmTrap(AlarmTrap { systick, .. }) => systick,
             Self::ControlAck(ControlAck { systick, .. }) => systick,
+            Self::FatalError(FatalError { systick, .. }) => systick,
+            Self::EolTestSnapshot(EolTestSnapshot { systick, .. }) => systick,
         };
         *val
     }

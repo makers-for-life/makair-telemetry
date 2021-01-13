@@ -3,6 +3,7 @@ use nom::IResult;
 use nom::{alt, do_parse, length_data, map, map_res, named, tag, take};
 use std::convert::TryFrom;
 
+use super::super::locale::Locale;
 use super::super::structures::*;
 
 const VERSION: u8 = 2;
@@ -52,6 +53,84 @@ named!(
     ventilation_mode<VentilationMode>,
     map_res!(be_u8, |num| VentilationMode::try_from(num))
 );
+
+fn fatal_error_details(input: &[u8]) -> IResult<&[u8], FatalErrorDetails> {
+    use nom::error::{Error, ErrorKind};
+    use nom::Err::Failure;
+    use FatalErrorDetails::*;
+
+    let (input, error_type) = be_u8(input)?;
+    match error_type {
+        1 => Ok((input, WatchdogRestart)),
+        2 => {
+            do_parse!(
+                input,
+                sep >> pressure_offset: be_i16
+                    >> sep
+                    >> min_pressure: be_i16
+                    >> sep
+                    >> max_pressure: be_i16
+                    >> sep
+                    >> flow_at_starting: be_i16
+                    >> sep
+                    >> flow_with_blower_on: be_i16
+                    >> (CalibrationError {
+                        pressure_offset,
+                        min_pressure,
+                        max_pressure,
+                        flow_at_starting: if flow_at_starting == i16::MAX {
+                            None
+                        } else {
+                            Some(flow_at_starting)
+                        },
+                        flow_with_blower_on: if flow_with_blower_on == i16::MAX {
+                            None
+                        } else {
+                            Some(flow_with_blower_on)
+                        },
+                    })
+            )
+        }
+        3 => {
+            do_parse!(
+                input,
+                sep >> battery_level: be_u16 >> (BatteryDeeplyDischarged { battery_level })
+            )
+        }
+        4 => Ok((input, MassFlowMeterError)),
+        5 => {
+            do_parse!(
+                input,
+                sep >> pressure: be_u16 >> (InconsistentPressure { pressure })
+            )
+        }
+        _ => Err(Failure(Error::new(input, ErrorKind::Switch))),
+    }
+}
+
+named!(
+    eol_test_step<EolTestStep>,
+    map_res!(be_u8, |step| EolTestStep::try_from(step))
+);
+
+fn eol_test_snapshot_content(input: &[u8]) -> IResult<&[u8], EolTestSnapshotContent> {
+    use nom::error::{Error, ErrorKind};
+    use nom::Err::Failure;
+    use EolTestSnapshotContent::*;
+
+    let (input, content_type) = be_u8(input)?;
+    match content_type {
+        0 => Ok((input, InProgress)),
+        1 => {
+            do_parse!(
+                input,
+                sep >> error: u8_array >> (Error(String::from_utf8_lossy(&error).into_owned()))
+            )
+        }
+        2 => Ok((input, Success)),
+        _ => Err(Failure(Error::new(input, ErrorKind::Switch))),
+    }
+}
 
 named!(
     boot<TelemetryMessage>,
@@ -159,6 +238,10 @@ named!(
             >> battery_level: be_u16
             >> sep
             >> current_alarm_codes: u8_array
+            >> sep
+            >> patient_height: be_u8
+            >> sep
+            >> locale: be_u16
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
@@ -207,6 +290,8 @@ named!(
                     inspiratory_duration_command: Some(inspiratory_duration_command),
                     battery_level: Some(battery_level),
                     current_alarm_codes: Some(current_alarm_codes),
+                    patient_height: Some(patient_height),
+                    locale: Locale::try_from_u16(locale),
                 })
             })
     )
@@ -352,6 +437,10 @@ named!(
             >> previous_inspiratory_duration: be_u16
             >> sep
             >> battery_level: be_u16
+            >> sep
+            >> patient_height: be_u8
+            >> sep
+            >> locale: be_u16
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -406,6 +495,8 @@ named!(
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 previous_inspiratory_duration: Some(previous_inspiratory_duration),
                 battery_level: Some(battery_level),
+                patient_height: Some(patient_height),
+                locale: Locale::try_from_u16(locale),
             }))
     )
 );
@@ -497,6 +588,65 @@ named!(
     )
 );
 
+named!(
+    fatal_error<TelemetryMessage>,
+    do_parse!(
+        tag!("E:")
+            >> tag!([VERSION])
+            >> software_version_len: be_u8
+            >> software_version:
+                map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
+                    bytes
+                ))
+            >> device_id1: be_u32
+            >> device_id2: be_u32
+            >> device_id3: be_u32
+            >> sep
+            >> systick: be_u64
+            >> sep
+            >> error: fatal_error_details
+            >> end
+            >> (TelemetryMessage::FatalError(FatalError {
+                telemetry_version: VERSION,
+                version: software_version.to_string(),
+                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                systick,
+                error,
+            }))
+    )
+);
+
+named!(
+    eol_test_snapshot<TelemetryMessage>,
+    do_parse!(
+        tag!("L:")
+            >> tag!([VERSION])
+            >> software_version_len: be_u8
+            >> software_version:
+                map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
+                    bytes
+                ))
+            >> device_id1: be_u32
+            >> device_id2: be_u32
+            >> device_id3: be_u32
+            >> sep
+            >> systick: be_u64
+            >> sep
+            >> current_step: eol_test_step
+            >> sep
+            >> content: eol_test_snapshot_content
+            >> end
+            >> (TelemetryMessage::EolTestSnapshot(EolTestSnapshot {
+                telemetry_version: VERSION,
+                version: software_version.to_string(),
+                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                systick,
+                current_step,
+                content,
+            }))
+    )
+);
+
 /// Transform bytes into a structured telemetry message
 ///
 /// * `input` - Bytes to parse.
@@ -510,6 +660,8 @@ pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<
         machine_state_snapshot,
         alarm_trap,
         control_ack,
+        fatal_error,
+        eol_test_snapshot,
     ))(input)
     .map_err(nom::Err::convert)
 }
@@ -569,6 +721,61 @@ mod tests {
 
     fn ventilation_mode_value(m: &VentilationMode) -> u8 {
         m.into()
+    }
+
+    fn fatal_error_details_strategy() -> BoxedStrategy<FatalErrorDetails> {
+        prop_oneof![
+            Just(FatalErrorDetails::WatchdogRestart),
+            fatal_error_details_calibration_error_strategy(),
+            fatal_error_details_battery_deeply_discharged_strategy(),
+            Just(FatalErrorDetails::MassFlowMeterError),
+            fatal_error_details_inconsistent_pressure_strategy(),
+        ]
+        .boxed()
+    }
+
+    prop_compose! {
+        fn fatal_error_details_calibration_error_strategy()(
+            pressure_offset in num::i16::ANY,
+            min_pressure in num::i16::ANY,
+            max_pressure in num::i16::ANY,
+            flow_at_starting in option::of(num::i16::ANY),
+            flow_with_blower_on in option::of(num::i16::ANY),
+        ) -> FatalErrorDetails {
+            FatalErrorDetails::CalibrationError { pressure_offset, min_pressure, max_pressure, flow_at_starting, flow_with_blower_on }
+        }
+    }
+
+    prop_compose! {
+        fn fatal_error_details_battery_deeply_discharged_strategy()(battery_level in num::u16::ANY) -> FatalErrorDetails {
+            FatalErrorDetails::BatteryDeeplyDischarged { battery_level }
+        }
+    }
+
+    prop_compose! {
+        fn fatal_error_details_inconsistent_pressure_strategy()(pressure in num::u16::ANY) -> FatalErrorDetails {
+            FatalErrorDetails::InconsistentPressure { pressure }
+        }
+    }
+
+    fn eol_test_step_strategy() -> impl Strategy<Value = EolTestStep> {
+        proptest::num::u8::ANY
+            .prop_filter_map("Invalid test step", |n| EolTestStep::try_from(n).ok())
+    }
+
+    fn eol_test_snapshot_content_strategy() -> BoxedStrategy<EolTestSnapshotContent> {
+        prop_oneof![
+            Just(EolTestSnapshotContent::InProgress),
+            eol_test_snapshot_content_error_strategy(),
+            Just(EolTestSnapshotContent::Success),
+        ]
+        .boxed()
+    }
+
+    prop_compose! {
+        fn eol_test_snapshot_content_error_strategy()(reason in ".+") -> EolTestSnapshotContent {
+            EolTestSnapshotContent::Error(reason)
+        }
     }
 
     proptest! {
@@ -651,6 +858,7 @@ mod tests {
             inspiratory_duration_command in num::u16::ANY,
             battery_level in num::u16::ANY,
             current_alarm_codes in collection::vec(0u8.., 0..100),
+            patient_height in num::u8::ANY,
         ) {
             let msg = StoppedMessage {
                 telemetry_version: VERSION,
@@ -686,6 +894,8 @@ mod tests {
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 battery_level: Some(battery_level),
                 current_alarm_codes: Some(current_alarm_codes),
+                patient_height: Some(patient_height),
+                locale: Some(Locale::default()),
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -758,6 +968,10 @@ mod tests {
                 b"\t",
                 &[msg.current_alarm_codes.clone().unwrap_or_default().len() as u8],
                 &msg.current_alarm_codes.clone().unwrap_or_default(),
+                b"\t",
+                &msg.patient_height.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.locale.unwrap_or_default().as_u16().to_be_bytes(),
                 b"\n",
             ]);
 
@@ -882,6 +1096,7 @@ mod tests {
             inspiratory_duration_command in num::u16::ANY,
             previous_inspiratory_duration in num::u16::ANY,
             battery_level in num::u16::ANY,
+            patient_height in num::u8::ANY,
         ) {
             let msg = MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -924,6 +1139,8 @@ mod tests {
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 previous_inspiratory_duration: Some(previous_inspiratory_duration),
                 battery_level: Some(battery_level),
+                patient_height: Some(patient_height),
+                locale: Some(Locale::default()),
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -1010,6 +1227,10 @@ mod tests {
                 &msg.previous_inspiratory_duration.unwrap_or_default().to_be_bytes(),
                 b"\t",
                 &msg.battery_level.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.patient_height.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.locale.unwrap_or_default().as_u16().to_be_bytes(),
                 b"\n",
             ]);
 
@@ -1134,6 +1355,131 @@ mod tests {
 
             let expected = TelemetryMessage::ControlAck(msg);
             assert_eq!(nom::dbg_dmp(control_ack, "control_ack")(input), Ok((&[][..], expected)));
+        }
+    }
+
+    proptest! {
+        #[test]
+        fn test_fatal_error_message_parser(
+            version in ".*",
+            device_id1 in (0u32..),
+            device_id2 in (0u32..),
+            device_id3 in (0u32..),
+            systick in (0u64..),
+            error in fatal_error_details_strategy(),
+        ) {
+            let msg = FatalError {
+                telemetry_version: VERSION,
+                version,
+                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                systick,
+                error,
+            };
+
+            let fatal_error_details: Vec<u8> = match msg.error {
+                FatalErrorDetails::WatchdogRestart => vec![1],
+                FatalErrorDetails::CalibrationError {
+                    pressure_offset,
+                    min_pressure,
+                    max_pressure,
+                    flow_at_starting,
+                    flow_with_blower_on
+                }  => flat(&[
+                    &[2],
+                    b"\t",
+                    &pressure_offset.to_be_bytes(),
+                    b"\t",
+                    &min_pressure.to_be_bytes(),
+                    b"\t",
+                    &max_pressure.to_be_bytes(),
+                    b"\t",
+                    &flow_at_starting.unwrap_or(i16::MAX).to_be_bytes(),
+                    b"\t",
+                    &flow_with_blower_on.unwrap_or(i16::MAX).to_be_bytes(),
+                ]),
+                FatalErrorDetails::BatteryDeeplyDischarged { battery_level } => flat(&[
+                    &[3],
+                    b"\t",
+                    &battery_level.to_be_bytes(),
+                ]),
+                FatalErrorDetails::MassFlowMeterError => vec![4],
+                FatalErrorDetails::InconsistentPressure { pressure } => flat(&[
+                    &[5],
+                    b"\t",
+                    &pressure.to_be_bytes(),
+                ]),
+            };
+
+            let input = &flat(&[
+                b"E:",
+                &[VERSION],
+                &[msg.version.len() as u8],
+                &msg.version.as_bytes(),
+                &device_id1.to_be_bytes(),
+                &device_id2.to_be_bytes(),
+                &device_id3.to_be_bytes(),
+                b"\t",
+                &msg.systick.to_be_bytes(),
+                b"\t",
+                &fatal_error_details,
+                b"\n",
+            ]);
+
+            let expected = TelemetryMessage::FatalError(msg);
+            assert_eq!(nom::dbg_dmp(fatal_error, "fatal_error")(input), Ok((&[][..], expected)));
+        }
+    }
+
+    proptest! {
+        #[test]
+        fn test_eol_test_snapshot_message_parser(
+            version in ".*",
+            device_id1 in (0u32..),
+            device_id2 in (0u32..),
+            device_id3 in (0u32..),
+            systick in (0u64..),
+            current_step in eol_test_step_strategy(),
+            content in eol_test_snapshot_content_strategy(),
+        ) {
+            let msg = EolTestSnapshot {
+                telemetry_version: VERSION,
+                version,
+                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                systick,
+                current_step,
+                content,
+            };
+
+            let eol_test_snapshot_content: Vec<u8> = match msg.content {
+                EolTestSnapshotContent::InProgress => vec![0],
+                EolTestSnapshotContent::Error(ref reason) => flat(&[
+                    &[1],
+                    b"\t",
+                    &[reason.len() as u8],
+                    &reason.as_bytes(),
+                ]),
+                EolTestSnapshotContent::Success => vec![2],
+            };
+
+            let input = &flat(&[
+                b"L:",
+                &[VERSION],
+                &[msg.version.len() as u8],
+                &msg.version.as_bytes(),
+                &device_id1.to_be_bytes(),
+                &device_id2.to_be_bytes(),
+                &device_id3.to_be_bytes(),
+                b"\t",
+                &msg.systick.to_be_bytes(),
+                b"\t",
+                &[current_step as u8],
+                b"\t",
+                &eol_test_snapshot_content,
+                b"\n",
+            ]);
+
+            let expected = TelemetryMessage::EolTestSnapshot(msg);
+            assert_eq!(nom::dbg_dmp(eol_test_snapshot, "eol_test_snapshot")(input), Ok((&[][..], expected)));
         }
     }
 }

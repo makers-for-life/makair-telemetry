@@ -139,6 +139,8 @@ named!(
                     inspiratory_duration_command: None,
                     battery_level: None,
                     current_alarm_codes: None,
+                    patient_height: None,
+                    locale: None,
                 })
             })
     )
@@ -280,6 +282,8 @@ named!(
                 inspiratory_duration_command: None,
                 previous_inspiratory_duration: None,
                 battery_level: None,
+                patient_height: None,
+                locale: None,
             }))
     )
 );
@@ -522,6 +526,8 @@ mod tests {
                 inspiratory_duration_command: None,
                 battery_level: None,
                 current_alarm_codes: None,
+                patient_height: None,
+                locale: None,
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -671,6 +677,8 @@ mod tests {
                 inspiratory_duration_command: None,
                 previous_inspiratory_duration: None,
                 battery_level: None,
+                patient_height: None,
+                locale: None,
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in makair-firmware/srcs/telemetry.cpp

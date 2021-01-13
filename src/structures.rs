@@ -801,14 +801,17 @@ impl<I> From<nom::error::Error<I>> for TelemetryError<I> {
     }
 }
 
+use thiserror::Error;
+
 /// Errors that need to be reported to the UI
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Error)]
 #[cfg_attr(
     feature = "serde-messages",
     derive(serde::Serialize, serde::Deserialize)
 )]
 pub enum HighLevelError {
     /// CRC error
+    #[error("invalid CRC: expected={expected} ≠ computed={computed}")]
     CrcError {
         /// Expected CRC (included in the message)
         expected: u32,
@@ -816,6 +819,7 @@ pub enum HighLevelError {
         computed: u32,
     },
     /// Unsupported protocol (message header contains an unsupported protocol version)
+    #[error("this message seems to use telemetry protocol version {found} whereas latest supported version is {maximum_supported}")]
     UnsupportedProtocolVersion {
         /// Maximum supported version of the telemetry protocol
         maximum_supported: u8,
@@ -824,6 +828,7 @@ pub enum HighLevelError {
     },
 }
 
+/*
 /// A telemetry message or a high-level error
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(
@@ -842,7 +847,7 @@ impl From<TelemetryMessage> for TelemetryMessageOrError {
         TelemetryMessageOrError::Message(message)
     }
 }
-
+*/
 #[cfg(test)]
 mod tests {
     use crate::structures::AlarmPriority;

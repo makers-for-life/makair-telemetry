@@ -12,7 +12,10 @@ use crate::locale::Locale;
 
 /// Variants of the MakAir firmware
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum Mode {
     /// Production mode
     Production,
@@ -24,7 +27,10 @@ pub enum Mode {
 
 /// Phases of the respiratory cycle
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum Phase {
     /// Inhalation
     Inhalation,
@@ -34,7 +40,10 @@ pub enum Phase {
 
 /// [obsolete in protocol v2] Sub-phases of the respiratory cycle
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum SubPhase {
     /// Inspiration
     Inspiration,
@@ -46,7 +55,10 @@ pub enum SubPhase {
 
 /// Supported alarm priorities
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum AlarmPriority {
     /// High
     High,
@@ -92,7 +104,10 @@ impl TryFrom<u8> for AlarmPriority {
 
 /// Supported ventilation modes
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 #[allow(non_camel_case_types)]
 pub enum VentilationMode {
     /// PC-CMV
@@ -178,7 +193,10 @@ impl VentilationMode {
 
 /// Details of fatal errors
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum FatalErrorDetails {
     /// MCU was restarted by watchdog
     WatchdogRestart,
@@ -211,7 +229,10 @@ pub enum FatalErrorDetails {
 
 /// Step of the end of line test
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 #[allow(non_camel_case_types, missing_docs)]
 pub enum EolTestStep {
     START,
@@ -287,7 +308,10 @@ impl TryFrom<u8> for EolTestStep {
 
 /// Content of end of line test snapshots
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum EolTestSnapshotContent {
     /// Test is in progress
     InProgress,
@@ -299,7 +323,10 @@ pub enum EolTestSnapshotContent {
 
 /// A telemetry message that is sent once every time the MCU boots
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct BootMessage {
     /// Version of the telemetry protocol
     pub telemetry_version: u8,
@@ -319,7 +346,10 @@ pub struct BootMessage {
 
 /// A telemetry message that is sent every 100 ms when the MCU is in "stop" mode
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct StoppedMessage {
     /// Version of the telemetry protocol
     pub telemetry_version: u8,
@@ -395,7 +425,10 @@ pub struct StoppedMessage {
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct DataSnapshot {
     /// Version of the telemetry protocol
     pub telemetry_version: u8,
@@ -431,7 +464,10 @@ pub struct DataSnapshot {
 
 /// A telemetry message that is sent at the end of every respiratory cycle
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct MachineStateSnapshot {
     /// Version of the telemetry protocol
     pub telemetry_version: u8,
@@ -521,7 +557,10 @@ pub struct MachineStateSnapshot {
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct AlarmTrap {
     /// Version of the telemetry protocol
     pub telemetry_version: u8,
@@ -559,7 +598,10 @@ pub struct AlarmTrap {
 
 /// An ACK message that is sent every time a setting is changed on the MCU side
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct ControlAck {
     /// Version of the telemetry protocol
     pub telemetry_version: u8,
@@ -577,7 +619,10 @@ pub struct ControlAck {
 
 /// [protocol v2] A message sent when a fatal error occurs
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct FatalError {
     /// Version of the telemetry protocol
     pub telemetry_version: u8,
@@ -593,7 +638,10 @@ pub struct FatalError {
 
 /// [protocol v2] A message sent during end of line tests
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct EolTestSnapshot {
     /// Version of the telemetry protocol
     pub telemetry_version: u8,
@@ -611,8 +659,11 @@ pub struct EolTestSnapshot {
 
 /// Supported telemetry messages
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
-#[cfg_attr(feature = "serialize-messages", serde(tag = "message_type"))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
+#[cfg_attr(feature = "serde-messages", serde(tag = "message_type"))]
 pub enum TelemetryMessage {
     /// A telemetry message that is sent once every time the MCU boots
     BootMessage(BootMessage),
@@ -752,7 +803,10 @@ impl<I> From<nom::error::Error<I>> for TelemetryError<I> {
 
 /// Errors that need to be reported to the UI
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum HighLevelError {
     /// CRC error
     CrcError {
@@ -772,7 +826,10 @@ pub enum HighLevelError {
 
 /// A telemetry message or a high-level error
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum TelemetryMessageOrError {
     /// A telemetry message
     Message(TelemetryMessage),

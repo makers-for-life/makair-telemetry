@@ -27,8 +27,8 @@ path = "src/lib.rs"
 
 [features]
 default = ["rand", "serial"]
-build-binary = ["clap", "env_logger", "rand", "serde_json", "serial", "serialize-messages"]
-serialize-messages = ["serde"]
+build-binary = ["clap", "env_logger", "rand", "serde_json", "serial", "serde-messages"]
+serde-messages = ["serde"]
 
 [[bin]]
 name = "makair_telemetry"

@@ -12,7 +12,10 @@ pub const DISABLE_RPI_WATCHDOG: u16 = 43_690;
 
 /// Available settings in the control protocol
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum ControlSetting {
     /// Heartbeat used for the RPi watchdog feature (value is ignored except for the special value `DISABLE_RPI_WATCHDOG` which disables watchdog)
     Heartbeat = 0,

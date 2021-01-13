@@ -203,7 +203,7 @@ pub enum FatalErrorDetails {
     MassFlowMeterError,
     /// Read an inconsistent pressure
     InconsistentPressure {
-        /// Measured pressure in ùùH2O
+        /// Measured pressure in mmH2O
         pressure: u16,
     },
 }

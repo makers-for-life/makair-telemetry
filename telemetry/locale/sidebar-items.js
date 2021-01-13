@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Locale","An ISO 639-1 language code to be used to choose language for the whole system"]]});

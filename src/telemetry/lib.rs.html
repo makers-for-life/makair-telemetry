@@ -352,6 +352,20 @@
 <span id="349">349</span>
 <span id="350">350</span>
 <span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -369,6 +383,8 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">alarm</span>;
 <span class="doccomment">/// Structures to represent control messages</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">control</span>;
+<span class="doccomment">/// Tools to manipulate ISO 639-1 language codes to be used in the control protocol</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">locale</span>;
 <span class="doccomment">/// Underlying parsers for telemetry messages</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">parsers</span>;
 <span class="doccomment">/// Structures to represent telemetry messages</span>
@@ -633,6 +649,18 @@
             ..
         }))) <span class="op">=</span><span class="op">&gt;</span> {
             <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;← {:?} = {}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">setting</span>, <span class="kw-2">&amp;</span><span class="ident">value</span>);
+        }
+        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessageOrError</span>::<span class="ident">Message</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">FatalError</span>(<span class="ident">FatalError</span> {
+            <span class="ident">error</span>,
+            ..
+        }))) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;***** FATAL ERROR ***** {:?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">error</span>);
+        }
+        <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessageOrError</span>::<span class="ident">Message</span>(<span class="ident">TelemetryMessage</span>::<span class="ident">EolTestSnapshot</span>(<span class="kw">_</span>))) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="macro">info</span><span class="macro">!</span>(
+                <span class="string">&quot;    {:?}&quot;</span>,
+                <span class="kw-2">&amp;</span><span class="ident">message</span>.<span class="ident">expect</span>(<span class="string">&quot;failed unwrapping message for EOL test snapshot&quot;</span>)
+            );
         }
         <span class="prelude-val">Ok</span>(<span class="ident">TelemetryMessageOrError</span>::<span class="ident">Error</span>(<span class="ident">e</span>)) <span class="op">=</span><span class="op">&gt;</span> {
             <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;a high-level error occurred: {:?}&quot;</span>, <span class="ident">e</span>);

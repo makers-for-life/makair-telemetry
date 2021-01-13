@@ -24,7 +24,7 @@ sourcesIndex["serial_core"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["serial_unix"] = {"name":"","files":["error.rs","lib.rs","poll.rs","tty.rs"]};
 sourcesIndex["static_assertions"] = {"name":"","files":["assert_cfg.rs","assert_eq_align.rs","assert_eq_size.rs","assert_fields.rs","assert_impl.rs","assert_obj_safe.rs","assert_trait.rs","assert_type.rs","const_assert.rs","lib.rs"]};
 sourcesIndex["tap"] = {"name":"","files":["conv.rs","lib.rs","pipe.rs","tap.rs"]};
-sourcesIndex["telemetry"] = {"name":"","dirs":[{"name":"parsers","files":["mod.rs","v1.rs","v2.rs"]}],"files":["alarm.rs","control.rs","lib.rs","structures.rs"]};
+sourcesIndex["telemetry"] = {"name":"","dirs":[{"name":"parsers","files":["mod.rs","v1.rs","v2.rs"]}],"files":["alarm.rs","control.rs","lib.rs","locale.rs","structures.rs"]};
 sourcesIndex["termios"] = {"name":"","dirs":[{"name":"os","files":["linux.rs","mod.rs"]}],"files":["ffi.rs","lib.rs"]};
 sourcesIndex["wyz"] = {"name":"","files":["conv.rs","fmt.rs","lib.rs","pipe.rs","tap.rs"]};
 createSourceSidebar();

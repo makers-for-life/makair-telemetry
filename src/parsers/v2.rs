@@ -3,6 +3,7 @@ use nom::IResult;
 use nom::{alt, do_parse, length_data, map, map_res, named, tag, take};
 use std::convert::TryFrom;
 
+use super::super::locale::Locale;
 use super::super::structures::*;
 
 const VERSION: u8 = 2;
@@ -239,6 +240,8 @@ named!(
             >> current_alarm_codes: u8_array
             >> sep
             >> patient_height: be_u8
+            >> sep
+            >> locale: be_u16
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
@@ -288,6 +291,7 @@ named!(
                     battery_level: Some(battery_level),
                     current_alarm_codes: Some(current_alarm_codes),
                     patient_height: Some(patient_height),
+                    locale: Locale::try_from_u16(locale),
                 })
             })
     )
@@ -435,6 +439,8 @@ named!(
             >> battery_level: be_u16
             >> sep
             >> patient_height: be_u8
+            >> sep
+            >> locale: be_u16
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -490,6 +496,7 @@ named!(
                 previous_inspiratory_duration: Some(previous_inspiratory_duration),
                 battery_level: Some(battery_level),
                 patient_height: Some(patient_height),
+                locale: Locale::try_from_u16(locale),
             }))
     )
 );
@@ -888,6 +895,7 @@ mod tests {
                 battery_level: Some(battery_level),
                 current_alarm_codes: Some(current_alarm_codes),
                 patient_height: Some(patient_height),
+                locale: Some(Locale::default()),
             };
 
             // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
@@ -962,6 +970,8 @@ mod tests {
                 &msg.current_alarm_codes.clone().unwrap_or_default(),
                 b"\t",
                 &msg.patient_height.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.locale.unwrap_or_default().as_u16().to_be_bytes(),
                 b"\n",
             ]);
 
@@ -1130,6 +1140,7 @@ mod tests {
                 previous_inspiratory_duration: Some(previous_inspiratory_duration),
                 battery_level: Some(battery_level),
                 patient_height: Some(patient_height),
+                locale: Some(Locale::default()),
             };
 
             // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
@@ -1218,6 +1229,8 @@ mod tests {
                 &msg.battery_level.unwrap_or_default().to_be_bytes(),
                 b"\t",
                 &msg.patient_height.unwrap_or_default().to_be_bytes(),
+                b"\t",
+                &msg.locale.unwrap_or_default().as_u16().to_be_bytes(),
                 b"\n",
             ]);
 

@@ -8,9 +8,18 @@ use std::ops::RangeInclusive;
 
 /// An ISO 639-1 language code to be used to choose language for the whole system
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
 pub struct Locale(u16);
 
 impl Locale {
+    /// Create a locale from a u16
+    pub fn try_from_u16(num: u16) -> Option<Self> {
+        match Self::try_from(Self(num).to_string().as_str()) {
+            Ok(locale) => Some(locale),
+            Err(_) => None,
+        }
+    }
+
     /// Language code as a u16
     pub fn as_u16(&self) -> u16 {
         self.0

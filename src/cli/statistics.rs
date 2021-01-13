@@ -137,6 +137,7 @@ mod tests {
                 previous_inspiratory_duration: None,
                 battery_level: None,
                 patient_height: None,
+                locale: None,
             },
         )];
 
@@ -182,6 +183,7 @@ mod tests {
             battery_level: None,
             current_alarm_codes: None,
             patient_height: None,
+            locale: None,
         }));
 
         assert_eq!(compute_duration(vect), 100);
@@ -278,6 +280,7 @@ mod tests {
                 previous_inspiratory_duration: None,
                 battery_level: None,
                 patient_height: None,
+                locale: None,
             },
         ));
 
@@ -316,6 +319,7 @@ mod tests {
             battery_level: None,
             current_alarm_codes: None,
             patient_height: None,
+            locale: None,
         }));
 
         assert_eq!(compute_duration(vect), 110);

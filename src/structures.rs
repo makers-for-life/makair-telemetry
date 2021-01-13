@@ -8,6 +8,7 @@ use std::convert::TryFrom;
 use std::io;
 
 pub use crate::control::ControlSetting;
+use crate::locale::Locale;
 
 /// Variants of the MakAir firmware
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -388,6 +389,8 @@ pub struct StoppedMessage {
     pub current_alarm_codes: Option<Vec<u8>>,
     /// [protocol v2] Patient's height in centimeters
     pub patient_height: Option<u8>,
+    /// [protocol v2] Language of the system
+    pub locale: Option<Locale>,
 }
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
@@ -512,6 +515,8 @@ pub struct MachineStateSnapshot {
     pub battery_level: Option<u16>,
     /// [protocol v2] Patient's height in centimeters
     pub patient_height: Option<u8>,
+    /// [protocol v2] Language of the system
+    pub locale: Option<Locale>,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped

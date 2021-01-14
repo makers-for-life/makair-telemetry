@@ -23,7 +23,7 @@ serial = { version = "0.4.0", optional = true }
 proptest = "0.10.1"
 
 [lib]
-name = "telemetry"
+name = "makair_telemetry"
 path = "src/lib.rs"
 
 [features]
@@ -32,7 +32,7 @@ build-binary = ["clap", "env_logger", "rand", "serde_json", "serial", "serde-mes
 serde-messages = ["serde"]
 
 [[bin]]
-name = "makair_telemetry"
+name = "makair_telemetry_cli"
 path = "src/cli/bin.rs"
 required-features = ["build-binary"]
 

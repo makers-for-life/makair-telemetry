@@ -73,13 +73,13 @@ jobs:
         uses: actions-rs/cargo@v1.0.1
         with:
           command: build
-          args: --bin makair_telemetry --features=build-binary --release
+          args: --bin makair_telemetry_cli --features=build-binary --release
 
       - name: Archive binary
         uses: actions/upload-artifact@v1
         with:
-          name: makair_telemetry
-          path: target/release/makair_telemetry
+          name: makair_telemetry_cli
+          path: target/release/makair_telemetry_cli
 
   docs:
     runs-on: ubuntu-latest

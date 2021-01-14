@@ -15,7 +15,9 @@
 
 ## Telemetry Library
 
-This crate is a library that handles reading and parsing the MakAir's telemetry binary protocol, and optionally sending new settings values using the Makair's control binary protocol.
+This crate is a library that handles reading, parsing and serializing the MakAir's telemetry binary protocol, and optionally sending new settings values using the Makair's control binary protocol.
+
+Crate name (for imports and `RUST_LOG`) is `makair_telemetry`.
 
 ➡ [API documentation](https://makers-for-life.github.io/makair-telemetry)
 
@@ -46,5 +48,5 @@ You can use the scripts provided in the `scripts/` directory to run it through C
 
 To see documentation, you can run:
 
-- `makair_telemetry --help` to see a list of available commands
-- `makair_telemetry [COMMAND] --help` to see a list of flags and options for a given `[COMMAND]`
+- `makair_telemetry_cli --help` to see a list of available commands
+- `makair_telemetry_cli [COMMAND] --help` to see a list of flags and options for a given `[COMMAND]`

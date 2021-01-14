@@ -18,13 +18,13 @@ use std::sync::mpsc::{Receiver, Sender, TryRecvError};
 
 use control::*;
 use convert::*;
+use makair_telemetry::*;
 use statistics::*;
 use storm::*;
 use structures::*;
-use telemetry::*;
 
 #[derive(Debug, Clap)]
-#[clap(author, about, version)]
+#[clap(name = "MakAir Telemetry CLI", author, about, version)]
 struct Opts {
     #[clap(subcommand)]
     mode: Mode,

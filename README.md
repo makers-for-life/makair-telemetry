@@ -11,13 +11,19 @@
 | V1.0.x | Working serial parsing from firmware | ✅
 | V1.1.x | Extend telemetry protocol and add control protocol | ✅
 | V1.2.x | Alarm code management has been reworked to use ENUMs (interoperability) | ✅
-| V2.0.x | Protocol V2, with ventilation modes and new alarms | ❌
+| V2.0.x | New lib API, protocol V2, with ventilation modes and new alarms | ❌
 
 ## Telemetry Library
 
 This crate is a library that handles reading and parsing the MakAir's telemetry binary protocol, and optionally sending new settings values using the Makair's control binary protocol.
 
 ➡ [API documentation](https://makers-for-life.github.io/makair-telemetry)
+
+### Available Cargo features
+
+- **rand** *(enabled by default)*: Provide standard random distribution implementations to generate control messages
+- **serial** *(enabled by default)*: Enable serial support (for communicating with a MakAir)
+- **serde-messages**: Provide serde implementations for telemetry and control structures (`Serialize` and `Deserialize`)
 
 ## Telemetry CLI Tool
 

@@ -31,6 +31,9 @@ pub mod structures;
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serial")))]
 /// Re-export serial lib
 pub use serial;
+#[cfg(feature = "websocket")]
+/// Re-export Url lib
+pub use url;
 
 use log::{debug, error, info, warn};
 #[cfg(feature = "serial")]
@@ -44,10 +47,13 @@ use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;
 #[cfg(feature = "serial")]
 use std::sync::{Arc, Mutex};
+#[cfg(feature = "websocket")]
+use url::Url;
 
 #[cfg(feature = "serial")]
 use control::*;
 use parsers::*;
+use serializers::*;
 use structures::*;
 
 use error::Error;
@@ -55,7 +61,7 @@ use error::Error;
 /// A decoded telemetry message
 pub type TelemetryChannelType = Result<TelemetryMessage, Error>;
 
-/// Open a serial port, consume it endlessly and send back parsed telemetry messages through a channel
+/// Open a serial port, consume it endlessly and send parsed telemetry messages through a channel
 ///
 /// * `port_id` - Name or path to the serial port.
 /// * `tx` - Sender of a channel.
@@ -343,6 +349,139 @@ pub fn gather_telemetry_from_file(
                             if !buffer.is_empty() {
                                 buffer.remove(0);
                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Connect to a WebSocket server, get binary messages endlessly and send parsed telemetry messages through a channel
+///
+/// * `url` - URL to the WebSocket server.
+/// * `tx` - Sender of a channel.
+/// * `file_buf` - Optional file buffer; if specified, messages will also be serialized and written in this file.
+/// * `control_rx` - Optional receiver of a channel used to send control messages through the WS session.
+///
+/// This is meant to be run in a dedicated thread.
+#[cfg(feature = "websocket")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "websocket")))]
+pub fn gather_telemetry_from_ws(
+    url: &Url,
+    tx: Sender<TelemetryChannelType>,
+    mut file_buf: Option<BufWriter<File>>,
+    control_rx: Option<Receiver<ControlMessage>>,
+) {
+    use tungstenite::client::connect;
+    use tungstenite::protocol::Message;
+
+    loop {
+        info!("opening {}", &url);
+
+        match connect(url) {
+            Err(e) => {
+                error!("{:?}", e);
+                tx.send(Err(e.into()))
+                    .expect("[tx channel] failed to send error");
+                std::thread::sleep(std::time::Duration::from_secs(1));
+            }
+            Ok((mut socket, _response)) => {
+                info!("WebSocket connection was successfuly established");
+                'ws_session: loop {
+                    match socket.read_message() {
+                        Ok(Message::Binary(bytes)) => {
+                            // Let's try to parse the received message
+                            match parse_telemetry_message(&bytes) {
+                                // It worked!
+                                Ok((_rest, message)) => {
+                                    if let Some(file_buffer) = file_buf.as_mut() {
+                                        // Write a new line with the base64 value of the message
+                                        let base64 = base64::encode(&message.to_bytes());
+                                        file_buffer
+                                            .write_all(base64.as_bytes())
+                                            .expect("[tx channel] failed flushing buffer to file");
+                                        file_buffer.write_all(b"\n").expect(
+                                            "[tx channel] failed ending buffer flush to file",
+                                        );
+                                        file_buffer.flush().expect(
+                                            "[tx channel] failed flushing buffer flush to file",
+                                        );
+                                    }
+
+                                    tx.send(Ok(message))
+                                        .expect("[tx channel] failed sending message");
+                                }
+                                // Message was read but there was a CRC error
+                                Err(nom::Err::Failure(TelemetryError(
+                                    _msg_bytes,
+                                    TelemetryErrorKind::CrcError { expected, computed },
+                                ))) => {
+                                    warn!(
+                                        "[CRC error]\texpected={}\tcomputed={}",
+                                        expected, computed
+                                    );
+
+                                    tx.send(Err(
+                                        HighLevelError::CrcError { expected, computed }.into()
+                                    ))
+                                    .expect("[tx channel] failed sending message");
+                                }
+                                // Message was built using an unsupported protocol version
+                                Err(nom::Err::Failure(TelemetryError(
+                                    _msg_bytes,
+                                    TelemetryErrorKind::UnsupportedProtocolVersion {
+                                        maximum_supported,
+                                        found,
+                                    },
+                                ))) => {
+                                    warn!(
+                                        "[unsupported protocol version]\tmaximum_supported={}\tfound={}",
+                                        maximum_supported, found
+                                    );
+
+                                    tx.send(Err(HighLevelError::UnsupportedProtocolVersion {
+                                        maximum_supported,
+                                        found,
+                                    }
+                                    .into()))
+                                        .expect("[tx channel] failed sending message");
+                                }
+                                // We can't do anything with this message
+                                Err(e) => {
+                                    debug!("{:?}", &e);
+                                }
+                            }
+                        }
+                        Ok(_) => {
+                            // Do nothing
+                        }
+                        Err(e) => {
+                            error!("{:}", &e);
+                            std::thread::sleep(std::time::Duration::from_secs(1));
+                            break 'ws_session;
+                        }
+                    }
+
+                    'sending_control_messages: loop {
+                        if let Some(rx) = control_rx.as_ref() {
+                            if let Ok(message) = rx.try_recv() {
+                                let write = socket
+                                    .write_message(Message::Binary(message.to_control_frame()));
+                                match write {
+                                    Ok(_) => debug!("→ {}", &message),
+                                    Err(e) => {
+                                        warn!(
+                                            "Could not send control message '{}': {:?}",
+                                            &message, &e
+                                        )
+                                    }
+                                }
+                            } else {
+                                break 'sending_control_messages;
+                            }
+                        } else {
+                            break 'sending_control_messages;
                         }
                     }
                 }

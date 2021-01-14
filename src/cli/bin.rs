@@ -10,11 +10,12 @@ mod convert;
 mod statistics;
 mod storm;
 
-use clap::Clap;
+use clap::{ArgGroup, Clap};
 use std::fs::File;
 use std::fs::OpenOptions;
 use std::io::BufWriter;
 use std::sync::mpsc::{Receiver, Sender, TryRecvError};
+use url::Url;
 
 use control::*;
 use convert::*;
@@ -32,7 +33,7 @@ struct Opts {
 
 #[derive(Debug, Clap)]
 enum Mode {
-    /// Read telemetry from a serial port, parse it and stream result to stdout
+    /// Read telemetry from a serial port or a WebSocket server, parse it and stream result to stdout
     Debug(Debug),
 
     /// Read telemetry from a serial port and save bytes to a file
@@ -58,49 +59,54 @@ enum Mode {
 }
 
 #[derive(Debug, Clap)]
+#[clap(group = ArgGroup::new("source").required(true))]
 struct Debug {
-    /// Address of the port to use
-    #[clap(short = 'p')]
-    port: String,
+    /// Address of the serial port
+    #[clap(short = 'p', long, group = "source")]
+    port: Option<String>,
+
+    /// URL of the WebSocket server
+    #[clap(short = 'w', long, group = "source")]
+    ws_url: Option<Url>,
 
     /// Randomly send control messages at a normal pace
-    #[clap(short = 'c', long = "random-control-messages")]
+    #[clap(short = 'c', long)]
     random_control_messages: bool,
 }
 
 #[derive(Debug, Clap)]
 struct Record {
     /// Address of the port to use
-    #[clap(short = 'p')]
+    #[clap(short = 'p', long)]
     port: String,
 
     /// Path of the file to write to
-    #[clap(short = 'o')]
+    #[clap(short = 'o', long)]
     output: String,
 }
 
 #[derive(Debug, Clap)]
 struct Play {
     /// Path of the recorded file
-    #[clap(short = 'i')]
+    #[clap(short = 'i', long)]
     input: String,
 
     /// Parse and output data as fast as possible
-    #[clap(long = "full-blast")]
+    #[clap(long)]
     full_blast: bool,
 }
 
 #[derive(Debug, Clap)]
 struct Stats {
     /// Path of the recorded file
-    #[clap(short = 'i')]
+    #[clap(short = 'i', long)]
     input: String,
 }
 
 #[derive(Debug, Clap)]
 struct Control {
     /// Address of the port to use
-    #[clap(short = 'p')]
+    #[clap(short = 'p', long)]
     port: String,
 
     /// Setting internal number
@@ -115,34 +121,34 @@ struct Control {
 #[derive(Debug, Clap)]
 struct Storm {
     /// Address of the port to use
-    #[clap(short = 'p')]
+    #[clap(short = 'p', long)]
     port: String,
 
     /// (generator) Send valid control messages
-    #[clap(short = 'v', long = "valid")]
+    #[clap(short = 'v', long)]
     valid: bool,
 
     /// (generator) Send random bytes
-    #[clap(short = 'b', long = "bytes")]
+    #[clap(short = 'b', long)]
     bytes: bool,
 
     /// (generator) Send control messages with wrong CRC
-    #[clap(short = 'c', long = "wrong-crc")]
+    #[clap(short = 'c', long)]
     wrong_crc: bool,
 
     /// Send data as fast as possible (MCU might not be able to read it, but it should not crash)
-    #[clap(short = 'f', long = "full-blast")]
+    #[clap(short = 'f', long)]
     full_blast: bool,
 }
 
 #[derive(Debug, Clap)]
 struct Convert {
     /// Path of the recorded file
-    #[clap(short = 'i')]
+    #[clap(short = 'i', long)]
     input: String,
 
     /// Path of the converted file
-    #[clap(short = 'o')]
+    #[clap(short = 'o', long)]
     output: String,
 
     /// If a systick value is specified, only messages with a greater or equal systick will be included
@@ -154,7 +160,7 @@ struct Convert {
     to: Option<u64>,
 
     /// Output format
-    #[clap(short = 'f')]
+    #[clap(short = 'f', long)]
     format: Format,
 
     /// (GTS) Value to use in a "source" label in every GTS line; uses the input filename if not specified
@@ -219,7 +225,13 @@ fn debug(cfg: Debug) {
     let (tx, rx): (Sender<TelemetryChannelType>, Receiver<TelemetryChannelType>) =
         std::sync::mpsc::channel();
     std::thread::spawn(move || {
-        gather_telemetry(&cfg.port, tx, None, Some(control_rx));
+        if let Some(port) = &cfg.port {
+            gather_telemetry(port, tx, None, Some(control_rx));
+        } else if let Some(url) = &cfg.ws_url {
+            gather_telemetry_from_ws(url, tx, None, Some(control_rx))
+        } else {
+            unreachable!()
+        }
     });
     loop {
         match rx.try_recv() {
@@ -230,7 +242,7 @@ fn debug(cfg: Debug) {
                 std::thread::sleep(THREAD_SLEEP_THROTTLE);
             }
             Err(TryRecvError::Disconnected) => {
-                panic!("channel to serial port thread was closed");
+                panic!("channel to receiver thread was closed");
             }
         }
     }

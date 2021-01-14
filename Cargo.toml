@@ -18,6 +18,8 @@ rand = { version = "0.8.2", optional = true }
 serde = { version = "1.0.119", features = ["derive"], optional = true }
 serde_json = { version = "1.0.61", optional = true }
 serial = { version = "0.4.0", optional = true }
+tungstenite = { git = "https://github.com/dnaka91/tungstenite-rs", rev = "5a3dd8acfd4eff420c662d30c0ce486e953f3d45", features = ["use-rustls"], optional = true } # https://github.com/snapview/tungstenite-rs/pull/166
+url = { version = "2.2.0", optional = true }
 
 [dev-dependencies]
 proptest = "0.10.1"
@@ -27,9 +29,10 @@ name = "makair_telemetry"
 path = "src/lib.rs"
 
 [features]
-default = ["rand", "serial"]
-build-binary = ["clap", "env_logger", "rand", "serde_json", "serial", "serde-messages"]
+default = ["rand", "serial", "websocket"]
+build-binary = ["clap", "env_logger", "rand", "serde_json", "serial", "serde-messages", "websocket"]
 serde-messages = ["serde"]
+websocket = ["tungstenite", "url"]
 
 [[bin]]
 name = "makair_telemetry_cli"

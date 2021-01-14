@@ -14,4 +14,10 @@ pub enum Error {
     /// Serial error
     #[error("Serial error: {0}")]
     SerialError(#[from] serial::core::Error),
+
+    #[cfg(feature = "websocket")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "websocket")))]
+    /// WebSocket error
+    #[error("WebSocket error: {0}")]
+    WebSocketError(#[from] tungstenite::Error),
 }

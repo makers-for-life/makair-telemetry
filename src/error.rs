@@ -10,6 +10,7 @@ pub enum Error {
     TelemetryError(#[from] HighLevelError),
 
     #[cfg(feature = "serial")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "serial")))]
     /// Serial error
     #[error("Serial error: {0}")]
     SerialError(#[from] serial::core::Error),

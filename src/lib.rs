@@ -9,6 +9,8 @@
 #![deny(missing_docs)]
 // Required for the parsers to compile
 #![recursion_limit = "256"]
+// Enable documentation of features
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
 
 /// Utilities related to alarms
 pub mod alarm;
@@ -25,9 +27,12 @@ pub mod serializers;
 /// Structures to represent telemetry messages
 pub mod structures;
 
-use log::{debug, error, info, warn};
 #[cfg(feature = "serial")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serial")))]
+/// Re-export serial lib
 pub use serial;
+
+use log::{debug, error, info, warn};
 #[cfg(feature = "serial")]
 use serial::prelude::*;
 use std::fs::File;
@@ -59,6 +64,7 @@ pub type TelemetryChannelType = Result<TelemetryMessage, Error>;
 ///
 /// This is meant to be run in a dedicated thread.
 #[cfg(feature = "serial")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serial")))]
 pub fn gather_telemetry(
     port_id: &str,
     tx: Sender<TelemetryChannelType>,

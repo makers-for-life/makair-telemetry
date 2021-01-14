@@ -118,15 +118,15 @@ struct Storm {
     #[clap(short = 'p')]
     port: String,
 
-    /// [generator] Send valid control messages
+    /// (generator) Send valid control messages
     #[clap(short = 'v', long = "valid")]
     valid: bool,
 
-    /// [generator] Send random bytes
+    /// (generator) Send random bytes
     #[clap(short = 'b', long = "bytes")]
     bytes: bool,
 
-    /// [generator] Send control messages with wrong CRC
+    /// (generator) Send control messages with wrong CRC
     #[clap(short = 'c', long = "wrong-crc")]
     wrong_crc: bool,
 
@@ -157,11 +157,11 @@ struct Convert {
     #[clap(short = 'f')]
     format: Format,
 
-    /// [GTS] Value to use in a "source" label in every GTS line; uses the input filename if not specified
+    /// (GTS) Value to use in a "source" label in every GTS line; uses the input filename if not specified
     #[clap(long)]
     gts_source_label: Option<String>,
 
-    /// [GTS] Do not put automatic or manual "source" label in every GTS line
+    /// (GTS) Do not put automatic or manual "source" label in every GTS line
     #[clap(long)]
     gts_disable_source_label: bool,
 }

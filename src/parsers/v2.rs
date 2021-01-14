@@ -3,8 +3,9 @@ use nom::IResult;
 use nom::{alt, do_parse, length_data, map, map_res, named, tag, take};
 use std::convert::TryFrom;
 
-use super::super::locale::Locale;
-use super::super::structures::*;
+use crate::control::*;
+use crate::locale::Locale;
+use crate::structures::*;
 
 const VERSION: u8 = 2;
 

@@ -89,9 +89,8 @@ jobs:
       - name: Install latest stable
         uses: actions-rs/toolchain@v1.0.6
         with:
-            toolchain: stable
+            toolchain: nightly
             override: true
-            components: rustfmt, clippy
 
       - name: Cache build artifacts
         uses: actions/cache@v2
@@ -106,6 +105,9 @@ jobs:
         uses: actions-rs/cargo@v1.0.1
         with:
           command: doc
+          args: --all-features
+        env:
+          RUSTDOCFLAGS: --cfg doc_cfg
 
       - name: Prepare documentation to be hosted
         run: |

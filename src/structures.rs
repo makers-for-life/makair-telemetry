@@ -8,7 +8,7 @@ use std::convert::TryFrom;
 use std::io;
 use thiserror::Error;
 
-pub use crate::control::ControlSetting;
+use crate::control::ControlSetting;
 use crate::locale::Locale;
 
 /// Variants of the MakAir firmware

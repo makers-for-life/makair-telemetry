@@ -411,15 +411,6 @@ mod tests {
         ]
     }
 
-    fn phase_value(phase: Phase, subphase: SubPhase) -> u8 {
-        match (phase, subphase) {
-            (Phase::Inhalation, SubPhase::Inspiration) => 17,
-            (Phase::Inhalation, SubPhase::HoldInspiration) => 18,
-            (Phase::Exhalation, SubPhase::Exhale) => 68,
-            _ => 0,
-        }
-    }
-
     fn alarm_priority_strategy() -> impl Strategy<Value = AlarmPriority> {
         prop_oneof![
             Just(AlarmPriority::Low),
@@ -432,14 +423,6 @@ mod tests {
         proptest::num::u8::ANY.prop_filter_map("Invalid control setting", |n| {
             ControlSetting::try_from(n).ok()
         })
-    }
-
-    fn alarm_priority_value(m: &AlarmPriority) -> u8 {
-        match m {
-            AlarmPriority::High => 4,
-            AlarmPriority::Medium => 2,
-            AlarmPriority::Low => 1,
-        }
     }
 
     proptest! {
@@ -514,21 +497,9 @@ mod tests {
                 patient_height: None,
                 locale: None,
             };
-
-            // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
-            let input = &flat(&[
-                b"O:\x01",
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::StoppedMessage(msg);
+
             assert_eq!(nom::dbg_dmp(stopped, "stopped")(input), Ok((&[][..], expected)));
         }
     }
@@ -565,36 +536,9 @@ mod tests {
                 inspiratory_flow: None,
                 expiratory_flow: None,
             };
-
-            // This needs to be consistent with sendDataSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
-            let input = &flat(&[
-                b"D:",
-                &[VERSION],
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &msg.centile.to_be_bytes(),
-                b"\t",
-                &msg.pressure.to_be_bytes(),
-                b"\t",
-                &[phase_value(phase_subphase.0, phase_subphase.1)],
-                b"\t",
-                &[msg.blower_valve_position],
-                b"\t",
-                &[msg.patient_valve_position],
-                b"\t",
-                &[msg.blower_rpm],
-                b"\t",
-                &[msg.battery_level],
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::DataSnapshot(msg);
+
             assert_eq!(nom::dbg_dmp(data_snapshot, "data_snapshot")(input), Ok((&[][..], expected)));
         }
     }
@@ -665,49 +609,9 @@ mod tests {
                 patient_height: None,
                 locale: None,
             };
-
-            // This needs to be consistent with sendMachineStateSnapshot() defined in makair-firmware/srcs/telemetry.cpp
-            let input = &flat(&[
-                b"S:",
-                &[VERSION],
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &msg.cycle.to_be_bytes(),
-                b"\t",
-                &[msg.peak_command],
-                b"\t",
-                &[msg.plateau_command],
-                b"\t",
-                &[msg.peep_command],
-                b"\t",
-                &[msg.cpm_command],
-                b"\t",
-                &msg.previous_peak_pressure.to_be_bytes(),
-                b"\t",
-                &msg.previous_plateau_pressure.to_be_bytes(),
-                b"\t",
-                &msg.previous_peep_pressure.to_be_bytes(),
-                b"\t",
-                &[msg.current_alarm_codes.len() as u8],
-                &msg.current_alarm_codes,
-                b"\t",
-                &msg.previous_volume.unwrap_or(0xFFFF).to_be_bytes(),
-                b"\t",
-                &msg.expiratory_term.to_be_bytes(),
-                b"\t",
-                if msg.trigger_enabled { b"\x01" } else { b"\x00" },
-                b"\t",
-                &msg.trigger_offset.to_be_bytes(),
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::MachineStateSnapshot(msg);
+
             assert_eq!(nom::dbg_dmp(machine_state_snapshot, "machine_state_snapshot")(input), Ok((&[][..], expected)));
         }
     }
@@ -748,42 +652,9 @@ mod tests {
                 measured,
                 cycles_since_trigger,
             };
-
-            // This needs to be consistent with sendAlarmTrap() defined in src/software/firmware/srcs/telemetry.cpp
-            let input = &flat(&[
-                b"T:",
-                &[VERSION],
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &msg.centile.to_be_bytes(),
-                b"\t",
-                &msg.pressure.to_be_bytes(),
-                b"\t",
-                &[phase_value(phase_subphase.0, phase_subphase.1)],
-                b"\t",
-                &msg.cycle.to_be_bytes(),
-                b"\t",
-                &[msg.alarm_code],
-                b"\t",
-                &[alarm_priority_value(&msg.alarm_priority)],
-                b"\t",
-                &[if msg.triggered { 240u8 } else { 15u8 }],
-                b"\t",
-                &msg.expected.to_be_bytes(),
-                b"\t",
-                &msg.measured.to_be_bytes(),
-                b"\t",
-                &msg.cycles_since_trigger.to_be_bytes(),
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::AlarmTrap(msg);
+
             assert_eq!(nom::dbg_dmp(alarm_trap, "alarm_trap")(input), Ok((&[][..], expected)));
         }
     }
@@ -807,26 +678,9 @@ mod tests {
                 setting,
                 value,
             };
-
-            // This needs to be consistent with sendAlarmTrap() defined in src/software/firmware/srcs/telemetry.cpp
-            let input = &flat(&[
-                b"A:",
-                &[VERSION],
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &(msg.setting as u8).to_be_bytes(),
-                b"\t",
-                &msg.value.to_be_bytes(),
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::ControlAck(msg);
+
             assert_eq!(nom::dbg_dmp(control_ack, "control_ack")(input), Ok((&[][..], expected)));
         }
     }

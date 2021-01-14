@@ -6,6 +6,7 @@
 use std::cmp::{Ord, Ordering, PartialOrd};
 use std::convert::TryFrom;
 use std::io;
+use thiserror::Error;
 
 pub use crate::control::ControlSetting;
 use crate::locale::Locale;
@@ -801,8 +802,6 @@ impl<I> From<nom::error::Error<I>> for TelemetryError<I> {
     }
 }
 
-use thiserror::Error;
-
 /// Errors that need to be reported to the UI
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 #[cfg_attr(
@@ -828,26 +827,6 @@ pub enum HighLevelError {
     },
 }
 
-/*
-/// A telemetry message or a high-level error
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde-messages",
-    derive(serde::Serialize, serde::Deserialize)
-)]
-pub enum TelemetryMessageOrError {
-    /// A telemetry message
-    Message(TelemetryMessage),
-    /// A high-level error
-    Error(HighLevelError),
-}
-
-impl From<TelemetryMessage> for TelemetryMessageOrError {
-    fn from(message: TelemetryMessage) -> Self {
-        TelemetryMessageOrError::Message(message)
-    }
-}
-*/
 #[cfg(test)]
 mod tests {
     use crate::structures::AlarmPriority;

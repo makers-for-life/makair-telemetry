@@ -250,6 +250,8 @@ named!(
             >> patient_height: be_u8
             >> sep
             >> patient_gender: patient_gender
+            >> sep
+            >> peak_pressure_alarm_threshold: be_u16
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
@@ -301,6 +303,7 @@ named!(
                     locale: Locale::try_from_u16(locale),
                     patient_height: Some(patient_height),
                     patient_gender: Some(patient_gender),
+                    peak_pressure_alarm_threshold: Some(peak_pressure_alarm_threshold),
                 })
             })
     )
@@ -452,6 +455,8 @@ named!(
             >> patient_height: be_u8
             >> sep
             >> patient_gender: patient_gender
+            >> sep
+            >> peak_pressure_alarm_threshold: be_u16
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -509,6 +514,7 @@ named!(
                 locale: Locale::try_from_u16(locale),
                 patient_height: Some(patient_height),
                 patient_gender: Some(patient_gender),
+                peak_pressure_alarm_threshold: Some(peak_pressure_alarm_threshold),
             }))
     )
 );
@@ -841,6 +847,7 @@ mod tests {
             current_alarm_codes in collection::vec(0u8.., 0..100),
             patient_height in num::u8::ANY,
             patient_gender in patient_gender_strategy(),
+            peak_pressure_alarm_threshold in num::u16::ANY,
         ) {
             let msg = StoppedMessage {
                 telemetry_version: VERSION,
@@ -879,6 +886,7 @@ mod tests {
                 locale: Some(Locale::default()),
                 patient_height: Some(patient_height),
                 patient_gender: Some(patient_gender),
+                peak_pressure_alarm_threshold: Some(peak_pressure_alarm_threshold),
             };
             let input = &msg.to_bytes_v2();
             let expected = TelemetryMessage::StoppedMessage(msg);
@@ -974,6 +982,7 @@ mod tests {
             battery_level in num::u16::ANY,
             patient_height in num::u8::ANY,
             patient_gender in patient_gender_strategy(),
+            peak_pressure_alarm_threshold in num::u16::ANY,
         ) {
             let msg = MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -1019,6 +1028,7 @@ mod tests {
                 locale: Some(Locale::default()),
                 patient_height: Some(patient_height),
                 patient_gender: Some(patient_gender),
+                peak_pressure_alarm_threshold: Some(peak_pressure_alarm_threshold),
             };
             let input = &msg.to_bytes_v2();
             let expected = TelemetryMessage::MachineStateSnapshot(msg);

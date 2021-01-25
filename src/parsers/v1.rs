@@ -143,6 +143,7 @@ named!(
                     locale: None,
                     patient_height: None,
                     patient_gender: None,
+                    peak_pressure_alarm_threshold: None,
                 })
             })
     )
@@ -287,6 +288,7 @@ named!(
                 locale: None,
                 patient_height: None,
                 patient_gender: None,
+                peak_pressure_alarm_threshold: None,
             }))
     )
 );
@@ -500,6 +502,7 @@ mod tests {
                 locale: None,
                 patient_height: None,
                 patient_gender: None,
+                peak_pressure_alarm_threshold: None,
             };
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::StoppedMessage(msg);
@@ -613,6 +616,7 @@ mod tests {
                 locale: None,
                 patient_height: None,
                 patient_gender: None,
+                peak_pressure_alarm_threshold: None,
             };
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::MachineStateSnapshot(msg);

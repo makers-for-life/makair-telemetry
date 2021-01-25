@@ -464,6 +464,8 @@ pub struct StoppedMessage {
     pub patient_height: Option<u8>,
     /// [protocol v2] Patient's gender
     pub patient_gender: Option<PatientGender>,
+    /// [protocol v2] Threshold for peak pressure alarm in mmH2O
+    pub peak_pressure_alarm_threshold: Option<u16>,
 }
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
@@ -598,6 +600,8 @@ pub struct MachineStateSnapshot {
     pub patient_height: Option<u8>,
     /// [protocol v2] Patient's gender
     pub patient_gender: Option<PatientGender>,
+    /// [protocol v2] Threshold for peak pressure alarm in mmH2O
+    pub peak_pressure_alarm_threshold: Option<u16>,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped

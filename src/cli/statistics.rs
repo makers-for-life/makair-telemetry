@@ -139,6 +139,7 @@ mod tests {
                 locale: None,
                 patient_height: None,
                 patient_gender: None,
+                peak_pressure_alarm_threshold: None,
             },
         )];
 
@@ -186,6 +187,7 @@ mod tests {
             locale: None,
             patient_height: None,
             patient_gender: None,
+            peak_pressure_alarm_threshold: None,
         }));
 
         assert_eq!(compute_duration(vect), 100);
@@ -284,6 +286,7 @@ mod tests {
                 locale: None,
                 patient_height: None,
                 patient_gender: None,
+                peak_pressure_alarm_threshold: None,
             },
         ));
 
@@ -324,6 +327,7 @@ mod tests {
             locale: None,
             patient_height: None,
             patient_gender: None,
+            peak_pressure_alarm_threshold: None,
         }));
 
         assert_eq!(compute_duration(vect), 110);

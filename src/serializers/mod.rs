@@ -257,6 +257,11 @@ impl ToBytes for StoppedMessage {
             &self.patient_height.unwrap_or_default().to_be_bytes(),
             b"\t",
             &[self.patient_gender.unwrap_or_default() as u8],
+            b"\t",
+            &self
+                .peak_pressure_alarm_threshold
+                .unwrap_or_default()
+                .to_be_bytes(),
             b"\n",
         ])
     }
@@ -518,6 +523,11 @@ impl ToBytes for MachineStateSnapshot {
             &self.patient_height.unwrap_or_default().to_be_bytes(),
             b"\t",
             &[self.patient_gender.unwrap_or_default() as u8],
+            b"\t",
+            &self
+                .peak_pressure_alarm_threshold
+                .unwrap_or_default()
+                .to_be_bytes(),
             b"\n",
         ])
     }

@@ -252,9 +252,11 @@ impl ToBytes for StoppedMessage {
             &[self.current_alarm_codes.clone().unwrap_or_default().len() as u8],
             &self.current_alarm_codes.clone().unwrap_or_default(),
             b"\t",
+            &self.locale.unwrap_or_default().as_u16().to_be_bytes(),
+            b"\t",
             &self.patient_height.unwrap_or_default().to_be_bytes(),
             b"\t",
-            &self.locale.unwrap_or_default().as_u16().to_be_bytes(),
+            &[self.patient_gender.unwrap_or_default() as u8],
             b"\n",
         ])
     }
@@ -511,9 +513,11 @@ impl ToBytes for MachineStateSnapshot {
             b"\t",
             &self.battery_level.unwrap_or_default().to_be_bytes(),
             b"\t",
+            &self.locale.unwrap_or_default().as_u16().to_be_bytes(),
+            b"\t",
             &self.patient_height.unwrap_or_default().to_be_bytes(),
             b"\t",
-            &self.locale.unwrap_or_default().as_u16().to_be_bytes(),
+            &[self.patient_gender.unwrap_or_default() as u8],
             b"\n",
         ])
     }

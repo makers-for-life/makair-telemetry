@@ -140,8 +140,9 @@ named!(
                     inspiratory_duration_command: None,
                     battery_level: None,
                     current_alarm_codes: None,
-                    patient_height: None,
                     locale: None,
+                    patient_height: None,
+                    patient_gender: None,
                 })
             })
     )
@@ -283,8 +284,9 @@ named!(
                 inspiratory_duration_command: None,
                 previous_inspiratory_duration: None,
                 battery_level: None,
-                patient_height: None,
                 locale: None,
+                patient_height: None,
+                patient_gender: None,
             }))
     )
 );
@@ -495,8 +497,9 @@ mod tests {
                 inspiratory_duration_command: None,
                 battery_level: None,
                 current_alarm_codes: None,
-                patient_height: None,
                 locale: None,
+                patient_height: None,
+                patient_gender: None,
             };
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::StoppedMessage(msg);
@@ -607,8 +610,9 @@ mod tests {
                 inspiratory_duration_command: None,
                 previous_inspiratory_duration: None,
                 battery_level: None,
-                patient_height: None,
                 locale: None,
+                patient_height: None,
+                patient_gender: None,
             };
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::MachineStateSnapshot(msg);

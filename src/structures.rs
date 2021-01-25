@@ -322,6 +322,46 @@ pub enum EolTestSnapshotContent {
     Success,
 }
 
+/// Patient gender
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
+pub enum PatientGender {
+    /// Male
+    Male = 0,
+    /// Female
+    Female = 1,
+}
+
+impl TryFrom<u8> for PatientGender {
+    type Error = io::Error;
+
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::Male),
+            1 => Ok(Self::Female),
+            _ => Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                format!("Invalid patient gender {}", value),
+            )),
+        }
+    }
+}
+
+impl Default for PatientGender {
+    fn default() -> Self {
+        Self::Male
+    }
+}
+
+impl From<&PatientGender> for u8 {
+    fn from(gender: &PatientGender) -> u8 {
+        *gender as u8
+    }
+}
+
 /// A telemetry message that is sent once every time the MCU boots
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(
@@ -418,10 +458,12 @@ pub struct StoppedMessage {
     pub battery_level: Option<u16>,
     /// [protocol v2] Codes of the alarms that are currently triggered
     pub current_alarm_codes: Option<Vec<u8>>,
-    /// [protocol v2] Patient's height in centimeters
-    pub patient_height: Option<u8>,
     /// [protocol v2] Language of the system
     pub locale: Option<Locale>,
+    /// [protocol v2] Patient's height in centimeters
+    pub patient_height: Option<u8>,
+    /// [protocol v2] Patient's gender
+    pub patient_gender: Option<PatientGender>,
 }
 
 /// A telemetry message that is sent every time the firmware does a control iteration (every 10 ms)
@@ -550,10 +592,12 @@ pub struct MachineStateSnapshot {
     pub previous_inspiratory_duration: Option<u16>,
     /// [protocol v2] Measured battery level value in centivolts (precise value)
     pub battery_level: Option<u16>,
-    /// [protocol v2] Patient's height in centimeters
-    pub patient_height: Option<u8>,
     /// [protocol v2] Language of the system
     pub locale: Option<Locale>,
+    /// [protocol v2] Patient's height in centimeters
+    pub patient_height: Option<u8>,
+    /// [protocol v2] Patient's gender
+    pub patient_gender: Option<PatientGender>,
 }
 
 /// A telemetry message that is sent every time an alarm is triggered or stopped

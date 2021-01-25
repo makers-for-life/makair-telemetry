@@ -134,6 +134,11 @@ fn eol_test_snapshot_content(input: &[u8]) -> IResult<&[u8], EolTestSnapshotCont
 }
 
 named!(
+    patient_gender<PatientGender>,
+    map_res!(be_u8, |num| PatientGender::try_from(num))
+);
+
+named!(
     boot<TelemetryMessage>,
     do_parse!(
         tag!("B:")
@@ -240,9 +245,11 @@ named!(
             >> sep
             >> current_alarm_codes: u8_array
             >> sep
+            >> locale: be_u16
+            >> sep
             >> patient_height: be_u8
             >> sep
-            >> locale: be_u16
+            >> patient_gender: patient_gender
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
@@ -291,8 +298,9 @@ named!(
                     inspiratory_duration_command: Some(inspiratory_duration_command),
                     battery_level: Some(battery_level),
                     current_alarm_codes: Some(current_alarm_codes),
-                    patient_height: Some(patient_height),
                     locale: Locale::try_from_u16(locale),
+                    patient_height: Some(patient_height),
+                    patient_gender: Some(patient_gender),
                 })
             })
     )
@@ -439,9 +447,11 @@ named!(
             >> sep
             >> battery_level: be_u16
             >> sep
+            >> locale: be_u16
+            >> sep
             >> patient_height: be_u8
             >> sep
-            >> locale: be_u16
+            >> patient_gender: patient_gender
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -496,8 +506,9 @@ named!(
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 previous_inspiratory_duration: Some(previous_inspiratory_duration),
                 battery_level: Some(battery_level),
-                patient_height: Some(patient_height),
                 locale: Locale::try_from_u16(locale),
+                patient_height: Some(patient_height),
+                patient_gender: Some(patient_gender),
             }))
     )
 );
@@ -761,6 +772,10 @@ mod tests {
         }
     }
 
+    fn patient_gender_strategy() -> impl Strategy<Value = PatientGender> {
+        prop_oneof![Just(PatientGender::Male), Just(PatientGender::Female),]
+    }
+
     proptest! {
         #[test]
         fn test_boot_message_parser(
@@ -825,6 +840,7 @@ mod tests {
             battery_level in num::u16::ANY,
             current_alarm_codes in collection::vec(0u8.., 0..100),
             patient_height in num::u8::ANY,
+            patient_gender in patient_gender_strategy(),
         ) {
             let msg = StoppedMessage {
                 telemetry_version: VERSION,
@@ -860,8 +876,9 @@ mod tests {
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 battery_level: Some(battery_level),
                 current_alarm_codes: Some(current_alarm_codes),
-                patient_height: Some(patient_height),
                 locale: Some(Locale::default()),
+                patient_height: Some(patient_height),
+                patient_gender: Some(patient_gender),
             };
             let input = &msg.to_bytes_v2();
             let expected = TelemetryMessage::StoppedMessage(msg);
@@ -956,6 +973,7 @@ mod tests {
             previous_inspiratory_duration in num::u16::ANY,
             battery_level in num::u16::ANY,
             patient_height in num::u8::ANY,
+            patient_gender in patient_gender_strategy(),
         ) {
             let msg = MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -998,8 +1016,9 @@ mod tests {
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 previous_inspiratory_duration: Some(previous_inspiratory_duration),
                 battery_level: Some(battery_level),
-                patient_height: Some(patient_height),
                 locale: Some(Locale::default()),
+                patient_height: Some(patient_height),
+                patient_gender: Some(patient_gender),
             };
             let input = &msg.to_bytes_v2();
             let expected = TelemetryMessage::MachineStateSnapshot(msg);

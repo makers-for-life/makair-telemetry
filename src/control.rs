@@ -80,7 +80,7 @@ pub enum ControlSetting {
     InspiratoryDuration = 26,
     /// Language of the system; this should be two letters (see [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1)) in ASCII representation as two u8
     Locale = 27,
-    /// Patient's height in centimeters
+    /// Patient's height in centimeters (value bounds must be between 30 and 250)
     PatientHeight = 28,
     /// Patient's gender (0 = male, 1 = female)
     PatientGender = 29,
@@ -159,7 +159,7 @@ impl ControlSetting {
             Self::TargetInspiratoryFlow => RangeInclusive::new(5, 80),
             Self::InspiratoryDuration => RangeInclusive::new(200, 3_000),
             Self::Locale => Locale::bounds(),
-            Self::PatientHeight => RangeInclusive::new(100, 250),
+            Self::PatientHeight => RangeInclusive::new(30, 250),
             Self::PatientGender => RangeInclusive::new(0, 1),
             Self::PeakPressureAlarmThreshold => RangeInclusive::new(50, 700),
         }

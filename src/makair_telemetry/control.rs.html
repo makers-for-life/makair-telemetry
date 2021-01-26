@@ -450,7 +450,7 @@
     <span class="ident">InspiratoryDuration</span> <span class="op">=</span> <span class="number">26</span>,
     <span class="doccomment">/// Language of the system; this should be two letters (see [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1)) in ASCII representation as two u8</span>
     <span class="ident">Locale</span> <span class="op">=</span> <span class="number">27</span>,
-    <span class="doccomment">/// Patient&#39;s height in centimeters</span>
+    <span class="doccomment">/// Patient&#39;s height in centimeters (value bounds must be between 30 and 250)</span>
     <span class="ident">PatientHeight</span> <span class="op">=</span> <span class="number">28</span>,
     <span class="doccomment">/// Patient&#39;s gender (0 = male, 1 = female)</span>
     <span class="ident">PatientGender</span> <span class="op">=</span> <span class="number">29</span>,
@@ -529,7 +529,7 @@
             <span class="self">Self</span>::<span class="ident">TargetInspiratoryFlow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">5</span>, <span class="number">80</span>),
             <span class="self">Self</span>::<span class="ident">InspiratoryDuration</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">200</span>, <span class="number">3_000</span>),
             <span class="self">Self</span>::<span class="ident">Locale</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Locale</span>::<span class="ident">bounds</span>(),
-            <span class="self">Self</span>::<span class="ident">PatientHeight</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">100</span>, <span class="number">250</span>),
+            <span class="self">Self</span>::<span class="ident">PatientHeight</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">30</span>, <span class="number">250</span>),
             <span class="self">Self</span>::<span class="ident">PatientGender</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">1</span>),
             <span class="self">Self</span>::<span class="ident">PeakPressureAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span>::<span class="ident">new</span>(<span class="number">50</span>, <span class="number">700</span>),
         }

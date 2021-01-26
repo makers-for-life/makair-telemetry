@@ -96,6 +96,7 @@ pub fn parse_telemetry_message(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::serializers::ToBytes;
     use proptest::prelude::*;
 
     pub fn flat(v: &[&[u8]]) -> Vec<u8> {
@@ -187,6 +188,32 @@ mod tests {
                     computed: expected_crc,
                 }
             ))));
+        }
+    }
+
+    proptest! {
+        #[test]
+        fn test_telemetry_message_serialization_and_deserialization(
+            version in ".*",
+            device_id1 in (0u32..),
+            device_id2 in (0u32..),
+            device_id3 in (0u32..),
+            systick in (0u64..),
+            mode in mode_strategy(),
+            value128 in (0u8..),
+        ) {
+            let msg = BootMessage {
+                telemetry_version: 2,
+                version,
+                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                systick,
+                mode,
+                value128,
+            };
+            let expected = TelemetryMessage::BootMessage(msg);
+            let input = &expected.to_bytes_v2();
+
+            assert_eq!(nom::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(input), Ok((&[][..], expected)));
         }
     }
 

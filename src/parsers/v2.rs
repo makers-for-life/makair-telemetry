@@ -3,8 +3,9 @@ use nom::IResult;
 use nom::{alt, do_parse, length_data, map, map_res, named, tag, take};
 use std::convert::TryFrom;
 
-use super::super::locale::Locale;
-use super::super::structures::*;
+use crate::control::*;
+use crate::locale::Locale;
+use crate::structures::*;
 
 const VERSION: u8 = 2;
 
@@ -133,6 +134,11 @@ fn eol_test_snapshot_content(input: &[u8]) -> IResult<&[u8], EolTestSnapshotCont
 }
 
 named!(
+    patient_gender<PatientGender>,
+    map_res!(be_u8, |num| PatientGender::try_from(num))
+);
+
+named!(
     boot<TelemetryMessage>,
     do_parse!(
         tag!("B:")
@@ -239,9 +245,13 @@ named!(
             >> sep
             >> current_alarm_codes: u8_array
             >> sep
+            >> locale: be_u16
+            >> sep
             >> patient_height: be_u8
             >> sep
-            >> locale: be_u16
+            >> patient_gender: patient_gender
+            >> sep
+            >> peak_pressure_alarm_threshold: be_u16
             >> end
             >> ({
                 TelemetryMessage::StoppedMessage(StoppedMessage {
@@ -290,8 +300,10 @@ named!(
                     inspiratory_duration_command: Some(inspiratory_duration_command),
                     battery_level: Some(battery_level),
                     current_alarm_codes: Some(current_alarm_codes),
-                    patient_height: Some(patient_height),
                     locale: Locale::try_from_u16(locale),
+                    patient_height: Some(patient_height),
+                    patient_gender: Some(patient_gender),
+                    peak_pressure_alarm_threshold: Some(peak_pressure_alarm_threshold),
                 })
             })
     )
@@ -438,9 +450,13 @@ named!(
             >> sep
             >> battery_level: be_u16
             >> sep
+            >> locale: be_u16
+            >> sep
             >> patient_height: be_u8
             >> sep
-            >> locale: be_u16
+            >> patient_gender: patient_gender
+            >> sep
+            >> peak_pressure_alarm_threshold: be_u16
             >> end
             >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -495,8 +511,10 @@ named!(
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 previous_inspiratory_duration: Some(previous_inspiratory_duration),
                 battery_level: Some(battery_level),
-                patient_height: Some(patient_height),
                 locale: Locale::try_from_u16(locale),
+                patient_height: Some(patient_height),
+                patient_gender: Some(patient_gender),
+                peak_pressure_alarm_threshold: Some(peak_pressure_alarm_threshold),
             }))
     )
 );
@@ -670,6 +688,7 @@ pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<
 mod tests {
     use super::super::tests::*;
     use super::*;
+    use crate::serializers::ToBytes;
     use proptest::bool;
     use proptest::collection;
     use proptest::num;
@@ -678,13 +697,6 @@ mod tests {
 
     fn phase_strategy() -> impl Strategy<Value = Phase> {
         prop_oneof![Just(Phase::Inhalation), Just(Phase::Exhalation)]
-    }
-
-    fn phase_value(phase: Phase) -> u8 {
-        match phase {
-            Phase::Inhalation => 17,
-            Phase::Exhalation => 68,
-        }
     }
 
     fn alarm_priority_strategy() -> impl Strategy<Value = AlarmPriority> {
@@ -701,14 +713,6 @@ mod tests {
         })
     }
 
-    fn alarm_priority_value(m: &AlarmPriority) -> u8 {
-        match m {
-            AlarmPriority::High => 4,
-            AlarmPriority::Medium => 2,
-            AlarmPriority::Low => 1,
-        }
-    }
-
     fn ventilation_mode_strategy() -> impl Strategy<Value = VentilationMode> {
         prop_oneof![
             Just(VentilationMode::PC_CMV),
@@ -717,10 +721,6 @@ mod tests {
             Just(VentilationMode::PC_VSAI),
             Just(VentilationMode::VC_AC),
         ]
-    }
-
-    fn ventilation_mode_value(m: &VentilationMode) -> u8 {
-        m.into()
     }
 
     fn fatal_error_details_strategy() -> BoxedStrategy<FatalErrorDetails> {
@@ -778,6 +778,10 @@ mod tests {
         }
     }
 
+    fn patient_gender_strategy() -> impl Strategy<Value = PatientGender> {
+        prop_oneof![Just(PatientGender::Male), Just(PatientGender::Female),]
+    }
+
     proptest! {
         #[test]
         fn test_boot_message_parser(
@@ -797,26 +801,9 @@ mod tests {
                 mode,
                 value128,
             };
-
-            // This needs to be consistent with sendBootMessage() defined in src/software/firmware/srcs/telemetry.cpp
-            let input = &flat(&[
-                b"B:",
-                &[VERSION],
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &[mode_ordinal(&msg.mode)],
-                b"\t",
-                &[msg.value128],
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v2();
             let expected = TelemetryMessage::BootMessage(msg);
+
             assert_eq!(nom::dbg_dmp(boot, "boot")(input), Ok((&[][..], expected)));
         }
     }
@@ -859,6 +846,8 @@ mod tests {
             battery_level in num::u16::ANY,
             current_alarm_codes in collection::vec(0u8.., 0..100),
             patient_height in num::u8::ANY,
+            patient_gender in patient_gender_strategy(),
+            peak_pressure_alarm_threshold in num::u16::ANY,
         ) {
             let msg = StoppedMessage {
                 telemetry_version: VERSION,
@@ -894,88 +883,14 @@ mod tests {
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 battery_level: Some(battery_level),
                 current_alarm_codes: Some(current_alarm_codes),
-                patient_height: Some(patient_height),
                 locale: Some(Locale::default()),
+                patient_height: Some(patient_height),
+                patient_gender: Some(patient_gender),
+                peak_pressure_alarm_threshold: Some(peak_pressure_alarm_threshold),
             };
-
-            // This needs to be consistent with sendStoppedMessage() defined in src/software/firmware/srcs/telemetry.cpp
-            let input = &flat(&[
-                b"O:",
-                &[VERSION],
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &[msg.peak_command.unwrap_or_default()],
-                b"\t",
-                &[msg.plateau_command.unwrap_or_default()],
-                b"\t",
-                &[msg.peep_command.unwrap_or_default()],
-                b"\t",
-                &[msg.cpm_command.unwrap_or_default()],
-                b"\t",
-                &msg.expiratory_term.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                if msg.trigger_enabled.unwrap_or_default() { b"\x01" } else { b"\x00" },
-                b"\t",
-                &msg.trigger_offset.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                if msg.alarm_snoozed.unwrap_or_default() { b"\x01" } else { b"\x00" },
-                b"\t",
-                &msg.cpu_load.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &[ventilation_mode_value(&msg.ventilation_mode)],
-                b"\t",
-                &msg.inspiratory_trigger_flow.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.expiratory_trigger_flow.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.ti_min.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.ti_max.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.low_inspiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.high_inspiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.low_expiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.high_expiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.low_respiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.high_respiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.target_tidal_volume.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.low_tidal_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.high_tidal_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.plateau_duration.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.leak_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.target_inspiratory_flow.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.inspiratory_duration_command.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.battery_level.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &[msg.current_alarm_codes.clone().unwrap_or_default().len() as u8],
-                &msg.current_alarm_codes.clone().unwrap_or_default(),
-                b"\t",
-                &msg.patient_height.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.locale.unwrap_or_default().as_u16().to_be_bytes(),
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v2();
             let expected = TelemetryMessage::StoppedMessage(msg);
+
             assert_eq!(nom::dbg_dmp(stopped, "stopped")(input), Ok((&[][..], expected)));
         }
     }
@@ -1005,7 +920,7 @@ mod tests {
                 systick,
                 centile,
                 pressure,
-                phase: phase.clone(),
+                phase,
                 subphase: None,
                 blower_valve_position,
                 patient_valve_position,
@@ -1014,40 +929,9 @@ mod tests {
                 inspiratory_flow: Some(inspiratory_flow),
                 expiratory_flow: Some(expiratory_flow),
             };
-
-            // This needs to be consistent with sendDataSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
-            let input = &flat(&[
-                b"D:",
-                &[VERSION],
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &msg.centile.to_be_bytes(),
-                b"\t",
-                &msg.pressure.to_be_bytes(),
-                b"\t",
-                &[phase_value(phase)],
-                b"\t",
-                &[msg.blower_valve_position],
-                b"\t",
-                &[msg.patient_valve_position],
-                b"\t",
-                &[msg.blower_rpm],
-                b"\t",
-                &[msg.battery_level],
-                b"\t",
-                &msg.inspiratory_flow.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.expiratory_flow.unwrap_or_default().to_be_bytes(),
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v2();
             let expected = TelemetryMessage::DataSnapshot(msg);
+
             assert_eq!(nom::dbg_dmp(data_snapshot, "data_snapshot")(input), Ok((&[][..], expected)));
         }
     }
@@ -1097,6 +981,8 @@ mod tests {
             previous_inspiratory_duration in num::u16::ANY,
             battery_level in num::u16::ANY,
             patient_height in num::u8::ANY,
+            patient_gender in patient_gender_strategy(),
+            peak_pressure_alarm_threshold in num::u16::ANY,
         ) {
             let msg = MachineStateSnapshot {
                 telemetry_version: VERSION,
@@ -1139,102 +1025,14 @@ mod tests {
                 inspiratory_duration_command: Some(inspiratory_duration_command),
                 previous_inspiratory_duration: Some(previous_inspiratory_duration),
                 battery_level: Some(battery_level),
-                patient_height: Some(patient_height),
                 locale: Some(Locale::default()),
+                patient_height: Some(patient_height),
+                patient_gender: Some(patient_gender),
+                peak_pressure_alarm_threshold: Some(peak_pressure_alarm_threshold),
             };
-
-            // This needs to be consistent with sendMachineStateSnapshot() defined in src/software/firmware/srcs/telemetry.cpp
-            let input = &flat(&[
-                b"S:",
-                &[VERSION],
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &msg.cycle.to_be_bytes(),
-                b"\t",
-                &[msg.peak_command],
-                b"\t",
-                &[msg.plateau_command],
-                b"\t",
-                &[msg.peep_command],
-                b"\t",
-                &[msg.cpm_command],
-                b"\t",
-                &msg.previous_peak_pressure.to_be_bytes(),
-                b"\t",
-                &msg.previous_plateau_pressure.to_be_bytes(),
-                b"\t",
-                &msg.previous_peep_pressure.to_be_bytes(),
-                b"\t",
-                &[msg.current_alarm_codes.len() as u8],
-                &msg.current_alarm_codes,
-                b"\t",
-                &msg.previous_volume.unwrap_or(0xFFFF).to_be_bytes(),
-                b"\t",
-                &msg.expiratory_term.to_be_bytes(),
-                b"\t",
-                if msg.trigger_enabled { b"\x01" } else { b"\x00" },
-                b"\t",
-                &msg.trigger_offset.to_be_bytes(),
-                b"\t",
-                &msg.previous_cpm.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                if msg.alarm_snoozed.unwrap_or_default() { b"\x01" } else { b"\x00" },
-                b"\t",
-                &msg.cpu_load.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &[ventilation_mode_value(&msg.ventilation_mode)],
-                b"\t",
-                &msg.inspiratory_trigger_flow.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.expiratory_trigger_flow.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.ti_min.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.ti_max.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.low_inspiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.high_inspiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.low_expiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.high_expiratory_minute_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.low_respiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.high_respiratory_rate_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.target_tidal_volume.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.low_tidal_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.high_tidal_volume_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.plateau_duration.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.leak_alarm_threshold.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.target_inspiratory_flow.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.inspiratory_duration_command.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.previous_inspiratory_duration.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.battery_level.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.patient_height.unwrap_or_default().to_be_bytes(),
-                b"\t",
-                &msg.locale.unwrap_or_default().as_u16().to_be_bytes(),
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v2();
             let expected = TelemetryMessage::MachineStateSnapshot(msg);
+
             assert_eq!(nom::dbg_dmp(machine_state_snapshot, "machine_state_snapshot")(input), Ok((&[][..], expected)));
         }
     }
@@ -1265,7 +1063,7 @@ mod tests {
                 systick,
                 centile,
                 pressure,
-                phase: phase.clone(),
+                phase,
                 subphase: None,
                 cycle,
                 alarm_code,
@@ -1275,42 +1073,9 @@ mod tests {
                 measured,
                 cycles_since_trigger,
             };
-
-            // This needs to be consistent with sendAlarmTrap() defined in src/software/firmware/srcs/telemetry.cpp
-            let input = &flat(&[
-                b"T:",
-                &[VERSION],
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &msg.centile.to_be_bytes(),
-                b"\t",
-                &msg.pressure.to_be_bytes(),
-                b"\t",
-                &[phase_value(phase)],
-                b"\t",
-                &msg.cycle.to_be_bytes(),
-                b"\t",
-                &[msg.alarm_code],
-                b"\t",
-                &[alarm_priority_value(&msg.alarm_priority)],
-                b"\t",
-                &[if msg.triggered { 240u8 } else { 15u8 }],
-                b"\t",
-                &msg.expected.to_be_bytes(),
-                b"\t",
-                &msg.measured.to_be_bytes(),
-                b"\t",
-                &msg.cycles_since_trigger.to_be_bytes(),
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v2();
             let expected = TelemetryMessage::AlarmTrap(msg);
+
             assert_eq!(nom::dbg_dmp(alarm_trap, "alarm_trap")(input), Ok((&[][..], expected)));
         }
     }
@@ -1334,26 +1099,9 @@ mod tests {
                 setting,
                 value,
             };
-
-            // This needs to be consistent with sendAlarmTrap() defined in src/software/firmware/srcs/telemetry.cpp
-            let input = &flat(&[
-                b"A:",
-                &[VERSION],
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &(msg.setting as u8).to_be_bytes(),
-                b"\t",
-                &msg.value.to_be_bytes(),
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v2();
             let expected = TelemetryMessage::ControlAck(msg);
+
             assert_eq!(nom::dbg_dmp(control_ack, "control_ack")(input), Ok((&[][..], expected)));
         }
     }
@@ -1375,57 +1123,9 @@ mod tests {
                 systick,
                 error,
             };
-
-            let fatal_error_details: Vec<u8> = match msg.error {
-                FatalErrorDetails::WatchdogRestart => vec![1],
-                FatalErrorDetails::CalibrationError {
-                    pressure_offset,
-                    min_pressure,
-                    max_pressure,
-                    flow_at_starting,
-                    flow_with_blower_on
-                }  => flat(&[
-                    &[2],
-                    b"\t",
-                    &pressure_offset.to_be_bytes(),
-                    b"\t",
-                    &min_pressure.to_be_bytes(),
-                    b"\t",
-                    &max_pressure.to_be_bytes(),
-                    b"\t",
-                    &flow_at_starting.unwrap_or(i16::MAX).to_be_bytes(),
-                    b"\t",
-                    &flow_with_blower_on.unwrap_or(i16::MAX).to_be_bytes(),
-                ]),
-                FatalErrorDetails::BatteryDeeplyDischarged { battery_level } => flat(&[
-                    &[3],
-                    b"\t",
-                    &battery_level.to_be_bytes(),
-                ]),
-                FatalErrorDetails::MassFlowMeterError => vec![4],
-                FatalErrorDetails::InconsistentPressure { pressure } => flat(&[
-                    &[5],
-                    b"\t",
-                    &pressure.to_be_bytes(),
-                ]),
-            };
-
-            let input = &flat(&[
-                b"E:",
-                &[VERSION],
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &fatal_error_details,
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v2();
             let expected = TelemetryMessage::FatalError(msg);
+
             assert_eq!(nom::dbg_dmp(fatal_error, "fatal_error")(input), Ok((&[][..], expected)));
         }
     }
@@ -1449,36 +1149,9 @@ mod tests {
                 current_step,
                 content,
             };
-
-            let eol_test_snapshot_content: Vec<u8> = match msg.content {
-                EolTestSnapshotContent::InProgress => vec![0],
-                EolTestSnapshotContent::Error(ref reason) => flat(&[
-                    &[1],
-                    b"\t",
-                    &[reason.len() as u8],
-                    &reason.as_bytes(),
-                ]),
-                EolTestSnapshotContent::Success => vec![2],
-            };
-
-            let input = &flat(&[
-                b"L:",
-                &[VERSION],
-                &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
-                &device_id1.to_be_bytes(),
-                &device_id2.to_be_bytes(),
-                &device_id3.to_be_bytes(),
-                b"\t",
-                &msg.systick.to_be_bytes(),
-                b"\t",
-                &[current_step as u8],
-                b"\t",
-                &eol_test_snapshot_content,
-                b"\n",
-            ]);
-
+            let input = &msg.to_bytes_v2();
             let expected = TelemetryMessage::EolTestSnapshot(msg);
+
             assert_eq!(nom::dbg_dmp(eol_test_snapshot, "eol_test_snapshot")(input), Ok((&[][..], expected)));
         }
     }

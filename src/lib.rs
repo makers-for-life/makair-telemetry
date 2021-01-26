@@ -9,53 +9,59 @@
 #![deny(missing_docs)]
 // Required for the parsers to compile
 #![recursion_limit = "256"]
+// Enable documentation of features
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
 
 /// Utilities related to alarms
 pub mod alarm;
 /// Structures to represent control messages
 pub mod control;
+/// Error-related entities
+pub mod error;
 /// Tools to manipulate ISO 639-1 language codes to be used in the control protocol
 pub mod locale;
 /// Underlying parsers for telemetry messages
 pub mod parsers;
+/// Binary representation of telemtry messages
+pub mod serializers;
 /// Structures to represent telemetry messages
 pub mod structures;
 
 #[cfg(feature = "serial")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serial")))]
+/// Re-export serial lib
+pub use serial;
+#[cfg(feature = "websocket")]
+/// Re-export Url lib
+pub use url;
+
 use log::{debug, error, info, warn};
 #[cfg(feature = "serial")]
-pub use serial;
-#[cfg(feature = "serial")]
 use serial::prelude::*;
-#[cfg(feature = "serial")]
 use std::fs::File;
+use std::io::{BufRead, BufReader};
 #[cfg(feature = "serial")]
-use std::io::BufRead;
+use std::io::{BufWriter, Read, Write};
 #[cfg(feature = "serial")]
-use std::io::BufReader;
-#[cfg(feature = "serial")]
-use std::io::BufWriter;
-#[cfg(feature = "serial")]
-use std::io::Read;
-#[cfg(feature = "serial")]
-use std::io::Write;
-#[cfg(feature = "serial")]
-use std::sync::mpsc::{Receiver, Sender};
+use std::sync::mpsc::Receiver;
+use std::sync::mpsc::Sender;
 #[cfg(feature = "serial")]
 use std::sync::{Arc, Mutex};
+#[cfg(feature = "websocket")]
+use url::Url;
 
 #[cfg(feature = "serial")]
 use control::*;
-#[cfg(feature = "serial")]
 use parsers::*;
-#[cfg(feature = "serial")]
+use serializers::*;
 use structures::*;
 
-/// A decoded telemetry message
-#[cfg(feature = "serial")]
-pub type TelemetryChannelType = Result<TelemetryMessageOrError, serial::core::Error>;
+use error::Error;
 
-/// Open a serial port, consume it endlessly and send back parsed telemetry messages through a channel
+/// A decoded telemetry message
+pub type TelemetryChannelType = Result<TelemetryMessage, Error>;
+
+/// Open a serial port, consume it endlessly and send parsed telemetry messages through a channel
 ///
 /// * `port_id` - Name or path to the serial port.
 /// * `tx` - Sender of a channel.
@@ -64,6 +70,7 @@ pub type TelemetryChannelType = Result<TelemetryMessageOrError, serial::core::Er
 ///
 /// This is meant to be run in a dedicated thread.
 #[cfg(feature = "serial")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serial")))]
 pub fn gather_telemetry(
     port_id: &str,
     tx: Sender<TelemetryChannelType>,
@@ -75,7 +82,8 @@ pub fn gather_telemetry(
         match serial::open(&port_id) {
             Err(e) => {
                 error!("{:?}", e);
-                tx.send(Err(e)).expect("[tx channel] failed to send error");
+                tx.send(Err(e.into()))
+                    .expect("[tx channel] failed to send error");
                 std::thread::sleep(std::time::Duration::from_secs(1));
             }
             Ok(mut port) => {
@@ -88,7 +96,7 @@ pub fn gather_telemetry(
                 }) {
                     Err(e) => {
                         error!("{}", e);
-                        tx.send(Err(e))
+                        tx.send(Err(e.into()))
                             .expect("[tx channel] failed setting up port");
                         std::thread::sleep(std::time::Duration::from_secs(1));
                     }
@@ -121,7 +129,7 @@ pub fn gather_telemetry(
                                                 file_buffer.flush().expect("[tx channel] failed flushing buffer flush to file");
                                             }
 
-                                            tx.send(Ok(message.into()))
+                                            tx.send(Ok(message))
                                                 .expect("[tx channel] failed sending message");
 
                                             buffer = Vec::from(rest);
@@ -136,10 +144,12 @@ pub fn gather_telemetry(
                                                 expected, computed
                                             );
 
-                                            tx.send(Ok(TelemetryMessageOrError::Error(
-                                                HighLevelError::CrcError { expected, computed },
-                                            )))
-                                            .expect("[tx channel] failed sending message");
+                                            tx.send(Err(HighLevelError::CrcError {
+                                                expected,
+                                                computed,
+                                            }
+                                            .into()))
+                                                .expect("[tx channel] failed sending message");
 
                                             buffer = buffer.clone().split_off(msg_bytes.len());
                                         }
@@ -156,12 +166,13 @@ pub fn gather_telemetry(
                                                 maximum_supported, found
                                             );
 
-                                            tx.send(Ok(TelemetryMessageOrError::Error(
+                                            tx.send(Err(
                                                 HighLevelError::UnsupportedProtocolVersion {
                                                     maximum_supported,
                                                     found,
-                                                },
-                                            )))
+                                                }
+                                                .into(),
+                                            ))
                                             .expect("[tx channel] failed sending message");
 
                                             buffer = buffer.clone().split_off(msg_bytes.len());
@@ -225,13 +236,9 @@ pub fn gather_telemetry(
 }
 
 /// Helper to display telemetry messages
-#[cfg(feature = "serial")]
 pub fn display_message(message: TelemetryChannelType) {
     match message {
-        Ok(TelemetryMessageOrError::Message(TelemetryMessage::BootMessage(BootMessage {
-            value128,
-            ..
-        }))) => {
+        Ok(TelemetryMessage::BootMessage(BootMessage { value128, .. })) => {
             debug!("####################################################################################");
             debug!("######### CONTROLLER STARTED #########");
             debug!("####################################################################################");
@@ -244,16 +251,16 @@ pub fn display_message(message: TelemetryChannelType) {
                 error!("value128 should be equal to 128 (found {:b} = {}); check serial port configuration", &value128, &value128);
             }
         }
-        Ok(TelemetryMessageOrError::Message(TelemetryMessage::StoppedMessage(_))) => {
+        Ok(TelemetryMessage::StoppedMessage(_)) => {
             debug!("stopped");
         }
-        Ok(TelemetryMessageOrError::Message(TelemetryMessage::DataSnapshot(_))) => {
+        Ok(TelemetryMessage::DataSnapshot(_)) => {
             info!(
                 "    {:?}",
                 &message.expect("failed unwrapping message for data snapshot")
             );
         }
-        Ok(TelemetryMessageOrError::Message(TelemetryMessage::MachineStateSnapshot(_))) => {
+        Ok(TelemetryMessage::MachineStateSnapshot(_)) => {
             debug!("------------------------------------------------------------------------------------");
             info!(
                 "{:?}",
@@ -261,10 +268,7 @@ pub fn display_message(message: TelemetryChannelType) {
             );
             debug!("------------------------------------------------------------------------------------");
         }
-        Ok(TelemetryMessageOrError::Message(TelemetryMessage::AlarmTrap(AlarmTrap {
-            triggered,
-            ..
-        }))) => {
+        Ok(TelemetryMessage::AlarmTrap(AlarmTrap { triggered, .. })) => {
             let prefix = if triggered { "NEW ALARM" } else { "STOPPED" };
             debug!("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             info!(
@@ -274,27 +278,17 @@ pub fn display_message(message: TelemetryChannelType) {
             );
             debug!("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }
-        Ok(TelemetryMessageOrError::Message(TelemetryMessage::ControlAck(ControlAck {
-            setting,
-            value,
-            ..
-        }))) => {
+        Ok(TelemetryMessage::ControlAck(ControlAck { setting, value, .. })) => {
             info!("← {:?} = {}", &setting, &value);
         }
-        Ok(TelemetryMessageOrError::Message(TelemetryMessage::FatalError(FatalError {
-            error,
-            ..
-        }))) => {
+        Ok(TelemetryMessage::FatalError(FatalError { error, .. })) => {
             info!("***** FATAL ERROR ***** {:?}", &error);
         }
-        Ok(TelemetryMessageOrError::Message(TelemetryMessage::EolTestSnapshot(_))) => {
+        Ok(TelemetryMessage::EolTestSnapshot(_)) => {
             info!(
                 "    {:?}",
                 &message.expect("failed unwrapping message for EOL test snapshot")
             );
-        }
-        Ok(TelemetryMessageOrError::Error(e)) => {
-            warn!("a high-level error occurred: {:?}", e);
         }
         Err(e) => {
             warn!("an error occurred: {:?}", e);
@@ -309,7 +303,6 @@ pub fn display_message(message: TelemetryChannelType) {
 /// * `enable_time_simulation` - If `true`, telemetry messages will be sent in a realistic timing; if `false`, they will be read as fast as possible.
 ///
 /// This is meant to be run in a dedicated thread.
-#[cfg(feature = "serial")]
 pub fn gather_telemetry_from_file(
     file: File,
     tx: Sender<TelemetryChannelType>,
@@ -342,7 +335,7 @@ pub fn gather_telemetry_from_file(
                                     _ => (),
                                 }
                             }
-                            tx.send(Ok(message.into()))
+                            tx.send(Ok(message))
                                 .expect("failed sending message to tx channel");
                             buffer = Vec::from(rest);
                         }
@@ -356,6 +349,139 @@ pub fn gather_telemetry_from_file(
                             if !buffer.is_empty() {
                                 buffer.remove(0);
                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Connect to a WebSocket server, get binary messages endlessly and send parsed telemetry messages through a channel
+///
+/// * `url` - URL to the WebSocket server.
+/// * `tx` - Sender of a channel.
+/// * `file_buf` - Optional file buffer; if specified, messages will also be serialized and written in this file.
+/// * `control_rx` - Optional receiver of a channel used to send control messages through the WS session.
+///
+/// This is meant to be run in a dedicated thread.
+#[cfg(feature = "websocket")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "websocket")))]
+pub fn gather_telemetry_from_ws(
+    url: &Url,
+    tx: Sender<TelemetryChannelType>,
+    mut file_buf: Option<BufWriter<File>>,
+    control_rx: Option<Receiver<ControlMessage>>,
+) {
+    use tungstenite::client::connect;
+    use tungstenite::protocol::Message;
+
+    loop {
+        info!("opening {}", &url);
+
+        match connect(url) {
+            Err(e) => {
+                error!("{:?}", e);
+                tx.send(Err(e.into()))
+                    .expect("[tx channel] failed to send error");
+                std::thread::sleep(std::time::Duration::from_secs(1));
+            }
+            Ok((mut socket, _response)) => {
+                info!("WebSocket connection was successfuly established");
+                'ws_session: loop {
+                    match socket.read_message() {
+                        Ok(Message::Binary(bytes)) => {
+                            // Let's try to parse the received message
+                            match parse_telemetry_message(&bytes) {
+                                // It worked!
+                                Ok((_rest, message)) => {
+                                    if let Some(file_buffer) = file_buf.as_mut() {
+                                        // Write a new line with the base64 value of the message
+                                        let base64 = base64::encode(&message.to_bytes());
+                                        file_buffer
+                                            .write_all(base64.as_bytes())
+                                            .expect("[tx channel] failed flushing buffer to file");
+                                        file_buffer.write_all(b"\n").expect(
+                                            "[tx channel] failed ending buffer flush to file",
+                                        );
+                                        file_buffer.flush().expect(
+                                            "[tx channel] failed flushing buffer flush to file",
+                                        );
+                                    }
+
+                                    tx.send(Ok(message))
+                                        .expect("[tx channel] failed sending message");
+                                }
+                                // Message was read but there was a CRC error
+                                Err(nom::Err::Failure(TelemetryError(
+                                    _msg_bytes,
+                                    TelemetryErrorKind::CrcError { expected, computed },
+                                ))) => {
+                                    warn!(
+                                        "[CRC error]\texpected={}\tcomputed={}",
+                                        expected, computed
+                                    );
+
+                                    tx.send(Err(
+                                        HighLevelError::CrcError { expected, computed }.into()
+                                    ))
+                                    .expect("[tx channel] failed sending message");
+                                }
+                                // Message was built using an unsupported protocol version
+                                Err(nom::Err::Failure(TelemetryError(
+                                    _msg_bytes,
+                                    TelemetryErrorKind::UnsupportedProtocolVersion {
+                                        maximum_supported,
+                                        found,
+                                    },
+                                ))) => {
+                                    warn!(
+                                        "[unsupported protocol version]\tmaximum_supported={}\tfound={}",
+                                        maximum_supported, found
+                                    );
+
+                                    tx.send(Err(HighLevelError::UnsupportedProtocolVersion {
+                                        maximum_supported,
+                                        found,
+                                    }
+                                    .into()))
+                                        .expect("[tx channel] failed sending message");
+                                }
+                                // We can't do anything with this message
+                                Err(e) => {
+                                    debug!("{:?}", &e);
+                                }
+                            }
+                        }
+                        Ok(_) => {
+                            // Do nothing
+                        }
+                        Err(e) => {
+                            error!("{:}", &e);
+                            std::thread::sleep(std::time::Duration::from_secs(1));
+                            break 'ws_session;
+                        }
+                    }
+
+                    'sending_control_messages: loop {
+                        if let Some(rx) = control_rx.as_ref() {
+                            if let Ok(message) = rx.try_recv() {
+                                let write = socket
+                                    .write_message(Message::Binary(message.to_control_frame()));
+                                match write {
+                                    Ok(_) => debug!("→ {}", &message),
+                                    Err(e) => {
+                                        warn!(
+                                            "Could not send control message '{}': {:?}",
+                                            &message, &e
+                                        )
+                                    }
+                                }
+                            } else {
+                                break 'sending_control_messages;
+                            }
+                        } else {
+                            break 'sending_control_messages;
                         }
                     }
                 }

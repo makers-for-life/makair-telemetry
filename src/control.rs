@@ -3,16 +3,21 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+use nom::IResult;
 use std::ops::RangeInclusive;
 
 use crate::locale::Locale;
+use crate::structures::{TelemetryError, TelemetryErrorKind};
 
 /// Special value that can be used in a heartbeat control message to disable RPi watchdog
 pub const DISABLE_RPI_WATCHDOG: u16 = 43_690;
 
 /// Available settings in the control protocol
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serialize-messages", derive(serde::Serialize))]
+#[cfg_attr(
+    feature = "serde-messages",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum ControlSetting {
     /// Heartbeat used for the RPi watchdog feature (value is ignored except for the special value `DISABLE_RPI_WATCHDOG` which disables watchdog)
     Heartbeat = 0,
@@ -77,6 +82,10 @@ pub enum ControlSetting {
     Locale = 27,
     /// Patient's height in centimeters
     PatientHeight = 28,
+    /// Patient's gender (0 = male, 1 = female)
+    PatientGender = 29,
+    /// Threshold for peak pressure alarm in mmH2O (value bounds must be between 50 and 700)
+    PeakPressureAlarmThreshold = 30,
 }
 
 impl ControlSetting {
@@ -113,6 +122,8 @@ impl ControlSetting {
             Self::InspiratoryDuration => 800,
             Self::Locale => Locale::default().as_usize(),
             Self::PatientHeight => 160,
+            Self::PatientGender => 0,
+            Self::PeakPressureAlarmThreshold => 500,
         }
     }
 
@@ -149,6 +160,8 @@ impl ControlSetting {
             Self::InspiratoryDuration => RangeInclusive::new(200, 3_000),
             Self::Locale => Locale::bounds(),
             Self::PatientHeight => RangeInclusive::new(100, 250),
+            Self::PatientGender => RangeInclusive::new(0, 1),
+            Self::PeakPressureAlarmThreshold => RangeInclusive::new(50, 700),
         }
     }
 }
@@ -187,6 +200,8 @@ impl std::convert::TryFrom<u8> for ControlSetting {
             26 => Ok(ControlSetting::InspiratoryDuration),
             27 => Ok(ControlSetting::Locale),
             28 => Ok(ControlSetting::PatientHeight),
+            29 => Ok(ControlSetting::PatientGender),
+            30 => Ok(ControlSetting::PeakPressureAlarmThreshold),
             _ => Err("Invalid setting number"),
         }
     }
@@ -203,7 +218,7 @@ impl rand::distributions::Distribution<ControlSetting> for rand::distributions::
 }
 
 /// A control message
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ControlMessage {
     /// The setting to change
     pub setting: ControlSetting,
@@ -262,5 +277,90 @@ impl ControlMessage {
     /// This converts message to binary and adds header, footer and CRC
     pub fn to_control_frame(&self) -> Vec<u8> {
         self.to_control_frame_with(None)
+    }
+}
+
+fn parse_control_setting(input: &[u8]) -> IResult<&[u8], ControlSetting> {
+    use nom::combinator::map_res;
+    use nom::number::streaming::be_u8;
+    use std::convert::TryFrom;
+
+    map_res(be_u8, ControlSetting::try_from)(input)
+}
+
+fn parse_inner_control_message(input: &[u8]) -> IResult<&[u8], ControlMessage> {
+    use nom::number::streaming::be_u16;
+
+    nom::do_parse!(
+        input,
+        setting: parse_control_setting >> value: be_u16 >> (ControlMessage { setting, value })
+    )
+}
+
+/// Transform bytes into a structured control message
+///
+/// * `input` - Bytes to parse.
+pub fn parse_control_message(
+    input: &[u8],
+) -> IResult<&[u8], ControlMessage, TelemetryError<&[u8]>> {
+    use nom::bytes::streaming::tag;
+    use nom::combinator::consumed;
+    use nom::number::streaming::be_u32;
+    use nom::sequence::{pair, preceded, terminated};
+
+    let header = tag(b"\x05\x0A");
+    let footer = tag(b"\x50\xA0");
+    let mut parser = preceded(
+        header,
+        terminated(pair(consumed(parse_inner_control_message), be_u32), footer),
+    );
+
+    parser(input)
+        .map_err(nom::Err::convert)
+        .and_then(|(rest, ((msg_bytes, msg), expected_crc))| {
+            let mut crc = crc32fast::Hasher::new();
+            crc.update(msg_bytes);
+            let computed_crc = crc.finalize();
+            if expected_crc == computed_crc {
+                Ok((rest, msg))
+            } else {
+                Err(nom::Err::Failure(TelemetryError(
+                    input,
+                    TelemetryErrorKind::CrcError {
+                        expected: expected_crc,
+                        computed: computed_crc,
+                    },
+                )))
+            }
+        })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use proptest::num;
+    use proptest::prelude::*;
+    use std::convert::TryFrom;
+
+    fn control_setting_strategy() -> impl Strategy<Value = ControlSetting> {
+        proptest::num::u8::ANY.prop_filter_map("Invalid control setting", |n| {
+            ControlSetting::try_from(n).ok()
+        })
+    }
+
+    proptest! {
+        #[test]
+        fn test_control_message_parser(
+            setting in control_setting_strategy(),
+            value in num::u16::ANY,
+        ) {
+            let msg = ControlMessage {
+                setting,
+                value,
+            };
+            let input = &msg.to_control_frame();
+
+            assert_eq!(nom::dbg_dmp(parse_control_message, "parse_control_message")(input), Ok((&[][..], msg)));
+        }
     }
 }

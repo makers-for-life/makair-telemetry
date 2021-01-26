@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["mk_frame","Wrap a binary payload into a CRC-aware binary frame"]],"trait":[["ToBytes","Serialize to binary using the telemetry protocol"]]});

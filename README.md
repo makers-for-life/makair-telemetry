@@ -26,6 +26,7 @@ Crate name (for imports and `RUST_LOG`) is `makair_telemetry`.
 - **rand** *(enabled by default)*: Provide standard random distribution implementations to generate control messages
 - **serial** *(enabled by default)*: Enable serial support (for communicating with a MakAir)
 - **serde-messages**: Provide serde implementations for telemetry and control structures (`Serialize` and `Deserialize`)
+- **websocket** *(beta)*: Allow to use WebSocket as transport in addition to serial or file
 
 ## Telemetry CLI Tool
 

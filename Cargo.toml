@@ -29,7 +29,7 @@ name = "makair_telemetry"
 path = "src/lib.rs"
 
 [features]
-default = ["rand", "serial", "websocket"]
+default = ["rand", "serial"]
 build-binary = ["clap", "env_logger", "rand", "serde_json", "serial", "serde-messages", "websocket"]
 serde-messages = ["serde"]
 websocket = ["tungstenite", "url"]

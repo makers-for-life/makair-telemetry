@@ -53,7 +53,6 @@ use url::Url;
 #[cfg(feature = "serial")]
 use control::*;
 use parsers::*;
-use serializers::*;
 use structures::*;
 
 use error::Error;
@@ -375,6 +374,8 @@ pub fn gather_telemetry_from_ws(
 ) {
     use tungstenite::client::connect;
     use tungstenite::protocol::Message;
+
+    use serializers::ToBytes;
 
     loop {
         info!("opening {}", &url);

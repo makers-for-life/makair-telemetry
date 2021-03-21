@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["open","A convenience function for opening a native serial port."]],"type":[["SystemPort","A convenience type alias for the system's native serial port type."]]});
+initSidebarItems({"externcrate":[["core",""],["unix",""]],"fn":[["open","A convenience function for opening a native serial port."]],"type":[["SystemPort","A convenience type alias for the system’s native serial port type."]]});

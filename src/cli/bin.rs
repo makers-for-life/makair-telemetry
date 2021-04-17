@@ -493,7 +493,7 @@ fn storm(cfg: Storm) {
                             }
                         }
                         Err(std::sync::mpsc::TryRecvError::Empty) => (),
-                        Err(e) => panic!(e),
+                        Err(e) => panic!("{:?}", &e),
                     }
                 },
             }
@@ -523,7 +523,7 @@ fn convert(cfg: Convert) {
         .expect("failed to create recording file");
     let mut output_buffer = BufWriter::new(output_file);
 
-    let gts_source_label = if cfg.format == Format::GTS && !cfg.gts_disable_source_label {
+    let gts_source_label = if cfg.format == Format::Gts && !cfg.gts_disable_source_label {
         cfg.gts_source_label.or_else(|| {
             Path::new(&input_file_name)
                 .file_name()
@@ -545,8 +545,8 @@ fn convert(cfg: Convert) {
             Ok(Ok(msg)) => {
                 if msg.systick() >= from && msg.systick() <= to {
                     let output_payload = match cfg.format {
-                        Format::GTS => telemetry_to_gts(&msg, &gts_source_label),
-                        Format::JSON => {
+                        Format::Gts => telemetry_to_gts(&msg, &gts_source_label),
+                        Format::Json => {
                             telemetry_to_json(&msg).expect("Failed to serialize a message to JSON")
                         }
                     };

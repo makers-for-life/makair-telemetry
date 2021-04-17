@@ -3,6 +3,8 @@
 // Copyright: 2020, Makers For Life
 // License: Public Domain License
 
+#![allow(clippy::upper_case_acronyms)]
+
 use std::cmp::{Ord, Ordering, PartialOrd};
 use std::convert::TryFrom;
 use std::io;

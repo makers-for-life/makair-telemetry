@@ -7,8 +7,8 @@ use crate::structures::*;
 
 #[derive(Debug, PartialEq)]
 pub enum Format {
-    GTS,
-    JSON,
+    Gts,
+    Json,
 }
 
 impl std::str::FromStr for Format {
@@ -16,8 +16,8 @@ impl std::str::FromStr for Format {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.trim().to_lowercase().as_str() {
-            "gts" => Ok(Self::GTS),
-            "json" => Ok(Self::JSON),
+            "gts" => Ok(Self::Gts),
+            "json" => Ok(Self::Json),
             _ => Err("Supported formats are: gts, json"),
         }
     }

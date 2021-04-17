@@ -31,6 +31,7 @@ pub enum ControlSetting {
     /// Plateau pressure in mmH2O (value bounds must be between 100 and 400)
     PlateauPressure = 2,
     /// PEEP in mmH2O (value bounds must be between 0 and 300)
+    #[allow(clippy::upper_case_acronyms)]
     PEEP = 3,
     /// Number of cycles per minute (value bounds must be between 5 and 35)
     CyclesPerMinute = 4,

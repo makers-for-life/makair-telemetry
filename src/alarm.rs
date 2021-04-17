@@ -58,6 +58,7 @@ pub enum AlarmCodeDescription {
     /// Patient is unplugged
     PatientUnplugged,
     /// PEEP was not reached
+    #[allow(clippy::upper_case_acronyms)]
     PEEPPressureNotReached,
     /// Battery level is low
     BatteryLow,

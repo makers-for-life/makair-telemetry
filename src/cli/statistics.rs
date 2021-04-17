@@ -148,9 +148,7 @@ mod tests {
 
     #[test]
     fn test_compute_duration_one_stopped_message() {
-        let mut vect: Vec<TelemetryMessage> = Vec::new();
-
-        vect.push(TelemetryMessage::StoppedMessage(StoppedMessage {
+        let vect: Vec<TelemetryMessage> = vec![TelemetryMessage::StoppedMessage(StoppedMessage {
             telemetry_version: 1,
             version: String::from(""),
             device_id: String::from(""),
@@ -188,61 +186,56 @@ mod tests {
             patient_height: None,
             patient_gender: None,
             peak_pressure_alarm_threshold: None,
-        }));
+        })];
 
         assert_eq!(compute_duration(vect), 100);
     }
 
     #[test]
     fn test_compute_duration_one_of_each_message() {
-        let mut vect: Vec<TelemetryMessage> = Vec::new();
-
-        vect.push(TelemetryMessage::BootMessage(BootMessage {
-            telemetry_version: 1,
-            version: String::from(""),
-            device_id: String::from(""),
-            systick: 0,
-            mode: Mode::Production,
-            value128: 0,
-        }));
-
-        vect.push(TelemetryMessage::AlarmTrap(AlarmTrap {
-            telemetry_version: 1,
-            version: String::from(""),
-            device_id: String::from(""),
-            systick: 0,
-            centile: 0,
-            pressure: 0,
-            phase: Phase::Inhalation,
-            subphase: None,
-            cycle: 0,
-            alarm_code: 0,
-            alarm_priority: AlarmPriority::Low,
-            triggered: true,
-            expected: 0,
-            measured: 0,
-            cycles_since_trigger: 0,
-        }));
-
-        vect.push(TelemetryMessage::DataSnapshot(DataSnapshot {
-            telemetry_version: 1,
-            version: String::from(""),
-            device_id: String::from(""),
-            systick: 0,
-            centile: 0,
-            pressure: 0,
-            phase: Phase::Inhalation,
-            subphase: None,
-            blower_valve_position: 0,
-            patient_valve_position: 0,
-            blower_rpm: 0,
-            battery_level: 0,
-            inspiratory_flow: None,
-            expiratory_flow: None,
-        }));
-
-        vect.push(TelemetryMessage::MachineStateSnapshot(
-            MachineStateSnapshot {
+        let vect: Vec<TelemetryMessage> = vec![
+            TelemetryMessage::BootMessage(BootMessage {
+                telemetry_version: 1,
+                version: String::from(""),
+                device_id: String::from(""),
+                systick: 0,
+                mode: Mode::Production,
+                value128: 0,
+            }),
+            TelemetryMessage::AlarmTrap(AlarmTrap {
+                telemetry_version: 1,
+                version: String::from(""),
+                device_id: String::from(""),
+                systick: 0,
+                centile: 0,
+                pressure: 0,
+                phase: Phase::Inhalation,
+                subphase: None,
+                cycle: 0,
+                alarm_code: 0,
+                alarm_priority: AlarmPriority::Low,
+                triggered: true,
+                expected: 0,
+                measured: 0,
+                cycles_since_trigger: 0,
+            }),
+            TelemetryMessage::DataSnapshot(DataSnapshot {
+                telemetry_version: 1,
+                version: String::from(""),
+                device_id: String::from(""),
+                systick: 0,
+                centile: 0,
+                pressure: 0,
+                phase: Phase::Inhalation,
+                subphase: None,
+                blower_valve_position: 0,
+                patient_valve_position: 0,
+                blower_rpm: 0,
+                battery_level: 0,
+                inspiratory_flow: None,
+                expiratory_flow: None,
+            }),
+            TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: 1,
                 version: String::from(""),
                 device_id: String::from(""),
@@ -287,48 +280,47 @@ mod tests {
                 patient_height: None,
                 patient_gender: None,
                 peak_pressure_alarm_threshold: None,
-            },
-        ));
-
-        vect.push(TelemetryMessage::StoppedMessage(StoppedMessage {
-            telemetry_version: 1,
-            version: String::from(""),
-            device_id: String::from(""),
-            systick: 0,
-            peak_command: None,
-            plateau_command: None,
-            peep_command: None,
-            cpm_command: None,
-            expiratory_term: None,
-            trigger_enabled: None,
-            trigger_offset: None,
-            alarm_snoozed: None,
-            cpu_load: None,
-            ventilation_mode: VentilationMode::default(),
-            inspiratory_trigger_flow: None,
-            expiratory_trigger_flow: None,
-            ti_min: None,
-            ti_max: None,
-            low_inspiratory_minute_volume_alarm_threshold: None,
-            high_inspiratory_minute_volume_alarm_threshold: None,
-            low_expiratory_minute_volume_alarm_threshold: None,
-            high_expiratory_minute_volume_alarm_threshold: None,
-            low_respiratory_rate_alarm_threshold: None,
-            high_respiratory_rate_alarm_threshold: None,
-            target_tidal_volume: None,
-            low_tidal_volume_alarm_threshold: None,
-            high_tidal_volume_alarm_threshold: None,
-            plateau_duration: None,
-            leak_alarm_threshold: None,
-            target_inspiratory_flow: None,
-            inspiratory_duration_command: None,
-            battery_level: None,
-            current_alarm_codes: None,
-            locale: None,
-            patient_height: None,
-            patient_gender: None,
-            peak_pressure_alarm_threshold: None,
-        }));
+            }),
+            TelemetryMessage::StoppedMessage(StoppedMessage {
+                telemetry_version: 1,
+                version: String::from(""),
+                device_id: String::from(""),
+                systick: 0,
+                peak_command: None,
+                plateau_command: None,
+                peep_command: None,
+                cpm_command: None,
+                expiratory_term: None,
+                trigger_enabled: None,
+                trigger_offset: None,
+                alarm_snoozed: None,
+                cpu_load: None,
+                ventilation_mode: VentilationMode::default(),
+                inspiratory_trigger_flow: None,
+                expiratory_trigger_flow: None,
+                ti_min: None,
+                ti_max: None,
+                low_inspiratory_minute_volume_alarm_threshold: None,
+                high_inspiratory_minute_volume_alarm_threshold: None,
+                low_expiratory_minute_volume_alarm_threshold: None,
+                high_expiratory_minute_volume_alarm_threshold: None,
+                low_respiratory_rate_alarm_threshold: None,
+                high_respiratory_rate_alarm_threshold: None,
+                target_tidal_volume: None,
+                low_tidal_volume_alarm_threshold: None,
+                high_tidal_volume_alarm_threshold: None,
+                plateau_duration: None,
+                leak_alarm_threshold: None,
+                target_inspiratory_flow: None,
+                inspiratory_duration_command: None,
+                battery_level: None,
+                current_alarm_codes: None,
+                locale: None,
+                patient_height: None,
+                patient_gender: None,
+                peak_pressure_alarm_threshold: None,
+            }),
+        ];
 
         assert_eq!(compute_duration(vect), 110);
     }

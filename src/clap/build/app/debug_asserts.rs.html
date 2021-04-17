@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-3.0.0-beta.2/src/build/app/debug_asserts.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>debug_asserts.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../clap/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../clap/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
                 <a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
@@ -285,7 +285,7 @@
 <span id="282">282</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">App</span>, <span class="ident">AppSettings</span>, <span class="ident">ArgSettings</span>, <span class="ident">ValueHint</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">Ordering</span>;
+<span class="kw">use</span> <span class="ident">std::cmp::Ordering</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Eq</span>)]</span>
 <span class="kw">enum</span> <span class="ident">Flag</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
@@ -295,7 +295,7 @@
 
 <span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">Flag</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">Flag</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">cmp</span>(<span class="ident">other</span>) <span class="op">=</span><span class="op">=</span> <span class="ident">Ordering</span>::<span class="ident">Equal</span>
+        <span class="self">self</span>.<span class="ident">cmp</span>(<span class="ident">other</span>) <span class="op">=</span><span class="op">=</span> <span class="ident">Ordering::Equal</span>
     }
 }
 
@@ -309,7 +309,7 @@
             <span class="op">|</span> (<span class="ident">App</span>(<span class="ident">s1</span>, <span class="kw">_</span>), <span class="ident">Arg</span>(<span class="ident">s2</span>, <span class="kw">_</span>))
             <span class="op">|</span> (<span class="ident">Arg</span>(<span class="ident">s1</span>, <span class="kw">_</span>), <span class="ident">App</span>(<span class="ident">s2</span>, <span class="kw">_</span>)) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">if</span> <span class="ident">s1</span> <span class="op">=</span><span class="op">=</span> <span class="ident">s2</span> {
-                    <span class="prelude-val">Some</span>(<span class="ident">Ordering</span>::<span class="ident">Equal</span>)
+                    <span class="prelude-val">Some</span>(<span class="ident">Ordering::Equal</span>)
                 } <span class="kw">else</span> {
                     <span class="ident">s1</span>.<span class="ident">partial_cmp</span>(<span class="ident">s2</span>)
                 }
@@ -325,26 +325,26 @@
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">assert_app</span>(<span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>) {
-    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;App::_debug_asserts&quot;</span>);
+    <span class="macro">debug!</span>(<span class="string">&quot;App::_debug_asserts&quot;</span>);
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">short_flags</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">long_flags</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">short_flags</span> <span class="op">=</span> <span class="macro">vec!</span>[];
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">long_flags</span> <span class="op">=</span> <span class="macro">vec!</span>[];
 
     <span class="kw">for</span> <span class="ident">sc</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">app</span>.<span class="ident">subcommands</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">sc</span>.<span class="ident">short_flag</span>.<span class="ident">as_ref</span>() {
-            <span class="ident">short_flags</span>.<span class="ident">push</span>(<span class="ident">Flag</span>::<span class="ident">App</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;-{}&quot;</span>, <span class="ident">s</span>), <span class="kw-2">&amp;</span><span class="ident">sc</span>.<span class="ident">name</span>));
+            <span class="ident">short_flags</span>.<span class="ident">push</span>(<span class="ident">Flag::App</span>(<span class="macro">format!</span>(<span class="string">&quot;-{}&quot;</span>, <span class="ident">s</span>), <span class="kw-2">&amp;</span><span class="ident">sc</span>.<span class="ident">name</span>));
         }
 
         <span class="kw">for</span> (<span class="ident">short_alias</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">sc</span>.<span class="ident">short_flag_aliases</span> {
-            <span class="ident">short_flags</span>.<span class="ident">push</span>(<span class="ident">Flag</span>::<span class="ident">App</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;-{}&quot;</span>, <span class="ident">short_alias</span>), <span class="kw-2">&amp;</span><span class="ident">sc</span>.<span class="ident">name</span>));
+            <span class="ident">short_flags</span>.<span class="ident">push</span>(<span class="ident">Flag::App</span>(<span class="macro">format!</span>(<span class="string">&quot;-{}&quot;</span>, <span class="ident">short_alias</span>), <span class="kw-2">&amp;</span><span class="ident">sc</span>.<span class="ident">name</span>));
         }
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">l</span>) <span class="op">=</span> <span class="ident">sc</span>.<span class="ident">long_flag</span>.<span class="ident">as_ref</span>() {
-            <span class="ident">long_flags</span>.<span class="ident">push</span>(<span class="ident">Flag</span>::<span class="ident">App</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;--{}&quot;</span>, <span class="ident">l</span>), <span class="kw-2">&amp;</span><span class="ident">sc</span>.<span class="ident">name</span>));
+            <span class="ident">long_flags</span>.<span class="ident">push</span>(<span class="ident">Flag::App</span>(<span class="macro">format!</span>(<span class="string">&quot;--{}&quot;</span>, <span class="ident">l</span>), <span class="kw-2">&amp;</span><span class="ident">sc</span>.<span class="ident">name</span>));
         }
 
         <span class="kw">for</span> (<span class="ident">long_alias</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">sc</span>.<span class="ident">long_flag_aliases</span> {
-            <span class="ident">long_flags</span>.<span class="ident">push</span>(<span class="ident">Flag</span>::<span class="ident">App</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;--{}&quot;</span>, <span class="ident">long_alias</span>), <span class="kw-2">&amp;</span><span class="ident">sc</span>.<span class="ident">name</span>));
+            <span class="ident">long_flags</span>.<span class="ident">push</span>(<span class="ident">Flag::App</span>(<span class="macro">format!</span>(<span class="string">&quot;--{}&quot;</span>, <span class="ident">long_alias</span>), <span class="kw-2">&amp;</span><span class="ident">sc</span>.<span class="ident">name</span>));
         }
     }
 
@@ -352,23 +352,23 @@
         <span class="ident">arg</span>.<span class="ident">_debug_asserts</span>();
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">short</span>.<span class="ident">as_ref</span>() {
-            <span class="ident">short_flags</span>.<span class="ident">push</span>(<span class="ident">Flag</span>::<span class="ident">Arg</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;-{}&quot;</span>, <span class="ident">s</span>), <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">arg</span>.<span class="ident">name</span>));
+            <span class="ident">short_flags</span>.<span class="ident">push</span>(<span class="ident">Flag::Arg</span>(<span class="macro">format!</span>(<span class="string">&quot;-{}&quot;</span>, <span class="ident">s</span>), <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">arg</span>.<span class="ident">name</span>));
         }
 
         <span class="kw">for</span> (<span class="ident">short_alias</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">short_aliases</span> {
-            <span class="ident">short_flags</span>.<span class="ident">push</span>(<span class="ident">Flag</span>::<span class="ident">Arg</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;-{}&quot;</span>, <span class="ident">short_alias</span>), <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">name</span>));
+            <span class="ident">short_flags</span>.<span class="ident">push</span>(<span class="ident">Flag::Arg</span>(<span class="macro">format!</span>(<span class="string">&quot;-{}&quot;</span>, <span class="ident">short_alias</span>), <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">name</span>));
         }
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">l</span>) <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">long</span>.<span class="ident">as_ref</span>() {
-            <span class="ident">long_flags</span>.<span class="ident">push</span>(<span class="ident">Flag</span>::<span class="ident">Arg</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;--{}&quot;</span>, <span class="ident">l</span>), <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">arg</span>.<span class="ident">name</span>));
+            <span class="ident">long_flags</span>.<span class="ident">push</span>(<span class="ident">Flag::Arg</span>(<span class="macro">format!</span>(<span class="string">&quot;--{}&quot;</span>, <span class="ident">l</span>), <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">arg</span>.<span class="ident">name</span>));
         }
 
         <span class="kw">for</span> (<span class="ident">long_alias</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">aliases</span> {
-            <span class="ident">long_flags</span>.<span class="ident">push</span>(<span class="ident">Flag</span>::<span class="ident">Arg</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;--{}&quot;</span>, <span class="ident">long_alias</span>), <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">name</span>));
+            <span class="ident">long_flags</span>.<span class="ident">push</span>(<span class="ident">Flag::Arg</span>(<span class="macro">format!</span>(<span class="string">&quot;--{}&quot;</span>, <span class="ident">long_alias</span>), <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">name</span>));
         }
 
         <span class="comment">// Name conflicts</span>
-        <span class="macro">assert</span><span class="macro">!</span>(
+        <span class="macro">assert!</span>(
             <span class="ident">app</span>.<span class="ident">two_args_of</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">id</span> <span class="op">=</span><span class="op">=</span> <span class="ident">arg</span>.<span class="ident">id</span>).<span class="ident">is_none</span>(),
             <span class="string">&quot;Argument names must be unique, but &#39;{}&#39; is in use by more than one argument or group&quot;</span>,
             <span class="ident">arg</span>.<span class="ident">name</span>,
@@ -377,7 +377,7 @@
         <span class="comment">// Long conflicts</span>
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">l</span>) <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">long</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">first</span>, <span class="ident">second</span>)) <span class="op">=</span> <span class="ident">app</span>.<span class="ident">two_args_of</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">long</span> <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">l</span>)) {
-                <span class="macro">panic</span><span class="macro">!</span>(
+                <span class="macro">panic!</span>(
                     <span class="string">&quot;Long option names must be unique for each argument, \
                         but &#39;--{}&#39; is in use by both &#39;{}&#39; and &#39;{}&#39;&quot;</span>,
                     <span class="ident">l</span>, <span class="ident">first</span>.<span class="ident">name</span>, <span class="ident">second</span>.<span class="ident">name</span>
@@ -388,7 +388,7 @@
         <span class="comment">// Short conflicts</span>
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">short</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">first</span>, <span class="ident">second</span>)) <span class="op">=</span> <span class="ident">app</span>.<span class="ident">two_args_of</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">short</span> <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>)) {
-                <span class="macro">panic</span><span class="macro">!</span>(
+                <span class="macro">panic!</span>(
                     <span class="string">&quot;Short option names must be unique for each argument, \
                         but &#39;-{}&#39; is in use by both &#39;{}&#39; and &#39;{}&#39;&quot;</span>,
                     <span class="ident">s</span>, <span class="ident">first</span>.<span class="ident">name</span>, <span class="ident">second</span>.<span class="ident">name</span>
@@ -401,7 +401,7 @@
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">first</span>, <span class="ident">second</span>)) <span class="op">=</span>
                 <span class="ident">app</span>.<span class="ident">two_args_of</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">is_positional</span>() <span class="op">&amp;&amp;</span> <span class="ident">x</span>.<span class="ident">index</span> <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">idx</span>))
             {
-                <span class="macro">panic</span><span class="macro">!</span>(
+                <span class="macro">panic!</span>(
                     <span class="string">&quot;Argument &#39;{}&#39; has the same index as &#39;{}&#39; \
                     and they are both positional arguments\n\n\t \
                     Use Arg::multiple_values(true) to allow one \
@@ -413,7 +413,7 @@
 
         <span class="comment">// requires, r_if, r_unless</span>
         <span class="kw">for</span> <span class="ident">req</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">requires</span> {
-            <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="macro">assert!</span>(
                 <span class="ident">app</span>.<span class="ident">id_exists</span>(<span class="kw-2">&amp;</span><span class="ident">req</span>.<span class="number">1</span>),
                 <span class="string">&quot;Argument or group &#39;{:?}&#39; specified in &#39;requires*&#39; for &#39;{}&#39; does not exist&quot;</span>,
                 <span class="ident">req</span>.<span class="number">1</span>,
@@ -422,7 +422,7 @@
         }
 
         <span class="kw">for</span> <span class="ident">req</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">r_ifs</span> {
-            <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="macro">assert!</span>(
                 <span class="ident">app</span>.<span class="ident">id_exists</span>(<span class="kw-2">&amp;</span><span class="ident">req</span>.<span class="number">0</span>),
                 <span class="string">&quot;Argument or group &#39;{:?}&#39; specified in &#39;required_if_eq*&#39; for &#39;{}&#39; does not exist&quot;</span>,
                 <span class="ident">req</span>.<span class="number">0</span>,
@@ -431,7 +431,7 @@
         }
 
         <span class="kw">for</span> <span class="ident">req</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">r_unless</span> {
-            <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="macro">assert!</span>(
                 <span class="ident">app</span>.<span class="ident">id_exists</span>(<span class="ident">req</span>),
                 <span class="string">&quot;Argument or group &#39;{:?}&#39; specified in &#39;required_unless*&#39; for &#39;{}&#39; does not exist&quot;</span>,
                 <span class="ident">req</span>,
@@ -441,7 +441,7 @@
 
         <span class="comment">// blacklist</span>
         <span class="kw">for</span> <span class="ident">req</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">blacklist</span> {
-            <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="macro">assert!</span>(
                 <span class="ident">app</span>.<span class="ident">id_exists</span>(<span class="ident">req</span>),
                 <span class="string">&quot;Argument or group &#39;{:?}&#39; specified in &#39;conflicts_with*&#39; for &#39;{}&#39; does not exist&quot;</span>,
                 <span class="ident">req</span>,
@@ -449,41 +449,41 @@
             );
         }
 
-        <span class="kw">if</span> <span class="ident">arg</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings</span>::<span class="ident">Last</span>) {
-            <span class="macro">assert</span><span class="macro">!</span>(
+        <span class="kw">if</span> <span class="ident">arg</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings::Last</span>) {
+            <span class="macro">assert!</span>(
                 <span class="ident">arg</span>.<span class="ident">long</span>.<span class="ident">is_none</span>(),
                 <span class="string">&quot;Flags or Options cannot have last(true) set. &#39;{}&#39; has both a long and last(true) set.&quot;</span>,
                 <span class="ident">arg</span>.<span class="ident">name</span>
             );
-            <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="macro">assert!</span>(
                 <span class="ident">arg</span>.<span class="ident">short</span>.<span class="ident">is_none</span>(),
                 <span class="string">&quot;Flags or Options cannot have last(true) set. &#39;{}&#39; has both a short and last(true) set.&quot;</span>,
                 <span class="ident">arg</span>.<span class="ident">name</span>
             );
         }
 
-        <span class="macro">assert</span><span class="macro">!</span>(
-            <span class="op">!</span>(<span class="ident">arg</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings</span>::<span class="ident">Required</span>) <span class="op">&amp;&amp;</span> <span class="ident">arg</span>.<span class="ident">global</span>),
+        <span class="macro">assert!</span>(
+            <span class="op">!</span>(<span class="ident">arg</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings::Required</span>) <span class="op">&amp;&amp;</span> <span class="ident">arg</span>.<span class="ident">global</span>),
             <span class="string">&quot;Global arguments cannot be required.\n\n\t&#39;{}&#39; is marked as both global and required&quot;</span>,
             <span class="ident">arg</span>.<span class="ident">name</span>
         );
 
         <span class="comment">// validators</span>
-        <span class="macro">assert</span><span class="macro">!</span>(
+        <span class="macro">assert!</span>(
             <span class="ident">arg</span>.<span class="ident">validator</span>.<span class="ident">is_none</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">arg</span>.<span class="ident">validator_os</span>.<span class="ident">is_none</span>(),
             <span class="string">&quot;Argument &#39;{}&#39; has both `validator` and `validator_os` set which is not allowed&quot;</span>,
             <span class="ident">arg</span>.<span class="ident">name</span>
         );
 
-        <span class="kw">if</span> <span class="ident">arg</span>.<span class="ident">value_hint</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ValueHint</span>::<span class="ident">CommandWithArguments</span> {
-            <span class="macro">assert</span><span class="macro">!</span>(
+        <span class="kw">if</span> <span class="ident">arg</span>.<span class="ident">value_hint</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ValueHint::CommandWithArguments</span> {
+            <span class="macro">assert!</span>(
                 <span class="ident">arg</span>.<span class="ident">short</span>.<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="ident">arg</span>.<span class="ident">long</span>.<span class="ident">is_none</span>(),
                 <span class="string">&quot;Argument &#39;{}&#39; has hint CommandWithArguments and must be positional.&quot;</span>,
                 <span class="ident">arg</span>.<span class="ident">name</span>
             );
 
-            <span class="macro">assert</span><span class="macro">!</span>(
-                <span class="ident">app</span>.<span class="ident">is_set</span>(<span class="ident">AppSettings</span>::<span class="ident">TrailingVarArg</span>),
+            <span class="macro">assert!</span>(
+                <span class="ident">app</span>.<span class="ident">is_set</span>(<span class="ident">AppSettings::TrailingVarArg</span>),
                 <span class="string">&quot;Positional argument &#39;{}&#39; has hint CommandWithArguments, so App must have TrailingVarArg set.&quot;</span>,
                 <span class="ident">arg</span>.<span class="ident">name</span>
             );
@@ -492,14 +492,14 @@
 
     <span class="kw">for</span> <span class="ident">group</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">app</span>.<span class="ident">groups</span> {
         <span class="comment">// Name conflicts</span>
-        <span class="macro">assert</span><span class="macro">!</span>(
+        <span class="macro">assert!</span>(
             <span class="ident">app</span>.<span class="ident">groups</span>.<span class="ident">iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">id</span> <span class="op">=</span><span class="op">=</span> <span class="ident">group</span>.<span class="ident">id</span>).<span class="ident">count</span>() <span class="op">&lt;</span> <span class="number">2</span>,
             <span class="string">&quot;Argument group name must be unique\n\n\t&#39;{}&#39; is already in use&quot;</span>,
             <span class="ident">group</span>.<span class="ident">name</span>,
         );
 
         <span class="comment">// Groups should not have naming conflicts with Args</span>
-        <span class="macro">assert</span><span class="macro">!</span>(
+        <span class="macro">assert!</span>(
             <span class="op">!</span><span class="ident">app</span>.<span class="ident">args</span>.<span class="ident">args</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">id</span> <span class="op">=</span><span class="op">=</span> <span class="ident">group</span>.<span class="ident">id</span>),
             <span class="string">&quot;Argument group name &#39;{}&#39; must not conflict with argument name&quot;</span>,
             <span class="ident">group</span>.<span class="ident">name</span>,
@@ -507,7 +507,7 @@
 
         <span class="comment">// Args listed inside groups should exist</span>
         <span class="kw">for</span> <span class="ident">arg</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">group</span>.<span class="ident">args</span> {
-            <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="macro">assert!</span>(
                 <span class="ident">app</span>.<span class="ident">args</span>.<span class="ident">args</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">id</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">*</span><span class="ident">arg</span>),
                 <span class="string">&quot;Argument group &#39;{}&#39; contains non-existent argument &#39;{:?}&#39;&quot;</span>,
                 <span class="ident">group</span>.<span class="ident">name</span>,
@@ -524,7 +524,7 @@
     <span class="ident">detect_duplicate_flags</span>(<span class="kw-2">&amp;</span><span class="ident">long_flags</span>, <span class="string">&quot;long&quot;</span>);
     <span class="ident">detect_duplicate_flags</span>(<span class="kw-2">&amp;</span><span class="ident">short_flags</span>, <span class="string">&quot;short&quot;</span>);
 
-    <span class="ident">app</span>.<span class="ident">_panic_on_missing_help</span>(<span class="ident">app</span>.<span class="ident">g_settings</span>.<span class="ident">is_set</span>(<span class="ident">AppSettings</span>::<span class="ident">HelpRequired</span>));
+    <span class="ident">app</span>.<span class="ident">_panic_on_missing_help</span>(<span class="ident">app</span>.<span class="ident">g_settings</span>.<span class="ident">is_set</span>(<span class="ident">AppSettings::HelpRequired</span>));
 }
 
 <span class="kw">fn</span> <span class="ident">detect_duplicate_flags</span>(<span class="ident">flags</span>: <span class="kw-2">&amp;</span>[<span class="ident">Flag</span>], <span class="ident">short_or_long</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
@@ -532,17 +532,17 @@
 
     <span class="kw">for</span> (<span class="ident">one</span>, <span class="ident">two</span>) <span class="kw">in</span> <span class="ident">find_duplicates</span>(<span class="ident">flags</span>) {
         <span class="kw">match</span> (<span class="ident">one</span>, <span class="ident">two</span>) {
-            (<span class="ident">App</span>(<span class="ident">flag</span>, <span class="ident">one</span>), <span class="ident">App</span>(<span class="kw">_</span>, <span class="ident">another</span>)) <span class="kw">if</span> <span class="ident">one</span> <span class="op">!</span><span class="op">=</span> <span class="ident">another</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(
+            (<span class="ident">App</span>(<span class="ident">flag</span>, <span class="ident">one</span>), <span class="ident">App</span>(<span class="kw">_</span>, <span class="ident">another</span>)) <span class="kw">if</span> <span class="ident">one</span> <span class="op">!</span><span class="op">=</span> <span class="ident">another</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(
                 <span class="string">&quot;the &#39;{}&#39; {} flag is specified for both &#39;{}&#39; and &#39;{}&#39; subcommands&quot;</span>,
                 <span class="ident">flag</span>, <span class="ident">short_or_long</span>, <span class="ident">one</span>, <span class="ident">another</span>
             ),
 
-            (<span class="ident">Arg</span>(<span class="ident">flag</span>, <span class="ident">one</span>), <span class="ident">Arg</span>(<span class="kw">_</span>, <span class="ident">another</span>)) <span class="kw">if</span> <span class="ident">one</span> <span class="op">!</span><span class="op">=</span> <span class="ident">another</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(
+            (<span class="ident">Arg</span>(<span class="ident">flag</span>, <span class="ident">one</span>), <span class="ident">Arg</span>(<span class="kw">_</span>, <span class="ident">another</span>)) <span class="kw">if</span> <span class="ident">one</span> <span class="op">!</span><span class="op">=</span> <span class="ident">another</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(
                 <span class="string">&quot;{} option names must be unique, but &#39;{}&#39; is in use by both &#39;{}&#39; and &#39;{}&#39;&quot;</span>,
                 <span class="ident">short_or_long</span>, <span class="ident">flag</span>, <span class="ident">one</span>, <span class="ident">another</span>
             ),
 
-            (<span class="ident">Arg</span>(<span class="ident">flag</span>, <span class="ident">arg</span>), <span class="ident">App</span>(<span class="kw">_</span>, <span class="ident">sub</span>)) <span class="op">|</span> (<span class="ident">App</span>(<span class="ident">flag</span>, <span class="ident">sub</span>), <span class="ident">Arg</span>(<span class="kw">_</span>, <span class="ident">arg</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(
+            (<span class="ident">Arg</span>(<span class="ident">flag</span>, <span class="ident">arg</span>), <span class="ident">App</span>(<span class="kw">_</span>, <span class="ident">sub</span>)) <span class="op">|</span> (<span class="ident">App</span>(<span class="ident">flag</span>, <span class="ident">sub</span>), <span class="ident">Arg</span>(<span class="kw">_</span>, <span class="ident">arg</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(
                 <span class="string">&quot;the &#39;{}&#39; {} flag for the &#39;{}&#39; argument conflicts with the short flag \
                      for &#39;{}&#39; subcommand&quot;</span>,
                 <span class="ident">flag</span>, <span class="ident">short_or_long</span>, <span class="ident">arg</span>, <span class="ident">sub</span>

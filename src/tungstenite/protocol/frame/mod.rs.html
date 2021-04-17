@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tungstenite-0.13.0/src/protocol/frame/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../tungstenite/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../tungstenite/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
                 <a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
@@ -283,16 +283,16 @@
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">coding</span>;
 
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">module_inception</span>)]</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::module_inception</span>)]</span>
 <span class="kw">mod</span> <span class="ident">frame</span>;
 <span class="kw">mod</span> <span class="ident">mask</span>;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">frame</span>::{<span class="ident">CloseFrame</span>, <span class="ident">Frame</span>, <span class="ident">FrameHeader</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::frame</span>::{<span class="ident">CloseFrame</span>, <span class="ident">Frame</span>, <span class="ident">FrameHeader</span>};
 
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">error</span>::{<span class="ident">CapacityError</span>, <span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::error</span>::{<span class="ident">CapacityError</span>, <span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
 <span class="kw">use</span> <span class="ident">input_buffer</span>::{<span class="ident">InputBuffer</span>, <span class="ident">MIN_READ</span>};
 <span class="kw">use</span> <span class="ident">log</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">IoError</span>, <span class="ident">ErrorKind</span> <span class="kw">as</span> <span class="ident">IoErrorKind</span>, <span class="ident">Read</span>, <span class="ident">Write</span>};
+<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">IoError</span>, <span class="ident">ErrorKind</span> <span class="kw">as</span> <span class="ident">IoErrorKind</span>, <span class="ident">Read</span>, <span class="ident">Write</span>};
 
 <span class="doccomment">/// A reader and writer for WebSocket frames.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
@@ -306,12 +306,12 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Stream</span><span class="op">&gt;</span> <span class="ident">FrameSocket</span><span class="op">&lt;</span><span class="ident">Stream</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Create a new frame socket.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">stream</span>: <span class="ident">Stream</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">FrameSocket</span> { <span class="ident">stream</span>, <span class="ident">codec</span>: <span class="ident">FrameCodec</span>::<span class="ident">new</span>() }
+        <span class="ident">FrameSocket</span> { <span class="ident">stream</span>, <span class="ident">codec</span>: <span class="ident">FrameCodec::new</span>() }
     }
 
     <span class="doccomment">/// Create a new frame socket from partially read data.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_partially_read</span>(<span class="ident">stream</span>: <span class="ident">Stream</span>, <span class="ident">part</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">FrameSocket</span> { <span class="ident">stream</span>, <span class="ident">codec</span>: <span class="ident">FrameCodec</span>::<span class="ident">from_partially_read</span>(<span class="ident">part</span>) }
+        <span class="ident">FrameSocket</span> { <span class="ident">stream</span>, <span class="ident">codec</span>: <span class="ident">FrameCodec::from_partially_read</span>(<span class="ident">part</span>) }
     }
 
     <span class="doccomment">/// Extract a stream from the socket.</span>
@@ -374,8 +374,8 @@
     <span class="doccomment">/// Create a new frame codec.</span>
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
-            <span class="ident">in_buffer</span>: <span class="ident">InputBuffer</span>::<span class="ident">with_capacity</span>(<span class="ident">MIN_READ</span>),
-            <span class="ident">out_buffer</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">in_buffer</span>: <span class="ident">InputBuffer::with_capacity</span>(<span class="ident">MIN_READ</span>),
+            <span class="ident">out_buffer</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">header</span>: <span class="prelude-val">None</span>,
         }
     }
@@ -383,8 +383,8 @@
     <span class="doccomment">/// Create a new frame codec from partially read data.</span>
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">from_partially_read</span>(<span class="ident">part</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
-            <span class="ident">in_buffer</span>: <span class="ident">InputBuffer</span>::<span class="ident">from_partially_read</span>(<span class="ident">part</span>),
-            <span class="ident">out_buffer</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">in_buffer</span>: <span class="ident">InputBuffer::from_partially_read</span>(<span class="ident">part</span>),
+            <span class="ident">out_buffer</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">header</span>: <span class="prelude-val">None</span>,
         }
     }
@@ -398,14 +398,14 @@
     <span class="kw">where</span>
         <span class="ident">Stream</span>: <span class="ident">Read</span>,
     {
-        <span class="kw">let</span> <span class="ident">max_size</span> <span class="op">=</span> <span class="ident">max_size</span>.<span class="ident">unwrap_or_else</span>(<span class="ident">usize</span>::<span class="ident">max_value</span>);
+        <span class="kw">let</span> <span class="ident">max_size</span> <span class="op">=</span> <span class="ident">max_size</span>.<span class="ident">unwrap_or_else</span>(<span class="ident">usize::max_value</span>);
 
         <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="kw">loop</span> {
             {
                 <span class="kw">let</span> <span class="ident">cursor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">in_buffer</span>.<span class="ident">as_cursor_mut</span>();
 
                 <span class="kw">if</span> <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">is_none</span>() {
-                    <span class="self">self</span>.<span class="ident">header</span> <span class="op">=</span> <span class="ident">FrameHeader</span>::<span class="ident">parse</span>(<span class="ident">cursor</span>)<span class="question-mark">?</span>;
+                    <span class="self">self</span>.<span class="ident">header</span> <span class="op">=</span> <span class="ident">FrameHeader::parse</span>(<span class="ident">cursor</span>)<span class="question-mark">?</span>;
                 }
 
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="kw">_</span>, <span class="kw-2">ref</span> <span class="ident">length</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">header</span> {
@@ -414,7 +414,7 @@
                     <span class="comment">// Enforce frame size limit early and make sure `length`</span>
                     <span class="comment">// is not too big (fits into `usize`).</span>
                     <span class="kw">if</span> <span class="ident">length</span> <span class="op">&gt;</span> <span class="ident">max_size</span> <span class="kw">as</span> <span class="ident">u64</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Capacity</span>(<span class="ident">CapacityError</span>::<span class="ident">MessageTooLong</span> {
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Capacity</span>(<span class="ident">CapacityError::MessageTooLong</span> {
                             <span class="ident">size</span>: <span class="ident">length</span> <span class="kw">as</span> <span class="ident">usize</span>,
                             <span class="ident">max_size</span>,
                         }));
@@ -423,7 +423,7 @@
                     <span class="kw">let</span> <span class="ident">input_size</span> <span class="op">=</span> <span class="ident">cursor</span>.<span class="ident">get_ref</span>().<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span> <span class="op">-</span> <span class="ident">cursor</span>.<span class="ident">position</span>();
                     <span class="kw">if</span> <span class="ident">length</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">input_size</span> {
                         <span class="comment">// No truncation here since `length` is checked above</span>
-                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">length</span> <span class="kw">as</span> <span class="ident">usize</span>);
+                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">length</span> <span class="kw">as</span> <span class="ident">usize</span>);
                         <span class="kw">if</span> <span class="ident">length</span> <span class="op">&gt;</span> <span class="number">0</span> {
                             <span class="ident">cursor</span>.<span class="ident">take</span>(<span class="ident">length</span>).<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">payload</span>)<span class="question-mark">?</span>;
                         }
@@ -436,19 +436,19 @@
             <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="self">self</span>
                 .<span class="ident">in_buffer</span>
                 .<span class="ident">prepare_reserve</span>(<span class="ident">MIN_READ</span>)
-                .<span class="ident">with_limit</span>(<span class="ident">usize</span>::<span class="ident">max_value</span>())
-                .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">Capacity</span>(<span class="ident">CapacityError</span>::<span class="ident">TcpBufferFull</span>))<span class="question-mark">?</span>
+                .<span class="ident">with_limit</span>(<span class="ident">usize::max_value</span>())
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error::Capacity</span>(<span class="ident">CapacityError::TcpBufferFull</span>))<span class="question-mark">?</span>
                 .<span class="ident">read_from</span>(<span class="ident">stream</span>)<span class="question-mark">?</span>;
             <span class="kw">if</span> <span class="ident">size</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
-                <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;no frame received&quot;</span>);
+                <span class="macro">trace!</span>(<span class="string">&quot;no frame received&quot;</span>);
                 <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
             }
         };
 
         <span class="kw">let</span> (<span class="ident">header</span>, <span class="ident">length</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;Bug: no frame header&quot;</span>);
-        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="ident">payload</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>, <span class="ident">length</span>);
-        <span class="kw">let</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">Frame</span>::<span class="ident">from_payload</span>(<span class="ident">header</span>, <span class="ident">payload</span>);
-        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;received frame {}&quot;</span>, <span class="ident">frame</span>);
+        <span class="macro">debug_assert_eq!</span>(<span class="ident">payload</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>, <span class="ident">length</span>);
+        <span class="kw">let</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">Frame::from_payload</span>(<span class="ident">header</span>, <span class="ident">payload</span>);
+        <span class="macro">trace!</span>(<span class="string">&quot;received frame {}&quot;</span>, <span class="ident">frame</span>);
         <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">frame</span>))
     }
 
@@ -457,7 +457,7 @@
     <span class="kw">where</span>
         <span class="ident">Stream</span>: <span class="ident">Write</span>,
     {
-        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;writing frame {}&quot;</span>, <span class="ident">frame</span>);
+        <span class="macro">trace!</span>(<span class="string">&quot;writing frame {}&quot;</span>, <span class="ident">frame</span>);
         <span class="self">self</span>.<span class="ident">out_buffer</span>.<span class="ident">reserve</span>(<span class="ident">frame</span>.<span class="ident">len</span>());
         <span class="ident">frame</span>.<span class="ident">format</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">out_buffer</span>).<span class="ident">expect</span>(<span class="string">&quot;Bug: can&#39;t write to vector&quot;</span>);
         <span class="self">self</span>.<span class="ident">write_pending</span>(<span class="ident">stream</span>)
@@ -472,8 +472,8 @@
             <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">stream</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">out_buffer</span>)<span class="question-mark">?</span>;
             <span class="kw">if</span> <span class="ident">len</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
                 <span class="comment">// This is the same as &quot;Connection reset by peer&quot;</span>
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">IoError</span>::<span class="ident">new</span>(
-                    <span class="ident">IoErrorKind</span>::<span class="ident">ConnectionReset</span>,
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">IoError::new</span>(
+                    <span class="ident">IoErrorKind::ConnectionReset</span>,
                     <span class="string">&quot;Connection reset while sending&quot;</span>,
                 )
                 .<span class="ident">into</span>());
@@ -488,71 +488,71 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
 
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">error</span>::{<span class="ident">CapacityError</span>, <span class="ident">Error</span>};
+    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::error</span>::{<span class="ident">CapacityError</span>, <span class="ident">Error</span>};
 
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Frame</span>, <span class="ident">FrameSocket</span>};
 
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Cursor</span>;
+    <span class="kw">use</span> <span class="ident">std::io::Cursor</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">read_frames</span>() {
-        <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="macro">vec</span><span class="macro">!</span>[
+        <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">Cursor::new</span>(<span class="macro">vec!</span>[
             <span class="number">0x82</span>, <span class="number">0x07</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>, <span class="number">0x82</span>, <span class="number">0x03</span>, <span class="number">0x03</span>, <span class="number">0x02</span>, <span class="number">0x01</span>,
             <span class="number">0x99</span>,
         ]);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sock</span> <span class="op">=</span> <span class="ident">FrameSocket</span>::<span class="ident">new</span>(<span class="ident">raw</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sock</span> <span class="op">=</span> <span class="ident">FrameSocket::new</span>(<span class="ident">raw</span>);
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="macro">assert_eq!</span>(
             <span class="ident">sock</span>.<span class="ident">read_frame</span>(<span class="prelude-val">None</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">into_data</span>(),
-            <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>]
+            <span class="macro">vec!</span>[<span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>]
         );
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sock</span>.<span class="ident">read_frame</span>(<span class="prelude-val">None</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">into_data</span>(), <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x03</span>, <span class="number">0x02</span>, <span class="number">0x01</span>]);
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">sock</span>.<span class="ident">read_frame</span>(<span class="prelude-val">None</span>).<span class="ident">unwrap</span>().<span class="ident">is_none</span>());
+        <span class="macro">assert_eq!</span>(<span class="ident">sock</span>.<span class="ident">read_frame</span>(<span class="prelude-val">None</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">into_data</span>(), <span class="macro">vec!</span>[<span class="number">0x03</span>, <span class="number">0x02</span>, <span class="number">0x01</span>]);
+        <span class="macro">assert!</span>(<span class="ident">sock</span>.<span class="ident">read_frame</span>(<span class="prelude-val">None</span>).<span class="ident">unwrap</span>().<span class="ident">is_none</span>());
 
         <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">rest</span>) <span class="op">=</span> <span class="ident">sock</span>.<span class="ident">into_inner</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">rest</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x99</span>]);
+        <span class="macro">assert_eq!</span>(<span class="ident">rest</span>, <span class="macro">vec!</span>[<span class="number">0x99</span>]);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">from_partially_read</span>() {
-        <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>]);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sock</span> <span class="op">=</span> <span class="ident">FrameSocket</span>::<span class="ident">from_partially_read</span>(<span class="ident">raw</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x82</span>, <span class="number">0x07</span>, <span class="number">0x01</span>]);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">Cursor::new</span>(<span class="macro">vec!</span>[<span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>]);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sock</span> <span class="op">=</span> <span class="ident">FrameSocket::from_partially_read</span>(<span class="ident">raw</span>, <span class="macro">vec!</span>[<span class="number">0x82</span>, <span class="number">0x07</span>, <span class="number">0x01</span>]);
+        <span class="macro">assert_eq!</span>(
             <span class="ident">sock</span>.<span class="ident">read_frame</span>(<span class="prelude-val">None</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">into_data</span>(),
-            <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>]
+            <span class="macro">vec!</span>[<span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>]
         );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">write_frames</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sock</span> <span class="op">=</span> <span class="ident">FrameSocket</span>::<span class="ident">new</span>(<span class="ident">Vec</span>::<span class="ident">new</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sock</span> <span class="op">=</span> <span class="ident">FrameSocket::new</span>(<span class="ident">Vec::new</span>());
 
-        <span class="kw">let</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">Frame</span>::<span class="ident">ping</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x04</span>, <span class="number">0x05</span>]);
+        <span class="kw">let</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">Frame::ping</span>(<span class="macro">vec!</span>[<span class="number">0x04</span>, <span class="number">0x05</span>]);
         <span class="ident">sock</span>.<span class="ident">write_frame</span>(<span class="ident">frame</span>).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">Frame</span>::<span class="ident">pong</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x01</span>]);
+        <span class="kw">let</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">Frame::pong</span>(<span class="macro">vec!</span>[<span class="number">0x01</span>]);
         <span class="ident">sock</span>.<span class="ident">write_frame</span>(<span class="ident">frame</span>).<span class="ident">unwrap</span>();
 
         <span class="kw">let</span> (<span class="ident">buf</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">sock</span>.<span class="ident">into_inner</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buf</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x89</span>, <span class="number">0x02</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x8a</span>, <span class="number">0x01</span>, <span class="number">0x01</span>]);
+        <span class="macro">assert_eq!</span>(<span class="ident">buf</span>, <span class="macro">vec!</span>[<span class="number">0x89</span>, <span class="number">0x02</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x8a</span>, <span class="number">0x01</span>, <span class="number">0x01</span>]);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">parse_overflow</span>() {
-        <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="macro">vec</span><span class="macro">!</span>[
+        <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">Cursor::new</span>(<span class="macro">vec!</span>[
             <span class="number">0x83</span>, <span class="number">0xff</span>, <span class="number">0xff</span>, <span class="number">0xff</span>, <span class="number">0xff</span>, <span class="number">0xff</span>, <span class="number">0xff</span>, <span class="number">0xff</span>, <span class="number">0xff</span>, <span class="number">0xff</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>,
         ]);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sock</span> <span class="op">=</span> <span class="ident">FrameSocket</span>::<span class="ident">new</span>(<span class="ident">raw</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sock</span> <span class="op">=</span> <span class="ident">FrameSocket::new</span>(<span class="ident">raw</span>);
         <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">sock</span>.<span class="ident">read_frame</span>(<span class="prelude-val">None</span>); <span class="comment">// should not crash</span>
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">size_limit_hit</span>() {
-        <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x82</span>, <span class="number">0x07</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>]);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sock</span> <span class="op">=</span> <span class="ident">FrameSocket</span>::<span class="ident">new</span>(<span class="ident">raw</span>);
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="macro">matches</span><span class="macro">!</span>(
+        <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">Cursor::new</span>(<span class="macro">vec!</span>[<span class="number">0x82</span>, <span class="number">0x07</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>]);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sock</span> <span class="op">=</span> <span class="ident">FrameSocket::new</span>(<span class="ident">raw</span>);
+        <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="ident">sock</span>.<span class="ident">read_frame</span>(<span class="prelude-val">Some</span>(<span class="number">5</span>)),
-            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Capacity</span>(<span class="ident">CapacityError</span>::<span class="ident">MessageTooLong</span> { <span class="ident">size</span>: <span class="number">7</span>, <span class="ident">max_size</span>: <span class="number">5</span> }))
+            <span class="prelude-val">Err</span>(<span class="ident">Error::Capacity</span>(<span class="ident">CapacityError::MessageTooLong</span> { <span class="ident">size</span>: <span class="number">7</span>, <span class="ident">max_size</span>: <span class="number">5</span> }))
         ));
     }
 }

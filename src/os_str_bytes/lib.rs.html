@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/os_str_bytes-2.4.0/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../os_str_bytes/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../os_str_bytes/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
                 <a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
@@ -618,7 +618,7 @@
 <span class="doccomment">//! [print\_bytes]: https://crates.io/crates/print_bytes</span>
 <span class="doccomment">//! [`Vec&lt;u8&gt;`]: https://doc.rust-lang.org/std/vec/struct.Vec.html</span>
 
-<span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">map_clone</span>)]</span>
+<span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::map_clone</span>)]</span>
 <span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/os_str_bytes/*&quot;</span>)]</span>
 <span class="comment">// Only require a nightly compiler when building documentation for docs.rs.</span>
 <span class="comment">// This is a private option that should not be used.</span>
@@ -628,18 +628,18 @@
 <span class="attribute">#![<span class="ident">forbid</span>(<span class="ident">unsafe_code</span>)]</span>
 <span class="attribute">#![<span class="ident">warn</span>(<span class="ident">unused_results</span>)]</span>
 
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">OsStr</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">OsString</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">result</span>;
+<span class="kw">use</span> <span class="ident">std::borrow::Cow</span>;
+<span class="kw">use</span> <span class="ident">std::error::Error</span>;
+<span class="kw">use</span> <span class="ident">std::ffi::OsStr</span>;
+<span class="kw">use</span> <span class="ident">std::ffi::OsString</span>;
+<span class="kw">use</span> <span class="ident">std::fmt</span>;
+<span class="kw">use</span> <span class="ident">std::fmt::Display</span>;
+<span class="kw">use</span> <span class="ident">std::fmt::Formatter</span>;
+<span class="kw">use</span> <span class="ident">std::path::Path</span>;
+<span class="kw">use</span> <span class="ident">std::path::PathBuf</span>;
+<span class="kw">use</span> <span class="ident">std::result</span>;
 
-<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">if_raw</span> {
+<span class="macro">macro_rules!</span> <span class="ident">if_raw</span> {
     ( $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">item</span>:<span class="ident">item</span>)<span class="op">+</span> ) <span class="op">=</span><span class="op">&gt;</span> {
         $(
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;raw&quot;</span>)]</span>
@@ -668,7 +668,7 @@
 )]</span>
 <span class="kw">mod</span> <span class="ident">imp</span>;
 
-<span class="macro">if_raw</span><span class="macro">!</span> {
+<span class="macro">if_raw!</span> {
     <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">raw</span>;
 }
 
@@ -689,18 +689,18 @@
 <span class="doccomment">/// [`OsStringExt`]: https://doc.rust-lang.org/std/os/unix/ffi/trait.OsStringExt.html</span>
 <span class="doccomment">/// [`Result::unwrap`]: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EncodingError</span>(<span class="ident">imp</span>::<span class="ident">EncodingError</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EncodingError</span>(<span class="ident">imp::EncodingError</span>);
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">EncodingError</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">fmt</span>(<span class="ident">formatter</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">EncodingError</span> {}
 
-<span class="kw">type</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">EncodingError</span><span class="op">&gt;</span>;
+<span class="kw">type</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">result::Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">EncodingError</span><span class="op">&gt;</span>;
 
 <span class="doccomment">/// A platform agnostic variant of [`OsStrExt`].</span>
 <span class="doccomment">///</span>
@@ -708,7 +708,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [module]: index.html</span>
 <span class="doccomment">/// [`OsStrExt`]: https://doc.rust-lang.org/std/os/unix/ffi/trait.OsStrExt.html</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OsStrBytes</span>: <span class="ident">private</span>::<span class="ident">Sealed</span> <span class="op">+</span> <span class="ident">ToOwned</span> {
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OsStrBytes</span>: <span class="ident">private::Sealed</span> <span class="op">+</span> <span class="ident">ToOwned</span> {
     <span class="doccomment">/// Converts a byte slice into an equivalent platform-native string.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Errors</span>
@@ -763,12 +763,12 @@
     <span class="kw">where</span>
         <span class="ident">TString</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span>,
     {
-        <span class="ident">imp</span>::<span class="ident">os_str_from_bytes</span>(<span class="ident">string</span>.<span class="ident">as_ref</span>()).<span class="ident">map_err</span>(<span class="ident">EncodingError</span>)
+        <span class="ident">imp::os_str_from_bytes</span>(<span class="ident">string</span>.<span class="ident">as_ref</span>()).<span class="ident">map_err</span>(<span class="ident">EncodingError</span>)
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">to_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span> {
-        <span class="ident">imp</span>::<span class="ident">os_str_to_bytes</span>(<span class="self">self</span>)
+        <span class="ident">imp::os_str_to_bytes</span>(<span class="self">self</span>)
     }
 }
 
@@ -778,9 +778,9 @@
     <span class="kw">where</span>
         <span class="ident">TString</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span>,
     {
-        <span class="ident">OsStr</span>::<span class="ident">from_bytes</span>(<span class="ident">string</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">os_string</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">os_string</span> {
-            <span class="ident">Cow</span>::<span class="ident">Borrowed</span>(<span class="ident">os_string</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Cow</span>::<span class="ident">Borrowed</span>(<span class="self">Self</span>::<span class="ident">new</span>(<span class="ident">os_string</span>)),
-            <span class="ident">Cow</span>::<span class="ident">Owned</span>(<span class="ident">os_string</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Cow</span>::<span class="ident">Owned</span>(<span class="ident">os_string</span>.<span class="ident">into</span>()),
+        <span class="ident">OsStr::from_bytes</span>(<span class="ident">string</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">os_string</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">os_string</span> {
+            <span class="ident">Cow::Borrowed</span>(<span class="ident">os_string</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Cow::Borrowed</span>(<span class="self">Self</span><span class="ident">::new</span>(<span class="ident">os_string</span>)),
+            <span class="ident">Cow::Owned</span>(<span class="ident">os_string</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Cow::Owned</span>(<span class="ident">os_string</span>.<span class="ident">into</span>()),
         })
     }
 
@@ -796,7 +796,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [module]: index.html</span>
 <span class="doccomment">/// [`OsStringExt`]: https://doc.rust-lang.org/std/os/unix/ffi/trait.OsStringExt.html</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OsStringBytes</span>: <span class="ident">private</span>::<span class="ident">Sealed</span> <span class="op">+</span> <span class="ident">Sized</span> {
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OsStringBytes</span>: <span class="ident">private::Sealed</span> <span class="op">+</span> <span class="ident">Sized</span> {
     <span class="doccomment">/// Copies a byte slice into an equivalent platform-native string.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// It is always better to use [`from_cow`] when the bytes may be owned.</span>
@@ -865,8 +865,8 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from_cow</span>(<span class="ident">string</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">string</span> {
-            <span class="ident">Cow</span>::<span class="ident">Borrowed</span>(<span class="ident">string</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">from_bytes</span>(<span class="ident">string</span>),
-            <span class="ident">Cow</span>::<span class="ident">Owned</span>(<span class="ident">string</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">from_vec</span>(<span class="ident">string</span>),
+            <span class="ident">Cow::Borrowed</span>(<span class="ident">string</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">Self</span><span class="ident">::from_bytes</span>(<span class="ident">string</span>),
+            <span class="ident">Cow::Owned</span>(<span class="ident">string</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">Self</span><span class="ident">::from_vec</span>(<span class="ident">string</span>),
         }
     }
 
@@ -922,17 +922,17 @@
     <span class="kw">where</span>
         <span class="ident">TString</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
     {
-        <span class="ident">imp</span>::<span class="ident">os_string_from_bytes</span>(<span class="ident">string</span>.<span class="ident">as_ref</span>()).<span class="ident">map_err</span>(<span class="ident">EncodingError</span>)
+        <span class="ident">imp::os_string_from_bytes</span>(<span class="ident">string</span>.<span class="ident">as_ref</span>()).<span class="ident">map_err</span>(<span class="ident">EncodingError</span>)
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from_vec</span>(<span class="ident">string</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">imp</span>::<span class="ident">os_string_from_vec</span>(<span class="ident">string</span>).<span class="ident">map_err</span>(<span class="ident">EncodingError</span>)
+        <span class="ident">imp::os_string_from_vec</span>(<span class="ident">string</span>).<span class="ident">map_err</span>(<span class="ident">EncodingError</span>)
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">into_vec</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="ident">imp</span>::<span class="ident">os_string_into_vec</span>(<span class="self">self</span>)
+        <span class="ident">imp::os_string_into_vec</span>(<span class="self">self</span>)
     }
 }
 
@@ -942,12 +942,12 @@
     <span class="kw">where</span>
         <span class="ident">TString</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
     {
-        <span class="ident">OsString</span>::<span class="ident">from_bytes</span>(<span class="ident">string</span>).<span class="ident">map</span>(<span class="ident">Into</span>::<span class="ident">into</span>)
+        <span class="ident">OsString::from_bytes</span>(<span class="ident">string</span>).<span class="ident">map</span>(<span class="ident">Into::into</span>)
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from_vec</span>(<span class="ident">string</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">OsString</span>::<span class="ident">from_vec</span>(<span class="ident">string</span>).<span class="ident">map</span>(<span class="ident">Into</span>::<span class="ident">into</span>)
+        <span class="ident">OsString::from_vec</span>(<span class="ident">string</span>).<span class="ident">map</span>(<span class="ident">Into::into</span>)
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
@@ -957,10 +957,10 @@
 }
 
 <span class="kw">mod</span> <span class="ident">private</span> {
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">OsStr</span>;
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">OsString</span>;
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
+    <span class="kw">use</span> <span class="ident">std::ffi::OsStr</span>;
+    <span class="kw">use</span> <span class="ident">std::ffi::OsString</span>;
+    <span class="kw">use</span> <span class="ident">std::path::Path</span>;
+    <span class="kw">use</span> <span class="ident">std::path::PathBuf</span>;
 
     <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Sealed</span> {}
     <span class="kw">impl</span> <span class="ident">Sealed</span> <span class="kw">for</span> <span class="ident">OsStr</span> {}

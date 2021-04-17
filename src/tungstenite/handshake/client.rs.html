@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tungstenite-0.13.0/src/handshake/client.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>client.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../tungstenite/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../tungstenite/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
                 <a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
@@ -328,11 +328,11 @@
 
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">io</span>::{<span class="ident">Read</span>, <span class="ident">Write</span>},
-    <span class="ident">marker</span>::<span class="ident">PhantomData</span>,
+    <span class="ident">marker::PhantomData</span>,
 };
 
 <span class="kw">use</span> <span class="ident">http</span>::{<span class="ident">HeaderMap</span>, <span class="ident">Request</span> <span class="kw">as</span> <span class="ident">HttpRequest</span>, <span class="ident">Response</span> <span class="kw">as</span> <span class="ident">HttpResponse</span>, <span class="ident">StatusCode</span>};
-<span class="kw">use</span> <span class="ident">httparse</span>::<span class="ident">Status</span>;
+<span class="kw">use</span> <span class="ident">httparse::Status</span>;
 <span class="kw">use</span> <span class="ident">log</span>::<span class="kw-2">*</span>;
 
 <span class="kw">use</span> <span class="kw">super</span>::{
@@ -367,22 +367,22 @@
         <span class="ident">request</span>: <span class="ident">Request</span>,
         <span class="ident">config</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WebSocketConfig</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">MidHandshake</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">request</span>.<span class="ident">method</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">http</span>::<span class="ident">Method</span>::<span class="ident">GET</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">WrongHttpMethod</span>));
+        <span class="kw">if</span> <span class="ident">request</span>.<span class="ident">method</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">http::Method::GET</span> {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::WrongHttpMethod</span>));
         }
 
-        <span class="kw">if</span> <span class="ident">request</span>.<span class="ident">version</span>() <span class="op">&lt;</span> <span class="ident">http</span>::<span class="ident">Version</span>::<span class="ident">HTTP_11</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">WrongHttpVersion</span>));
+        <span class="kw">if</span> <span class="ident">request</span>.<span class="ident">version</span>() <span class="op">&lt;</span> <span class="ident">http::Version::HTTP_11</span> {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::WrongHttpVersion</span>));
         }
 
         <span class="comment">// Check the URI scheme: only ws or wss are supported</span>
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">client</span>::<span class="ident">uri_mode</span>(<span class="ident">request</span>.<span class="ident">uri</span>())<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::client::uri_mode</span>(<span class="ident">request</span>.<span class="ident">uri</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">generate_key</span>();
 
         <span class="kw">let</span> <span class="ident">machine</span> <span class="op">=</span> {
             <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">generate_request</span>(<span class="ident">request</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>)<span class="question-mark">?</span>;
-            <span class="ident">HandshakeMachine</span>::<span class="ident">start_write</span>(<span class="ident">stream</span>, <span class="ident">req</span>)
+            <span class="ident">HandshakeMachine::start_write</span>(<span class="ident">stream</span>, <span class="ident">req</span>)
         };
 
         <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> {
@@ -390,7 +390,7 @@
             <span class="ident">ClientHandshake</span> { <span class="ident">verify_data</span>: <span class="ident">VerifyData</span> { <span class="ident">accept_key</span> }, <span class="ident">config</span>, <span class="ident">_marker</span>: <span class="ident">PhantomData</span> }
         };
 
-        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Client handshake initiated.&quot;</span>);
+        <span class="macro">trace!</span>(<span class="string">&quot;Client handshake initiated.&quot;</span>);
         <span class="prelude-val">Ok</span>(<span class="ident">MidHandshake</span> { <span class="ident">role</span>: <span class="ident">client</span>, <span class="ident">machine</span> })
     }
 }
@@ -401,18 +401,18 @@
     <span class="kw">type</span> <span class="ident">FinalResult</span> <span class="op">=</span> (<span class="ident">WebSocket</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>, <span class="ident">Response</span>);
     <span class="kw">fn</span> <span class="ident">stage_finished</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">finish</span>: <span class="ident">StageResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">IncomingData</span>, <span class="self">Self</span>::<span class="ident">InternalStream</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ProcessingResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">InternalStream</span>, <span class="self">Self</span>::<span class="ident">FinalResult</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="ident">finish</span>: <span class="ident">StageResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::IncomingData</span>, <span class="self">Self</span><span class="ident">::InternalStream</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ProcessingResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::InternalStream</span>, <span class="self">Self</span><span class="ident">::FinalResult</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">finish</span> {
-            <span class="ident">StageResult</span>::<span class="ident">DoneWriting</span>(<span class="ident">stream</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">ProcessingResult</span>::<span class="ident">Continue</span>(<span class="ident">HandshakeMachine</span>::<span class="ident">start_read</span>(<span class="ident">stream</span>))
+            <span class="ident">StageResult::DoneWriting</span>(<span class="ident">stream</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">ProcessingResult::Continue</span>(<span class="ident">HandshakeMachine::start_read</span>(<span class="ident">stream</span>))
             }
-            <span class="ident">StageResult</span>::<span class="ident">DoneReading</span> { <span class="ident">stream</span>, <span class="ident">result</span>, <span class="ident">tail</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">StageResult::DoneReading</span> { <span class="ident">stream</span>, <span class="ident">result</span>, <span class="ident">tail</span> } <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">verify_data</span>.<span class="ident">verify_response</span>(<span class="ident">result</span>)<span class="question-mark">?</span>;
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Client handshake done.&quot;</span>);
+                <span class="macro">debug!</span>(<span class="string">&quot;Client handshake done.&quot;</span>);
                 <span class="kw">let</span> <span class="ident">websocket</span> <span class="op">=</span>
-                    <span class="ident">WebSocket</span>::<span class="ident">from_partially_read</span>(<span class="ident">stream</span>, <span class="ident">tail</span>, <span class="ident">Role</span>::<span class="ident">Client</span>, <span class="self">self</span>.<span class="ident">config</span>);
-                <span class="ident">ProcessingResult</span>::<span class="ident">Done</span>((<span class="ident">websocket</span>, <span class="ident">result</span>))
+                    <span class="ident">WebSocket::from_partially_read</span>(<span class="ident">stream</span>, <span class="ident">tail</span>, <span class="ident">Role::Client</span>, <span class="self">self</span>.<span class="ident">config</span>);
+                <span class="ident">ProcessingResult::Done</span>((<span class="ident">websocket</span>, <span class="ident">result</span>))
             }
         })
     }
@@ -420,10 +420,10 @@
 
 <span class="doccomment">/// Generate client request.</span>
 <span class="kw">fn</span> <span class="ident">generate_request</span>(<span class="ident">request</span>: <span class="ident">Request</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
     <span class="kw">let</span> <span class="ident">uri</span> <span class="op">=</span> <span class="ident">request</span>.<span class="ident">uri</span>();
 
-    <span class="kw">let</span> <span class="ident">authority</span> <span class="op">=</span> <span class="ident">uri</span>.<span class="ident">authority</span>().<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="ident">Url</span>(<span class="ident">UrlError</span>::<span class="ident">NoHostName</span>))<span class="question-mark">?</span>.<span class="ident">as_str</span>();
+    <span class="kw">let</span> <span class="ident">authority</span> <span class="op">=</span> <span class="ident">uri</span>.<span class="ident">authority</span>().<span class="ident">ok_or</span>(<span class="ident">Error::Url</span>(<span class="ident">UrlError::NoHostName</span>))<span class="question-mark">?</span>.<span class="ident">as_str</span>();
     <span class="kw">let</span> <span class="ident">host</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">idx</span>) <span class="op">=</span> <span class="ident">authority</span>.<span class="ident">find</span>(<span class="string">&#39;@&#39;</span>) {
         <span class="comment">// handle possible name:password@</span>
         <span class="ident">authority</span>.<span class="ident">split_at</span>(<span class="ident">idx</span> <span class="op">+</span> <span class="number">1</span>).<span class="number">1</span>
@@ -431,10 +431,10 @@
         <span class="ident">authority</span>
     };
     <span class="kw">if</span> <span class="ident">authority</span>.<span class="ident">is_empty</span>() {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Url</span>(<span class="ident">UrlError</span>::<span class="ident">EmptyHostName</span>));
+        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Url</span>(<span class="ident">UrlError::EmptyHostName</span>));
     }
 
-    <span class="macro">write</span><span class="macro">!</span>(
+    <span class="macro">write!</span>(
         <span class="ident">req</span>,
         <span class="string">&quot;\
          GET {path} {version:?}\r\n\
@@ -445,7 +445,7 @@
          Sec-WebSocket-Key: {key}\r\n&quot;</span>,
         <span class="ident">version</span> <span class="op">=</span> <span class="ident">request</span>.<span class="ident">version</span>(),
         <span class="ident">host</span> <span class="op">=</span> <span class="ident">host</span>,
-        <span class="ident">path</span> <span class="op">=</span> <span class="ident">uri</span>.<span class="ident">path_and_query</span>().<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="ident">Url</span>(<span class="ident">UrlError</span>::<span class="ident">NoPathOrQuery</span>))<span class="question-mark">?</span>.<span class="ident">as_str</span>(),
+        <span class="ident">path</span> <span class="op">=</span> <span class="ident">uri</span>.<span class="ident">path_and_query</span>().<span class="ident">ok_or</span>(<span class="ident">Error::Url</span>(<span class="ident">UrlError::NoPathOrQuery</span>))<span class="question-mark">?</span>.<span class="ident">as_str</span>(),
         <span class="ident">key</span> <span class="op">=</span> <span class="ident">key</span>
     )
     .<span class="ident">unwrap</span>();
@@ -455,10 +455,10 @@
         <span class="kw">if</span> <span class="ident">k</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;sec-websocket-protocol&quot;</span> {
             <span class="ident">k</span> <span class="op">=</span> <span class="string">&quot;Sec-WebSocket-Protocol&quot;</span>;
         }
-        <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">req</span>, <span class="string">&quot;{}: {}\r&quot;</span>, <span class="ident">k</span>, <span class="ident">v</span>.<span class="ident">to_str</span>()<span class="question-mark">?</span>).<span class="ident">unwrap</span>();
+        <span class="macro">writeln!</span>(<span class="ident">req</span>, <span class="string">&quot;{}: {}\r&quot;</span>, <span class="ident">k</span>, <span class="ident">v</span>.<span class="ident">to_str</span>()<span class="question-mark">?</span>).<span class="ident">unwrap</span>();
     }
-    <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">req</span>, <span class="string">&quot;\r&quot;</span>).<span class="ident">unwrap</span>();
-    <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Request: {:?}&quot;</span>, <span class="ident">String</span>::<span class="ident">from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">req</span>));
+    <span class="macro">writeln!</span>(<span class="ident">req</span>, <span class="string">&quot;\r&quot;</span>).<span class="ident">unwrap</span>();
+    <span class="macro">trace!</span>(<span class="string">&quot;Request: {:?}&quot;</span>, <span class="ident">String::from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">req</span>));
     <span class="prelude-val">Ok</span>(<span class="ident">req</span>)
 }
 
@@ -473,8 +473,8 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">verify_response</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">response</span>: <span class="ident">Response</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
         <span class="comment">// 1. If the status code received from the server is not 101, the</span>
         <span class="comment">// client handles the response per HTTP [RFC2616] procedures. (RFC 6455)</span>
-        <span class="kw">if</span> <span class="ident">response</span>.<span class="ident">status</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">StatusCode</span>::<span class="ident">SWITCHING_PROTOCOLS</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Http</span>(<span class="ident">response</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="prelude-val">None</span>)));
+        <span class="kw">if</span> <span class="ident">response</span>.<span class="ident">status</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">StatusCode::SWITCHING_PROTOCOLS</span> {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Http</span>(<span class="ident">response</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="prelude-val">None</span>)));
         }
 
         <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">response</span>.<span class="ident">headers</span>();
@@ -489,7 +489,7 @@
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">h</span><span class="op">|</span> <span class="ident">h</span>.<span class="ident">eq_ignore_ascii_case</span>(<span class="string">&quot;websocket&quot;</span>))
             .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
         {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">MissingUpgradeWebSocketHeader</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::MissingUpgradeWebSocketHeader</span>));
         }
         <span class="comment">// 3.  If the response lacks a |Connection| header field or the</span>
         <span class="comment">// |Connection| header field doesn&#39;t contain a token that is an</span>
@@ -501,14 +501,14 @@
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">h</span><span class="op">|</span> <span class="ident">h</span>.<span class="ident">eq_ignore_ascii_case</span>(<span class="string">&quot;Upgrade&quot;</span>))
             .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
         {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">MissingConnectionUpgradeHeader</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::MissingConnectionUpgradeHeader</span>));
         }
         <span class="comment">// 4.  If the response lacks a |Sec-WebSocket-Accept| header field or</span>
         <span class="comment">// the |Sec-WebSocket-Accept| contains a value other than the</span>
         <span class="comment">// base64-encoded SHA-1 of ... the client MUST _Fail the WebSocket</span>
         <span class="comment">// Connection_. (RFC 6455)</span>
         <span class="kw">if</span> <span class="op">!</span><span class="ident">headers</span>.<span class="ident">get</span>(<span class="string">&quot;Sec-WebSocket-Accept&quot;</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">h</span><span class="op">|</span> <span class="ident">h</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">accept_key</span>).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">SecWebSocketAcceptKeyMismatch</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::SecWebSocketAcceptKeyMismatch</span>));
         }
         <span class="comment">// 5.  If the response includes a |Sec-WebSocket-Extensions| header</span>
         <span class="comment">// field and this header field indicates the use of an extension</span>
@@ -530,29 +530,29 @@
 
 <span class="kw">impl</span> <span class="ident">TryParse</span> <span class="kw">for</span> <span class="ident">Response</span> {
     <span class="kw">fn</span> <span class="ident">try_parse</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="self">Self</span>)<span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hbuffer</span> <span class="op">=</span> [<span class="ident">httparse</span>::<span class="ident">EMPTY_HEADER</span>; <span class="ident">MAX_HEADERS</span>];
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">httparse</span>::<span class="ident">Response</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hbuffer</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hbuffer</span> <span class="op">=</span> [<span class="ident">httparse::EMPTY_HEADER</span>; <span class="ident">MAX_HEADERS</span>];
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">httparse::Response::new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hbuffer</span>);
         <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">req</span>.<span class="ident">parse</span>(<span class="ident">buf</span>)<span class="question-mark">?</span> {
-            <span class="ident">Status</span>::<span class="ident">Partial</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-            <span class="ident">Status</span>::<span class="ident">Complete</span>(<span class="ident">size</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>((<span class="ident">size</span>, <span class="ident">Response</span>::<span class="ident">from_httparse</span>(<span class="ident">req</span>)<span class="question-mark">?</span>)),
+            <span class="ident">Status::Partial</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+            <span class="ident">Status::Complete</span>(<span class="ident">size</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>((<span class="ident">size</span>, <span class="ident">Response::from_httparse</span>(<span class="ident">req</span>)<span class="question-mark">?</span>)),
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;b</span>: <span class="lifetime">&#39;h</span><span class="op">&gt;</span> <span class="ident">FromHttparse</span><span class="op">&lt;</span><span class="ident">httparse</span>::<span class="ident">Response</span><span class="op">&lt;</span><span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;b</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Response</span> {
-    <span class="kw">fn</span> <span class="ident">from_httparse</span>(<span class="ident">raw</span>: <span class="ident">httparse</span>::<span class="ident">Response</span><span class="op">&lt;</span><span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;b</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;b</span>: <span class="lifetime">&#39;h</span><span class="op">&gt;</span> <span class="ident">FromHttparse</span><span class="op">&lt;</span><span class="ident">httparse::Response</span><span class="op">&lt;</span><span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;b</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Response</span> {
+    <span class="kw">fn</span> <span class="ident">from_httparse</span>(<span class="ident">raw</span>: <span class="ident">httparse::Response</span><span class="op">&lt;</span><span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;b</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">raw</span>.<span class="ident">version</span>.<span class="ident">expect</span>(<span class="string">&quot;Bug: no HTTP version&quot;</span>) <span class="op">&lt;</span> <span class="comment">/*1.*/</span><span class="number">1</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">WrongHttpMethod</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::WrongHttpMethod</span>));
         }
 
-        <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">HeaderMap</span>::<span class="ident">from_httparse</span>(<span class="ident">raw</span>.<span class="ident">headers</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">HeaderMap::from_httparse</span>(<span class="ident">raw</span>.<span class="ident">headers</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">response</span> <span class="op">=</span> <span class="ident">Response</span>::<span class="ident">new</span>(());
-        <span class="kw-2">*</span><span class="ident">response</span>.<span class="ident">status_mut</span>() <span class="op">=</span> <span class="ident">StatusCode</span>::<span class="ident">from_u16</span>(<span class="ident">raw</span>.<span class="ident">code</span>.<span class="ident">expect</span>(<span class="string">&quot;Bug: no HTTP status code&quot;</span>))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">response</span> <span class="op">=</span> <span class="ident">Response::new</span>(());
+        <span class="kw-2">*</span><span class="ident">response</span>.<span class="ident">status_mut</span>() <span class="op">=</span> <span class="ident">StatusCode::from_u16</span>(<span class="ident">raw</span>.<span class="ident">code</span>.<span class="ident">expect</span>(<span class="string">&quot;Bug: no HTTP status code&quot;</span>))<span class="question-mark">?</span>;
         <span class="kw-2">*</span><span class="ident">response</span>.<span class="ident">headers_mut</span>() <span class="op">=</span> <span class="ident">headers</span>;
         <span class="comment">// TODO: httparse only supports HTTP 0.9/1.0/1.1 but not HTTP 2.0</span>
         <span class="comment">// so the only valid value we could get in the response would be 1.1.</span>
-        <span class="kw-2">*</span><span class="ident">response</span>.<span class="ident">version_mut</span>() <span class="op">=</span> <span class="ident">http</span>::<span class="ident">Version</span>::<span class="ident">HTTP_11</span>;
+        <span class="kw-2">*</span><span class="ident">response</span>.<span class="ident">version_mut</span>() <span class="op">=</span> <span class="ident">http::Version::HTTP_11</span>;
 
         <span class="prelude-val">Ok</span>(<span class="ident">response</span>)
     }
@@ -562,29 +562,29 @@
 <span class="kw">fn</span> <span class="ident">generate_key</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
     <span class="comment">// a base64-encoded (see Section 4 of [RFC4648]) value that,</span>
     <span class="comment">// when decoded, is 16 bytes in length (RFC 6455)</span>
-    <span class="kw">let</span> <span class="ident">r</span>: [<span class="ident">u8</span>; <span class="number">16</span>] <span class="op">=</span> <span class="ident">rand</span>::<span class="ident">random</span>();
-    <span class="ident">base64</span>::<span class="ident">encode</span>(<span class="kw-2">&amp;</span><span class="ident">r</span>)
+    <span class="kw">let</span> <span class="ident">r</span>: [<span class="ident">u8</span>; <span class="number">16</span>] <span class="op">=</span> <span class="ident">rand::random</span>();
+    <span class="ident">base64::encode</span>(<span class="kw-2">&amp;</span><span class="ident">r</span>)
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="kw">super</span>::<span class="ident">machine</span>::<span class="ident">TryParse</span>, <span class="ident">generate_key</span>, <span class="ident">generate_request</span>, <span class="ident">Response</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">client</span>::<span class="ident">IntoClientRequest</span>;
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="kw">super</span><span class="ident">::machine::TryParse</span>, <span class="ident">generate_key</span>, <span class="ident">generate_request</span>, <span class="ident">Response</span>};
+    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::client::IntoClientRequest</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">random_keys</span>() {
         <span class="kw">let</span> <span class="ident">k1</span> <span class="op">=</span> <span class="ident">generate_key</span>();
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Generated random key 1: {}&quot;</span>, <span class="ident">k1</span>);
+        <span class="macro">println!</span>(<span class="string">&quot;Generated random key 1: {}&quot;</span>, <span class="ident">k1</span>);
         <span class="kw">let</span> <span class="ident">k2</span> <span class="op">=</span> <span class="ident">generate_key</span>();
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Generated random key 2: {}&quot;</span>, <span class="ident">k2</span>);
-        <span class="macro">assert_ne</span><span class="macro">!</span>(<span class="ident">k1</span>, <span class="ident">k2</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">k1</span>.<span class="ident">len</span>(), <span class="ident">k2</span>.<span class="ident">len</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">k1</span>.<span class="ident">len</span>(), <span class="number">24</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">k2</span>.<span class="ident">len</span>(), <span class="number">24</span>);
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">k1</span>.<span class="ident">ends_with</span>(<span class="string">&quot;==&quot;</span>));
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">k2</span>.<span class="ident">ends_with</span>(<span class="string">&quot;==&quot;</span>));
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">k1</span>[..<span class="number">22</span>].<span class="ident">find</span>(<span class="string">&#39;=&#39;</span>).<span class="ident">is_none</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">k2</span>[..<span class="number">22</span>].<span class="ident">find</span>(<span class="string">&#39;=&#39;</span>).<span class="ident">is_none</span>());
+        <span class="macro">println!</span>(<span class="string">&quot;Generated random key 2: {}&quot;</span>, <span class="ident">k2</span>);
+        <span class="macro">assert_ne!</span>(<span class="ident">k1</span>, <span class="ident">k2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">k1</span>.<span class="ident">len</span>(), <span class="ident">k2</span>.<span class="ident">len</span>());
+        <span class="macro">assert_eq!</span>(<span class="ident">k1</span>.<span class="ident">len</span>(), <span class="number">24</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">k2</span>.<span class="ident">len</span>(), <span class="number">24</span>);
+        <span class="macro">assert!</span>(<span class="ident">k1</span>.<span class="ident">ends_with</span>(<span class="string">&quot;==&quot;</span>));
+        <span class="macro">assert!</span>(<span class="ident">k2</span>.<span class="ident">ends_with</span>(<span class="string">&quot;==&quot;</span>));
+        <span class="macro">assert!</span>(<span class="ident">k1</span>[..<span class="number">22</span>].<span class="ident">find</span>(<span class="string">&#39;=&#39;</span>).<span class="ident">is_none</span>());
+        <span class="macro">assert!</span>(<span class="ident">k2</span>[..<span class="number">22</span>].<span class="ident">find</span>(<span class="string">&#39;=&#39;</span>).<span class="ident">is_none</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -600,8 +600,8 @@
             Sec-WebSocket-Key: A70tsIbeMZUbJHh5BWFw6Q==\r\n\
             \r\n&quot;</span>;
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">generate_request</span>(<span class="ident">request</span>, <span class="ident">key</span>).<span class="ident">unwrap</span>();
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Request: {}&quot;</span>, <span class="ident">String</span>::<span class="ident">from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">request</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="ident">request</span>[..], <span class="kw-2">&amp;</span><span class="ident">correct</span>[..]);
+        <span class="macro">println!</span>(<span class="string">&quot;Request: {}&quot;</span>, <span class="ident">String::from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">request</span>));
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">request</span>[..], <span class="kw-2">&amp;</span><span class="ident">correct</span>[..]);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -617,8 +617,8 @@
             Sec-WebSocket-Key: A70tsIbeMZUbJHh5BWFw6Q==\r\n\
             \r\n&quot;</span>;
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">generate_request</span>(<span class="ident">request</span>, <span class="ident">key</span>).<span class="ident">unwrap</span>();
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Request: {}&quot;</span>, <span class="ident">String</span>::<span class="ident">from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">request</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="ident">request</span>[..], <span class="kw-2">&amp;</span><span class="ident">correct</span>[..]);
+        <span class="macro">println!</span>(<span class="string">&quot;Request: {}&quot;</span>, <span class="ident">String::from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">request</span>));
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">request</span>[..], <span class="kw-2">&amp;</span><span class="ident">correct</span>[..]);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -634,16 +634,16 @@
             Sec-WebSocket-Key: A70tsIbeMZUbJHh5BWFw6Q==\r\n\
             \r\n&quot;</span>;
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">generate_request</span>(<span class="ident">request</span>, <span class="ident">key</span>).<span class="ident">unwrap</span>();
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Request: {}&quot;</span>, <span class="ident">String</span>::<span class="ident">from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">request</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="ident">request</span>[..], <span class="kw-2">&amp;</span><span class="ident">correct</span>[..]);
+        <span class="macro">println!</span>(<span class="string">&quot;Request: {}&quot;</span>, <span class="ident">String::from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">request</span>));
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">request</span>[..], <span class="kw-2">&amp;</span><span class="ident">correct</span>[..]);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">response_parsing</span>() {
         <span class="kw">const</span> <span class="ident">DATA</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="string">b&quot;HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n&quot;</span>;
-        <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">resp</span>) <span class="op">=</span> <span class="ident">Response</span>::<span class="ident">try_parse</span>(<span class="ident">DATA</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">resp</span>.<span class="ident">status</span>(), <span class="ident">http</span>::<span class="ident">StatusCode</span>::<span class="ident">OK</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">resp</span>.<span class="ident">headers</span>().<span class="ident">get</span>(<span class="string">&quot;Content-Type&quot;</span>).<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="string">b&quot;text/html&quot;</span>[..],);
+        <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">resp</span>) <span class="op">=</span> <span class="ident">Response::try_parse</span>(<span class="ident">DATA</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq!</span>(<span class="ident">resp</span>.<span class="ident">status</span>(), <span class="ident">http::StatusCode::OK</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">resp</span>.<span class="ident">headers</span>().<span class="ident">get</span>(<span class="string">&quot;Content-Type&quot;</span>).<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="string">b&quot;text/html&quot;</span>[..],);
     }
 }
 </pre></div>

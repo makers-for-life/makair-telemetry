@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tungstenite-0.13.0/src/protocol/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../tungstenite/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../tungstenite/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
                 <a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
@@ -741,13 +741,13 @@
 
 <span class="kw">mod</span> <span class="ident">message</span>;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{<span class="ident">frame</span>::<span class="ident">CloseFrame</span>, <span class="ident">message</span>::<span class="ident">Message</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{<span class="ident">frame::CloseFrame</span>, <span class="ident">message::Message</span>};
 
 <span class="kw">use</span> <span class="ident">log</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">collections</span>::<span class="ident">VecDeque</span>,
+    <span class="ident">collections::VecDeque</span>,
     <span class="ident">io</span>::{<span class="ident">ErrorKind</span> <span class="kw">as</span> <span class="ident">IoErrorKind</span>, <span class="ident">Read</span>, <span class="ident">Write</span>},
-    <span class="ident">mem</span>::<span class="ident">replace</span>,
+    <span class="ident">mem::replace</span>,
 };
 
 <span class="kw">use</span> <span class="self">self</span>::{
@@ -759,7 +759,7 @@
 };
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">error</span>::{<span class="ident">Error</span>, <span class="ident">ProtocolError</span>, <span class="prelude-ty">Result</span>},
-    <span class="ident">util</span>::<span class="ident">NonBlockingResult</span>,
+    <span class="ident">util::NonBlockingResult</span>,
 };
 
 <span class="doccomment">/// Indicates a Client or Server role of the websocket</span>
@@ -825,7 +825,7 @@
     <span class="doccomment">/// or together with an existing one. If you need an initial handshake, use</span>
     <span class="doccomment">/// `connect()` or `accept()` functions of the crate to construct a websocket.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_raw_socket</span>(<span class="ident">stream</span>: <span class="ident">Stream</span>, <span class="ident">role</span>: <span class="ident">Role</span>, <span class="ident">config</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WebSocketConfig</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">WebSocket</span> { <span class="ident">socket</span>: <span class="ident">stream</span>, <span class="ident">context</span>: <span class="ident">WebSocketContext</span>::<span class="ident">new</span>(<span class="ident">role</span>, <span class="ident">config</span>) }
+        <span class="ident">WebSocket</span> { <span class="ident">socket</span>: <span class="ident">stream</span>, <span class="ident">context</span>: <span class="ident">WebSocketContext::new</span>(<span class="ident">role</span>, <span class="ident">config</span>) }
     }
 
     <span class="doccomment">/// Convert a raw socket into a WebSocket without performing a handshake.</span>
@@ -841,7 +841,7 @@
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">WebSocket</span> {
             <span class="ident">socket</span>: <span class="ident">stream</span>,
-            <span class="ident">context</span>: <span class="ident">WebSocketContext</span>::<span class="ident">from_partially_read</span>(<span class="ident">part</span>, <span class="ident">role</span>, <span class="ident">config</span>),
+            <span class="ident">context</span>: <span class="ident">WebSocketContext::from_partially_read</span>(<span class="ident">part</span>, <span class="ident">role</span>, <span class="ident">config</span>),
         }
     }
 
@@ -985,20 +985,20 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">role</span>: <span class="ident">Role</span>, <span class="ident">config</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WebSocketConfig</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">WebSocketContext</span> {
             <span class="ident">role</span>,
-            <span class="ident">frame</span>: <span class="ident">FrameCodec</span>::<span class="ident">new</span>(),
-            <span class="ident">state</span>: <span class="ident">WebSocketState</span>::<span class="ident">Active</span>,
+            <span class="ident">frame</span>: <span class="ident">FrameCodec::new</span>(),
+            <span class="ident">state</span>: <span class="ident">WebSocketState::Active</span>,
             <span class="ident">incomplete</span>: <span class="prelude-val">None</span>,
-            <span class="ident">send_queue</span>: <span class="ident">VecDeque</span>::<span class="ident">new</span>(),
+            <span class="ident">send_queue</span>: <span class="ident">VecDeque::new</span>(),
             <span class="ident">pong</span>: <span class="prelude-val">None</span>,
-            <span class="ident">config</span>: <span class="ident">config</span>.<span class="ident">unwrap_or_else</span>(<span class="ident">WebSocketConfig</span>::<span class="ident">default</span>),
+            <span class="ident">config</span>: <span class="ident">config</span>.<span class="ident">unwrap_or_else</span>(<span class="ident">WebSocketConfig::default</span>),
         }
     }
 
     <span class="doccomment">/// Create a WebSocket context that manages an post-handshake stream.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_partially_read</span>(<span class="ident">part</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">role</span>: <span class="ident">Role</span>, <span class="ident">config</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WebSocketConfig</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">WebSocketContext</span> {
-            <span class="ident">frame</span>: <span class="ident">FrameCodec</span>::<span class="ident">from_partially_read</span>(<span class="ident">part</span>),
-            ..<span class="ident">WebSocketContext</span>::<span class="ident">new</span>(<span class="ident">role</span>, <span class="ident">config</span>)
+            <span class="ident">frame</span>: <span class="ident">FrameCodec::from_partially_read</span>(<span class="ident">part</span>),
+            ..<span class="ident">WebSocketContext::new</span>(<span class="ident">role</span>, <span class="ident">config</span>)
         }
     }
 
@@ -1045,7 +1045,7 @@
             <span class="comment">// If we get here, either write blocks or we have nothing to write.</span>
             <span class="comment">// Thus if read blocks, just let it return WouldBlock.</span>
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">read_message_frame</span>(<span class="ident">stream</span>)<span class="question-mark">?</span> {
-                <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Received message {}&quot;</span>, <span class="ident">message</span>);
+                <span class="macro">trace!</span>(<span class="string">&quot;Received message {}&quot;</span>, <span class="ident">message</span>);
                 <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">message</span>);
             }
         }
@@ -1068,7 +1068,7 @@
 
         <span class="comment">// Do not write after sending a close frame.</span>
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">state</span>.<span class="ident">is_active</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">SendAfterClosing</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::SendAfterClosing</span>));
         }
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">max_send_queue</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">max_send_queue</span> {
@@ -1080,19 +1080,19 @@
             }
 
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">send_queue</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">max_send_queue</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">SendQueueFull</span>(<span class="ident">message</span>));
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::SendQueueFull</span>(<span class="ident">message</span>));
             }
         }
 
         <span class="kw">let</span> <span class="ident">frame</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">message</span> {
-            <span class="ident">Message</span>::<span class="ident">Text</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Frame</span>::<span class="ident">message</span>(<span class="ident">data</span>.<span class="ident">into</span>(), <span class="ident">OpCode</span>::<span class="ident">Data</span>(<span class="ident">OpData</span>::<span class="ident">Text</span>), <span class="bool-val">true</span>),
-            <span class="ident">Message</span>::<span class="ident">Binary</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Frame</span>::<span class="ident">message</span>(<span class="ident">data</span>, <span class="ident">OpCode</span>::<span class="ident">Data</span>(<span class="ident">OpData</span>::<span class="ident">Binary</span>), <span class="bool-val">true</span>),
-            <span class="ident">Message</span>::<span class="ident">Ping</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Frame</span>::<span class="ident">ping</span>(<span class="ident">data</span>),
-            <span class="ident">Message</span>::<span class="ident">Pong</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="self">self</span>.<span class="ident">pong</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Frame</span>::<span class="ident">pong</span>(<span class="ident">data</span>));
+            <span class="ident">Message::Text</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Frame::message</span>(<span class="ident">data</span>.<span class="ident">into</span>(), <span class="ident">OpCode::Data</span>(<span class="ident">OpData::Text</span>), <span class="bool-val">true</span>),
+            <span class="ident">Message::Binary</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Frame::message</span>(<span class="ident">data</span>, <span class="ident">OpCode::Data</span>(<span class="ident">OpData::Binary</span>), <span class="bool-val">true</span>),
+            <span class="ident">Message::Ping</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Frame::ping</span>(<span class="ident">data</span>),
+            <span class="ident">Message::Pong</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="self">self</span>.<span class="ident">pong</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Frame::pong</span>(<span class="ident">data</span>));
                 <span class="kw">return</span> <span class="self">self</span>.<span class="ident">write_pending</span>(<span class="ident">stream</span>);
             }
-            <span class="ident">Message</span>::<span class="ident">Close</span>(<span class="ident">code</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">close</span>(<span class="ident">stream</span>, <span class="ident">code</span>),
+            <span class="ident">Message::Close</span>(<span class="ident">code</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">close</span>(<span class="ident">stream</span>, <span class="ident">code</span>),
         };
 
         <span class="self">self</span>.<span class="ident">send_queue</span>.<span class="ident">push_back</span>(<span class="ident">frame</span>);
@@ -1111,11 +1111,11 @@
         <span class="comment">// response, unless it already received a Close frame. It SHOULD</span>
         <span class="comment">// respond with Pong frame as soon as is practical. (RFC 6455)</span>
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pong</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">pong</span>.<span class="ident">take</span>() {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Sending pong reply&quot;</span>);
+            <span class="macro">trace!</span>(<span class="string">&quot;Sending pong reply&quot;</span>);
             <span class="self">self</span>.<span class="ident">send_one_frame</span>(<span class="ident">stream</span>, <span class="ident">pong</span>)<span class="question-mark">?</span>;
         }
         <span class="comment">// If we have any unsent frames, send them.</span>
-        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Frames still in queue: {}&quot;</span>, <span class="self">self</span>.<span class="ident">send_queue</span>.<span class="ident">len</span>());
+        <span class="macro">trace!</span>(<span class="string">&quot;Frames still in queue: {}&quot;</span>, <span class="self">self</span>.<span class="ident">send_queue</span>.<span class="ident">len</span>());
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">data</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">send_queue</span>.<span class="ident">pop_front</span>() {
             <span class="self">self</span>.<span class="ident">send_one_frame</span>(<span class="ident">stream</span>, <span class="ident">data</span>)<span class="question-mark">?</span>;
         }
@@ -1124,15 +1124,15 @@
         <span class="comment">// willing to take more data.</span>
 
         <span class="comment">// If we&#39;re closing and there is nothing to send anymore, we should close the connection.</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">role</span> <span class="op">=</span><span class="op">=</span> <span class="ident">Role</span>::<span class="ident">Server</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">state</span>.<span class="ident">can_read</span>() {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">role</span> <span class="op">=</span><span class="op">=</span> <span class="ident">Role::Server</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">state</span>.<span class="ident">can_read</span>() {
             <span class="comment">// The underlying TCP connection, in most normal cases, SHOULD be closed</span>
             <span class="comment">// first by the server, so that it holds the TIME_WAIT state and not the</span>
             <span class="comment">// client (as this would prevent it from re-opening the connection for 2</span>
             <span class="comment">// maximum segment lifetimes (2MSL), while there is no corresponding</span>
             <span class="comment">// server impact as a TIME_WAIT connection is immediately reopened upon</span>
             <span class="comment">// a new SYN with a higher seq number). (RFC 6455)</span>
-            <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">WebSocketState</span>::<span class="ident">Terminated</span>;
-            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">ConnectionClosed</span>)
+            <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">WebSocketState::Terminated</span>;
+            <span class="prelude-val">Err</span>(<span class="ident">Error::ConnectionClosed</span>)
         } <span class="kw">else</span> {
             <span class="prelude-val">Ok</span>(())
         }
@@ -1147,9 +1147,9 @@
     <span class="kw">where</span>
         <span class="ident">Stream</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Write</span>,
     {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">WebSocketState</span>::<span class="ident">Active</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">state</span> {
-            <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">WebSocketState</span>::<span class="ident">ClosedByUs</span>;
-            <span class="kw">let</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">Frame</span>::<span class="ident">close</span>(<span class="ident">code</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">WebSocketState::Active</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">state</span> {
+            <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">WebSocketState::ClosedByUs</span>;
+            <span class="kw">let</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">Frame::close</span>(<span class="ident">code</span>);
             <span class="self">self</span>.<span class="ident">send_queue</span>.<span class="ident">push_back</span>(<span class="ident">frame</span>);
         } <span class="kw">else</span> {
             <span class="comment">// Already closed, nothing to do.</span>
@@ -1168,7 +1168,7 @@
             .<span class="ident">check_connection_reset</span>(<span class="self">self</span>.<span class="ident">state</span>)<span class="question-mark">?</span>
         {
             <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">state</span>.<span class="ident">can_read</span>() {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">ReceivedAfterClosing</span>));
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::ReceivedAfterClosing</span>));
             }
             <span class="comment">// MUST be 0 unless an extension is negotiated that defines meanings</span>
             <span class="comment">// for non-zero values.  If a nonzero value is received and none of</span>
@@ -1178,12 +1178,12 @@
             {
                 <span class="kw">let</span> <span class="ident">hdr</span> <span class="op">=</span> <span class="ident">frame</span>.<span class="ident">header</span>();
                 <span class="kw">if</span> <span class="ident">hdr</span>.<span class="ident">rsv1</span> <span class="op">|</span><span class="op">|</span> <span class="ident">hdr</span>.<span class="ident">rsv2</span> <span class="op">|</span><span class="op">|</span> <span class="ident">hdr</span>.<span class="ident">rsv3</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">NonZeroReservedBits</span>));
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::NonZeroReservedBits</span>));
                 }
             }
 
             <span class="kw">match</span> <span class="self">self</span>.<span class="ident">role</span> {
-                <span class="ident">Role</span>::<span class="ident">Server</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Role::Server</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="ident">frame</span>.<span class="ident">is_masked</span>() {
                         <span class="comment">// A server MUST remove masking for data frames received from a client</span>
                         <span class="comment">// as described in Section 5.3. (RFC 6455)</span>
@@ -1193,53 +1193,53 @@
                         <span class="comment">// frame that is not masked. (RFC 6455)</span>
                         <span class="comment">// The only exception here is if the user explicitly accepts given</span>
                         <span class="comment">// stream by setting WebSocketConfig.accept_unmasked_frames to true</span>
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">UnmaskedFrameFromClient</span>));
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::UnmaskedFrameFromClient</span>));
                     }
                 }
-                <span class="ident">Role</span>::<span class="ident">Client</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Role::Client</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="ident">frame</span>.<span class="ident">is_masked</span>() {
                         <span class="comment">// A client MUST close a connection if it detects a masked frame. (RFC 6455)</span>
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">MaskedFrameFromServer</span>));
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::MaskedFrameFromServer</span>));
                     }
                 }
             }
 
             <span class="kw">match</span> <span class="ident">frame</span>.<span class="ident">header</span>().<span class="ident">opcode</span> {
-                <span class="ident">OpCode</span>::<span class="ident">Control</span>(<span class="ident">ctl</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">OpCode::Control</span>(<span class="ident">ctl</span>) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">match</span> <span class="ident">ctl</span> {
                         <span class="comment">// All control frames MUST have a payload length of 125 bytes or less</span>
                         <span class="comment">// and MUST NOT be fragmented. (RFC 6455)</span>
                         <span class="kw">_</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">frame</span>.<span class="ident">header</span>().<span class="ident">is_final</span> <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">FragmentedControlFrame</span>))
+                            <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::FragmentedControlFrame</span>))
                         }
                         <span class="kw">_</span> <span class="kw">if</span> <span class="ident">frame</span>.<span class="ident">payload</span>().<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">125</span> <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">ControlFrameTooBig</span>))
+                            <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::ControlFrameTooBig</span>))
                         }
-                        <span class="ident">OpCtl</span>::<span class="ident">Close</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">do_close</span>(<span class="ident">frame</span>.<span class="ident">into_close</span>()<span class="question-mark">?</span>).<span class="ident">map</span>(<span class="ident">Message</span>::<span class="ident">Close</span>)),
-                        <span class="ident">OpCtl</span>::<span class="ident">Reserved</span>(<span class="ident">i</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">UnknownControlFrameType</span>(<span class="ident">i</span>)))
+                        <span class="ident">OpCtl::Close</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">do_close</span>(<span class="ident">frame</span>.<span class="ident">into_close</span>()<span class="question-mark">?</span>).<span class="ident">map</span>(<span class="ident">Message::Close</span>)),
+                        <span class="ident">OpCtl::Reserved</span>(<span class="ident">i</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::UnknownControlFrameType</span>(<span class="ident">i</span>)))
                         }
-                        <span class="ident">OpCtl</span>::<span class="ident">Ping</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">OpCtl::Ping</span> <span class="op">=</span><span class="op">&gt;</span> {
                             <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">frame</span>.<span class="ident">into_data</span>();
                             <span class="comment">// No ping processing after we sent a close frame.</span>
                             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">state</span>.<span class="ident">is_active</span>() {
-                                <span class="self">self</span>.<span class="ident">pong</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Frame</span>::<span class="ident">pong</span>(<span class="ident">data</span>.<span class="ident">clone</span>()));
+                                <span class="self">self</span>.<span class="ident">pong</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Frame::pong</span>(<span class="ident">data</span>.<span class="ident">clone</span>()));
                             }
-                            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Message</span>::<span class="ident">Ping</span>(<span class="ident">data</span>)))
+                            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Message::Ping</span>(<span class="ident">data</span>)))
                         }
-                        <span class="ident">OpCtl</span>::<span class="ident">Pong</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Message</span>::<span class="ident">Pong</span>(<span class="ident">frame</span>.<span class="ident">into_data</span>()))),
+                        <span class="ident">OpCtl::Pong</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Message::Pong</span>(<span class="ident">frame</span>.<span class="ident">into_data</span>()))),
                     }
                 }
 
-                <span class="ident">OpCode</span>::<span class="ident">Data</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">OpCode::Data</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">let</span> <span class="ident">fin</span> <span class="op">=</span> <span class="ident">frame</span>.<span class="ident">header</span>().<span class="ident">is_final</span>;
                     <span class="kw">match</span> <span class="ident">data</span> {
-                        <span class="ident">OpData</span>::<span class="ident">Continue</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">OpData::Continue</span> <span class="op">=</span><span class="op">&gt;</span> {
                             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">msg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">incomplete</span> {
                                 <span class="ident">msg</span>.<span class="ident">extend</span>(<span class="ident">frame</span>.<span class="ident">into_data</span>(), <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">max_message_size</span>)<span class="question-mark">?</span>;
                             } <span class="kw">else</span> {
-                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(
-                                    <span class="ident">ProtocolError</span>::<span class="ident">UnexpectedContinueFrame</span>,
+                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(
+                                    <span class="ident">ProtocolError::UnexpectedContinueFrame</span>,
                                 ));
                             }
                             <span class="kw">if</span> <span class="ident">fin</span> {
@@ -1249,16 +1249,16 @@
                             }
                         }
                         <span class="ident">c</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">incomplete</span>.<span class="ident">is_some</span>() <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">ExpectedFragment</span>(<span class="ident">c</span>)))
+                            <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::ExpectedFragment</span>(<span class="ident">c</span>)))
                         }
-                        <span class="ident">OpData</span>::<span class="ident">Text</span> <span class="op">|</span> <span class="ident">OpData</span>::<span class="ident">Binary</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">OpData::Text</span> <span class="op">|</span> <span class="ident">OpData::Binary</span> <span class="op">=</span><span class="op">&gt;</span> {
                             <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> {
                                 <span class="kw">let</span> <span class="ident">message_type</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">data</span> {
-                                    <span class="ident">OpData</span>::<span class="ident">Text</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">IncompleteMessageType</span>::<span class="ident">Text</span>,
-                                    <span class="ident">OpData</span>::<span class="ident">Binary</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">IncompleteMessageType</span>::<span class="ident">Binary</span>,
-                                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Bug: message is not text nor binary&quot;</span>),
+                                    <span class="ident">OpData::Text</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">IncompleteMessageType::Text</span>,
+                                    <span class="ident">OpData::Binary</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">IncompleteMessageType::Binary</span>,
+                                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;Bug: message is not text nor binary&quot;</span>),
                                 };
-                                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">IncompleteMessage</span>::<span class="ident">new</span>(<span class="ident">message_type</span>);
+                                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">IncompleteMessage::new</span>(<span class="ident">message_type</span>);
                                 <span class="ident">m</span>.<span class="ident">extend</span>(<span class="ident">frame</span>.<span class="ident">into_data</span>(), <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">max_message_size</span>)<span class="question-mark">?</span>;
                                 <span class="ident">m</span>
                             };
@@ -1269,61 +1269,61 @@
                                 <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
                             }
                         }
-                        <span class="ident">OpData</span>::<span class="ident">Reserved</span>(<span class="ident">i</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">UnknownDataFrameType</span>(<span class="ident">i</span>)))
+                        <span class="ident">OpData::Reserved</span>(<span class="ident">i</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::UnknownDataFrameType</span>(<span class="ident">i</span>)))
                         }
                     }
                 }
             } <span class="comment">// match opcode</span>
         } <span class="kw">else</span> {
             <span class="comment">// Connection closed by peer</span>
-            <span class="kw">match</span> <span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">state</span>, <span class="ident">WebSocketState</span>::<span class="ident">Terminated</span>) {
-                <span class="ident">WebSocketState</span>::<span class="ident">ClosedByPeer</span> <span class="op">|</span> <span class="ident">WebSocketState</span>::<span class="ident">CloseAcknowledged</span> <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">ConnectionClosed</span>)
+            <span class="kw">match</span> <span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">state</span>, <span class="ident">WebSocketState::Terminated</span>) {
+                <span class="ident">WebSocketState::ClosedByPeer</span> <span class="op">|</span> <span class="ident">WebSocketState::CloseAcknowledged</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="prelude-val">Err</span>(<span class="ident">Error::ConnectionClosed</span>)
                 }
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">ProtocolError</span>::<span class="ident">ResetWithoutClosingHandshake</span>)),
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::ResetWithoutClosingHandshake</span>)),
             }
         }
     }
 
     <span class="doccomment">/// Received a close frame. Tells if we need to return a close frame to the user.</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">option_option</span>)]</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::option_option</span>)]</span>
     <span class="kw">fn</span> <span class="ident">do_close</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">close</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CloseFrame</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CloseFrame</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Received close frame: {:?}&quot;</span>, <span class="ident">close</span>);
+        <span class="macro">debug!</span>(<span class="string">&quot;Received close frame: {:?}&quot;</span>, <span class="ident">close</span>);
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">state</span> {
-            <span class="ident">WebSocketState</span>::<span class="ident">Active</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">WebSocketState::Active</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">close_code</span> <span class="op">=</span> <span class="ident">close</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">code</span>);
-                <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">WebSocketState</span>::<span class="ident">ClosedByPeer</span>;
+                <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">WebSocketState::ClosedByPeer</span>;
                 <span class="kw">let</span> <span class="ident">reply</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">code</span>) <span class="op">=</span> <span class="ident">close_code</span> {
                     <span class="kw">if</span> <span class="ident">code</span>.<span class="ident">is_allowed</span>() {
-                        <span class="ident">Frame</span>::<span class="ident">close</span>(<span class="prelude-val">Some</span>(<span class="ident">CloseFrame</span> {
-                            <span class="ident">code</span>: <span class="ident">CloseCode</span>::<span class="ident">Normal</span>,
+                        <span class="ident">Frame::close</span>(<span class="prelude-val">Some</span>(<span class="ident">CloseFrame</span> {
+                            <span class="ident">code</span>: <span class="ident">CloseCode::Normal</span>,
                             <span class="ident">reason</span>: <span class="string">&quot;&quot;</span>.<span class="ident">into</span>(),
                         }))
                     } <span class="kw">else</span> {
-                        <span class="ident">Frame</span>::<span class="ident">close</span>(<span class="prelude-val">Some</span>(<span class="ident">CloseFrame</span> {
-                            <span class="ident">code</span>: <span class="ident">CloseCode</span>::<span class="ident">Protocol</span>,
+                        <span class="ident">Frame::close</span>(<span class="prelude-val">Some</span>(<span class="ident">CloseFrame</span> {
+                            <span class="ident">code</span>: <span class="ident">CloseCode::Protocol</span>,
                             <span class="ident">reason</span>: <span class="string">&quot;Protocol violation&quot;</span>.<span class="ident">into</span>(),
                         }))
                     }
                 } <span class="kw">else</span> {
-                    <span class="ident">Frame</span>::<span class="ident">close</span>(<span class="prelude-val">None</span>)
+                    <span class="ident">Frame::close</span>(<span class="prelude-val">None</span>)
                 };
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Replying to close with {:?}&quot;</span>, <span class="ident">reply</span>);
+                <span class="macro">debug!</span>(<span class="string">&quot;Replying to close with {:?}&quot;</span>, <span class="ident">reply</span>);
                 <span class="self">self</span>.<span class="ident">send_queue</span>.<span class="ident">push_back</span>(<span class="ident">reply</span>);
 
                 <span class="prelude-val">Some</span>(<span class="ident">close</span>)
             }
-            <span class="ident">WebSocketState</span>::<span class="ident">ClosedByPeer</span> <span class="op">|</span> <span class="ident">WebSocketState</span>::<span class="ident">CloseAcknowledged</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">WebSocketState::ClosedByPeer</span> <span class="op">|</span> <span class="ident">WebSocketState::CloseAcknowledged</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="comment">// It is already closed, just ignore.</span>
                 <span class="prelude-val">None</span>
             }
-            <span class="ident">WebSocketState</span>::<span class="ident">ClosedByUs</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">WebSocketState::ClosedByUs</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="comment">// We received a reply.</span>
-                <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">WebSocketState</span>::<span class="ident">CloseAcknowledged</span>;
+                <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">WebSocketState::CloseAcknowledged</span>;
                 <span class="prelude-val">Some</span>(<span class="ident">close</span>)
             }
-            <span class="ident">WebSocketState</span>::<span class="ident">Terminated</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+            <span class="ident">WebSocketState::Terminated</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
         }
     }
 
@@ -1333,15 +1333,15 @@
         <span class="ident">Stream</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Write</span>,
     {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">role</span> {
-            <span class="ident">Role</span>::<span class="ident">Server</span> <span class="op">=</span><span class="op">&gt;</span> {}
-            <span class="ident">Role</span>::<span class="ident">Client</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">Role::Server</span> <span class="op">=</span><span class="op">&gt;</span> {}
+            <span class="ident">Role::Client</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="comment">// 5.  If the data is being sent by the client, the frame(s) MUST be</span>
                 <span class="comment">// masked as defined in Section 5.3. (RFC 6455)</span>
                 <span class="ident">frame</span>.<span class="ident">set_random_mask</span>();
             }
         }
 
-        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Sending frame: {:?}&quot;</span>, <span class="ident">frame</span>);
+        <span class="macro">trace!</span>(<span class="string">&quot;Sending frame: {:?}&quot;</span>, <span class="ident">frame</span>);
         <span class="self">self</span>.<span class="ident">frame</span>.<span class="ident">write_frame</span>(<span class="ident">stream</span>, <span class="ident">frame</span>).<span class="ident">check_connection_reset</span>(<span class="self">self</span>.<span class="ident">state</span>)
     }
 }
@@ -1364,20 +1364,20 @@
 <span class="kw">impl</span> <span class="ident">WebSocketState</span> {
     <span class="doccomment">/// Tell if we&#39;re allowed to process normal messages.</span>
     <span class="kw">fn</span> <span class="ident">is_active</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="macro">matches</span><span class="macro">!</span>(<span class="self">self</span>, <span class="ident">WebSocketState</span>::<span class="ident">Active</span>)
+        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">WebSocketState::Active</span>)
     }
 
     <span class="doccomment">/// Tell if we should process incoming data. Note that if we send a close frame</span>
     <span class="doccomment">/// but the remote hasn&#39;t confirmed, they might have sent data before they receive our</span>
     <span class="doccomment">/// close frame, so we should still pass those to client code, hence ClosedByUs is valid.</span>
     <span class="kw">fn</span> <span class="ident">can_read</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="macro">matches</span><span class="macro">!</span>(<span class="self">self</span>, <span class="ident">WebSocketState</span>::<span class="ident">Active</span> <span class="op">|</span> <span class="ident">WebSocketState</span>::<span class="ident">ClosedByUs</span>)
+        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">WebSocketState::Active</span> <span class="op">|</span> <span class="ident">WebSocketState::ClosedByUs</span>)
     }
 
     <span class="doccomment">/// Check if the state is active, return error if not.</span>
     <span class="kw">fn</span> <span class="ident">check_active</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">WebSocketState</span>::<span class="ident">Terminated</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">AlreadyClosed</span>),
+            <span class="ident">WebSocketState::Terminated</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error::AlreadyClosed</span>),
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
         }
     }
@@ -1391,11 +1391,11 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">CheckConnectionReset</span> <span class="kw">for</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">check_connection_reset</span>(<span class="self">self</span>, <span class="ident">state</span>: <span class="ident">WebSocketState</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Io</span>(<span class="ident">io_error</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>({
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">state</span>.<span class="ident">can_read</span>() <span class="op">&amp;&amp;</span> <span class="ident">io_error</span>.<span class="ident">kind</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">IoErrorKind</span>::<span class="ident">ConnectionReset</span> {
-                    <span class="ident">Error</span>::<span class="ident">ConnectionClosed</span>
+            <span class="prelude-val">Err</span>(<span class="ident">Error::Io</span>(<span class="ident">io_error</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>({
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">state</span>.<span class="ident">can_read</span>() <span class="op">&amp;&amp;</span> <span class="ident">io_error</span>.<span class="ident">kind</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">IoErrorKind::ConnectionReset</span> {
+                    <span class="ident">Error::ConnectionClosed</span>
                 } <span class="kw">else</span> {
-                    <span class="ident">Error</span>::<span class="ident">Io</span>(<span class="ident">io_error</span>)
+                    <span class="ident">Error::Io</span>(<span class="ident">io_error</span>)
                 }
             }),
             <span class="ident">x</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">x</span>,
@@ -1406,65 +1406,65 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Message</span>, <span class="ident">Role</span>, <span class="ident">WebSocket</span>, <span class="ident">WebSocketConfig</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">error</span>::{<span class="ident">CapacityError</span>, <span class="ident">Error</span>};
+    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::error</span>::{<span class="ident">CapacityError</span>, <span class="ident">Error</span>};
 
-    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">io</span>, <span class="ident">io</span>::<span class="ident">Cursor</span>};
+    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">io</span>, <span class="ident">io::Cursor</span>};
 
     <span class="kw">struct</span> <span class="ident">WriteMoc</span><span class="op">&lt;</span><span class="ident">Stream</span><span class="op">&gt;</span>(<span class="ident">Stream</span>);
 
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Stream</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">WriteMoc</span><span class="op">&lt;</span><span class="ident">Stream</span><span class="op">&gt;</span> {
-        <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Stream</span><span class="op">&gt;</span> <span class="ident">io::Write</span> <span class="kw">for</span> <span class="ident">WriteMoc</span><span class="op">&lt;</span><span class="ident">Stream</span><span class="op">&gt;</span> {
+        <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
             <span class="prelude-val">Ok</span>(<span class="ident">buf</span>.<span class="ident">len</span>())
         }
-        <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="prelude-val">Ok</span>(())
         }
     }
 
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Stream</span>: <span class="ident">io</span>::<span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="ident">Read</span> <span class="kw">for</span> <span class="ident">WriteMoc</span><span class="op">&lt;</span><span class="ident">Stream</span><span class="op">&gt;</span> {
-        <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Stream</span>: <span class="ident">io::Read</span><span class="op">&gt;</span> <span class="ident">io::Read</span> <span class="kw">for</span> <span class="ident">WriteMoc</span><span class="op">&lt;</span><span class="ident">Stream</span><span class="op">&gt;</span> {
+        <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
             <span class="self">self</span>.<span class="number">0</span>.<span class="ident">read</span>(<span class="ident">buf</span>)
         }
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">receive_messages</span>() {
-        <span class="kw">let</span> <span class="ident">incoming</span> <span class="op">=</span> <span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="macro">vec</span><span class="macro">!</span>[
+        <span class="kw">let</span> <span class="ident">incoming</span> <span class="op">=</span> <span class="ident">Cursor::new</span>(<span class="macro">vec!</span>[
             <span class="number">0x89</span>, <span class="number">0x02</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x8a</span>, <span class="number">0x01</span>, <span class="number">0x03</span>, <span class="number">0x01</span>, <span class="number">0x07</span>, <span class="number">0x48</span>, <span class="number">0x65</span>, <span class="number">0x6c</span>, <span class="number">0x6c</span>, <span class="number">0x6f</span>,
             <span class="number">0x2c</span>, <span class="number">0x20</span>, <span class="number">0x80</span>, <span class="number">0x06</span>, <span class="number">0x57</span>, <span class="number">0x6f</span>, <span class="number">0x72</span>, <span class="number">0x6c</span>, <span class="number">0x64</span>, <span class="number">0x21</span>, <span class="number">0x82</span>, <span class="number">0x03</span>, <span class="number">0x01</span>, <span class="number">0x02</span>,
             <span class="number">0x03</span>,
         ]);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">socket</span> <span class="op">=</span> <span class="ident">WebSocket</span>::<span class="ident">from_raw_socket</span>(<span class="ident">WriteMoc</span>(<span class="ident">incoming</span>), <span class="ident">Role</span>::<span class="ident">Client</span>, <span class="prelude-val">None</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">socket</span>.<span class="ident">read_message</span>().<span class="ident">unwrap</span>(), <span class="ident">Message</span>::<span class="ident">Ping</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="number">1</span>, <span class="number">2</span>]));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">socket</span>.<span class="ident">read_message</span>().<span class="ident">unwrap</span>(), <span class="ident">Message</span>::<span class="ident">Pong</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="number">3</span>]));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">socket</span>.<span class="ident">read_message</span>().<span class="ident">unwrap</span>(), <span class="ident">Message</span>::<span class="ident">Text</span>(<span class="string">&quot;Hello, World!&quot;</span>.<span class="ident">into</span>()));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">socket</span>.<span class="ident">read_message</span>().<span class="ident">unwrap</span>(), <span class="ident">Message</span>::<span class="ident">Binary</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>]));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">socket</span> <span class="op">=</span> <span class="ident">WebSocket::from_raw_socket</span>(<span class="ident">WriteMoc</span>(<span class="ident">incoming</span>), <span class="ident">Role::Client</span>, <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">socket</span>.<span class="ident">read_message</span>().<span class="ident">unwrap</span>(), <span class="ident">Message::Ping</span>(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>]));
+        <span class="macro">assert_eq!</span>(<span class="ident">socket</span>.<span class="ident">read_message</span>().<span class="ident">unwrap</span>(), <span class="ident">Message::Pong</span>(<span class="macro">vec!</span>[<span class="number">3</span>]));
+        <span class="macro">assert_eq!</span>(<span class="ident">socket</span>.<span class="ident">read_message</span>().<span class="ident">unwrap</span>(), <span class="ident">Message::Text</span>(<span class="string">&quot;Hello, World!&quot;</span>.<span class="ident">into</span>()));
+        <span class="macro">assert_eq!</span>(<span class="ident">socket</span>.<span class="ident">read_message</span>().<span class="ident">unwrap</span>(), <span class="ident">Message::Binary</span>(<span class="macro">vec!</span>[<span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>]));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">size_limiting_text_fragmented</span>() {
-        <span class="kw">let</span> <span class="ident">incoming</span> <span class="op">=</span> <span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="macro">vec</span><span class="macro">!</span>[
+        <span class="kw">let</span> <span class="ident">incoming</span> <span class="op">=</span> <span class="ident">Cursor::new</span>(<span class="macro">vec!</span>[
             <span class="number">0x01</span>, <span class="number">0x07</span>, <span class="number">0x48</span>, <span class="number">0x65</span>, <span class="number">0x6c</span>, <span class="number">0x6c</span>, <span class="number">0x6f</span>, <span class="number">0x2c</span>, <span class="number">0x20</span>, <span class="number">0x80</span>, <span class="number">0x06</span>, <span class="number">0x57</span>, <span class="number">0x6f</span>, <span class="number">0x72</span>,
             <span class="number">0x6c</span>, <span class="number">0x64</span>, <span class="number">0x21</span>,
         ]);
-        <span class="kw">let</span> <span class="ident">limit</span> <span class="op">=</span> <span class="ident">WebSocketConfig</span> { <span class="ident">max_message_size</span>: <span class="prelude-val">Some</span>(<span class="number">10</span>), ..<span class="ident">WebSocketConfig</span>::<span class="ident">default</span>() };
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">socket</span> <span class="op">=</span> <span class="ident">WebSocket</span>::<span class="ident">from_raw_socket</span>(<span class="ident">WriteMoc</span>(<span class="ident">incoming</span>), <span class="ident">Role</span>::<span class="ident">Client</span>, <span class="prelude-val">Some</span>(<span class="ident">limit</span>));
+        <span class="kw">let</span> <span class="ident">limit</span> <span class="op">=</span> <span class="ident">WebSocketConfig</span> { <span class="ident">max_message_size</span>: <span class="prelude-val">Some</span>(<span class="number">10</span>), ..<span class="ident">WebSocketConfig::default</span>() };
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">socket</span> <span class="op">=</span> <span class="ident">WebSocket::from_raw_socket</span>(<span class="ident">WriteMoc</span>(<span class="ident">incoming</span>), <span class="ident">Role::Client</span>, <span class="prelude-val">Some</span>(<span class="ident">limit</span>));
 
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="macro">matches</span><span class="macro">!</span>(
+        <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="ident">socket</span>.<span class="ident">read_message</span>(),
-            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Capacity</span>(<span class="ident">CapacityError</span>::<span class="ident">MessageTooLong</span> { <span class="ident">size</span>: <span class="number">13</span>, <span class="ident">max_size</span>: <span class="number">10</span> }))
+            <span class="prelude-val">Err</span>(<span class="ident">Error::Capacity</span>(<span class="ident">CapacityError::MessageTooLong</span> { <span class="ident">size</span>: <span class="number">13</span>, <span class="ident">max_size</span>: <span class="number">10</span> }))
         ));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">size_limiting_binary</span>() {
-        <span class="kw">let</span> <span class="ident">incoming</span> <span class="op">=</span> <span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x82</span>, <span class="number">0x03</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>]);
-        <span class="kw">let</span> <span class="ident">limit</span> <span class="op">=</span> <span class="ident">WebSocketConfig</span> { <span class="ident">max_message_size</span>: <span class="prelude-val">Some</span>(<span class="number">2</span>), ..<span class="ident">WebSocketConfig</span>::<span class="ident">default</span>() };
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">socket</span> <span class="op">=</span> <span class="ident">WebSocket</span>::<span class="ident">from_raw_socket</span>(<span class="ident">WriteMoc</span>(<span class="ident">incoming</span>), <span class="ident">Role</span>::<span class="ident">Client</span>, <span class="prelude-val">Some</span>(<span class="ident">limit</span>));
+        <span class="kw">let</span> <span class="ident">incoming</span> <span class="op">=</span> <span class="ident">Cursor::new</span>(<span class="macro">vec!</span>[<span class="number">0x82</span>, <span class="number">0x03</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>]);
+        <span class="kw">let</span> <span class="ident">limit</span> <span class="op">=</span> <span class="ident">WebSocketConfig</span> { <span class="ident">max_message_size</span>: <span class="prelude-val">Some</span>(<span class="number">2</span>), ..<span class="ident">WebSocketConfig::default</span>() };
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">socket</span> <span class="op">=</span> <span class="ident">WebSocket::from_raw_socket</span>(<span class="ident">WriteMoc</span>(<span class="ident">incoming</span>), <span class="ident">Role::Client</span>, <span class="prelude-val">Some</span>(<span class="ident">limit</span>));
 
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="macro">matches</span><span class="macro">!</span>(
+        <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="ident">socket</span>.<span class="ident">read_message</span>(),
-            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Capacity</span>(<span class="ident">CapacityError</span>::<span class="ident">MessageTooLong</span> { <span class="ident">size</span>: <span class="number">3</span>, <span class="ident">max_size</span>: <span class="number">2</span> }))
+            <span class="prelude-val">Err</span>(<span class="ident">Error::Capacity</span>(<span class="ident">CapacityError::MessageTooLong</span> { <span class="ident">size</span>: <span class="number">3</span>, <span class="ident">max_size</span>: <span class="number">2</span> }))
         ));
     }
 }

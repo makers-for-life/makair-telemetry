@@ -43,6 +43,8 @@ pub const RMC_SW_20: u8 = 47;
 pub const RMC_SW_21: u8 = 48;
 /// Error code of RMC SW 22
 pub const RMC_SW_22: u8 = 49;
+/// Error code of RMC SW 23
+pub const RMC_SW_23: u8 = 107;
 
 /// Wrapper arround an alarm code
 #[derive(Debug, Eq, PartialEq, Hash, Clone, Copy, PartialOrd, Ord)]
@@ -88,6 +90,8 @@ pub enum AlarmCodeDescription {
     TidalVolumeHigh,
     /// Peak pressure is too high
     PeakPressureHigh,
+    /// Expiratory flow is too low
+    ExpiratoryFlowTooLow,
     /// Unknown cause
     Unknown(u8),
 }
@@ -113,6 +117,7 @@ impl AlarmCode {
             RMC_SW_20 => AlarmCodeDescription::TidalVolumeLow,
             RMC_SW_21 => AlarmCodeDescription::TidalVolumeHigh,
             RMC_SW_22 => AlarmCodeDescription::PeakPressureHigh,
+            RMC_SW_23 => AlarmCodeDescription::ExpiratoryFlowTooLow,
             _ => AlarmCodeDescription::Unknown(self.code),
         }
     }

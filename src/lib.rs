@@ -313,41 +313,39 @@ pub fn gather_telemetry_from_file(
     let stopped_message_period = std::time::Duration::from_millis(100);
     let data_message_period = std::time::Duration::from_millis(10);
 
-    for line in reader.lines() {
-        if let Ok(line_str) = line {
-            if let Ok(mut bytes) = base64::decode(line_str) {
-                buffer.append(&mut bytes);
+    for line_str in reader.lines().flatten() {
+        if let Ok(mut bytes) = base64::decode(line_str) {
+            buffer.append(&mut bytes);
 
-                while !buffer.is_empty() {
-                    // Let's try to parse the buffer
-                    match parse_telemetry_message(&buffer) {
-                        // It worked! Let's extract the message and replace the buffer with the rest of the bytes
-                        Ok((rest, message)) => {
-                            if enable_time_simulation {
-                                match message {
-                                    TelemetryMessage::StoppedMessage { .. } => {
-                                        std::thread::sleep(stopped_message_period);
-                                    }
-                                    TelemetryMessage::DataSnapshot { .. } => {
-                                        std::thread::sleep(data_message_period);
-                                    }
-                                    _ => (),
+            while !buffer.is_empty() {
+                // Let's try to parse the buffer
+                match parse_telemetry_message(&buffer) {
+                    // It worked! Let's extract the message and replace the buffer with the rest of the bytes
+                    Ok((rest, message)) => {
+                        if enable_time_simulation {
+                            match message {
+                                TelemetryMessage::StoppedMessage { .. } => {
+                                    std::thread::sleep(stopped_message_period);
                                 }
+                                TelemetryMessage::DataSnapshot { .. } => {
+                                    std::thread::sleep(data_message_period);
+                                }
+                                _ => (),
                             }
-                            tx.send(Ok(message))
-                                .expect("failed sending message to tx channel");
-                            buffer = Vec::from(rest);
                         }
-                        // There are not enough bytes, let's wait until we get more
-                        Err(nom::Err::Incomplete(_)) => {
-                            break;
-                        }
-                        // We can't do anything with the begining of the buffer, let's drop its first byte
-                        Err(e) => {
-                            debug!("{:?}", &e);
-                            if !buffer.is_empty() {
-                                buffer.remove(0);
-                            }
+                        tx.send(Ok(message))
+                            .expect("failed sending message to tx channel");
+                        buffer = Vec::from(rest);
+                    }
+                    // There are not enough bytes, let's wait until we get more
+                    Err(nom::Err::Incomplete(_)) => {
+                        break;
+                    }
+                    // We can't do anything with the begining of the buffer, let's drop its first byte
+                    Err(e) => {
+                        debug!("{:?}", &e);
+                        if !buffer.is_empty() {
+                            buffer.remove(0);
                         }
                     }
                 }

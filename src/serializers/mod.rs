@@ -721,11 +721,15 @@ impl ToBytes for EolTestSnapshot {
         let (device_id1, device_id2, device_id3) = split_device_id(&self.device_id);
 
         let eol_test_snapshot_content: Vec<u8> = match self.content {
-            EolTestSnapshotContent::InProgress => vec![0],
-            EolTestSnapshotContent::Error(ref reason) => {
-                flat(&[&[1], b"\t", &[reason.len() as u8], &reason.as_bytes()])
+            EolTestSnapshotContent::InProgress(ref message) => {
+                flat(&[&[0], b"\t", &[message.len() as u8], &message.as_bytes()])
             }
-            EolTestSnapshotContent::Success => vec![2],
+            EolTestSnapshotContent::Error(ref message) => {
+                flat(&[&[1], b"\t", &[message.len() as u8], &message.as_bytes()])
+            }
+            EolTestSnapshotContent::Success(ref message) => {
+                flat(&[&[2], b"\t", &[message.len() as u8], &message.as_bytes()])
+            }
         };
 
         flat(&[

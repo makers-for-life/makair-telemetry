@@ -121,14 +121,26 @@ fn eol_test_snapshot_content(input: &[u8]) -> IResult<&[u8], EolTestSnapshotCont
 
     let (input, content_type) = be_u8(input)?;
     match content_type {
-        0 => Ok((input, InProgress)),
+        0 => {
+            do_parse!(
+                input,
+                sep >> message: u8_array
+                    >> (InProgress(String::from_utf8_lossy(&message).into_owned()))
+            )
+        }
         1 => {
             do_parse!(
                 input,
-                sep >> error: u8_array >> (Error(String::from_utf8_lossy(&error).into_owned()))
+                sep >> message: u8_array >> (Error(String::from_utf8_lossy(&message).into_owned()))
             )
         }
-        2 => Ok((input, Success)),
+        2 => {
+            do_parse!(
+                input,
+                sep >> message: u8_array
+                    >> (Success(String::from_utf8_lossy(&message).into_owned()))
+            )
+        }
         _ => Err(Failure(Error::new(input, ErrorKind::Switch))),
     }
 }
@@ -765,16 +777,28 @@ mod tests {
 
     fn eol_test_snapshot_content_strategy() -> BoxedStrategy<EolTestSnapshotContent> {
         prop_oneof![
-            Just(EolTestSnapshotContent::InProgress),
+            eol_test_snapshot_content_in_progress_strategy(),
             eol_test_snapshot_content_error_strategy(),
-            Just(EolTestSnapshotContent::Success),
+            eol_test_snapshot_content_success_strategy(),
         ]
         .boxed()
     }
 
     prop_compose! {
-        fn eol_test_snapshot_content_error_strategy()(reason in ".+") -> EolTestSnapshotContent {
-            EolTestSnapshotContent::Error(reason)
+        fn eol_test_snapshot_content_in_progress_strategy()(message in ".+") -> EolTestSnapshotContent {
+            EolTestSnapshotContent::InProgress(message)
+        }
+    }
+
+    prop_compose! {
+        fn eol_test_snapshot_content_error_strategy()(message in ".+") -> EolTestSnapshotContent {
+            EolTestSnapshotContent::Error(message)
+        }
+    }
+
+    prop_compose! {
+        fn eol_test_snapshot_content_success_strategy()(message in ".+") -> EolTestSnapshotContent {
+            EolTestSnapshotContent::Success(message)
         }
     }
 

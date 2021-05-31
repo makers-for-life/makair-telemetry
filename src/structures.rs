@@ -317,11 +317,11 @@ impl TryFrom<u8> for EolTestStep {
 )]
 pub enum EolTestSnapshotContent {
     /// Test is in progress
-    InProgress,
+    InProgress(String),
     /// There was an error during test
     Error(String),
     /// End of line test succeeded
-    Success,
+    Success(String),
 }
 
 /// Patient gender

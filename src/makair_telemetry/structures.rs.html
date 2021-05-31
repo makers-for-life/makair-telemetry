@@ -1227,11 +1227,11 @@
 )]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">EolTestSnapshotContent</span> {
     <span class="doccomment">/// Test is in progress</span>
-    <span class="ident">InProgress</span>,
+    <span class="ident">InProgress</span>(<span class="ident">String</span>),
     <span class="doccomment">/// There was an error during test</span>
     <span class="ident">Error</span>(<span class="ident">String</span>),
     <span class="doccomment">/// End of line test succeeded</span>
-    <span class="ident">Success</span>,
+    <span class="ident">Success</span>(<span class="ident">String</span>),
 }
 
 <span class="doccomment">/// Patient gender</span>

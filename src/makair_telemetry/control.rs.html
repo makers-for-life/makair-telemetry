@@ -368,6 +368,11 @@
 <span id="365">365</span>
 <span id="366">366</span>
 <span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
 </pre><pre class="rust">
 <span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
@@ -458,6 +463,8 @@
     <span class="ident">PatientGender</span> <span class="op">=</span> <span class="number">29</span>,
     <span class="doccomment">/// Threshold for peak pressure alarm in mmH2O (value bounds must be between 50 and 700)</span>
     <span class="ident">PeakPressureAlarmThreshold</span> <span class="op">=</span> <span class="number">30</span>,
+    <span class="doccomment">/// Confirm end-of-line test step (value bounds must be between 0 and 0)</span>
+    <span class="ident">EolConfirm</span> <span class="op">=</span> <span class="number">31</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">ControlSetting</span> {
@@ -496,6 +503,7 @@
             <span class="self">Self</span><span class="ident">::PatientHeight</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">160</span>,
             <span class="self">Self</span><span class="ident">::PatientGender</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
             <span class="self">Self</span><span class="ident">::PeakPressureAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">500</span>,
+            <span class="self">Self</span><span class="ident">::EolConfirm</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
         }
     }
 
@@ -534,6 +542,7 @@
             <span class="self">Self</span><span class="ident">::PatientHeight</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">30</span>, <span class="number">250</span>),
             <span class="self">Self</span><span class="ident">::PatientGender</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">1</span>),
             <span class="self">Self</span><span class="ident">::PeakPressureAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">50</span>, <span class="number">700</span>),
+            <span class="self">Self</span><span class="ident">::EolConfirm</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">0</span>),
         }
     }
 }
@@ -574,6 +583,7 @@
             <span class="number">28</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PatientHeight</span>),
             <span class="number">29</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PatientGender</span>),
             <span class="number">30</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PeakPressureAlarmThreshold</span>),
+            <span class="number">31</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::EolConfirm</span>),
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Invalid setting number&quot;</span>),
         }
     }

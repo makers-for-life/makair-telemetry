@@ -87,6 +87,8 @@ pub enum ControlSetting {
     PatientGender = 29,
     /// Threshold for peak pressure alarm in mmH2O (value bounds must be between 50 and 700)
     PeakPressureAlarmThreshold = 30,
+    /// Confirm end-of-line test step (value bounds must be between 0 and 0)
+    EolConfirm = 31,
 }
 
 impl ControlSetting {
@@ -125,6 +127,7 @@ impl ControlSetting {
             Self::PatientHeight => 160,
             Self::PatientGender => 0,
             Self::PeakPressureAlarmThreshold => 500,
+            Self::EolConfirm => 0,
         }
     }
 
@@ -163,6 +166,7 @@ impl ControlSetting {
             Self::PatientHeight => RangeInclusive::new(30, 250),
             Self::PatientGender => RangeInclusive::new(0, 1),
             Self::PeakPressureAlarmThreshold => RangeInclusive::new(50, 700),
+            Self::EolConfirm => RangeInclusive::new(0, 0),
         }
     }
 }
@@ -203,6 +207,7 @@ impl std::convert::TryFrom<u8> for ControlSetting {
             28 => Ok(ControlSetting::PatientHeight),
             29 => Ok(ControlSetting::PatientGender),
             30 => Ok(ControlSetting::PeakPressureAlarmThreshold),
+            31 => Ok(ControlSetting::EolConfirm),
             _ => Err("Invalid setting number"),
         }
     }

@@ -144,7 +144,7 @@ mod tests {
             let input_message = &flat(&[
                 b"B:\x01",
                 &[msg.version.len() as u8],
-                &msg.version.as_bytes(),
+                msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),
                 &device_id2.to_be_bytes(),
                 &device_id3.to_be_bytes(),
@@ -168,20 +168,20 @@ mod tests {
 
             let input = &flat(&[
                 b"\x03\x0C",
-                &input_message,
+                input_message,
                 &expected_crc.to_be_bytes(),
                 b"\x30\xC0",
             ]);
             let fake_input = &flat(&[
                 b"\x03\x0C",
-                &input_message,
+                input_message,
                 &fake_crc.to_be_bytes(),
                 b"\x30\xC0",
             ]);
 
             let expected = TelemetryMessage::BootMessage(msg);
-            assert_eq!(nom::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(input), Ok((&[][..], expected)));
-            assert_eq!(nom::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(fake_input), Err(nom::Err::Failure(TelemetryError(
+            assert_eq!(nom::error::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(fake_input), Err(nom::Err::Failure(TelemetryError(
                 &fake_input[..],
                 TelemetryErrorKind::CrcError{
                     expected: fake_crc,
@@ -213,7 +213,7 @@ mod tests {
             let expected = TelemetryMessage::BootMessage(msg);
             let input = &expected.to_bytes_v2();
 
-            assert_eq!(nom::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(input), Ok((&[][..], expected)));
         }
     }
 
@@ -229,7 +229,7 @@ mod tests {
             },
         );
         assert_eq!(
-            nom::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(input),
+            nom::error::dbg_dmp(parse_telemetry_message, "parse_telemetry_message")(input),
             Err(nom::Err::Failure(expected))
         );
     }

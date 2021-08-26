@@ -296,11 +296,10 @@ fn parse_control_setting(input: &[u8]) -> IResult<&[u8], ControlSetting> {
 
 fn parse_inner_control_message(input: &[u8]) -> IResult<&[u8], ControlMessage> {
     use nom::number::streaming::be_u16;
+    use nom::sequence::pair;
 
-    nom::do_parse!(
-        input,
-        setting: parse_control_setting >> value: be_u16 >> (ControlMessage { setting, value })
-    )
+    let mut parser = pair(parse_control_setting, be_u16);
+    parser(input).map(|(rest, (setting, value))| (rest, ControlMessage { setting, value }))
 }
 
 /// Transform bytes into a structured control message
@@ -366,7 +365,7 @@ mod tests {
             };
             let input = &msg.to_control_frame();
 
-            assert_eq!(nom::dbg_dmp(parse_control_message, "parse_control_message")(input), Ok((&[][..], msg)));
+            assert_eq!(nom::error::dbg_dmp(parse_control_message, "parse_control_message")(input), Ok((&[][..], msg)));
         }
     }
 }

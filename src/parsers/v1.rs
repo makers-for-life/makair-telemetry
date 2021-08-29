@@ -1,6 +1,10 @@
+use nom::branch::alt;
+use nom::bytes::streaming::{tag, take};
+use nom::combinator::{map, map_res};
+use nom::multi::length_data;
 use nom::number::streaming::{be_u16, be_u32, be_u64, be_u8};
+use nom::sequence::tuple;
 use nom::IResult;
-use nom::{alt, do_parse, length_data, map, map_res, named, tag, take};
 use std::convert::TryFrom;
 
 use crate::control::*;
@@ -8,181 +12,208 @@ use crate::structures::*;
 
 const VERSION: u8 = 1;
 
-named!(sep, tag!("\t"));
-named!(end, tag!("\n"));
+fn sep(input: &[u8]) -> IResult<&[u8], &[u8]> {
+    tag("\t")(input)
+}
 
-named!(
-    mode<Mode>,
-    alt!(
-        map!(tag!(b"\x01"), |_| Mode::Production)
-            | map!(tag!(b"\x02"), |_| Mode::Qualification)
-            | map!(tag!(b"\x03"), |_| Mode::IntegrationTest)
-    )
-);
+fn end(input: &[u8]) -> IResult<&[u8], &[u8]> {
+    tag("\n")(input)
+}
 
-named!(
-    phase_and_subphase<(Phase, SubPhase)>,
-    alt!(
-        map!(tag!([17u8]), |_| (Phase::Inhalation, SubPhase::Inspiration))
-            | map!(tag!([18u8]), |_| (
-                Phase::Inhalation,
-                SubPhase::HoldInspiration
-            ))
-            | map!(tag!([68u8]), |_| (Phase::Exhalation, SubPhase::Exhale))
-    )
-);
+fn mode(input: &[u8]) -> IResult<&[u8], Mode> {
+    let mut parser = alt((
+        map(tag(b"\x01"), |_| Mode::Production),
+        map(tag(b"\x02"), |_| Mode::Qualification),
+        map(tag(b"\x03"), |_| Mode::IntegrationTest),
+    ));
+    parser(input)
+}
 
-named!(
-    control_setting<ControlSetting>,
-    map_res!(be_u8, |num| ControlSetting::try_from(num))
-);
+fn phase_and_subphase(input: &[u8]) -> IResult<&[u8], (Phase, SubPhase)> {
+    let mut parser = alt((
+        map(tag([17u8]), |_| (Phase::Inhalation, SubPhase::Inspiration)),
+        map(tag([18u8]), |_| {
+            (Phase::Inhalation, SubPhase::HoldInspiration)
+        }),
+        map(tag([68u8]), |_| (Phase::Exhalation, SubPhase::Exhale)),
+    ));
+    parser(input)
+}
 
-named!(
-    alarm_priority<AlarmPriority>,
-    alt!(
-        map!(tag!([4u8]), |_| AlarmPriority::High)
-            | map!(tag!([2u8]), |_| AlarmPriority::Medium)
-            | map!(tag!([1u8]), |_| AlarmPriority::Low)
-    )
-);
+fn control_setting(input: &[u8]) -> IResult<&[u8], ControlSetting> {
+    let mut parser = map_res(be_u8, ControlSetting::try_from);
+    parser(input)
+}
 
-named!(
-    u8_array<Vec<u8>>,
-    map!(length_data!(be_u8), |slice| Vec::from(slice))
-);
+fn alarm_priority(input: &[u8]) -> IResult<&[u8], AlarmPriority> {
+    let mut parser = alt((
+        map(tag([4u8]), |_| AlarmPriority::High),
+        map(tag([2u8]), |_| AlarmPriority::Medium),
+        map(tag([1u8]), |_| AlarmPriority::Low),
+    ));
+    parser(input)
+}
 
-named!(
-    triggered<bool>,
-    alt!(map!(tag!([240u8]), |_| true) | map!(tag!([15u8]), |_| false))
-);
+fn u8_array(input: &[u8]) -> IResult<&[u8], Vec<u8>> {
+    let mut parser = map(length_data(be_u8), Vec::from);
+    parser(input)
+}
 
-named!(
-    boot<TelemetryMessage>,
-    do_parse!(
-        tag!("B:")
-            >> tag!([VERSION])
-            >> software_version_len: be_u8
-            >> software_version:
-                map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
-                    bytes
-                ))
-            >> device_id1: be_u32
-            >> device_id2: be_u32
-            >> device_id3: be_u32
-            >> sep
-            >> systick: be_u64
-            >> sep
-            >> mode: mode
-            >> sep
-            >> value128: be_u8
-            >> end
-            >> ({
-                TelemetryMessage::BootMessage(BootMessage {
-                    telemetry_version: VERSION,
-                    version: software_version.to_string(),
-                    device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
-                    systick,
-                    mode,
-                    value128,
-                })
-            })
-    )
-);
+fn triggered(input: &[u8]) -> IResult<&[u8], bool> {
+    let mut parser = alt((map(tag([240u8]), |_| true), map(tag([15u8]), |_| false)));
+    parser(input)
+}
 
-named!(
-    stopped<TelemetryMessage>,
-    do_parse!(
-        tag!("O:")
-            >> tag!([VERSION])
-            >> software_version_len: be_u8
-            >> software_version:
-                map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
-                    bytes
-                ))
-            >> device_id1: be_u32
-            >> device_id2: be_u32
-            >> device_id3: be_u32
-            >> sep
-            >> systick: be_u64
-            >> end
-            >> ({
-                TelemetryMessage::StoppedMessage(StoppedMessage {
-                    telemetry_version: VERSION,
-                    version: software_version.to_string(),
-                    device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
-                    systick,
-                    peak_command: None,
-                    plateau_command: None,
-                    peep_command: None,
-                    cpm_command: None,
-                    expiratory_term: None,
-                    trigger_enabled: None,
-                    trigger_offset: None,
-                    alarm_snoozed: None,
-                    cpu_load: None,
-                    ventilation_mode: VentilationMode::default(),
-                    inspiratory_trigger_flow: None,
-                    expiratory_trigger_flow: None,
-                    ti_min: None,
-                    ti_max: None,
-                    low_inspiratory_minute_volume_alarm_threshold: None,
-                    high_inspiratory_minute_volume_alarm_threshold: None,
-                    low_expiratory_minute_volume_alarm_threshold: None,
-                    high_expiratory_minute_volume_alarm_threshold: None,
-                    low_respiratory_rate_alarm_threshold: None,
-                    high_respiratory_rate_alarm_threshold: None,
-                    target_tidal_volume: None,
-                    low_tidal_volume_alarm_threshold: None,
-                    high_tidal_volume_alarm_threshold: None,
-                    plateau_duration: None,
-                    leak_alarm_threshold: None,
-                    target_inspiratory_flow: None,
-                    inspiratory_duration_command: None,
-                    battery_level: None,
-                    current_alarm_codes: None,
-                    locale: None,
-                    patient_height: None,
-                    patient_gender: None,
-                    peak_pressure_alarm_threshold: None,
-                })
-            })
-    )
-);
+fn software_version(input: &[u8]) -> IResult<&[u8], &str> {
+    let (rest, len) = be_u8(input)?;
+    let mut parser = map_res(take(len), std::str::from_utf8);
+    parser(rest)
+}
 
-named!(
-    data_snapshot<TelemetryMessage>,
-    do_parse!(
-        tag!("D:")
-            >> tag!([VERSION])
-            >> software_version_len: be_u8
-            >> software_version:
-                map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
-                    bytes
-                ))
-            >> device_id1: be_u32
-            >> device_id2: be_u32
-            >> device_id3: be_u32
-            >> sep
-            >> systick: be_u64
-            >> sep
-            >> centile: be_u16
-            >> sep
-            >> pressure: be_u16
-            >> sep
-            >> phase_and_subphase: phase_and_subphase
-            >> sep
-            >> blower_valve_position: be_u8
-            >> sep
-            >> patient_valve_position: be_u8
-            >> sep
-            >> blower_rpm: be_u8
-            >> sep
-            >> battery_level: be_u8
-            >> end
-            >> (TelemetryMessage::DataSnapshot(DataSnapshot {
+fn device_id(input: &[u8]) -> IResult<&[u8], String> {
+    let mut parser = map(tuple((be_u32, be_u32, be_u32)), |(p1, p2, p3)| {
+        format!("{}-{}-{}", p1, p2, p3)
+    });
+    parser(input)
+}
+
+fn boot(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
+    let mut parser = map(
+        tuple((
+            tag("B:"),
+            tag([VERSION]),
+            software_version,
+            device_id,
+            sep,
+            be_u64,
+            sep,
+            mode,
+            sep,
+            be_u8,
+            end,
+        )),
+        |(_, _, software_version, device_id, _, systick, _, mode, _, value128, _)| {
+            TelemetryMessage::BootMessage(BootMessage {
                 telemetry_version: VERSION,
-                version: software_version.to_string(),
-                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                version: software_version.to_owned(),
+                device_id,
+                systick,
+                mode,
+                value128,
+            })
+        },
+    );
+    parser(input)
+}
+
+fn stopped(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
+    let mut parser = map(
+        tuple((
+            tag("O:"),
+            tag([VERSION]),
+            software_version,
+            device_id,
+            sep,
+            be_u64,
+            end,
+        )),
+        |(_, _, software_version, device_id, _, systick, _)| {
+            TelemetryMessage::StoppedMessage(StoppedMessage {
+                telemetry_version: VERSION,
+                version: software_version.to_owned(),
+                device_id,
+                systick,
+                peak_command: None,
+                plateau_command: None,
+                peep_command: None,
+                cpm_command: None,
+                expiratory_term: None,
+                trigger_enabled: None,
+                trigger_offset: None,
+                alarm_snoozed: None,
+                cpu_load: None,
+                ventilation_mode: VentilationMode::default(),
+                inspiratory_trigger_flow: None,
+                expiratory_trigger_flow: None,
+                ti_min: None,
+                ti_max: None,
+                low_inspiratory_minute_volume_alarm_threshold: None,
+                high_inspiratory_minute_volume_alarm_threshold: None,
+                low_expiratory_minute_volume_alarm_threshold: None,
+                high_expiratory_minute_volume_alarm_threshold: None,
+                low_respiratory_rate_alarm_threshold: None,
+                high_respiratory_rate_alarm_threshold: None,
+                target_tidal_volume: None,
+                low_tidal_volume_alarm_threshold: None,
+                high_tidal_volume_alarm_threshold: None,
+                plateau_duration: None,
+                leak_alarm_threshold: None,
+                target_inspiratory_flow: None,
+                inspiratory_duration_command: None,
+                battery_level: None,
+                current_alarm_codes: None,
+                locale: None,
+                patient_height: None,
+                patient_gender: None,
+                peak_pressure_alarm_threshold: None,
+            })
+        },
+    );
+    parser(input)
+}
+
+fn data_snapshot(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
+    let mut parser = map(
+        tuple((
+            tag("D:"),
+            tag([VERSION]),
+            software_version,
+            device_id,
+            sep,
+            be_u64,
+            sep,
+            be_u16,
+            sep,
+            be_u16,
+            sep,
+            phase_and_subphase,
+            sep,
+            be_u8,
+            sep,
+            be_u8,
+            sep,
+            be_u8,
+            sep,
+            be_u8,
+            end,
+        )),
+        |(
+            _,
+            _,
+            software_version,
+            device_id,
+            _,
+            systick,
+            _,
+            centile,
+            _,
+            pressure,
+            _,
+            phase_and_subphase,
+            _,
+            blower_valve_position,
+            _,
+            patient_valve_position,
+            _,
+            blower_rpm,
+            _,
+            battery_level,
+            _,
+        )| {
+            TelemetryMessage::DataSnapshot(DataSnapshot {
+                telemetry_version: VERSION,
+                version: software_version.to_owned(),
+                device_id,
                 systick,
                 centile,
                 pressure: i16::try_from(pressure).unwrap_or(i16::MAX),
@@ -194,56 +225,85 @@ named!(
                 battery_level,
                 inspiratory_flow: None,
                 expiratory_flow: None,
-            }))
-    )
-);
+            })
+        },
+    );
+    parser(input)
+}
 
-named!(
-    machine_state_snapshot<TelemetryMessage>,
-    do_parse!(
-        tag!("S:")
-            >> tag!([VERSION])
-            >> software_version_len: be_u8
-            >> software_version:
-                map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
-                    bytes
-                ))
-            >> device_id1: be_u32
-            >> device_id2: be_u32
-            >> device_id3: be_u32
-            >> sep
-            >> systick: be_u64
-            >> sep
-            >> cycle: be_u32
-            >> sep
-            >> peak_command: be_u8
-            >> sep
-            >> plateau_command: be_u8
-            >> sep
-            >> peep_command: be_u8
-            >> sep
-            >> cpm_command: be_u8
-            >> sep
-            >> previous_peak_pressure: be_u16
-            >> sep
-            >> previous_plateau_pressure: be_u16
-            >> sep
-            >> previous_peep_pressure: be_u16
-            >> sep
-            >> current_alarm_codes: u8_array
-            >> sep
-            >> previous_volume: be_u16
-            >> sep
-            >> expiratory_term: be_u8
-            >> sep
-            >> trigger_enabled: be_u8
-            >> sep
-            >> trigger_offset: be_u8
-            >> end
-            >> (TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
+fn machine_state_snapshot(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
+    let mut parser = map(
+        tuple((
+            tuple((
+                tag("S:"),
+                tag([VERSION]),
+                software_version,
+                device_id,
+                sep,
+                be_u64,
+                sep,
+                be_u32,
+                sep,
+                be_u8,
+                sep,
+                be_u8,
+                sep,
+                be_u8,
+                sep,
+                be_u8,
+                sep,
+                be_u16,
+                sep,
+                be_u16,
+                sep,
+            )),
+            tuple((
+                be_u16, sep, u8_array, sep, be_u16, sep, be_u8, sep, be_u8, sep, be_u8, end,
+            )),
+        )),
+        |(
+            (
+                _,
+                _,
+                software_version,
+                device_id,
+                _,
+                systick,
+                _,
+                cycle,
+                _,
+                peak_command,
+                _,
+                plateau_command,
+                _,
+                peep_command,
+                _,
+                cpm_command,
+                _,
+                previous_peak_pressure,
+                _,
+                previous_plateau_pressure,
+                _,
+            ),
+            (
+                previous_peep_pressure,
+                _,
+                current_alarm_codes,
+                _,
+                previous_volume,
+                _,
+                expiratory_term,
+                _,
+                trigger_enabled,
+                _,
+                trigger_offset,
+                _,
+            ),
+        )| {
+            TelemetryMessage::MachineStateSnapshot(MachineStateSnapshot {
                 telemetry_version: VERSION,
-                version: software_version.to_string(),
-                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                version: software_version.to_owned(),
+                device_id,
                 systick,
                 cycle,
                 peak_command,
@@ -289,50 +349,70 @@ named!(
                 patient_height: None,
                 patient_gender: None,
                 peak_pressure_alarm_threshold: None,
-            }))
-    )
-);
+            })
+        },
+    );
+    parser(input)
+}
 
-named!(
-    alarm_trap<TelemetryMessage>,
-    do_parse!(
-        tag!("T:")
-            >> tag!([VERSION])
-            >> software_version_len: be_u8
-            >> software_version:
-                map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
-                    bytes
-                ))
-            >> device_id1: be_u32
-            >> device_id2: be_u32
-            >> device_id3: be_u32
-            >> sep
-            >> systick: be_u64
-            >> sep
-            >> centile: be_u16
-            >> sep
-            >> pressure: be_u16
-            >> sep
-            >> phase_and_subphase: phase_and_subphase
-            >> sep
-            >> cycle: be_u32
-            >> sep
-            >> alarm_code: be_u8
-            >> sep
-            >> alarm_priority: alarm_priority
-            >> sep
-            >> triggered: triggered
-            >> sep
-            >> expected: be_u32
-            >> sep
-            >> measured: be_u32
-            >> sep
-            >> cycles_since_trigger: be_u32
-            >> end
-            >> (TelemetryMessage::AlarmTrap(AlarmTrap {
+fn alarm_trap(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
+    let mut parser = map(
+        tuple((
+            tuple((
+                tag("T:"),
+                tag([VERSION]),
+                software_version,
+                device_id,
+                sep,
+                be_u64,
+                sep,
+                be_u16,
+                sep,
+                be_u16,
+                sep,
+                phase_and_subphase,
+                sep,
+                be_u32,
+                sep,
+                be_u8,
+                sep,
+                alarm_priority,
+                sep,
+                triggered,
+                sep,
+            )),
+            tuple((be_u32, sep, be_u32, sep, be_u32, end)),
+        )),
+        |(
+            (
+                _,
+                _,
+                software_version,
+                device_id,
+                _,
+                systick,
+                _,
+                centile,
+                _,
+                pressure,
+                _,
+                phase_and_subphase,
+                _,
+                cycle,
+                _,
+                alarm_code,
+                _,
+                alarm_priority,
+                _,
+                triggered,
+                _,
+            ),
+            (expected, _, measured, _, cycles_since_trigger, _),
+        )| {
+            TelemetryMessage::AlarmTrap(AlarmTrap {
                 telemetry_version: VERSION,
-                version: software_version.to_string(),
-                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                version: software_version.to_owned(),
+                device_id,
                 systick,
                 centile,
                 pressure: i16::try_from(pressure).unwrap_or(i16::MAX),
@@ -345,40 +425,40 @@ named!(
                 expected,
                 measured,
                 cycles_since_trigger,
-            }))
-    )
-);
+            })
+        },
+    );
+    parser(input)
+}
 
-named!(
-    control_ack<TelemetryMessage>,
-    do_parse!(
-        tag!("A:")
-            >> tag!([VERSION])
-            >> software_version_len: be_u8
-            >> software_version:
-                map_res!(take!(software_version_len), |bytes| std::str::from_utf8(
-                    bytes
-                ))
-            >> device_id1: be_u32
-            >> device_id2: be_u32
-            >> device_id3: be_u32
-            >> sep
-            >> systick: be_u64
-            >> sep
-            >> setting: control_setting
-            >> sep
-            >> value: be_u16
-            >> end
-            >> (TelemetryMessage::ControlAck(ControlAck {
+fn control_ack(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
+    let mut parser = map(
+        tuple((
+            tag("A:"),
+            tag([VERSION]),
+            software_version,
+            device_id,
+            sep,
+            be_u64,
+            sep,
+            control_setting,
+            sep,
+            be_u16,
+            end,
+        )),
+        |(_, _, software_version, device_id, _, systick, _, setting, _, value, _)| {
+            TelemetryMessage::ControlAck(ControlAck {
                 telemetry_version: VERSION,
-                version: software_version.to_string(),
-                device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
+                version: software_version.to_owned(),
+                device_id,
                 systick,
                 setting,
                 value,
-            }))
-    )
-);
+            })
+        },
+    );
+    parser(input)
+}
 
 /// Transform bytes into a structured telemetry message
 ///
@@ -452,7 +532,7 @@ mod tests {
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::BootMessage(msg);
 
-            assert_eq!(nom::dbg_dmp(boot, "boot")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(boot, "boot")(input), Ok((&[][..], expected)));
         }
     }
 
@@ -507,7 +587,7 @@ mod tests {
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::StoppedMessage(msg);
 
-            assert_eq!(nom::dbg_dmp(stopped, "stopped")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(stopped, "stopped")(input), Ok((&[][..], expected)));
         }
     }
 
@@ -546,7 +626,7 @@ mod tests {
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::DataSnapshot(msg);
 
-            assert_eq!(nom::dbg_dmp(data_snapshot, "data_snapshot")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(data_snapshot, "data_snapshot")(input), Ok((&[][..], expected)));
         }
     }
 
@@ -621,7 +701,7 @@ mod tests {
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::MachineStateSnapshot(msg);
 
-            assert_eq!(nom::dbg_dmp(machine_state_snapshot, "machine_state_snapshot")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(machine_state_snapshot, "machine_state_snapshot")(input), Ok((&[][..], expected)));
         }
     }
 
@@ -664,7 +744,7 @@ mod tests {
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::AlarmTrap(msg);
 
-            assert_eq!(nom::dbg_dmp(alarm_trap, "alarm_trap")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(alarm_trap, "alarm_trap")(input), Ok((&[][..], expected)));
         }
     }
 
@@ -690,7 +770,7 @@ mod tests {
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::ControlAck(msg);
 
-            assert_eq!(nom::dbg_dmp(control_ack, "control_ack")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(control_ack, "control_ack")(input), Ok((&[][..], expected)));
         }
     }
 }

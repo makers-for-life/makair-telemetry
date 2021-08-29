@@ -81,7 +81,7 @@ impl ToBytes for BootMessage {
             b"B:",
             &[1],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -102,7 +102,7 @@ impl ToBytes for BootMessage {
             b"B:",
             &[2],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -125,7 +125,7 @@ impl ToBytes for StoppedMessage {
             b"O:",
             &[1],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -142,7 +142,7 @@ impl ToBytes for StoppedMessage {
             b"O:",
             &[2],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -275,7 +275,7 @@ impl ToBytes for DataSnapshot {
             b"D:",
             &[1],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -306,7 +306,7 @@ impl ToBytes for DataSnapshot {
             b"D:",
             &[2],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -343,7 +343,7 @@ impl ToBytes for MachineStateSnapshot {
             b"S:",
             &[1],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -391,7 +391,7 @@ impl ToBytes for MachineStateSnapshot {
             b"S:",
             &[2],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -541,7 +541,7 @@ impl ToBytes for AlarmTrap {
             b"T:",
             &[1],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -578,7 +578,7 @@ impl ToBytes for AlarmTrap {
             b"T:",
             &[2],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -617,7 +617,7 @@ impl ToBytes for ControlAck {
             b"A:",
             &[1],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -638,7 +638,7 @@ impl ToBytes for ControlAck {
             b"A:",
             &[2],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -698,7 +698,7 @@ impl ToBytes for FatalError {
             b"E:",
             &[2],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -722,13 +722,13 @@ impl ToBytes for EolTestSnapshot {
 
         let eol_test_snapshot_content: Vec<u8> = match self.content {
             EolTestSnapshotContent::InProgress(ref message) => {
-                flat(&[&[0], b"\t", &[message.len() as u8], &message.as_bytes()])
+                flat(&[&[0], b"\t", &[message.len() as u8], message.as_bytes()])
             }
             EolTestSnapshotContent::Error(ref message) => {
-                flat(&[&[1], b"\t", &[message.len() as u8], &message.as_bytes()])
+                flat(&[&[1], b"\t", &[message.len() as u8], message.as_bytes()])
             }
             EolTestSnapshotContent::Success(ref message) => {
-                flat(&[&[2], b"\t", &[message.len() as u8], &message.as_bytes()])
+                flat(&[&[2], b"\t", &[message.len() as u8], message.as_bytes()])
             }
         };
 
@@ -736,7 +736,7 @@ impl ToBytes for EolTestSnapshot {
             b"L:",
             &[2],
             &[self.version.len() as u8],
-            &self.version.as_bytes(),
+            self.version.as_bytes(),
             &device_id1.to_be_bytes(),
             &device_id2.to_be_bytes(),
             &device_id3.to_be_bytes(),
@@ -758,7 +758,7 @@ pub fn mk_frame(payload: &[u8]) -> Vec<u8> {
 
     flat(&[
         b"\x03\x0C",
-        &payload,
+        payload,
         &crc.finalize().to_be_bytes(),
         b"\x30\xC0",
     ])

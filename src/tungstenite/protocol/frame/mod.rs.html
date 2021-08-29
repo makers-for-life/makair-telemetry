@@ -1,7 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tungstenite-0.13.0/src/protocol/frame/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
-<link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../tungstenite/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button">?</button>
-                <a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;tungstenite-0.15.0&#x2F;src&#x2F;protocol&#x2F;frame&#x2F;mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../tungstenite/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -272,14 +269,7 @@
 <span id="269">269</span>
 <span id="270">270</span>
 <span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-</pre><pre class="rust">
-<span class="doccomment">//! Utilities to work with raw WebSocket frames.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Utilities to work with raw WebSocket frames.</span>
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">coding</span>;
 
@@ -287,12 +277,15 @@
 <span class="kw">mod</span> <span class="ident">frame</span>;
 <span class="kw">mod</span> <span class="ident">mask</span>;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::frame</span>::{<span class="ident">CloseFrame</span>, <span class="ident">Frame</span>, <span class="ident">FrameHeader</span>};
-
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::error</span>::{<span class="ident">CapacityError</span>, <span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
-<span class="kw">use</span> <span class="ident">input_buffer</span>::{<span class="ident">InputBuffer</span>, <span class="ident">MIN_READ</span>};
-<span class="kw">use</span> <span class="ident">log</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">std::io</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">IoError</span>, <span class="ident">ErrorKind</span> <span class="kw">as</span> <span class="ident">IoErrorKind</span>, <span class="ident">Read</span>, <span class="ident">Write</span>};
+
+<span class="kw">use</span> <span class="ident">log</span>::<span class="kw-2">*</span>;
+
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::frame</span>::{<span class="ident">CloseFrame</span>, <span class="ident">Frame</span>, <span class="ident">FrameHeader</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">error</span>::{<span class="ident">CapacityError</span>, <span class="ident">Error</span>, <span class="prelude-ty">Result</span>},
+    <span class="ident">ReadBuffer</span>,
+};
 
 <span class="doccomment">/// A reader and writer for WebSocket frames.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
@@ -363,7 +356,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">FrameCodec</span> {
     <span class="doccomment">/// Buffer to read data from the stream.</span>
-    <span class="ident">in_buffer</span>: <span class="ident">InputBuffer</span>,
+    <span class="ident">in_buffer</span>: <span class="ident">ReadBuffer</span>,
     <span class="doccomment">/// Buffer to send packets to the network.</span>
     <span class="ident">out_buffer</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Header and remaining size of the incoming packet being processed.</span>
@@ -373,17 +366,13 @@
 <span class="kw">impl</span> <span class="ident">FrameCodec</span> {
     <span class="doccomment">/// Create a new frame codec.</span>
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">in_buffer</span>: <span class="ident">InputBuffer::with_capacity</span>(<span class="ident">MIN_READ</span>),
-            <span class="ident">out_buffer</span>: <span class="ident">Vec::new</span>(),
-            <span class="ident">header</span>: <span class="prelude-val">None</span>,
-        }
+        <span class="self">Self</span> { <span class="ident">in_buffer</span>: <span class="ident">ReadBuffer::new</span>(), <span class="ident">out_buffer</span>: <span class="ident">Vec::new</span>(), <span class="ident">header</span>: <span class="prelude-val">None</span> }
     }
 
     <span class="doccomment">/// Create a new frame codec from partially read data.</span>
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">from_partially_read</span>(<span class="ident">part</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
-            <span class="ident">in_buffer</span>: <span class="ident">InputBuffer::from_partially_read</span>(<span class="ident">part</span>),
+            <span class="ident">in_buffer</span>: <span class="ident">ReadBuffer::from_partially_read</span>(<span class="ident">part</span>),
             <span class="ident">out_buffer</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">header</span>: <span class="prelude-val">None</span>,
         }
@@ -433,12 +422,7 @@
             }
 
             <span class="comment">// Not enough data in buffer.</span>
-            <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="self">self</span>
-                .<span class="ident">in_buffer</span>
-                .<span class="ident">prepare_reserve</span>(<span class="ident">MIN_READ</span>)
-                .<span class="ident">with_limit</span>(<span class="ident">usize::max_value</span>())
-                .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error::Capacity</span>(<span class="ident">CapacityError::TcpBufferFull</span>))<span class="question-mark">?</span>
-                .<span class="ident">read_from</span>(<span class="ident">stream</span>)<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">in_buffer</span>.<span class="ident">read_from</span>(<span class="ident">stream</span>)<span class="question-mark">?</span>;
             <span class="kw">if</span> <span class="ident">size</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
                 <span class="macro">trace!</span>(<span class="string">&quot;no frame received&quot;</span>);
                 <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
@@ -488,7 +472,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
 
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::error</span>::{<span class="ident">CapacityError</span>, <span class="ident">Error</span>};
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="ident">CapacityError</span>, <span class="ident">Error</span>};
 
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Frame</span>, <span class="ident">FrameSocket</span>};
 
@@ -556,6 +540,7 @@
         ));
     }
 }
-</pre></div>
+</code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="tungstenite" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>
-    <script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script></body></html>
+    <script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script>
+</body></html>

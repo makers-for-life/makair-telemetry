@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["WeightedIndex",""]],"trait":[["Weight",""]]});
+initSidebarItems({"macro":[["impl_weight",""]],"struct":[["WeightedIndex",""]],"trait":[["Weight",""]]});

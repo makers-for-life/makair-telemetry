@@ -1,7 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-3.0.0-beta.2/src/build/arg/settings.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>settings.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
-<link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../clap/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button">?</button>
-                <a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;clap-3.0.0-beta.4&#x2F;src&#x2F;build&#x2F;arg&#x2F;settings.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>settings.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../clap/index.html'><div class='logo-container rust-logo'><img src='https:&#x2F;&#x2F;clap.rs&#x2F;images&#x2F;media&#x2F;clap.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -192,8 +189,23 @@
 <span id="189">189</span>
 <span id="190">190</span>
 <span id="191">191</span>
-</pre><pre class="rust">
-<span class="comment">// Std</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+</pre><pre class="rust"><code><span class="comment">// Std</span>
 <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
 <span class="comment">// Third party</span>
@@ -203,25 +215,28 @@
     <span class="kw">struct</span> <span class="ident">Flags</span>: <span class="ident">u32</span> {
         <span class="kw">const</span> <span class="ident">REQUIRED</span>         <span class="op">=</span> <span class="number">1</span>;
         <span class="kw">const</span> <span class="ident">MULTIPLE_OCC</span>     <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">1</span>;
-        <span class="kw">const</span> <span class="ident">EMPTY_VALS</span>       <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">2</span> <span class="op">|</span> <span class="self">Self</span><span class="ident">::TAKES_VAL</span>.<span class="ident">bits</span>;
+        <span class="kw">const</span> <span class="ident">NO_EMPTY_VALS</span>    <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">2</span>;
         <span class="kw">const</span> <span class="ident">GLOBAL</span>           <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">3</span>;
         <span class="kw">const</span> <span class="ident">HIDDEN</span>           <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">4</span>;
         <span class="kw">const</span> <span class="ident">TAKES_VAL</span>        <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">5</span>;
         <span class="kw">const</span> <span class="ident">USE_DELIM</span>        <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">6</span>;
         <span class="kw">const</span> <span class="ident">NEXT_LINE_HELP</span>   <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">7</span>;
         <span class="kw">const</span> <span class="ident">R_UNLESS_ALL</span>     <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">8</span>;
-        <span class="kw">const</span> <span class="ident">REQ_DELIM</span>        <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">9</span> <span class="op">|</span> <span class="self">Self</span><span class="ident">::TAKES_VAL</span>.<span class="ident">bits</span> <span class="op">|</span> <span class="self">Self</span><span class="ident">::USE_DELIM</span>.<span class="ident">bits</span>;
+        <span class="kw">const</span> <span class="ident">REQ_DELIM</span>        <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">9</span>;
         <span class="kw">const</span> <span class="ident">DELIM_NOT_SET</span>    <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">10</span>;
-        <span class="kw">const</span> <span class="ident">HIDE_POS_VALS</span>    <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">11</span> <span class="op">|</span> <span class="self">Self</span><span class="ident">::TAKES_VAL</span>.<span class="ident">bits</span>;
-        <span class="kw">const</span> <span class="ident">ALLOW_TAC_VALS</span>   <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">12</span> <span class="op">|</span> <span class="self">Self</span><span class="ident">::TAKES_VAL</span>.<span class="ident">bits</span>;
-        <span class="kw">const</span> <span class="ident">REQUIRE_EQUALS</span>   <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">13</span> <span class="op">|</span> <span class="self">Self</span><span class="ident">::TAKES_VAL</span>.<span class="ident">bits</span>;
-        <span class="kw">const</span> <span class="ident">LAST</span>             <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">14</span> <span class="op">|</span> <span class="self">Self</span><span class="ident">::TAKES_VAL</span>.<span class="ident">bits</span>;
-        <span class="kw">const</span> <span class="ident">HIDE_DEFAULT_VAL</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">15</span> <span class="op">|</span> <span class="self">Self</span><span class="ident">::TAKES_VAL</span>.<span class="ident">bits</span>;
+        <span class="kw">const</span> <span class="ident">HIDE_POS_VALS</span>    <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">11</span>;
+        <span class="kw">const</span> <span class="ident">ALLOW_TAC_VALS</span>   <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">12</span>;
+        <span class="kw">const</span> <span class="ident">REQUIRE_EQUALS</span>   <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">13</span>;
+        <span class="kw">const</span> <span class="ident">LAST</span>             <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">14</span>;
+        <span class="kw">const</span> <span class="ident">HIDE_DEFAULT_VAL</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">15</span>;
         <span class="kw">const</span> <span class="ident">CASE_INSENSITIVE</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">16</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;env&quot;</span>)]</span>
         <span class="kw">const</span> <span class="ident">HIDE_ENV_VALS</span>    <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">17</span>;
         <span class="kw">const</span> <span class="ident">HIDDEN_SHORT_H</span>   <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">18</span>;
         <span class="kw">const</span> <span class="ident">HIDDEN_LONG_H</span>    <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">19</span>;
-        <span class="kw">const</span> <span class="ident">MULTIPLE_VALS</span>    <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">20</span> <span class="op">|</span> <span class="self">Self</span><span class="ident">::TAKES_VAL</span>.<span class="ident">bits</span>;
+        <span class="kw">const</span> <span class="ident">MULTIPLE_VALS</span>    <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">20</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;env&quot;</span>)]</span>
+        <span class="kw">const</span> <span class="ident">HIDE_ENV</span>         <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">21</span>;
     }
 }
 
@@ -233,7 +248,7 @@
     <span class="ident">Required</span>(<span class="string">&quot;required&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::REQUIRED</span>,
     <span class="ident">MultipleOccurrences</span>(<span class="string">&quot;multipleoccurrences&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::MULTIPLE_OCC</span>,
     <span class="ident">MultipleValues</span>(<span class="string">&quot;multiplevalues&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::MULTIPLE_VALS</span>,
-    <span class="ident">AllowEmptyValues</span>(<span class="string">&quot;allowemptyvalues&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::EMPTY_VALS</span>,
+    <span class="ident">ForbidEmptyValues</span>(<span class="string">&quot;forbidemptyvalues&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::NO_EMPTY_VALS</span>,
     <span class="ident">Hidden</span>(<span class="string">&quot;hidden&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::HIDDEN</span>,
     <span class="ident">TakesValue</span>(<span class="string">&quot;takesvalue&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::TAKES_VAL</span>,
     <span class="ident">UseValueDelimiter</span>(<span class="string">&quot;usevaluedelimiter&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::USE_DELIM</span>,
@@ -245,6 +260,9 @@
     <span class="ident">RequireEquals</span>(<span class="string">&quot;requireequals&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::REQUIRE_EQUALS</span>,
     <span class="ident">Last</span>(<span class="string">&quot;last&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::LAST</span>,
     <span class="ident">IgnoreCase</span>(<span class="string">&quot;ignorecase&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::CASE_INSENSITIVE</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;env&quot;</span>)]</span>
+    <span class="ident">HideEnv</span>(<span class="string">&quot;hideenv&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::HIDE_ENV</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;env&quot;</span>)]</span>
     <span class="ident">HideEnvValues</span>(<span class="string">&quot;hideenvvalues&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::HIDE_ENV_VALS</span>,
     <span class="ident">HideDefaultValue</span>(<span class="string">&quot;hidedefaultvalue&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::HIDE_DEFAULT_VAL</span>,
     <span class="ident">HiddenShortHelp</span>(<span class="string">&quot;hiddenshorthelp&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Flags::HIDDEN_SHORT_H</span>,
@@ -261,10 +279,10 @@
 <span class="doccomment">/// methods [`Arg::setting`], [`Arg::unset_setting`], and [`Arg::is_set`]. This is what the</span>
 <span class="doccomment">/// [`Arg`] methods which accept a `bool` use internally.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// [`Arg`]: ./struct.Arg.html</span>
-<span class="doccomment">/// [`Arg::setting`]: ./struct.Arg.html#method.setting</span>
-<span class="doccomment">/// [`Arg::unset_setting`]: ./struct.Arg.html#method.unset_setting</span>
-<span class="doccomment">/// [`Arg::is_set`]: ./struct.Arg.html#method.is_set</span>
+<span class="doccomment">/// [`Arg`]: crate::Arg</span>
+<span class="doccomment">/// [`Arg::setting`]: crate::Arg::setting()</span>
+<span class="doccomment">/// [`Arg::unset_setting`]: crate::Arg::unset_setting()</span>
+<span class="doccomment">/// [`Arg::is_set`]: crate::Arg::is_set()</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ArgSettings</span> {
     <span class="doccomment">/// Specifies that an arg must be used</span>
@@ -273,8 +291,8 @@
     <span class="ident">MultipleValues</span>,
     <span class="doccomment">/// Allows an arg to appear multiple times</span>
     <span class="ident">MultipleOccurrences</span>,
-    <span class="doccomment">/// Allows an arg accept empty values such as `&quot;&quot;`</span>
-    <span class="ident">AllowEmptyValues</span>,
+    <span class="doccomment">/// Forbids an arg from accepting empty values such as `&quot;&quot;`</span>
+    <span class="ident">ForbidEmptyValues</span>,
     <span class="doccomment">/// Hides an arg from the help message</span>
     <span class="ident">Hidden</span>,
     <span class="doccomment">/// Allows an argument to take a value (such as `--option value`)</span>
@@ -299,8 +317,12 @@
     <span class="ident">HideDefaultValue</span>,
     <span class="doccomment">/// Possible values become case insensitive</span>
     <span class="ident">IgnoreCase</span>,
+    <span class="doccomment">/// Hides environment variable arguments from the help message</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;env&quot;</span>)]</span>
+    <span class="ident">HideEnv</span>,
     <span class="doccomment">/// Hides any values currently assigned to ENV variables in the help message (good for sensitive</span>
     <span class="doccomment">/// information)</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;env&quot;</span>)]</span>
     <span class="ident">HideEnvValues</span>,
     <span class="doccomment">/// The argument should **not** be shown in short help text</span>
     <span class="ident">HiddenShortHelp</span>,
@@ -312,7 +334,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="kw">super</span><span class="ident">::ArgSettings</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ArgSettings</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">arg_settings_fromstr</span>() {
@@ -321,8 +343,8 @@
             <span class="ident">ArgSettings::AllowHyphenValues</span>
         );
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;allowemptyvalues&quot;</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">ArgSettings</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>(),
-            <span class="ident">ArgSettings::AllowEmptyValues</span>
+            <span class="string">&quot;forbidemptyvalues&quot;</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">ArgSettings</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>(),
+            <span class="ident">ArgSettings::ForbidEmptyValues</span>
         );
         <span class="macro">assert_eq!</span>(
             <span class="string">&quot;hidepossiblevalues&quot;</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">ArgSettings</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>(),
@@ -369,6 +391,12 @@
             <span class="string">&quot;ignorecase&quot;</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">ArgSettings</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>(),
             <span class="ident">ArgSettings::IgnoreCase</span>
         );
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;env&quot;</span>)]</span>
+        <span class="macro">assert_eq!</span>(
+            <span class="string">&quot;hideenv&quot;</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">ArgSettings</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>(),
+            <span class="ident">ArgSettings::HideEnv</span>
+        );
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;env&quot;</span>)]</span>
         <span class="macro">assert_eq!</span>(
             <span class="string">&quot;hideenvvalues&quot;</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">ArgSettings</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>(),
             <span class="ident">ArgSettings::HideEnvValues</span>
@@ -384,6 +412,7 @@
         <span class="macro">assert!</span>(<span class="string">&quot;hahahaha&quot;</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">ArgSettings</span><span class="op">&gt;</span>().<span class="ident">is_err</span>());
     }
 }
-</pre></div>
+</code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="clap" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>
-    <script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script></body></html>
+    <script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script>
+</body></html>

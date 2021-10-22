@@ -2,7 +2,7 @@
 name = "makair-telemetry"
 version = "2.2.0"
 authors = ["David Sferruzza <david.sferruzza@gmail.com>", "Valerian Saliou <valerian@valeriansaliou.name>"]
-edition = "2018"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -10,7 +10,7 @@ mod convert;
 mod statistics;
 mod storm;
 
-use clap::{ArgGroup, Clap};
+use clap::{ArgGroup, Parser};
 use std::fs::File;
 use std::fs::OpenOptions;
 use std::io::BufWriter;
@@ -24,14 +24,14 @@ use statistics::*;
 use storm::*;
 use structures::*;
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 #[clap(name = "MakAir Telemetry CLI", author, about, version)]
 struct Opts {
     #[clap(subcommand)]
     mode: Mode,
 }
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 enum Mode {
     /// Read telemetry from a serial port or a WebSocket server, parse it and stream result to stdout
     Debug(Debug),
@@ -58,7 +58,7 @@ enum Mode {
     DisableRpiWatchdog(DisableRpiWatchdog),
 }
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 #[clap(group = ArgGroup::new("source").required(true))]
 struct Debug {
     /// Address of the serial port
@@ -74,7 +74,7 @@ struct Debug {
     random_control_messages: bool,
 }
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 struct Record {
     /// Address of the port to use
     #[clap(short = 'p', long)]
@@ -85,7 +85,7 @@ struct Record {
     output: String,
 }
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 struct Play {
     /// Path of the recorded file
     #[clap(short = 'i', long)]
@@ -96,14 +96,14 @@ struct Play {
     full_blast: bool,
 }
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 struct Stats {
     /// Path of the recorded file
     #[clap(short = 'i', long)]
     input: String,
 }
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 struct Control {
     /// Address of the port to use
     #[clap(short = 'p', long)]
@@ -118,7 +118,7 @@ struct Control {
     value: u16,
 }
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 struct Storm {
     /// Address of the port to use
     #[clap(short = 'p', long)]
@@ -141,7 +141,7 @@ struct Storm {
     full_blast: bool,
 }
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 struct Convert {
     /// Path of the recorded file
     #[clap(short = 'i', long)]
@@ -172,7 +172,7 @@ struct Convert {
     gts_disable_source_label: bool,
 }
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 struct DisableRpiWatchdog {
     /// Address of the port to use
     #[clap(short = 'p')]

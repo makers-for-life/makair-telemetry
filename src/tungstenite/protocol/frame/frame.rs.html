@@ -496,13 +496,13 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span> <span class="ident">CloseFrame</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Convert into a owned string.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_owned</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CloseFrame</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_owned</span>(<span class="self">self</span>) -&gt; <span class="ident">CloseFrame</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
         <span class="ident">CloseFrame</span> { <span class="ident">code</span>: <span class="self">self</span>.<span class="ident">code</span>, <span class="ident">reason</span>: <span class="self">self</span>.<span class="ident">reason</span>.<span class="ident">into_owned</span>().<span class="ident">into</span>() }
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">CloseFrame</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{} ({})&quot;</span>, <span class="self">self</span>.<span class="ident">reason</span>, <span class="self">self</span>.<span class="ident">code</span>)
     }
 }
@@ -526,7 +526,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">FrameHeader</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident">FrameHeader</span> {
             <span class="ident">is_final</span>: <span class="bool-val">true</span>,
             <span class="ident">rsv1</span>: <span class="bool-val">false</span>,
@@ -542,25 +542,25 @@
     <span class="doccomment">/// Parse a header from an input stream.</span>
     <span class="doccomment">/// Returns `None` if insufficient data and does not consume anything in this case.</span>
     <span class="doccomment">/// Payload size is returned along with the header.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse</span>(<span class="ident">cursor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Cursor</span><span class="op">&lt;</span><span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="self">Self</span>, <span class="ident">u64</span>)<span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse</span>(<span class="ident">cursor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Cursor</span><span class="op">&lt;</span><span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="self">Self</span>, <span class="ident">u64</span>)<span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">initial</span> <span class="op">=</span> <span class="ident">cursor</span>.<span class="ident">position</span>();
         <span class="kw">match</span> <span class="ident"><span class="self">Self</span>::parse_internal</span>(<span class="ident">cursor</span>) {
-            <span class="ident">ret</span> @ <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ret</span> @ <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; {
                 <span class="ident">cursor</span>.<span class="ident">set_position</span>(<span class="ident">initial</span>);
                 <span class="ident">ret</span>
             }
-            <span class="ident">ret</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ret</span>,
+            <span class="ident">ret</span> =&gt; <span class="ident">ret</span>,
         }
     }
 
     <span class="doccomment">/// Get the size of the header formatted with given payload length.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::len_without_is_empty</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">length</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">length</span>: <span class="ident">u64</span>) -&gt; <span class="ident">usize</span> {
         <span class="number">2</span> <span class="op">+</span> <span class="ident">LengthFormat::for_length</span>(<span class="ident">length</span>).<span class="ident">extra_bytes</span>() <span class="op">+</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">mask</span>.<span class="ident">is_some</span>() { <span class="number">4</span> } <span class="kw">else</span> { <span class="number">0</span> }
     }
 
     <span class="doccomment">/// Format a header for given payload size.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">length</span>: <span class="ident">u64</span>, <span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">impl</span> <span class="ident">Write</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">length</span>: <span class="ident">u64</span>, <span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">impl</span> <span class="ident">Write</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">code</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">opcode</span>.<span class="ident">into</span>();
 
         <span class="kw">let</span> <span class="ident">one</span> <span class="op">=</span> {
@@ -576,9 +576,9 @@
 
         <span class="ident">output</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span>[<span class="ident">one</span>, <span class="ident">two</span>])<span class="question-mark">?</span>;
         <span class="kw">match</span> <span class="ident">lenfmt</span> {
-            <span class="ident">LengthFormat::U8</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> (),
-            <span class="ident">LengthFormat::U16</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">output</span>.<span class="ident">write_u16</span>::<span class="op">&lt;</span><span class="ident">NetworkEndian</span><span class="op">&gt;</span>(<span class="ident">length</span> <span class="kw">as</span> <span class="ident">u16</span>)<span class="question-mark">?</span>,
-            <span class="ident">LengthFormat::U64</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">output</span>.<span class="ident">write_u64</span>::<span class="op">&lt;</span><span class="ident">NetworkEndian</span><span class="op">&gt;</span>(<span class="ident">length</span>)<span class="question-mark">?</span>,
+            <span class="ident">LengthFormat::U8</span>(<span class="kw">_</span>) =&gt; (),
+            <span class="ident">LengthFormat::U16</span> =&gt; <span class="ident">output</span>.<span class="ident">write_u16</span>::<span class="op">&lt;</span><span class="ident">NetworkEndian</span><span class="op">&gt;</span>(<span class="ident">length</span> <span class="kw">as</span> <span class="ident">u16</span>)<span class="question-mark">?</span>,
+            <span class="ident">LengthFormat::U64</span> =&gt; <span class="ident">output</span>.<span class="ident">write_u64</span>::<span class="op">&lt;</span><span class="ident">NetworkEndian</span><span class="op">&gt;</span>(<span class="ident">length</span>)<span class="question-mark">?</span>,
         }
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">mask</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">mask</span> {
@@ -600,7 +600,7 @@
     <span class="doccomment">/// Internal parse engine.</span>
     <span class="doccomment">/// Returns `None` if insufficient data.</span>
     <span class="doccomment">/// Payload size is returned along with the header.</span>
-    <span class="kw">fn</span> <span class="ident">parse_internal</span>(<span class="ident">cursor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">impl</span> <span class="ident">Read</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="self">Self</span>, <span class="ident">u64</span>)<span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">parse_internal</span>(<span class="ident">cursor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">impl</span> <span class="ident">Read</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="self">Self</span>, <span class="ident">u64</span>)<span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">first</span>, <span class="ident">second</span>) <span class="op">=</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">head</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">2</span>];
             <span class="kw">if</span> <span class="ident">cursor</span>.<span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">head</span>)<span class="question-mark">?</span> <span class="op">!</span><span class="op">=</span> <span class="number">2</span> {
@@ -630,13 +630,13 @@
             <span class="kw">let</span> <span class="ident">length_length</span> <span class="op">=</span> <span class="ident">LengthFormat::for_byte</span>(<span class="ident">length_byte</span>).<span class="ident">extra_bytes</span>();
             <span class="kw">if</span> <span class="ident">length_length</span> <span class="op">&gt;</span> <span class="number">0</span> {
                 <span class="kw">match</span> <span class="ident">cursor</span>.<span class="ident">read_uint</span>::<span class="op">&lt;</span><span class="ident">NetworkEndian</span><span class="op">&gt;</span>(<span class="ident">length_length</span>) {
-                    <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">kind</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">ErrorKind::UnexpectedEof</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">ErrorKind::UnexpectedEof</span> =&gt; {
                         <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
                     }
-                    <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>.<span class="ident">into</span>());
                     }
-                    <span class="prelude-val">Ok</span>(<span class="ident">read</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">read</span>,
+                    <span class="prelude-val">Ok</span>(<span class="ident">read</span>) =&gt; <span class="ident">read</span>,
                 }
             } <span class="kw">else</span> {
                 <span class="ident">u64::from</span>(<span class="ident">length_byte</span>)
@@ -656,10 +656,10 @@
 
         <span class="comment">// Disallow bad opcode</span>
         <span class="kw">match</span> <span class="ident">opcode</span> {
-            <span class="ident">OpCode::Control</span>(<span class="ident">Control::Reserved</span>(<span class="kw">_</span>)) <span class="op">|</span> <span class="ident">OpCode::Data</span>(<span class="ident">Data::Reserved</span>(<span class="kw">_</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">OpCode::Control</span>(<span class="ident">Control::Reserved</span>(<span class="kw">_</span>)) <span class="op">|</span> <span class="ident">OpCode::Data</span>(<span class="ident">Data::Reserved</span>(<span class="kw">_</span>)) =&gt; {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::InvalidOpcode</span>(<span class="ident">first</span> <span class="op">&amp;</span> <span class="number">0x0F</span>)))
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (),
+            <span class="kw">_</span> =&gt; (),
         }
 
         <span class="kw">let</span> <span class="ident">hdr</span> <span class="op">=</span> <span class="ident">FrameHeader</span> { <span class="ident">is_final</span>, <span class="ident">rsv1</span>, <span class="ident">rsv2</span>, <span class="ident">rsv3</span>, <span class="ident">opcode</span>, <span class="ident">mask</span> };
@@ -679,44 +679,44 @@
     <span class="doccomment">/// Get the length of the frame.</span>
     <span class="doccomment">/// This is the length of the header + the length of the payload.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
         <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">payload</span>.<span class="ident">len</span>();
         <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">len</span>(<span class="ident">length</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="op">+</span> <span class="ident">length</span>
     }
 
     <span class="doccomment">/// Check if the frame is empty.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">0</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span>
     }
 
     <span class="doccomment">/// Get a reference to the frame&#39;s header.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">header</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">FrameHeader</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">header</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">FrameHeader</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">header</span>
     }
 
     <span class="doccomment">/// Get a mutable reference to the frame&#39;s header.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">header_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">FrameHeader</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">header_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">FrameHeader</span> {
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">header</span>
     }
 
     <span class="doccomment">/// Get a reference to the frame&#39;s payload.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">payload</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">payload</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">payload</span>
     }
 
     <span class="doccomment">/// Get a mutable reference to the frame&#39;s payload.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">payload_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">payload_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">payload</span>
     }
 
     <span class="doccomment">/// Test whether the frame is masked.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_masked</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_masked</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">mask</span>.<span class="ident">is_some</span>()
     }
 
@@ -740,23 +740,23 @@
 
     <span class="doccomment">/// Consume the frame into its payload as binary.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_data</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_data</span>(<span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">payload</span>
     }
 
     <span class="doccomment">/// Consume the frame into its payload as string.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_string</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">StdResult</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">FromUtf8Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_string</span>(<span class="self">self</span>) -&gt; <span class="ident">StdResult</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">FromUtf8Error</span><span class="op">&gt;</span> {
         <span class="ident">String::from_utf8</span>(<span class="self">self</span>.<span class="ident">payload</span>)
     }
 
     <span class="doccomment">/// Consume the frame into a closing frame.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">into_close</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CloseFrame</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">into_close</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CloseFrame</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">payload</span>.<span class="ident">len</span>() {
-            <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
-            <span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::InvalidCloseSequence</span>)),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="number">0</span> =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
+            <span class="number">1</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::InvalidCloseSequence</span>)),
+            <span class="kw">_</span> =&gt; {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">payload</span>;
                 <span class="kw">let</span> <span class="ident">code</span> <span class="op">=</span> <span class="ident">NetworkEndian::read_u16</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[<span class="number">0</span>..<span class="number">2</span>]).<span class="ident">into</span>();
                 <span class="ident">data</span>.<span class="ident">drain</span>(<span class="number">0</span>..<span class="number">2</span>);
@@ -768,7 +768,7 @@
 
     <span class="doccomment">/// Create a new data frame.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">message</span>(<span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">opcode</span>: <span class="ident">OpCode</span>, <span class="ident">is_final</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Frame</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">message</span>(<span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">opcode</span>: <span class="ident">OpCode</span>, <span class="ident">is_final</span>: <span class="ident">bool</span>) -&gt; <span class="ident">Frame</span> {
         <span class="macro">debug_assert!</span>(<span class="macro">matches!</span>(<span class="ident">opcode</span>, <span class="ident">OpCode::Data</span>(<span class="kw">_</span>)), <span class="string">&quot;Invalid opcode for data frame.&quot;</span>);
 
         <span class="ident">Frame</span> { <span class="ident">header</span>: <span class="ident">FrameHeader</span> { <span class="ident">is_final</span>, <span class="ident">opcode</span>, ..<span class="ident">FrameHeader::default</span>() }, <span class="ident">payload</span>: <span class="ident">data</span> }
@@ -776,7 +776,7 @@
 
     <span class="doccomment">/// Create a new Pong control frame.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pong</span>(<span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Frame</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pong</span>(<span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="ident">Frame</span> {
         <span class="ident">Frame</span> {
             <span class="ident">header</span>: <span class="ident">FrameHeader</span> {
                 <span class="ident">opcode</span>: <span class="ident">OpCode::Control</span>(<span class="ident">Control::Pong</span>),
@@ -788,7 +788,7 @@
 
     <span class="doccomment">/// Create a new Ping control frame.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ping</span>(<span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Frame</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ping</span>(<span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="ident">Frame</span> {
         <span class="ident">Frame</span> {
             <span class="ident">header</span>: <span class="ident">FrameHeader</span> {
                 <span class="ident">opcode</span>: <span class="ident">OpCode::Control</span>(<span class="ident">Control::Ping</span>),
@@ -800,7 +800,7 @@
 
     <span class="doccomment">/// Create a new Close control frame.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">close</span>(<span class="ident">msg</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CloseFrame</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Frame</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">close</span>(<span class="ident">msg</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CloseFrame</span><span class="op">&gt;</span>) -&gt; <span class="ident">Frame</span> {
         <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">CloseFrame</span> { <span class="ident">code</span>, <span class="ident">reason</span> }) <span class="op">=</span> <span class="ident">msg</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">reason</span>.<span class="ident">as_bytes</span>().<span class="ident">len</span>() <span class="op">+</span> <span class="number">2</span>);
             <span class="ident">p</span>.<span class="ident">write_u16</span>::<span class="op">&lt;</span><span class="ident">NetworkEndian</span><span class="op">&gt;</span>(<span class="ident">code</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>(); <span class="comment">// can&#39;t fail</span>
@@ -814,12 +814,12 @@
     }
 
     <span class="doccomment">/// Create a frame from given header and data.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_payload</span>(<span class="ident">header</span>: <span class="ident">FrameHeader</span>, <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_payload</span>(<span class="ident">header</span>: <span class="ident">FrameHeader</span>, <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Frame</span> { <span class="ident">header</span>, <span class="ident">payload</span> }
     }
 
     <span class="doccomment">/// Write a frame out to a buffer</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">impl</span> <span class="ident">Write</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">impl</span> <span class="ident">Write</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">format</span>(<span class="self">self</span>.<span class="ident">payload</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>, <span class="ident">output</span>)<span class="question-mark">?</span>;
         <span class="self">self</span>.<span class="ident">apply_mask</span>();
         <span class="ident">output</span>.<span class="ident">write_all</span>(<span class="self">self</span>.<span class="ident">payload</span>())<span class="question-mark">?</span>;
@@ -828,7 +828,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">Frame</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="macro">write!</span>(
             <span class="ident">f</span>,
             <span class="string">&quot;
@@ -863,7 +863,7 @@ payload: 0x{}
 <span class="kw">impl</span> <span class="ident">LengthFormat</span> {
     <span class="doccomment">/// Get the length format for a given data size.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">for_length</span>(<span class="ident">length</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">for_length</span>(<span class="ident">length</span>: <span class="ident">u64</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">if</span> <span class="ident">length</span> <span class="op">&lt;</span> <span class="number">126</span> {
             <span class="ident">LengthFormat::U8</span>(<span class="ident">length</span> <span class="kw">as</span> <span class="ident">u8</span>)
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">length</span> <span class="op">&lt;</span> <span class="number">65536</span> {
@@ -875,31 +875,31 @@ payload: 0x{}
 
     <span class="doccomment">/// Get the size of the length encoding.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">extra_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">fn</span> <span class="ident">extra_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">LengthFormat::U8</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
-            <span class="ident">LengthFormat::U16</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">2</span>,
-            <span class="ident">LengthFormat::U64</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">8</span>,
+            <span class="ident">LengthFormat::U8</span>(<span class="kw">_</span>) =&gt; <span class="number">0</span>,
+            <span class="ident">LengthFormat::U16</span> =&gt; <span class="number">2</span>,
+            <span class="ident">LengthFormat::U64</span> =&gt; <span class="number">8</span>,
         }
     }
 
     <span class="doccomment">/// Encode the given length.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">length_byte</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span> {
+    <span class="kw">fn</span> <span class="ident">length_byte</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u8</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">LengthFormat::U8</span>(<span class="ident">b</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">b</span>,
-            <span class="ident">LengthFormat::U16</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">126</span>,
-            <span class="ident">LengthFormat::U64</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">127</span>,
+            <span class="ident">LengthFormat::U8</span>(<span class="ident">b</span>) =&gt; <span class="ident">b</span>,
+            <span class="ident">LengthFormat::U16</span> =&gt; <span class="number">126</span>,
+            <span class="ident">LengthFormat::U64</span> =&gt; <span class="number">127</span>,
         }
     }
 
     <span class="doccomment">/// Get the length format for a given length byte.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">for_byte</span>(<span class="ident">byte</span>: <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">for_byte</span>(<span class="ident">byte</span>: <span class="ident">u8</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">byte</span> <span class="op">&amp;</span> <span class="number">0x7F</span> {
-            <span class="number">126</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">LengthFormat::U16</span>,
-            <span class="number">127</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">LengthFormat::U64</span>,
-            <span class="ident">b</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">LengthFormat::U8</span>(<span class="ident">b</span>),
+            <span class="number">126</span> =&gt; <span class="ident">LengthFormat::U16</span>,
+            <span class="number">127</span> =&gt; <span class="ident">LengthFormat::U64</span>,
+            <span class="ident">b</span> =&gt; <span class="ident">LengthFormat::U8</span>(<span class="ident">b</span>),
         }
     }
 }

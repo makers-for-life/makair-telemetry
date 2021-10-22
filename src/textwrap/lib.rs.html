@@ -2334,28 +2334,28 @@
 <span class="comment">// WordSeperator used in the function signatures below.</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;smawk&quot;</span>)]</span>
 <span class="macro">macro_rules!</span> <span class="ident">DefaultWrapAlgorithm</span> {
-    () <span class="op">=</span><span class="op">&gt;</span> {
+    () =&gt; {
         <span class="ident">wrap_algorithms::OptimalFit</span>
     };
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;smawk&quot;</span>))]</span>
 <span class="macro">macro_rules!</span> <span class="ident">DefaultWrapAlgorithm</span> {
-    () <span class="op">=</span><span class="op">&gt;</span> {
+    () =&gt; {
         <span class="ident">wrap_algorithms::FirstFit</span>
     };
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unicode-linebreak&quot;</span>)]</span>
 <span class="macro">macro_rules!</span> <span class="ident">DefaultWordSeparator</span> {
-    () <span class="op">=</span><span class="op">&gt;</span> {
+    () =&gt; {
         <span class="ident">word_separators::UnicodeBreakProperties</span>
     };
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unicode-linebreak&quot;</span>))]</span>
 <span class="macro">macro_rules!</span> <span class="ident">DefaultWordSeparator</span> {
-    () <span class="op">=</span><span class="op">&gt;</span> {
+    () =&gt; {
         <span class="ident">word_separators::AsciiSpace</span>
     };
 }
@@ -2401,7 +2401,7 @@
     <span class="ident">WordSep</span>: <span class="ident">Clone</span>,
     <span class="ident">WordSplit</span>: <span class="ident">Clone</span>,
 {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Options</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">WrapAlgo</span>, <span class="ident">WordSep</span>, <span class="ident">WordSplit</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Options</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">WrapAlgo</span>, <span class="ident">WordSep</span>, <span class="ident">WordSplit</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">width</span>: <span class="ident">options</span>.<span class="ident">width</span>,
             <span class="ident">initial_indent</span>: <span class="ident">options</span>.<span class="ident">initial_indent</span>,
@@ -2422,7 +2422,7 @@
         <span class="ident">word_splitters::HyphenSplitter</span>,
     <span class="op">&gt;</span>
 {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">width</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">width</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Options::new</span>(<span class="ident">width</span>)
     }
 }
@@ -2515,7 +2515,7 @@
     <span class="doccomment">/// the different `WordSplitter` in use. Thus dynamic dispatch</span>
     <span class="doccomment">/// allows to change the word splitter at run-time without</span>
     <span class="doccomment">/// changing the variables type.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">width</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">width</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Options::with_word_splitter</span>(<span class="ident">width</span>, <span class="ident">word_splitters::HyphenSplitter</span>)
     }
 
@@ -2537,7 +2537,7 @@
     <span class="doccomment">/// **Note:** Only available when the `terminal_size` feature is</span>
     <span class="doccomment">/// enabled.</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;terminal_size&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_termwidth</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_termwidth</span>() -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">termwidth</span>())
     }
 }
@@ -2619,7 +2619,7 @@
     <span class="doccomment">/// static BAR: Options&lt;FirstFit, AsciiSpace, HyphenSplitter&gt; = FOO;</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">with_word_splitter</span>(<span class="ident">width</span>: <span class="ident">usize</span>, <span class="ident">word_splitter</span>: <span class="ident">WordSplit</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">with_word_splitter</span>(<span class="ident">width</span>: <span class="ident">usize</span>, <span class="ident">word_splitter</span>: <span class="ident">WordSplit</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Options</span> {
             <span class="ident">width</span>,
             <span class="ident">initial_indent</span>: <span class="string">&quot;&quot;</span>,
@@ -2651,7 +2651,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`self.initial_indent`]: #structfield.initial_indent</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">initial_indent</span>(<span class="self">self</span>, <span class="ident">indent</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">initial_indent</span>(<span class="self">self</span>, <span class="ident">indent</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Options</span> {
             <span class="ident">initial_indent</span>: <span class="ident">indent</span>,
             ..<span class="self">self</span>
@@ -2687,7 +2687,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`self.subsequent_indent`]: #structfield.subsequent_indent</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">subsequent_indent</span>(<span class="self">self</span>, <span class="ident">indent</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">subsequent_indent</span>(<span class="self">self</span>, <span class="ident">indent</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Options</span> {
             <span class="ident">subsequent_indent</span>: <span class="ident">indent</span>,
             ..<span class="self">self</span>
@@ -2714,7 +2714,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`self.break_words`]: #structfield.break_words</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">break_words</span>(<span class="self">self</span>, <span class="ident">setting</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">break_words</span>(<span class="self">self</span>, <span class="ident">setting</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Options</span> {
             <span class="ident">break_words</span>: <span class="ident">setting</span>,
             ..<span class="self">self</span>
@@ -2729,7 +2729,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">word_separator</span><span class="op">&lt;</span><span class="ident">NewWordSep</span><span class="op">&gt;</span>(
         <span class="self">self</span>,
         <span class="ident">word_separator</span>: <span class="ident">NewWordSep</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Options</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">WrapAlgo</span>, <span class="ident">NewWordSep</span>, <span class="ident">WordSplit</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">Options</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">WrapAlgo</span>, <span class="ident">NewWordSep</span>, <span class="ident">WordSplit</span><span class="op">&gt;</span> {
         <span class="ident">Options</span> {
             <span class="ident">width</span>: <span class="self">self</span>.<span class="ident">width</span>,
             <span class="ident">initial_indent</span>: <span class="self">self</span>.<span class="ident">initial_indent</span>,
@@ -2750,7 +2750,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wrap_algorithm</span><span class="op">&lt;</span><span class="ident">NewWrapAlgo</span><span class="op">&gt;</span>(
         <span class="self">self</span>,
         <span class="ident">wrap_algorithm</span>: <span class="ident">NewWrapAlgo</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Options</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">NewWrapAlgo</span>, <span class="ident">WordSep</span>, <span class="ident">WordSplit</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">Options</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">NewWrapAlgo</span>, <span class="ident">WordSep</span>, <span class="ident">WordSplit</span><span class="op">&gt;</span> {
         <span class="ident">Options</span> {
             <span class="ident">width</span>: <span class="self">self</span>.<span class="ident">width</span>,
             <span class="ident">initial_indent</span>: <span class="self">self</span>.<span class="ident">initial_indent</span>,
@@ -2784,7 +2784,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">word_splitter</span><span class="op">&lt;</span><span class="ident">NewWordSplit</span><span class="op">&gt;</span>(
         <span class="self">self</span>,
         <span class="ident">word_splitter</span>: <span class="ident">NewWordSplit</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Options</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">WrapAlgo</span>, <span class="ident">WordSep</span>, <span class="ident">NewWordSplit</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">Options</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">WrapAlgo</span>, <span class="ident">WordSep</span>, <span class="ident">NewWordSplit</span><span class="op">&gt;</span> {
         <span class="ident">Options</span> {
             <span class="ident">width</span>: <span class="self">self</span>.<span class="ident">width</span>,
             <span class="ident">initial_indent</span>: <span class="self">self</span>.<span class="ident">initial_indent</span>,
@@ -2822,7 +2822,7 @@
 <span class="doccomment">/// **Note:** Only available when the `terminal_size` Cargo feature is</span>
 <span class="doccomment">/// enabled.</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;terminal_size&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">termwidth</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">termwidth</span>() -&gt; <span class="ident">usize</span> {
     <span class="ident">terminal_size::terminal_size</span>().<span class="ident">map_or</span>(<span class="number">80</span>, <span class="op">|</span>(<span class="ident">terminal_size::Width</span>(<span class="ident">w</span>), <span class="kw">_</span>)<span class="op">|</span> <span class="ident">w</span>.<span class="ident">into</span>())
 }
 
@@ -2858,7 +2858,7 @@
 <span class="doccomment">///     &quot;- Memory safety\n  without\n  garbage\n  collection.&quot;</span>
 <span class="doccomment">/// );</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fill</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">WrapAlgo</span>, <span class="ident">WordSep</span>, <span class="ident">WordSplit</span>, <span class="ident">Opt</span><span class="op">&gt;</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">width_or_options</span>: <span class="ident">Opt</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fill</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">WrapAlgo</span>, <span class="ident">WordSep</span>, <span class="ident">WordSplit</span>, <span class="ident">Opt</span><span class="op">&gt;</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">width_or_options</span>: <span class="ident">Opt</span>) -&gt; <span class="ident">String</span>
 <span class="kw">where</span>
     <span class="ident">WrapAlgo</span>: <span class="ident">wrap_algorithms::WrapAlgorithm</span>,
     <span class="ident">WordSep</span>: <span class="ident">word_separators::WordSeparator</span>,
@@ -2927,7 +2927,7 @@
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unfill</span>(
     <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-) <span class="op">-</span><span class="op">&gt;</span> (
+) -&gt; (
     <span class="ident">String</span>,
     <span class="ident">Options</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="macro">DefaultWrapAlgorithm!</span>(), <span class="macro">DefaultWordSeparator!</span>(), <span class="ident">word_splitters::HyphenSplitter</span><span class="op">&gt;</span>,
 ) {
@@ -2940,9 +2940,9 @@
         <span class="kw">let</span> <span class="ident">without_prefix</span> <span class="op">=</span> <span class="ident">line</span>.<span class="ident">trim_start_matches</span>(<span class="ident">prefix_chars</span>);
         <span class="kw">let</span> <span class="ident">prefix</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">line</span>[..<span class="ident">line</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">without_prefix</span>.<span class="ident">len</span>()];
 
-        <span class="kw">if</span> <span class="ident">idx</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="kw">if</span> <span class="ident">idx</span> <span class="op">==</span> <span class="number">0</span> {
             <span class="ident">options</span>.<span class="ident">initial_indent</span> <span class="op">=</span> <span class="ident">prefix</span>;
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">idx</span> <span class="op">=</span><span class="op">=</span> <span class="number">1</span> {
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">idx</span> <span class="op">==</span> <span class="number">1</span> {
             <span class="ident">options</span>.<span class="ident">subsequent_indent</span> <span class="op">=</span> <span class="ident">prefix</span>;
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">idx</span> <span class="op">&gt;</span> <span class="number">1</span> {
             <span class="kw">for</span> ((<span class="ident">idx</span>, <span class="ident">x</span>), <span class="ident">y</span>) <span class="kw">in</span> <span class="ident">prefix</span>.<span class="ident">char_indices</span>().<span class="ident">zip</span>(<span class="ident">options</span>.<span class="ident">subsequent_indent</span>.<span class="ident">chars</span>()) {
@@ -2959,7 +2959,7 @@
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">unfilled</span> <span class="op">=</span> <span class="ident">String::with_capacity</span>(<span class="ident">text</span>.<span class="ident">len</span>());
     <span class="kw">for</span> (<span class="ident">idx</span>, <span class="ident">line</span>) <span class="kw">in</span> <span class="ident">trimmed</span>.<span class="ident">split</span>(<span class="string">&#39;\n&#39;</span>).<span class="ident">enumerate</span>() {
-        <span class="kw">if</span> <span class="ident">idx</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="kw">if</span> <span class="ident">idx</span> <span class="op">==</span> <span class="number">0</span> {
             <span class="ident">unfilled</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="ident">options</span>.<span class="ident">initial_indent</span>.<span class="ident">len</span>()..]);
         } <span class="kw">else</span> {
             <span class="ident">unfilled</span>.<span class="ident">push</span>(<span class="string">&#39; &#39;</span>);
@@ -3028,7 +3028,7 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">refill</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">WrapAlgo</span>, <span class="ident">WordSep</span>, <span class="ident">WordSplit</span>, <span class="ident">Opt</span><span class="op">&gt;</span>(
     <span class="ident">filled_text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">new_width_or_options</span>: <span class="ident">Opt</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span>
+) -&gt; <span class="ident">String</span>
 <span class="kw">where</span>
     <span class="ident">WrapAlgo</span>: <span class="ident">wrap_algorithms::WrapAlgorithm</span>,
     <span class="ident">WordSep</span>: <span class="ident">word_separators::WordSeparator</span>,
@@ -3217,7 +3217,7 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">WrapAlgo</span>, <span class="ident">WordSep</span>, <span class="ident">WordSplit</span>, <span class="ident">Opt</span><span class="op">&gt;</span>(
     <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">width_or_options</span>: <span class="ident">Opt</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>
+) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">WrapAlgo</span>: <span class="ident">wrap_algorithms::WrapAlgorithm</span>,
     <span class="ident">WordSep</span>: <span class="ident">word_separators::WordSeparator</span>,
@@ -3258,11 +3258,11 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">idx</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">for</span> <span class="ident">words</span> <span class="kw">in</span> <span class="ident">wrapped_words</span> {
             <span class="kw">let</span> <span class="ident">last_word</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">words</span>.<span class="ident">last</span>() {
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">None</span> =&gt; {
                     <span class="ident">lines</span>.<span class="ident">push</span>(<span class="ident">Cow::from</span>(<span class="string">&quot;&quot;</span>));
                     <span class="kw">continue</span>;
                 }
-                <span class="prelude-val">Some</span>(<span class="ident">word</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">word</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">word</span>) =&gt; <span class="ident">word</span>,
             };
 
             <span class="comment">// We assume here that all words are contiguous in `line`.</span>
@@ -3369,7 +3369,7 @@
     <span class="ident">left_gap</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">middle_gap</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">right_gap</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>
+) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">WrapAlgo</span>: <span class="ident">wrap_algorithms::WrapAlgorithm</span>,
     <span class="ident">WordSep</span>: <span class="ident">word_separators::WordSeparator</span>,
@@ -3397,15 +3397,15 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">line</span> <span class="op">=</span> <span class="ident">String::from</span>(<span class="ident">left_gap</span>);
         <span class="kw">for</span> <span class="ident">column_no</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">columns</span> {
             <span class="kw">match</span> <span class="ident">wrapped_lines</span>.<span class="ident">get</span>(<span class="ident">line_no</span> <span class="op">+</span> <span class="ident">column_no</span> <span class="op">*</span> <span class="ident">lines_per_column</span>) {
-                <span class="prelude-val">Some</span>(<span class="ident">column_line</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">column_line</span>) =&gt; {
                     <span class="ident">line</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="ident">column_line</span>);
                     <span class="ident">line</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="string">&quot; &quot;</span>.<span class="ident">repeat</span>(<span class="ident">column_width</span> <span class="op">-</span> <span class="ident">core::display_width</span>(<span class="kw-2">&amp;</span><span class="ident">column_line</span>)));
                 }
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">None</span> =&gt; {
                     <span class="ident">line</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="string">&quot; &quot;</span>.<span class="ident">repeat</span>(<span class="ident">column_width</span>));
                 }
             }
-            <span class="kw">if</span> <span class="ident">column_no</span> <span class="op">=</span><span class="op">=</span> <span class="ident">columns</span> <span class="op">-</span> <span class="number">1</span> {
+            <span class="kw">if</span> <span class="ident">column_no</span> <span class="op">==</span> <span class="ident">columns</span> <span class="op">-</span> <span class="number">1</span> {
                 <span class="ident">line</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="ident">last_column_padding</span>);
             } <span class="kw">else</span> {
                 <span class="ident">line</span>.<span class="ident">push_str</span>(<span class="ident">middle_gap</span>);

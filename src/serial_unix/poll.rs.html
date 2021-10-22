@@ -145,15 +145,15 @@
 <span class="kw">const</span> <span class="ident">POLLHUP</span>:  <span class="ident">c_short</span> <span class="op">=</span> <span class="number">0x0010</span>;
 <span class="kw">const</span> <span class="ident">POLLNVAL</span>: <span class="ident">c_short</span> <span class="op">=</span> <span class="number">0x0020</span>;
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_read_fd</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_read_fd</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="ident">wait_fd</span>(<span class="ident">fd</span>, <span class="ident">POLLIN</span>, <span class="ident">timeout</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_write_fd</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_write_fd</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="ident">wait_fd</span>(<span class="ident">fd</span>, <span class="ident">POLLOUT</span>, <span class="ident">timeout</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">wait_fd</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">events</span>: <span class="ident">c_short</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">wait_fd</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">events</span>: <span class="ident">c_short</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">EINTR</span>, <span class="ident">EPIPE</span>, <span class="ident">EIO</span>};
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fds</span> <span class="op">=</span> <span class="macro">vec!</span>(<span class="ident">pollfd</span> { <span class="ident">fd</span>: <span class="ident">fd</span>, <span class="ident">events</span>: <span class="ident">events</span>, <span class="ident">revents</span>: <span class="number">0</span> });
@@ -164,14 +164,14 @@
         <span class="kw">let</span> <span class="ident">errno</span> <span class="op">=</span> <span class="ident"><span class="kw">super</span>::error::errno</span>();
 
         <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">errno</span> {
-            <span class="ident">EINTR</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">io::ErrorKind::Interrupted</span>,
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">io::ErrorKind::Other</span>,
+            <span class="ident">EINTR</span> =&gt; <span class="ident">io::ErrorKind::Interrupted</span>,
+            <span class="kw">_</span> =&gt; <span class="ident">io::ErrorKind::Other</span>,
         };
 
         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io::Error::new</span>(<span class="ident">kind</span>, <span class="ident"><span class="kw">super</span>::error::error_string</span>(<span class="ident">errno</span>)));
     }
 
-    <span class="kw">if</span> <span class="ident">wait</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+    <span class="kw">if</span> <span class="ident">wait</span> <span class="op">==</span> <span class="number">0</span> {
         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io::Error::new</span>(<span class="ident">io::ErrorKind::TimedOut</span>, <span class="string">&quot;Operation timed out&quot;</span>));
     }
 
@@ -188,7 +188,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">do_poll</span>(<span class="ident">fds</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">pollfd</span><span class="op">&gt;</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span> {
+<span class="kw">fn</span> <span class="ident">do_poll</span>(<span class="ident">fds</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">pollfd</span><span class="op">&gt;</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) -&gt; <span class="ident">c_int</span> {
     <span class="kw">use</span> <span class="ident">std::ptr</span>;
 
     <span class="kw">use</span> <span class="ident">libc::c_void</span>;
@@ -199,7 +199,7 @@
     }
 
     <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
-        <span class="kw">fn</span> <span class="ident">ppoll</span>(<span class="ident">fds</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">pollfd</span>, <span class="ident">nfds</span>: <span class="ident">nfds_t</span>, <span class="ident">timeout_ts</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::timespec</span>, <span class="ident">sigmask</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">sigset_t</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span>;
+        <span class="kw">fn</span> <span class="ident">ppoll</span>(<span class="ident">fds</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">pollfd</span>, <span class="ident">nfds</span>: <span class="ident">nfds_t</span>, <span class="ident">timeout_ts</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::timespec</span>, <span class="ident">sigmask</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">sigset_t</span>) -&gt; <span class="ident">c_int</span>;
     }
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">timeout_ts</span> <span class="op">=</span> <span class="ident">libc::timespec</span> {
@@ -217,9 +217,9 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>))]</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">do_poll</span>(<span class="ident">fds</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">pollfd</span><span class="op">&gt;</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span> {
+<span class="kw">fn</span> <span class="ident">do_poll</span>(<span class="ident">fds</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">pollfd</span><span class="op">&gt;</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) -&gt; <span class="ident">c_int</span> {
     <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
-        <span class="kw">fn</span> <span class="ident">poll</span>(<span class="ident">fds</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">pollfd</span>, <span class="ident">nfds</span>: <span class="ident">nfds_t</span>, <span class="ident">timeout</span>: <span class="ident">c_int</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span>;
+        <span class="kw">fn</span> <span class="ident">poll</span>(<span class="ident">fds</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">pollfd</span>, <span class="ident">nfds</span>: <span class="ident">nfds_t</span>, <span class="ident">timeout</span>: <span class="ident">c_int</span>) -&gt; <span class="ident">c_int</span>;
     }
 
     <span class="kw">let</span> <span class="ident">milliseconds</span> <span class="op">=</span> <span class="ident">timeout</span>.<span class="ident">as_secs</span>() <span class="op">*</span> <span class="number">1000</span> <span class="op">+</span> <span class="ident">timeout</span>.<span class="ident">subsec_nanos</span>() <span class="kw">as</span> <span class="ident">u64</span> <span class="op">/</span> <span class="number">1_000_000</span>;

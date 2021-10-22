@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;clap-3.0.0-beta.4&#x2F;src&#x2F;build&#x2F;arg_group.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>arg_group.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../clap/index.html'><div class='logo-container rust-logo'><img src='https:&#x2F;&#x2F;clap.rs&#x2F;images&#x2F;media&#x2F;clap.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;clap-3.0.0-beta.5&#x2F;src&#x2F;build&#x2F;arg_group.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>arg_group.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../clap/index.html'><div class='logo-container rust-logo'><img src='https:&#x2F;&#x2F;clap.rs&#x2F;images&#x2F;media&#x2F;clap.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -576,6 +576,30 @@
 <span id="576">576</span>
 <span id="577">577</span>
 <span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
 </pre><pre class="rust"><code><span class="comment">// Internal</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::util</span>::{<span class="ident">Id</span>, <span class="ident">Key</span>};
 
@@ -665,7 +689,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span> <span class="ident">ArgGroup</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">with_id</span>(<span class="ident">id</span>: <span class="ident">Id</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">with_id</span>(<span class="ident">id</span>: <span class="ident">Id</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">ArgGroup</span> {
             <span class="ident">id</span>,
             ..<span class="ident">ArgGroup::default</span>()
@@ -682,13 +706,36 @@
     <span class="doccomment">/// ArgGroup::new(&quot;config&quot;)</span>
     <span class="doccomment">/// # ;</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;help</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">n</span>: <span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">n</span>.<span class="ident">into</span>();
-        <span class="ident">ArgGroup</span> {
-            <span class="ident">id</span>: <span class="ident">Id::from</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">name</span>),
-            <span class="ident">name</span>,
-            ..<span class="ident">ArgGroup::default</span>()
-        }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;help</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">n</span>: <span class="ident">S</span>) -&gt; <span class="self">Self</span> {
+        <span class="ident">ArgGroup::default</span>().<span class="ident">name</span>(<span class="ident">n</span>)
+    }
+
+    <span class="doccomment">/// Deprecated, see [`ArgGroup::new`]</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;3.0.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Replaced with `ArgGroup::new`&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_name</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;help</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">n</span>: <span class="ident">S</span>) -&gt; <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">n</span>)
+    }
+
+    <span class="doccomment">/// Deprecated, see [`ArgGroup::from`]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;yaml&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;3.0.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Replaced with `ArgGroup::from`&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_yaml</span>(<span class="ident">yaml</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;help</span> <span class="ident">Yaml</span>) -&gt; <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">yaml</span>)
+    }
+
+    <span class="doccomment">/// Sets the group name.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// # use clap::{App, ArgGroup};</span>
+    <span class="doccomment">/// ArgGroup::default().name(&quot;config&quot;)</span>
+    <span class="doccomment">/// # ;</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;help</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">n</span>: <span class="ident">S</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">name</span> <span class="op">=</span> <span class="ident">n</span>.<span class="ident">into</span>();
+        <span class="self">self</span>.<span class="ident">id</span> <span class="op">=</span> <span class="ident">Id::from</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>);
+        <span class="self">self</span>
     }
 
     <span class="doccomment">/// Adds an [argument] to this group by name</span>
@@ -712,7 +759,7 @@
     <span class="doccomment">/// assert!(m.is_present(&quot;flag&quot;));</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// [argument]: crate::Arg</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">arg</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">arg_id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">arg</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">arg_id</span>: <span class="ident">T</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">args</span>.<span class="ident">push</span>(<span class="ident">arg_id</span>.<span class="ident">into</span>());
         <span class="self">self</span>
     }
@@ -737,7 +784,7 @@
     <span class="doccomment">/// assert!(m.is_present(&quot;flag&quot;));</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// [arguments]: crate::Arg</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">args</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ns</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">args</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ns</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>]) -&gt; <span class="self">Self</span> {
         <span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="ident">ns</span> {
             <span class="self">self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">arg</span>(<span class="ident">n</span>);
         }
@@ -786,7 +833,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Arg`]: crate::Arg</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">multiple</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">m</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">multiple</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">m</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">multiple</span> <span class="op">=</span> <span class="ident">m</span>;
         <span class="self">self</span>
     }
@@ -827,7 +874,7 @@
     <span class="doccomment">/// [`ArgGroup::multiple`]: ArgGroup::multiple()</span>
     <span class="doccomment">/// [`App`]: crate::App</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">required</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">r</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">required</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">r</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">required</span> <span class="op">=</span> <span class="ident">r</span>;
         <span class="self">self</span>
     }
@@ -862,7 +909,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// [required group]: ArgGroup::required()</span>
     <span class="doccomment">/// [argument requirement rules]: crate::Arg::requires()</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">requires</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">requires</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">requires</span>.<span class="ident">push</span>(<span class="ident">id</span>.<span class="ident">into</span>());
         <span class="self">self</span>
     }
@@ -899,7 +946,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// [required group]: ArgGroup::required()</span>
     <span class="doccomment">/// [argument requirement rules]: crate::Arg::requires_all()</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">requires_all</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ns</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="lifetime">&#39;help</span> <span class="ident">str</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">requires_all</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ns</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="lifetime">&#39;help</span> <span class="ident">str</span>]) -&gt; <span class="self">Self</span> {
         <span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="ident">ns</span> {
             <span class="self">self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">requires</span>(<span class="ident">n</span>);
         }
@@ -933,7 +980,7 @@
     <span class="doccomment">/// assert_eq!(err.kind, ErrorKind::ArgumentConflict);</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// [argument exclusion rules]: crate::Arg::conflicts_with()</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">conflicts_with</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">conflicts_with</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">conflicts</span>.<span class="ident">push</span>(<span class="ident">id</span>.<span class="ident">into</span>());
         <span class="self">self</span>
     }
@@ -969,7 +1016,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [argument exclusion rules]: crate::Arg::conflicts_with_all()</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">conflicts_with_all</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ns</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="lifetime">&#39;help</span> <span class="ident">str</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">conflicts_with_all</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ns</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="lifetime">&#39;help</span> <span class="ident">str</span>]) -&gt; <span class="self">Self</span> {
         <span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="ident">ns</span> {
             <span class="self">self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">conflicts_with</span>(<span class="ident">n</span>);
         }
@@ -978,7 +1025,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">ArgGroup</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ArgGroup</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">g</span>: <span class="kw-2">&amp;</span><span class="ident">ArgGroup</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">g</span>: <span class="kw-2">&amp;</span><span class="ident">ArgGroup</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">ArgGroup</span> {
             <span class="ident">id</span>: <span class="ident">g</span>.<span class="ident">id</span>.<span class="ident">clone</span>(),
             <span class="ident">name</span>: <span class="ident">g</span>.<span class="ident">name</span>,
@@ -1002,16 +1049,17 @@
     <span class="doccomment">/// let yaml = load_yaml!(&quot;group.yaml&quot;);</span>
     <span class="doccomment">/// let ag = ArgGroup::from(yaml);</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">y</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;help</span> <span class="ident">Yaml</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">y</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;help</span> <span class="ident">Yaml</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">y</span>.<span class="ident">as_hash</span>().<span class="ident">expect</span>(<span class="string">&quot;ArgGroup::from::&lt;Yaml&gt; expects a table&quot;</span>);
         <span class="comment">// We WANT this to panic on error...so expect() is good.</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">ArgGroup::default</span>();
-        <span class="kw">let</span> <span class="ident">group_settings</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">b</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">1</span> {
+        <span class="kw">let</span> <span class="ident">group_settings</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">b</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
             <span class="kw">let</span> <span class="ident">name_yaml</span> <span class="op">=</span> <span class="ident">b</span>.<span class="ident">keys</span>().<span class="ident">next</span>().<span class="ident">expect</span>(<span class="string">&quot;failed to get name&quot;</span>);
             <span class="kw">let</span> <span class="ident">name_str</span> <span class="op">=</span> <span class="ident">name_yaml</span>
                 .<span class="ident">as_str</span>()
                 .<span class="ident">expect</span>(<span class="string">&quot;failed to convert arg YAML name to str&quot;</span>);
             <span class="ident">a</span>.<span class="ident">name</span> <span class="op">=</span> <span class="ident">name_str</span>;
+            <span class="ident">a</span>.<span class="ident">id</span> <span class="op">=</span> <span class="ident">Id::from</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">name</span>);
             <span class="ident">b</span>.<span class="ident">get</span>(<span class="ident">name_yaml</span>)
                 .<span class="ident">expect</span>(<span class="string">&quot;failed to get name_str&quot;</span>)
                 .<span class="ident">as_hash</span>()
@@ -1022,24 +1070,24 @@
 
         <span class="kw">for</span> (<span class="ident">k</span>, <span class="ident">v</span>) <span class="kw">in</span> <span class="ident">group_settings</span> {
             <span class="ident">a</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">k</span>.<span class="ident">as_str</span>().<span class="ident">unwrap</span>() {
-                <span class="string">&quot;required&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">a</span>.<span class="ident">required</span>(<span class="ident">v</span>.<span class="ident">as_bool</span>().<span class="ident">unwrap</span>()),
-                <span class="string">&quot;multiple&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">a</span>.<span class="ident">multiple</span>(<span class="ident">v</span>.<span class="ident">as_bool</span>().<span class="ident">unwrap</span>()),
-                <span class="string">&quot;args&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">yaml_vec_or_str!</span>(<span class="ident">a</span>, <span class="ident">v</span>, <span class="ident">arg</span>),
-                <span class="string">&quot;arg&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="string">&quot;required&quot;</span> =&gt; <span class="ident">a</span>.<span class="ident">required</span>(<span class="ident">v</span>.<span class="ident">as_bool</span>().<span class="ident">unwrap</span>()),
+                <span class="string">&quot;multiple&quot;</span> =&gt; <span class="ident">a</span>.<span class="ident">multiple</span>(<span class="ident">v</span>.<span class="ident">as_bool</span>().<span class="ident">unwrap</span>()),
+                <span class="string">&quot;args&quot;</span> =&gt; <span class="macro">yaml_vec_or_str!</span>(<span class="ident">a</span>, <span class="ident">v</span>, <span class="ident">arg</span>),
+                <span class="string">&quot;arg&quot;</span> =&gt; {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ys</span>) <span class="op">=</span> <span class="ident">v</span>.<span class="ident">as_str</span>() {
                         <span class="ident">a</span> <span class="op">=</span> <span class="ident">a</span>.<span class="ident">arg</span>(<span class="ident">ys</span>);
                     }
                     <span class="ident">a</span>
                 }
-                <span class="string">&quot;requires&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">yaml_vec_or_str!</span>(<span class="ident">a</span>, <span class="ident">v</span>, <span class="ident">requires</span>),
-                <span class="string">&quot;conflicts_with&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">yaml_vec_or_str!</span>(<span class="ident">a</span>, <span class="ident">v</span>, <span class="ident">conflicts_with</span>),
-                <span class="string">&quot;name&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="string">&quot;requires&quot;</span> =&gt; <span class="macro">yaml_vec_or_str!</span>(<span class="ident">a</span>, <span class="ident">v</span>, <span class="ident">requires</span>),
+                <span class="string">&quot;conflicts_with&quot;</span> =&gt; <span class="macro">yaml_vec_or_str!</span>(<span class="ident">a</span>, <span class="ident">v</span>, <span class="ident">conflicts_with</span>),
+                <span class="string">&quot;name&quot;</span> =&gt; {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ys</span>) <span class="op">=</span> <span class="ident">v</span>.<span class="ident">as_str</span>() {
-                        <span class="ident">a</span>.<span class="ident">name</span> <span class="op">=</span> <span class="ident">ys</span>;
+                        <span class="ident">a</span> <span class="op">=</span> <span class="ident">a</span>.<span class="ident">name</span>(<span class="ident">ys</span>);
                     }
                     <span class="ident">a</span>
                 }
-                <span class="ident">s</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(
+                <span class="ident">s</span> =&gt; <span class="macro">panic!</span>(
                     <span class="string">&quot;Unknown ArgGroup setting &#39;{}&#39; in YAML file for \
                      ArgGroup &#39;{}&#39;&quot;</span>,
                     <span class="ident">s</span>, <span class="ident">a</span>.<span class="ident">name</span>
@@ -1142,7 +1190,7 @@ requires:
 }
 
 <span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">ArgGroup</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">ArgGroup</span> {
             <span class="ident">id</span>: <span class="self">self</span>.<span class="ident">id</span>.<span class="ident">clone</span>(),
             <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>,

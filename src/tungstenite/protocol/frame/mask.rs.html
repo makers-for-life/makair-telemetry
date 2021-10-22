@@ -73,7 +73,7 @@
 <span id="73">73</span>
 </pre><pre class="rust"><code><span class="doccomment">/// Generate a random frame mask.</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_mask</span>() <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">u8</span>; <span class="number">4</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_mask</span>() -&gt; [<span class="ident">u8</span>; <span class="number">4</span>] {
     <span class="ident">rand::random</span>()
 }
 

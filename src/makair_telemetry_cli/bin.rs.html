@@ -582,8 +582,6 @@
 <span id="582">582</span>
 <span id="583">583</span>
 <span id="584">584</span>
-<span id="585">585</span>
-<span id="586">586</span>
 </pre><pre class="rust"><code><span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
 <span class="comment">// Copyright: 2020, Makers For Life</span>
@@ -596,7 +594,7 @@
 <span class="kw">mod</span> <span class="ident">statistics</span>;
 <span class="kw">mod</span> <span class="ident">storm</span>;
 
-<span class="kw">use</span> <span class="ident">clap</span>::{<span class="ident">ArgGroup</span>, <span class="ident">Clap</span>};
+<span class="kw">use</span> <span class="ident">clap</span>::{<span class="ident">ArgGroup</span>, <span class="ident">Parser</span>};
 <span class="kw">use</span> <span class="ident">std::fs::File</span>;
 <span class="kw">use</span> <span class="ident">std::fs::OpenOptions</span>;
 <span class="kw">use</span> <span class="ident">std::io::BufWriter</span>;
@@ -610,14 +608,14 @@
 <span class="kw">use</span> <span class="ident">storm</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">structures</span>::<span class="kw-2">*</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clap</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Parser</span>)]</span>
 <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MakAir Telemetry CLI&quot;</span>, <span class="ident">author</span>, <span class="ident">about</span>, <span class="ident">version</span>)]</span>
 <span class="kw">struct</span> <span class="ident">Opts</span> {
     <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">subcommand</span>)]</span>
     <span class="ident">mode</span>: <span class="ident">Mode</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clap</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Parser</span>)]</span>
 <span class="kw">enum</span> <span class="ident">Mode</span> {
     <span class="doccomment">/// Read telemetry from a serial port or a WebSocket server, parse it and stream result to stdout</span>
     <span class="ident">Debug</span>(<span class="ident">Debug</span>),
@@ -644,7 +642,7 @@
     <span class="ident">DisableRpiWatchdog</span>(<span class="ident">DisableRpiWatchdog</span>),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clap</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Parser</span>)]</span>
 <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">group</span> <span class="op">=</span> <span class="ident">ArgGroup::new</span>(<span class="string">&quot;source&quot;</span>).<span class="ident">required</span>(<span class="bool-val">true</span>))]</span>
 <span class="kw">struct</span> <span class="ident">Debug</span> {
     <span class="doccomment">/// Address of the serial port</span>
@@ -660,7 +658,7 @@
     <span class="ident">random_control_messages</span>: <span class="ident">bool</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clap</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Parser</span>)]</span>
 <span class="kw">struct</span> <span class="ident">Record</span> {
     <span class="doccomment">/// Address of the port to use</span>
     <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span> <span class="op">=</span> <span class="string">&#39;p&#39;</span>, <span class="ident">long</span>)]</span>
@@ -671,7 +669,7 @@
     <span class="ident">output</span>: <span class="ident">String</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clap</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Parser</span>)]</span>
 <span class="kw">struct</span> <span class="ident">Play</span> {
     <span class="doccomment">/// Path of the recorded file</span>
     <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span> <span class="op">=</span> <span class="string">&#39;i&#39;</span>, <span class="ident">long</span>)]</span>
@@ -682,14 +680,14 @@
     <span class="ident">full_blast</span>: <span class="ident">bool</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clap</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Parser</span>)]</span>
 <span class="kw">struct</span> <span class="ident">Stats</span> {
     <span class="doccomment">/// Path of the recorded file</span>
     <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span> <span class="op">=</span> <span class="string">&#39;i&#39;</span>, <span class="ident">long</span>)]</span>
     <span class="ident">input</span>: <span class="ident">String</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clap</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Parser</span>)]</span>
 <span class="kw">struct</span> <span class="ident">Control</span> {
     <span class="doccomment">/// Address of the port to use</span>
     <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span> <span class="op">=</span> <span class="string">&#39;p&#39;</span>, <span class="ident">long</span>)]</span>
@@ -704,7 +702,7 @@
     <span class="ident">value</span>: <span class="ident">u16</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clap</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Parser</span>)]</span>
 <span class="kw">struct</span> <span class="ident">Storm</span> {
     <span class="doccomment">/// Address of the port to use</span>
     <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span> <span class="op">=</span> <span class="string">&#39;p&#39;</span>, <span class="ident">long</span>)]</span>
@@ -727,7 +725,7 @@
     <span class="ident">full_blast</span>: <span class="ident">bool</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clap</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Parser</span>)]</span>
 <span class="kw">struct</span> <span class="ident">Convert</span> {
     <span class="doccomment">/// Path of the recorded file</span>
     <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span> <span class="op">=</span> <span class="string">&#39;i&#39;</span>, <span class="ident">long</span>)]</span>
@@ -758,7 +756,7 @@
     <span class="ident">gts_disable_source_label</span>: <span class="ident">bool</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clap</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Parser</span>)]</span>
 <span class="kw">struct</span> <span class="ident">DisableRpiWatchdog</span> {
     <span class="doccomment">/// Address of the port to use</span>
     <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span> <span class="op">=</span> <span class="string">&#39;p&#39;</span>)]</span>
@@ -773,14 +771,14 @@
     <span class="kw">let</span> <span class="ident">opts</span>: <span class="ident">Opts</span> <span class="op">=</span> <span class="ident">Opts::parse</span>();
 
     <span class="kw">match</span> <span class="ident">opts</span>.<span class="ident">mode</span> {
-        <span class="ident">Mode::Debug</span>(<span class="ident">cfg</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">debug</span>(<span class="ident">cfg</span>),
-        <span class="ident">Mode::Record</span>(<span class="ident">cfg</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">record</span>(<span class="ident">cfg</span>),
-        <span class="ident">Mode::Play</span>(<span class="ident">cfg</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">play</span>(<span class="ident">cfg</span>),
-        <span class="ident">Mode::Stats</span>(<span class="ident">cfg</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">stats</span>(<span class="ident">cfg</span>),
-        <span class="ident">Mode::Control</span>(<span class="ident">cfg</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">control</span>(<span class="ident">cfg</span>),
-        <span class="ident">Mode::Storm</span>(<span class="ident">cfg</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">storm</span>(<span class="ident">cfg</span>),
-        <span class="ident">Mode::Convert</span>(<span class="ident">cfg</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">convert</span>(<span class="ident">cfg</span>),
-        <span class="ident">Mode::DisableRpiWatchdog</span>(<span class="ident">cfg</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">disable_rpi_watchdog</span>(<span class="ident">cfg</span>),
+        <span class="ident">Mode::Debug</span>(<span class="ident">cfg</span>) =&gt; <span class="ident">debug</span>(<span class="ident">cfg</span>),
+        <span class="ident">Mode::Record</span>(<span class="ident">cfg</span>) =&gt; <span class="ident">record</span>(<span class="ident">cfg</span>),
+        <span class="ident">Mode::Play</span>(<span class="ident">cfg</span>) =&gt; <span class="ident">play</span>(<span class="ident">cfg</span>),
+        <span class="ident">Mode::Stats</span>(<span class="ident">cfg</span>) =&gt; <span class="ident">stats</span>(<span class="ident">cfg</span>),
+        <span class="ident">Mode::Control</span>(<span class="ident">cfg</span>) =&gt; <span class="ident">control</span>(<span class="ident">cfg</span>),
+        <span class="ident">Mode::Storm</span>(<span class="ident">cfg</span>) =&gt; <span class="ident">storm</span>(<span class="ident">cfg</span>),
+        <span class="ident">Mode::Convert</span>(<span class="ident">cfg</span>) =&gt; <span class="ident">convert</span>(<span class="ident">cfg</span>),
+        <span class="ident">Mode::DisableRpiWatchdog</span>(<span class="ident">cfg</span>) =&gt; <span class="ident">disable_rpi_watchdog</span>(<span class="ident">cfg</span>),
     }
 }
 
@@ -821,13 +819,13 @@
     });
     <span class="kw">loop</span> {
         <span class="kw">match</span> <span class="ident">rx</span>.<span class="ident">try_recv</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) =&gt; {
                 <span class="ident">display_message</span>(<span class="ident">msg</span>);
             }
-            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Empty</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Empty</span>) =&gt; {
                 <span class="ident">std::thread::sleep</span>(<span class="ident">THREAD_SLEEP_THROTTLE</span>);
             }
-            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Disconnected</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Disconnected</span>) =&gt; {
                 <span class="macro">panic!</span>(<span class="string">&quot;channel to receiver thread was closed&quot;</span>);
             }
         }
@@ -861,13 +859,13 @@
     });
     <span class="kw">loop</span> {
         <span class="kw">match</span> <span class="ident">rx</span>.<span class="ident">try_recv</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) =&gt; {
                 <span class="ident">display_message</span>(<span class="ident">msg</span>);
             }
-            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Empty</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Empty</span>) =&gt; {
                 <span class="ident">std::thread::sleep</span>(<span class="ident">THREAD_SLEEP_THROTTLE</span>);
             }
-            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Disconnected</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Disconnected</span>) =&gt; {
                 <span class="macro">panic!</span>(<span class="string">&quot;channel to serial port thread was closed&quot;</span>);
             }
         }
@@ -886,13 +884,13 @@
 
     <span class="kw">loop</span> {
         <span class="kw">match</span> <span class="ident">rx</span>.<span class="ident">try_recv</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) =&gt; {
                 <span class="ident">display_message</span>(<span class="ident">msg</span>);
             }
-            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Empty</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Empty</span>) =&gt; {
                 <span class="ident">std::thread::sleep</span>(<span class="ident">THREAD_SLEEP_THROTTLE</span>);
             }
-            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Disconnected</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Disconnected</span>) =&gt; {
                 <span class="macro">warn!</span>(<span class="string">&quot;end of recording&quot;</span>);
                 <span class="ident">std::process::exit</span>(<span class="number">0</span>);
             }
@@ -922,41 +920,41 @@
 
     <span class="kw">loop</span> {
         <span class="kw">match</span> <span class="ident">rx</span>.<span class="ident">try_recv</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">channel_message</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">channel_message</span>) =&gt; {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=</span> <span class="ident">channel_message</span> {
                     <span class="kw">match</span> <span class="ident">message</span> {
-                        <span class="ident">TelemetryMessage::BootMessage</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">TelemetryMessage::BootMessage</span>(<span class="kw">_</span>) =&gt; {
                             <span class="ident">nb_boot_messages</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                         }
-                        <span class="ident">TelemetryMessage::AlarmTrap</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">TelemetryMessage::AlarmTrap</span>(<span class="kw">_</span>) =&gt; {
                             <span class="ident">nb_alarm_traps</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                         }
-                        <span class="ident">TelemetryMessage::DataSnapshot</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">TelemetryMessage::DataSnapshot</span>(<span class="kw">_</span>) =&gt; {
                             <span class="ident">nb_data_snapshots</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                         }
-                        <span class="ident">TelemetryMessage::MachineStateSnapshot</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">TelemetryMessage::MachineStateSnapshot</span>(<span class="kw">_</span>) =&gt; {
                             <span class="ident">nb_machine_state_snapshots</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                         }
-                        <span class="ident">TelemetryMessage::StoppedMessage</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">TelemetryMessage::StoppedMessage</span>(<span class="kw">_</span>) =&gt; {
                             <span class="ident">nb_stopped_messages</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                         }
-                        <span class="ident">TelemetryMessage::ControlAck</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">TelemetryMessage::ControlAck</span>(<span class="kw">_</span>) =&gt; {
                             <span class="ident">nb_control_ack</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                         }
-                        <span class="ident">TelemetryMessage::FatalError</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">TelemetryMessage::FatalError</span>(<span class="kw">_</span>) =&gt; {
                             <span class="ident">nb_fatal_error</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                         }
-                        <span class="ident">TelemetryMessage::EolTestSnapshot</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">TelemetryMessage::EolTestSnapshot</span>(<span class="kw">_</span>) =&gt; {
                             <span class="ident">nb_eol_test_snapshots</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                         }
                     }
                     <span class="ident">telemetry_messages</span>.<span class="ident">push</span>(<span class="ident">message</span>);
                 }
             }
-            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Empty</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Empty</span>) =&gt; {
                 <span class="ident">std::thread::sleep</span>(<span class="ident">THREAD_SLEEP_THROTTLE</span>);
             }
-            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Disconnected</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Disconnected</span>) =&gt; {
                 <span class="macro">println!</span>(<span class="string">&quot;Statistics&quot;</span>);
                 <span class="macro">println!</span>(<span class="string">&quot;Nb BootMessages: {}&quot;</span>, <span class="ident">nb_boot_messages</span>);
                 <span class="macro">println!</span>(<span class="string">&quot;Nb AlarmTraps: {}&quot;</span>, <span class="ident">nb_alarm_traps</span>);
@@ -977,8 +975,6 @@
 }
 
 <span class="kw">fn</span> <span class="ident">control</span>(<span class="ident">cfg</span>: <span class="ident">Control</span>) {
-    <span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
-
     <span class="kw">let</span> <span class="ident">setting</span> <span class="op">=</span> <span class="ident">ControlSetting::try_from</span>(<span class="ident">cfg</span>.<span class="ident">setting</span>).<span class="ident">expect</span>(<span class="string">&quot;invalid control setting passed&quot;</span>);
     <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">cfg</span>.<span class="ident">value</span>;
 
@@ -998,13 +994,13 @@
     });
     <span class="kw">loop</span> {
         <span class="kw">match</span> <span class="ident">rx</span>.<span class="ident">try_recv</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) =&gt; {
                 <span class="ident">display_message</span>(<span class="ident">msg</span>);
             }
-            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Empty</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Empty</span>) =&gt; {
                 <span class="ident">std::thread::sleep</span>(<span class="ident">THREAD_SLEEP_THROTTLE</span>);
             }
-            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Disconnected</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Disconnected</span>) =&gt; {
                 <span class="macro">panic!</span>(<span class="string">&quot;channel to serial port thread was closed&quot;</span>);
             }
         }
@@ -1039,10 +1035,10 @@
         <span class="ident">std::thread::sleep</span>(<span class="ident">std::time::Duration::from_secs</span>(<span class="number">3</span>));
         <span class="kw">loop</span> {
             <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">generators</span>.<span class="ident">choose</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rand::thread_rng</span>()) {
-                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">&quot;valid&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">gen_random_message_bytes</span>(),
-                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">&quot;bytes&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">gen_random_bytes</span>(),
-                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">&quot;wrong_crc&quot;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">gen_random_message_with_wrong_crc</span>(),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">&quot;valid&quot;</span>) =&gt; <span class="ident">gen_random_message_bytes</span>(),
+                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">&quot;bytes&quot;</span>) =&gt; <span class="ident">gen_random_bytes</span>(),
+                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">&quot;wrong_crc&quot;</span>) =&gt; <span class="ident">gen_random_message_with_wrong_crc</span>(),
+                <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
             };
             <span class="ident">tx</span>.<span class="ident">send</span>(<span class="ident">bytes</span>).<span class="ident">expect</span>(<span class="string">&quot;[tx] failed to send bytes&quot;</span>);
             <span class="kw">if</span> <span class="op">!</span><span class="ident">full_blast</span> {
@@ -1053,11 +1049,11 @@
 
     <span class="macro">info!</span>(<span class="string">&quot;opening {}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">port_id</span>);
     <span class="kw">match</span> <span class="ident">serial::open</span>(<span class="kw-2">&amp;</span><span class="ident">port_id</span>) {
-        <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; {
             <span class="macro">error!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">e</span>);
             <span class="ident">std::thread::sleep</span>(<span class="ident">std::time::Duration::from_secs</span>(<span class="number">1</span>));
         }
-        <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">port</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">port</span>) =&gt; {
             <span class="kw">match</span> <span class="ident">port</span>.<span class="ident">reconfigure</span>(<span class="kw-2">&amp;</span><span class="op">|</span><span class="ident">settings</span><span class="op">|</span> {
                 <span class="ident">settings</span>.<span class="ident">set_char_size</span>(<span class="ident">serial::Bits8</span>);
                 <span class="ident">settings</span>.<span class="ident">set_parity</span>(<span class="ident">serial::ParityNone</span>);
@@ -1065,21 +1061,21 @@
                 <span class="ident">settings</span>.<span class="ident">set_flow_control</span>(<span class="ident">serial::FlowNone</span>);
                 <span class="ident">settings</span>.<span class="ident">set_baud_rate</span>(<span class="ident">serial::Baud115200</span>)
             }) {
-                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; {
                     <span class="macro">error!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">e</span>);
                     <span class="ident">std::thread::sleep</span>(<span class="ident">std::time::Duration::from_secs</span>(<span class="number">1</span>));
                 }
-                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">loop</span> {
+                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="kw">loop</span> {
                     <span class="kw">match</span> <span class="ident">rx</span>.<span class="ident">try_recv</span>() {
-                        <span class="prelude-val">Ok</span>(<span class="ident">bytes</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="prelude-val">Ok</span>(<span class="ident">bytes</span>) =&gt; {
                             <span class="kw">let</span> <span class="ident">write</span> <span class="op">=</span> <span class="ident">port</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="ident">bytes</span>);
                             <span class="kw">match</span> <span class="ident">write</span> {
-                                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">debug!</span>(<span class="string">&quot;→ {:?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">bytes</span>),
-                                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">warn!</span>(<span class="string">&quot;Could not send bytes &#39;{:?}&#39;: {:?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">bytes</span>, <span class="kw-2">&amp;</span><span class="ident">e</span>),
+                                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="macro">debug!</span>(<span class="string">&quot;→ {:?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">bytes</span>),
+                                <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="macro">warn!</span>(<span class="string">&quot;Could not send bytes &#39;{:?}&#39;: {:?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">bytes</span>, <span class="kw-2">&amp;</span><span class="ident">e</span>),
                             }
                         }
-                        <span class="prelude-val">Err</span>(<span class="ident">std::sync::mpsc::TryRecvError::Empty</span>) <span class="op">=</span><span class="op">&gt;</span> (),
-                        <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">e</span>),
+                        <span class="prelude-val">Err</span>(<span class="ident">std::sync::mpsc::TryRecvError::Empty</span>) =&gt; (),
+                        <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">e</span>),
                     }
                 },
             }
@@ -1109,7 +1105,7 @@
         .<span class="ident">expect</span>(<span class="string">&quot;failed to create recording file&quot;</span>);
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output_buffer</span> <span class="op">=</span> <span class="ident">BufWriter::new</span>(<span class="ident">output_file</span>);
 
-    <span class="kw">let</span> <span class="ident">gts_source_label</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">cfg</span>.<span class="ident">format</span> <span class="op">=</span><span class="op">=</span> <span class="ident">Format::Gts</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">cfg</span>.<span class="ident">gts_disable_source_label</span> {
+    <span class="kw">let</span> <span class="ident">gts_source_label</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">cfg</span>.<span class="ident">format</span> <span class="op">==</span> <span class="ident">Format::Gts</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">cfg</span>.<span class="ident">gts_disable_source_label</span> {
         <span class="ident">cfg</span>.<span class="ident">gts_source_label</span>.<span class="ident">or_else</span>(<span class="op">|</span><span class="op">|</span> {
             <span class="ident">Path::new</span>(<span class="kw-2">&amp;</span><span class="ident">input_file_name</span>)
                 .<span class="ident">file_name</span>()
@@ -1128,11 +1124,11 @@
 
     <span class="kw">loop</span> {
         <span class="kw">match</span> <span class="ident">rx</span>.<span class="ident">try_recv</span>() {
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="ident">msg</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="ident">msg</span>)) =&gt; {
                 <span class="kw">if</span> <span class="ident">msg</span>.<span class="ident">systick</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">from</span> <span class="op">&amp;&amp;</span> <span class="ident">msg</span>.<span class="ident">systick</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">to</span> {
                     <span class="kw">let</span> <span class="ident">output_payload</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">cfg</span>.<span class="ident">format</span> {
-                        <span class="ident">Format::Gts</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">telemetry_to_gts</span>(<span class="kw-2">&amp;</span><span class="ident">msg</span>, <span class="kw-2">&amp;</span><span class="ident">gts_source_label</span>),
-                        <span class="ident">Format::Json</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Format::Gts</span> =&gt; <span class="ident">telemetry_to_gts</span>(<span class="kw-2">&amp;</span><span class="ident">msg</span>, <span class="kw-2">&amp;</span><span class="ident">gts_source_label</span>),
+                        <span class="ident">Format::Json</span> =&gt; {
                             <span class="ident">telemetry_to_json</span>(<span class="kw-2">&amp;</span><span class="ident">msg</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to serialize a message to JSON&quot;</span>)
                         }
                     };
@@ -1143,13 +1139,13 @@
                     <span class="ident">skipped</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                 }
             }
-            <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) =&gt; {
                 <span class="ident">display_message</span>(<span class="ident">msg</span>);
             }
-            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Empty</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Empty</span>) =&gt; {
                 <span class="ident">std::thread::sleep</span>(<span class="ident">THREAD_SLEEP_THROTTLE</span>);
             }
-            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Disconnected</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">TryRecvError::Disconnected</span>) =&gt; {
                 <span class="macro">warn!</span>(<span class="string">&quot;end of recording&quot;</span>);
                 <span class="kw">if</span> <span class="ident">skipped</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
                     <span class="macro">info!</span>(<span class="string">&quot;{} records were skipped&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">skipped</span>);

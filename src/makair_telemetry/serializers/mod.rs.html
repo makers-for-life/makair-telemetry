@@ -820,22 +820,22 @@
 <span class="doccomment">/// Serialize to binary using the telemetry protocol</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ToBytes</span> {
     <span class="doccomment">/// Serialize to binary using the latest telemetry protocol</span>
-    <span class="kw">fn</span> <span class="ident">to_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">to_bytes_v2</span>()
     }
 
     <span class="doccomment">/// Serialize to binary using the telemetry protocol v1</span>
-    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Serialize to binary using the telemetry protocol v2</span>
-    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>;
 }
 
-<span class="kw">fn</span> <span class="ident">flat</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">flat</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]]) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
     <span class="ident">v</span>.<span class="ident">iter</span>().<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>()).<span class="ident">copied</span>().<span class="ident">collect</span>()
 }
 
-<span class="kw">fn</span> <span class="ident">split_device_id</span>(<span class="ident">device_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>) {
+<span class="kw">fn</span> <span class="ident">split_device_id</span>(<span class="ident">device_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; (<span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>) {
     <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">device_id</span> <span class="op">=</span> <span class="ident">device_id</span>.<span class="ident">split</span>(<span class="string">&#39;-&#39;</span>);
@@ -854,37 +854,37 @@
     (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">phase_value_v1</span>(<span class="ident">phase</span>: <span class="ident">Phase</span>, <span class="ident">subphase</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SubPhase</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span> {
+<span class="kw">fn</span> <span class="ident">phase_value_v1</span>(<span class="ident">phase</span>: <span class="ident">Phase</span>, <span class="ident">subphase</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SubPhase</span><span class="op">&gt;</span>) -&gt; <span class="ident">u8</span> {
     <span class="kw">let</span> <span class="ident">subphase</span> <span class="op">=</span> <span class="ident">subphase</span>.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">phase</span> {
-        <span class="ident">Phase::Inhalation</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">SubPhase::Inspiration</span>,
-        <span class="ident">Phase::Exhalation</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">SubPhase::Exhale</span>,
+        <span class="ident">Phase::Inhalation</span> =&gt; <span class="ident">SubPhase::Inspiration</span>,
+        <span class="ident">Phase::Exhalation</span> =&gt; <span class="ident">SubPhase::Exhale</span>,
     });
 
     <span class="kw">match</span> (<span class="ident">phase</span>, <span class="ident">subphase</span>) {
-        (<span class="ident">Phase::Inhalation</span>, <span class="ident">SubPhase::Inspiration</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="number">17</span>,
-        (<span class="ident">Phase::Inhalation</span>, <span class="ident">SubPhase::HoldInspiration</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="number">18</span>,
-        (<span class="ident">Phase::Exhalation</span>, <span class="ident">SubPhase::Exhale</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="number">68</span>,
-        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
+        (<span class="ident">Phase::Inhalation</span>, <span class="ident">SubPhase::Inspiration</span>) =&gt; <span class="number">17</span>,
+        (<span class="ident">Phase::Inhalation</span>, <span class="ident">SubPhase::HoldInspiration</span>) =&gt; <span class="number">18</span>,
+        (<span class="ident">Phase::Exhalation</span>, <span class="ident">SubPhase::Exhale</span>) =&gt; <span class="number">68</span>,
+        <span class="kw">_</span> =&gt; <span class="number">0</span>,
     }
 }
 
-<span class="kw">fn</span> <span class="ident">phase_value_v2</span>(<span class="ident">phase</span>: <span class="ident">Phase</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span> {
+<span class="kw">fn</span> <span class="ident">phase_value_v2</span>(<span class="ident">phase</span>: <span class="ident">Phase</span>) -&gt; <span class="ident">u8</span> {
     <span class="kw">match</span> <span class="ident">phase</span> {
-        <span class="ident">Phase::Inhalation</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">17</span>,
-        <span class="ident">Phase::Exhalation</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">68</span>,
+        <span class="ident">Phase::Inhalation</span> =&gt; <span class="number">17</span>,
+        <span class="ident">Phase::Exhalation</span> =&gt; <span class="number">68</span>,
     }
 }
 
-<span class="kw">fn</span> <span class="ident">alarm_priority_value</span>(<span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">AlarmPriority</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span> {
+<span class="kw">fn</span> <span class="ident">alarm_priority_value</span>(<span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">AlarmPriority</span>) -&gt; <span class="ident">u8</span> {
     <span class="kw">match</span> <span class="ident">m</span> {
-        <span class="ident">AlarmPriority::High</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">4</span>,
-        <span class="ident">AlarmPriority::Medium</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">2</span>,
-        <span class="ident">AlarmPriority::Low</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1</span>,
+        <span class="ident">AlarmPriority::High</span> =&gt; <span class="number">4</span>,
+        <span class="ident">AlarmPriority::Medium</span> =&gt; <span class="number">2</span>,
+        <span class="ident">AlarmPriority::Low</span> =&gt; <span class="number">1</span>,
     }
 }
 
 <span class="kw">impl</span> <span class="ident">ToBytes</span> <span class="kw">for</span> <span class="ident">BootMessage</span> {
-    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
@@ -905,7 +905,7 @@
         ])
     }
 
-    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
@@ -928,7 +928,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToBytes</span> <span class="kw">for</span> <span class="ident">StoppedMessage</span> {
-    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
@@ -945,7 +945,7 @@
         ])
     }
 
-    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
@@ -1078,7 +1078,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToBytes</span> <span class="kw">for</span> <span class="ident">DataSnapshot</span> {
-    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
@@ -1109,7 +1109,7 @@
         ])
     }
 
-    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
@@ -1146,7 +1146,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToBytes</span> <span class="kw">for</span> <span class="ident">MachineStateSnapshot</span> {
-    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
@@ -1194,7 +1194,7 @@
         ])
     }
 
-    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
@@ -1344,7 +1344,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToBytes</span> <span class="kw">for</span> <span class="ident">AlarmTrap</span> {
-    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
@@ -1381,7 +1381,7 @@
         ])
     }
 
-    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
@@ -1420,7 +1420,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToBytes</span> <span class="kw">for</span> <span class="ident">ControlAck</span> {
-    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
@@ -1441,7 +1441,7 @@
         ])
     }
 
-    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
@@ -1464,25 +1464,25 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToBytes</span> <span class="kw">for</span> <span class="ident">FatalError</span> {
-    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="macro">warn!</span>(
             <span class="string">&quot;trying to serialize a FatalError message that did not exist in telemetry protocol v1&quot;</span>
         );
         <span class="macro">vec!</span>[]
     }
 
-    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="kw">let</span> <span class="ident">fatal_error_details</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">error</span> {
-            <span class="ident">FatalErrorDetails::WatchdogRestart</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">vec!</span>[<span class="number">1</span>],
+            <span class="ident">FatalErrorDetails::WatchdogRestart</span> =&gt; <span class="macro">vec!</span>[<span class="number">1</span>],
             <span class="ident">FatalErrorDetails::CalibrationError</span> {
                 <span class="ident">pressure_offset</span>,
                 <span class="ident">min_pressure</span>,
                 <span class="ident">max_pressure</span>,
                 <span class="ident">flow_at_starting</span>,
                 <span class="ident">flow_with_blower_on</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
+            } =&gt; <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
                 <span class="kw-2">&amp;</span>[<span class="number">2</span>],
                 <span class="string">b&quot;\t&quot;</span>,
                 <span class="kw-2">&amp;</span><span class="ident">pressure_offset</span>.<span class="ident">to_be_bytes</span>(),
@@ -1495,11 +1495,11 @@
                 <span class="string">b&quot;\t&quot;</span>,
                 <span class="kw-2">&amp;</span><span class="ident">flow_with_blower_on</span>.<span class="ident">unwrap_or</span>(<span class="ident">i16::MAX</span>).<span class="ident">to_be_bytes</span>(),
             ]),
-            <span class="ident">FatalErrorDetails::BatteryDeeplyDischarged</span> { <span class="ident">battery_level</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">FatalErrorDetails::BatteryDeeplyDischarged</span> { <span class="ident">battery_level</span> } =&gt; {
                 <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="number">3</span>], <span class="string">b&quot;\t&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">battery_level</span>.<span class="ident">to_be_bytes</span>()])
             }
-            <span class="ident">FatalErrorDetails::MassFlowMeterError</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">vec!</span>[<span class="number">4</span>],
-            <span class="ident">FatalErrorDetails::InconsistentPressure</span> { <span class="ident">pressure</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">FatalErrorDetails::MassFlowMeterError</span> =&gt; <span class="macro">vec!</span>[<span class="number">4</span>],
+            <span class="ident">FatalErrorDetails::InconsistentPressure</span> { <span class="ident">pressure</span> } =&gt; {
                 <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="number">5</span>], <span class="string">b&quot;\t&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">pressure</span>.<span class="ident">to_be_bytes</span>()])
             }
         };
@@ -1522,22 +1522,22 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToBytes</span> <span class="kw">for</span> <span class="ident">EolTestSnapshot</span> {
-    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="macro">warn!</span>(<span class="string">&quot;trying to serialize a EolTestSnapshot message that did not exist in telemetry protocol v1&quot;</span>);
         <span class="macro">vec!</span>[]
     }
 
-    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">device_id1</span>, <span class="ident">device_id2</span>, <span class="ident">device_id3</span>) <span class="op">=</span> <span class="ident">split_device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">device_id</span>);
 
         <span class="kw">let</span> <span class="ident">eol_test_snapshot_content</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">content</span> {
-            <span class="ident">EolTestSnapshotContent::InProgress</span>(<span class="kw-2">ref</span> <span class="ident">message</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">EolTestSnapshotContent::InProgress</span>(<span class="kw-2">ref</span> <span class="ident">message</span>) =&gt; {
                 <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="number">0</span>], <span class="string">b&quot;\t&quot;</span>, <span class="kw-2">&amp;</span>[<span class="ident">message</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u8</span>], <span class="ident">message</span>.<span class="ident">as_bytes</span>()])
             }
-            <span class="ident">EolTestSnapshotContent::Error</span>(<span class="kw-2">ref</span> <span class="ident">message</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">EolTestSnapshotContent::Error</span>(<span class="kw-2">ref</span> <span class="ident">message</span>) =&gt; {
                 <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="number">1</span>], <span class="string">b&quot;\t&quot;</span>, <span class="kw-2">&amp;</span>[<span class="ident">message</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u8</span>], <span class="ident">message</span>.<span class="ident">as_bytes</span>()])
             }
-            <span class="ident">EolTestSnapshotContent::Success</span>(<span class="kw-2">ref</span> <span class="ident">message</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">EolTestSnapshotContent::Success</span>(<span class="kw-2">ref</span> <span class="ident">message</span>) =&gt; {
                 <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="number">2</span>], <span class="string">b&quot;\t&quot;</span>, <span class="kw-2">&amp;</span>[<span class="ident">message</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u8</span>], <span class="ident">message</span>.<span class="ident">as_bytes</span>()])
             }
         };
@@ -1562,7 +1562,7 @@
 }
 
 <span class="doccomment">/// Wrap a binary payload into a CRC-aware binary frame</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mk_frame</span>(<span class="ident">payload</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mk_frame</span>(<span class="ident">payload</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">crc</span> <span class="op">=</span> <span class="ident">crc32fast::Hasher::new</span>();
     <span class="ident">crc</span>.<span class="ident">update</span>(<span class="ident">payload</span>);
 
@@ -1575,30 +1575,30 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToBytes</span> <span class="kw">for</span> <span class="ident">TelemetryMessage</span> {
-    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::BootMessage</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
-            <span class="ident"><span class="self">Self</span>::StoppedMessage</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
-            <span class="ident"><span class="self">Self</span>::DataSnapshot</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
-            <span class="ident"><span class="self">Self</span>::MachineStateSnapshot</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
-            <span class="ident"><span class="self">Self</span>::AlarmTrap</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
-            <span class="ident"><span class="self">Self</span>::ControlAck</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
-            <span class="ident"><span class="self">Self</span>::FatalError</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
-            <span class="ident"><span class="self">Self</span>::EolTestSnapshot</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
+            <span class="ident"><span class="self">Self</span>::BootMessage</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
+            <span class="ident"><span class="self">Self</span>::StoppedMessage</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
+            <span class="ident"><span class="self">Self</span>::DataSnapshot</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
+            <span class="ident"><span class="self">Self</span>::MachineStateSnapshot</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
+            <span class="ident"><span class="self">Self</span>::AlarmTrap</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
+            <span class="ident"><span class="self">Self</span>::ControlAck</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
+            <span class="ident"><span class="self">Self</span>::FatalError</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
+            <span class="ident"><span class="self">Self</span>::EolTestSnapshot</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v1</span>(),
         };
         <span class="ident">mk_frame</span>(<span class="kw-2">&amp;</span><span class="ident">payload</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes_v2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::BootMessage</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
-            <span class="ident"><span class="self">Self</span>::StoppedMessage</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
-            <span class="ident"><span class="self">Self</span>::DataSnapshot</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
-            <span class="ident"><span class="self">Self</span>::MachineStateSnapshot</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
-            <span class="ident"><span class="self">Self</span>::AlarmTrap</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
-            <span class="ident"><span class="self">Self</span>::ControlAck</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
-            <span class="ident"><span class="self">Self</span>::FatalError</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
-            <span class="ident"><span class="self">Self</span>::EolTestSnapshot</span>(<span class="ident">m</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
+            <span class="ident"><span class="self">Self</span>::BootMessage</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
+            <span class="ident"><span class="self">Self</span>::StoppedMessage</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
+            <span class="ident"><span class="self">Self</span>::DataSnapshot</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
+            <span class="ident"><span class="self">Self</span>::MachineStateSnapshot</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
+            <span class="ident"><span class="self">Self</span>::AlarmTrap</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
+            <span class="ident"><span class="self">Self</span>::ControlAck</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
+            <span class="ident"><span class="self">Self</span>::FatalError</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
+            <span class="ident"><span class="self">Self</span>::EolTestSnapshot</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">to_bytes_v2</span>(),
         };
         <span class="ident">mk_frame</span>(<span class="kw-2">&amp;</span><span class="ident">payload</span>)
     }

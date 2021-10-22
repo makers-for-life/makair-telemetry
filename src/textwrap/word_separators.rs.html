@@ -449,7 +449,7 @@
     <span class="comment">// this isn&#39;t possible until Rust supports higher-kinded types:</span>
     <span class="comment">// https://github.com/rust-lang/rfcs/blob/master/text/1522-conservative-impl-trait.md</span>
     <span class="doccomment">/// Find all words in `line`.</span>
-    <span class="kw">fn</span> <span class="ident">find_words</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Word</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">find_words</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Word</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
 }
 
 <span class="comment">// The internal `WordSeparatorClone` trait is allows us to implement</span>
@@ -458,24 +458,24 @@
 <span class="comment">// WrapAlgo, WordSep, WordSplit&gt;` implementation.</span>
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">WordSeparatorClone</span> {
-    <span class="kw">fn</span> <span class="ident">clone_box</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">WordSeparator</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">clone_box</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">WordSeparator</span><span class="op">&gt;</span>;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">WordSeparator</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">WordSeparatorClone</span> <span class="kw">for</span> <span class="ident">T</span> {
-    <span class="kw">fn</span> <span class="ident">clone_box</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">WordSeparator</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">clone_box</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">WordSeparator</span><span class="op">&gt;</span> {
         <span class="ident">Box::new</span>(<span class="self">self</span>.<span class="ident">clone</span>())
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">WordSeparator</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">WordSeparator</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">WordSeparator</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">std::ops::Deref</span>;
         <span class="self">self</span>.<span class="ident">deref</span>().<span class="ident">clone_box</span>()
     }
 }
 
 <span class="kw">impl</span> <span class="ident">WordSeparator</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">WordSeparator</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">find_words</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Word</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">find_words</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Word</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">std::ops::Deref</span>;
         <span class="self">self</span>.<span class="ident">deref</span>().<span class="ident">find_words</span>(<span class="ident">line</span>)
     }
@@ -498,7 +498,7 @@
 <span class="doccomment">///                        Word::from(&quot;World!&quot;)]);</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">impl</span> <span class="ident">WordSeparator</span> <span class="kw">for</span> <span class="ident">AsciiSpace</span> {
-    <span class="kw">fn</span> <span class="ident">find_words</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Word</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">find_words</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Word</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">start</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">in_whitespace</span> <span class="op">=</span> <span class="bool-val">false</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">char_indices</span> <span class="op">=</span> <span class="ident">line</span>.<span class="ident">char_indices</span>();
@@ -514,11 +514,11 @@
                 <span class="kw">if</span> <span class="ident">in_whitespace</span> <span class="op">&amp;&amp;</span> <span class="ident">ch</span> <span class="op">!</span><span class="op">=</span> <span class="string">&#39; &#39;</span> {
                     <span class="kw">let</span> <span class="ident">word</span> <span class="op">=</span> <span class="ident">Word::from</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="ident">start</span>..<span class="ident">idx</span>]);
                     <span class="ident">start</span> <span class="op">=</span> <span class="ident">idx</span>;
-                    <span class="ident">in_whitespace</span> <span class="op">=</span> <span class="ident">ch</span> <span class="op">=</span><span class="op">=</span> <span class="string">&#39; &#39;</span>;
+                    <span class="ident">in_whitespace</span> <span class="op">=</span> <span class="ident">ch</span> <span class="op">==</span> <span class="string">&#39; &#39;</span>;
                     <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">word</span>);
                 }
 
-                <span class="ident">in_whitespace</span> <span class="op">=</span> <span class="ident">ch</span> <span class="op">=</span><span class="op">=</span> <span class="string">&#39; &#39;</span>;
+                <span class="ident">in_whitespace</span> <span class="op">=</span> <span class="ident">ch</span> <span class="op">==</span> <span class="string">&#39; &#39;</span>;
             }
 
             <span class="kw">if</span> <span class="ident">start</span> <span class="op">&lt;</span> <span class="ident">line</span>.<span class="ident">len</span>() {
@@ -600,7 +600,7 @@
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unicode-linebreak&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">WordSeparator</span> <span class="kw">for</span> <span class="ident">UnicodeBreakProperties</span> {
-    <span class="kw">fn</span> <span class="ident">find_words</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Word</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">find_words</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Word</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="comment">// Construct an iterator over (original index, stripped index)</span>
         <span class="comment">// tuples. We find the Unicode linebreaks on a stripped string,</span>
         <span class="comment">// but we need the original indices so we can form words based on</span>
@@ -608,14 +608,14 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last_stripped_idx</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">char_indices</span> <span class="op">=</span> <span class="ident">line</span>.<span class="ident">char_indices</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">idx_map</span> <span class="op">=</span> <span class="ident">std::iter::from_fn</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">char_indices</span>.<span class="ident">next</span>() {
-            <span class="prelude-val">Some</span>((<span class="ident">orig_idx</span>, <span class="ident">ch</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Some</span>((<span class="ident">orig_idx</span>, <span class="ident">ch</span>)) =&gt; {
                 <span class="kw">let</span> <span class="ident">stripped_idx</span> <span class="op">=</span> <span class="ident">last_stripped_idx</span>;
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">skip_ansi_escape_sequence</span>(<span class="ident">ch</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">char_indices</span>.<span class="ident">by_ref</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">ch</span>)<span class="op">|</span> <span class="ident">ch</span>)) {
                     <span class="ident">last_stripped_idx</span> <span class="op">+</span><span class="op">=</span> <span class="ident">ch</span>.<span class="ident">len_utf8</span>();
                 }
                 <span class="prelude-val">Some</span>((<span class="ident">orig_idx</span>, <span class="ident">stripped_idx</span>))
             }
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">None</span>,
         });
 
         <span class="kw">let</span> <span class="ident">stripped</span> <span class="op">=</span> <span class="ident">strip_ansi_escape_sequences</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>);
@@ -625,13 +625,13 @@
                 <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">stripped</span>[..<span class="kw-2">*</span><span class="ident">idx</span>].<span class="ident">chars</span>().<span class="ident">next_back</span>() {
                     <span class="comment">// We suppress breaks at ‘-’ since we want to control</span>
                     <span class="comment">// this via the WordSplitter.</span>
-                    <span class="prelude-val">Some</span>(<span class="string">&#39;-&#39;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+                    <span class="prelude-val">Some</span>(<span class="string">&#39;-&#39;</span>) =&gt; <span class="bool-val">false</span>,
                     <span class="comment">// Soft hyphens are currently not supported since we</span>
                     <span class="comment">// require all `Word` fragments to be continuous in</span>
                     <span class="comment">// the input string.</span>
-                    <span class="prelude-val">Some</span>(<span class="ident">SHY</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+                    <span class="prelude-val">Some</span>(<span class="ident">SHY</span>) =&gt; <span class="bool-val">false</span>,
                     <span class="comment">// Other breaks should be fine!</span>
-                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
+                    <span class="kw">_</span> =&gt; <span class="bool-val">true</span>,
                 }
             })
             .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
@@ -646,7 +646,7 @@
         <span class="ident">Box::new</span>(<span class="ident">std::iter::from_fn</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
             <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::while_let_on_iterator</span>)]</span>
             <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">idx</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="ident">opportunities</span>.<span class="ident">next</span>() {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">orig_idx</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="ident">idx_map</span>.<span class="ident">find</span>(<span class="op">|</span><span class="kw-2">&amp;</span>(<span class="kw">_</span>, <span class="ident">stripped_idx</span>)<span class="op">|</span> <span class="ident">stripped_idx</span> <span class="op">=</span><span class="op">=</span> <span class="ident">idx</span>)
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">orig_idx</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="ident">idx_map</span>.<span class="ident">find</span>(<span class="op">|</span><span class="kw-2">&amp;</span>(<span class="kw">_</span>, <span class="ident">stripped_idx</span>)<span class="op">|</span> <span class="ident">stripped_idx</span> <span class="op">==</span> <span class="ident">idx</span>)
                 {
                     <span class="kw">let</span> <span class="ident">word</span> <span class="op">=</span> <span class="ident">Word::from</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="ident">start</span>..<span class="ident">orig_idx</span>]);
                     <span class="ident">start</span> <span class="op">=</span> <span class="ident">orig_idx</span>;
@@ -674,7 +674,7 @@
 
 <span class="comment">// Strip all ANSI escape sequences from `text`.</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unicode-linebreak&quot;</span>)]</span>
-<span class="kw">fn</span> <span class="ident">strip_ansi_escape_sequences</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+<span class="kw">fn</span> <span class="ident">strip_ansi_escape_sequences</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">String</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">String::with_capacity</span>(<span class="ident">text</span>.<span class="ident">len</span>());
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chars</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">chars</span>();
@@ -694,7 +694,7 @@
 
     <span class="comment">// Like assert_eq!, but the left expression is an iterator.</span>
     <span class="macro">macro_rules!</span> <span class="ident">assert_iter_eq</span> {
-        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">left</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">right</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">left</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">right</span>:<span class="ident">expr</span>) =&gt; {
             <span class="macro">assert_eq!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">left</span>.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(), <span class="macro-nonterminal">$</span><span class="macro-nonterminal">right</span>);
         };
     }

@@ -192,37 +192,37 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">BufReadDecoderError</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Replace UTF-8 errors with U+FFFD</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lossy</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">io::Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lossy</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">io::Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">BufReadDecoderError::Io</span>(<span class="ident">error</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">error</span>),
-            <span class="ident">BufReadDecoderError::InvalidByteSequence</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">REPLACEMENT_CHARACTER</span>),
+            <span class="ident">BufReadDecoderError::Io</span>(<span class="ident">error</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">error</span>),
+            <span class="ident">BufReadDecoderError::InvalidByteSequence</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">REPLACEMENT_CHARACTER</span>),
         }
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">BufReadDecoderError</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">BufReadDecoderError::InvalidByteSequence</span>(<span class="ident">bytes</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">BufReadDecoderError::InvalidByteSequence</span>(<span class="ident">bytes</span>) =&gt; {
                 <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;invalid byte sequence: {:02x?}&quot;</span>, <span class="ident">bytes</span>)
             }
-            <span class="ident">BufReadDecoderError::Io</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;underlying bytestream error: {}&quot;</span>, <span class="ident">err</span>),
+            <span class="ident">BufReadDecoderError::Io</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;underlying bytestream error: {}&quot;</span>, <span class="ident">err</span>),
         }
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">BufReadDecoderError</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="ident">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="ident">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">BufReadDecoderError::InvalidByteSequence</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-            <span class="ident">BufReadDecoderError::Io</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">err</span>),
+            <span class="ident">BufReadDecoderError::InvalidByteSequence</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+            <span class="ident">BufReadDecoderError::Io</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">err</span>),
         }
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BufRead</span><span class="op">&gt;</span> <span class="ident">BufReadDecoder</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="doccomment">/// This is to `Read::read_to_string` what `String::from_utf8_lossy` is to `String::from_utf8`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_to_string_lossy</span>(<span class="ident">buf_read</span>: <span class="ident">B</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_to_string_lossy</span>(<span class="ident">buf_read</span>: <span class="ident">B</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">buf_read</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">string</span> <span class="op">=</span> <span class="ident">String::new</span>();
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">result</span>) <span class="op">=</span> <span class="ident">decoder</span>.<span class="ident">next_lossy</span>() {
@@ -231,7 +231,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">string</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">buf_read</span>: <span class="ident">B</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">buf_read</span>: <span class="ident">B</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">buf_read</span>,
             <span class="ident">bytes_consumed</span>: <span class="number">0</span>,
@@ -240,7 +240,7 @@
     }
 
     <span class="doccomment">/// Same as `BufReadDecoder::next_strict`, but replace UTF-8 errors with U+FFFD.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_lossy</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">io::Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_lossy</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">io::Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">next_strict</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">result</span><span class="op">|</span> <span class="ident">result</span>.<span class="ident">or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">lossy</span>()))
     }
 
@@ -251,16 +251,16 @@
     <span class="doccomment">/// This is similar to `Iterator::next`,</span>
     <span class="doccomment">/// except that decoded chunks borrow the decoder (~iterator)</span>
     <span class="doccomment">/// so they need to be handled or copied before the next chunk can start decoding.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_strict</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">BufReadDecoderError</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_strict</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">BufReadDecoderError</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">enum</span> <span class="ident">BytesSource</span> {
             <span class="ident">BufRead</span>(<span class="ident">usize</span>),
             <span class="ident">Incomplete</span>,
         }
         <span class="macro">macro_rules!</span> <span class="ident">try_io</span> {
-            (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">io_result</span>: <span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">io_result</span>: <span class="ident">expr</span>) =&gt; {
                 <span class="kw">match</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">io_result</span> {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">value</span>,
-                    <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">BufReadDecoderError::Io</span>(<span class="ident">error</span>)))
+                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) =&gt; <span class="ident">value</span>,
+                    <span class="prelude-val">Err</span>(<span class="ident">error</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">BufReadDecoderError::Io</span>(<span class="ident">error</span>)))
                 }
             }
         }
@@ -278,19 +278,19 @@
                     <span class="kw">return</span> <span class="prelude-val">None</span>  <span class="comment">// EOF</span>
                 }
                 <span class="kw">match</span> <span class="ident">str::from_utf8</span>(<span class="ident">buf</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
                         <span class="kw">break</span> (<span class="ident">BytesSource::BufRead</span>(<span class="ident">buf</span>.<span class="ident">len</span>()), <span class="prelude-val">Ok</span>(()))
                     }
-                    <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="prelude-val">Err</span>(<span class="ident">error</span>) =&gt; {
                         <span class="kw">let</span> <span class="ident">valid_up_to</span> <span class="op">=</span> <span class="ident">error</span>.<span class="ident">valid_up_to</span>();
                         <span class="kw">if</span> <span class="ident">valid_up_to</span> <span class="op">&gt;</span> <span class="number">0</span> {
                             <span class="kw">break</span> (<span class="ident">BytesSource::BufRead</span>(<span class="ident">valid_up_to</span>), <span class="prelude-val">Ok</span>(()))
                         }
                         <span class="kw">match</span> <span class="ident">error</span>.<span class="ident">error_len</span>() {
-                            <span class="prelude-val">Some</span>(<span class="ident">invalid_sequence_length</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="prelude-val">Some</span>(<span class="ident">invalid_sequence_length</span>) =&gt; {
                                 <span class="kw">break</span> (<span class="ident">BytesSource::BufRead</span>(<span class="ident">invalid_sequence_length</span>), <span class="prelude-val">Err</span>(()))
                             }
-                            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="prelude-val">None</span> =&gt; {
                                 <span class="self">self</span>.<span class="ident">bytes_consumed</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">len</span>();
                                 <span class="self">self</span>.<span class="ident">incomplete</span> <span class="op">=</span> <span class="ident">Incomplete::new</span>(<span class="ident">buf</span>);
                                 <span class="comment">// need more input bytes</span>
@@ -306,29 +306,29 @@
                 <span class="kw">let</span> (<span class="ident">consumed</span>, <span class="ident">opt_result</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">incomplete</span>.<span class="ident">try_complete_offsets</span>(<span class="ident">buf</span>);
                 <span class="self">self</span>.<span class="ident">bytes_consumed</span> <span class="op">=</span> <span class="ident">consumed</span>;
                 <span class="kw">match</span> <span class="ident">opt_result</span> {
-                    <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="prelude-val">None</span> =&gt; {
                         <span class="comment">// need more input bytes</span>
                         <span class="kw">continue</span>
                     }
-                    <span class="prelude-val">Some</span>(<span class="ident">result</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="prelude-val">Some</span>(<span class="ident">result</span>) =&gt; {
                         <span class="kw">break</span> (<span class="ident">BytesSource::Incomplete</span>, <span class="ident">result</span>)
                     }
                 }
             };
         };
         <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">source</span> {
-            <span class="ident">BytesSource::BufRead</span>(<span class="ident">byte_count</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">BytesSource::BufRead</span>(<span class="ident">byte_count</span>) =&gt; {
                 <span class="self">self</span>.<span class="ident">bytes_consumed</span> <span class="op">=</span> <span class="ident">byte_count</span>;
                 <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="macro">try_io!</span>(<span class="self">self</span>.<span class="ident">buf_read</span>.<span class="ident">fill_buf</span>());
                 <span class="kw-2">&amp;</span><span class="ident">buf</span>[..<span class="ident">byte_count</span>]
             }
-            <span class="ident">BytesSource::Incomplete</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">BytesSource::Incomplete</span> =&gt; {
                 <span class="self">self</span>.<span class="ident">incomplete</span>.<span class="ident">take_buffer</span>()
             }
         };
         <span class="kw">match</span> <span class="ident">result</span> {
-            <span class="prelude-val">Ok</span>(()) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="kw">unsafe</span> { <span class="ident">str::from_utf8_unchecked</span>(<span class="ident">bytes</span>) })),
-            <span class="prelude-val">Err</span>(()) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">BufReadDecoderError::InvalidByteSequence</span>(<span class="ident">bytes</span>))),
+            <span class="prelude-val">Ok</span>(()) =&gt; <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="kw">unsafe</span> { <span class="ident">str::from_utf8_unchecked</span>(<span class="ident">bytes</span>) })),
+            <span class="prelude-val">Err</span>(()) =&gt; <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">BufReadDecoderError::InvalidByteSequence</span>(<span class="ident">bytes</span>))),
         }
     }
 }

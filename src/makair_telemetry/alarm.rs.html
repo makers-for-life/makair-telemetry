@@ -256,61 +256,61 @@
 
 <span class="kw">impl</span> <span class="ident">AlarmCode</span> {
     <span class="doccomment">/// Get a textual description of the inner alarm code</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description</span>(<span class="self">self</span>) -&gt; <span class="ident">AlarmCodeDescription</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">code</span> {
-            <span class="ident">RMC_SW_1</span> <span class="op">|</span> <span class="ident">RMC_SW_14</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::PlateauPressureNotReached</span>,
-            <span class="ident">RMC_SW_2</span> <span class="op">|</span> <span class="ident">RMC_SW_19</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::PatientUnplugged</span>,
-            <span class="ident">RMC_SW_3</span> <span class="op">|</span> <span class="ident">RMC_SW_15</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::PEEPPressureNotReached</span>,
-            <span class="ident">RMC_SW_4</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::InspiratoryMinuteVolumeLow</span>,
-            <span class="ident">RMC_SW_5</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::InspiratoryMinuteVolumeHigh</span>,
-            <span class="ident">RMC_SW_6</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::ExpiratoryMinuteVolumeLow</span>,
-            <span class="ident">RMC_SW_7</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::ExpiratoryMinuteVolumeHigh</span>,
-            <span class="ident">RMC_SW_8</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::RespiratoryRateLow</span>,
-            <span class="ident">RMC_SW_9</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::RespiratoryRateHigh</span>,
-            <span class="ident">RMC_SW_10</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::LeakHigh</span>,
-            <span class="ident">RMC_SW_11</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::BatteryLow</span>,
-            <span class="ident">RMC_SW_12</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::BatteryVeryLow</span>,
-            <span class="ident">RMC_SW_16</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::PowerCableUnplugged</span>,
-            <span class="ident">RMC_SW_18</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::PressureTooHigh</span>,
-            <span class="ident">RMC_SW_20</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::TidalVolumeLow</span>,
-            <span class="ident">RMC_SW_21</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::TidalVolumeHigh</span>,
-            <span class="ident">RMC_SW_22</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::PeakPressureHigh</span>,
-            <span class="ident">RMC_SW_23</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::ExpiratoryFlowTooLow</span>,
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AlarmCodeDescription::Unknown</span>(<span class="self">self</span>.<span class="ident">code</span>),
+            <span class="ident">RMC_SW_1</span> <span class="op">|</span> <span class="ident">RMC_SW_14</span> =&gt; <span class="ident">AlarmCodeDescription::PlateauPressureNotReached</span>,
+            <span class="ident">RMC_SW_2</span> <span class="op">|</span> <span class="ident">RMC_SW_19</span> =&gt; <span class="ident">AlarmCodeDescription::PatientUnplugged</span>,
+            <span class="ident">RMC_SW_3</span> <span class="op">|</span> <span class="ident">RMC_SW_15</span> =&gt; <span class="ident">AlarmCodeDescription::PEEPPressureNotReached</span>,
+            <span class="ident">RMC_SW_4</span> =&gt; <span class="ident">AlarmCodeDescription::InspiratoryMinuteVolumeLow</span>,
+            <span class="ident">RMC_SW_5</span> =&gt; <span class="ident">AlarmCodeDescription::InspiratoryMinuteVolumeHigh</span>,
+            <span class="ident">RMC_SW_6</span> =&gt; <span class="ident">AlarmCodeDescription::ExpiratoryMinuteVolumeLow</span>,
+            <span class="ident">RMC_SW_7</span> =&gt; <span class="ident">AlarmCodeDescription::ExpiratoryMinuteVolumeHigh</span>,
+            <span class="ident">RMC_SW_8</span> =&gt; <span class="ident">AlarmCodeDescription::RespiratoryRateLow</span>,
+            <span class="ident">RMC_SW_9</span> =&gt; <span class="ident">AlarmCodeDescription::RespiratoryRateHigh</span>,
+            <span class="ident">RMC_SW_10</span> =&gt; <span class="ident">AlarmCodeDescription::LeakHigh</span>,
+            <span class="ident">RMC_SW_11</span> =&gt; <span class="ident">AlarmCodeDescription::BatteryLow</span>,
+            <span class="ident">RMC_SW_12</span> =&gt; <span class="ident">AlarmCodeDescription::BatteryVeryLow</span>,
+            <span class="ident">RMC_SW_16</span> =&gt; <span class="ident">AlarmCodeDescription::PowerCableUnplugged</span>,
+            <span class="ident">RMC_SW_18</span> =&gt; <span class="ident">AlarmCodeDescription::PressureTooHigh</span>,
+            <span class="ident">RMC_SW_20</span> =&gt; <span class="ident">AlarmCodeDescription::TidalVolumeLow</span>,
+            <span class="ident">RMC_SW_21</span> =&gt; <span class="ident">AlarmCodeDescription::TidalVolumeHigh</span>,
+            <span class="ident">RMC_SW_22</span> =&gt; <span class="ident">AlarmCodeDescription::PeakPressureHigh</span>,
+            <span class="ident">RMC_SW_23</span> =&gt; <span class="ident">AlarmCodeDescription::ExpiratoryFlowTooLow</span>,
+            <span class="kw">_</span> =&gt; <span class="ident">AlarmCodeDescription::Unknown</span>(<span class="self">self</span>.<span class="ident">code</span>),
         }
     }
 
     <span class="doccomment">/// Lists adjacent (similar) alarm (if any)</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">adjacent</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AlarmCode</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">adjacent</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AlarmCode</span><span class="op">&gt;</span> {
         <span class="comment">// Adjacent alarm codes always match from higher priority, to lower priority. This lets \</span>
         <span class="comment">//   a telemetry library consumer to de-duplicate alarms when a similar alarm is shown \</span>
         <span class="comment">//   at both medium and high level.</span>
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">code</span> {
             <span class="comment">// &#39;Battery very low&#39; high-priority alarm takes precedence over &#39;battery low&#39; \</span>
             <span class="comment">//   medium-priority alarm</span>
-            <span class="ident">RMC_SW_12</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">RMC_SW_11</span>)),
+            <span class="ident">RMC_SW_12</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">RMC_SW_11</span>)),
             <span class="comment">// &#39;Patient unplugged&#39; high-priority alarm takes precedence over its medium-priority \</span>
             <span class="comment">//   counterpart</span>
-            <span class="ident">RMC_SW_2</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">RMC_SW_19</span>)),
+            <span class="ident">RMC_SW_2</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">RMC_SW_19</span>)),
             <span class="comment">// &#39;Plateau pressure not reached&#39; high-priority alarm takes precedence over its \</span>
             <span class="comment">//   medium-priority counterpart</span>
-            <span class="ident">RMC_SW_1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">RMC_SW_14</span>)),
+            <span class="ident">RMC_SW_1</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">RMC_SW_14</span>)),
             <span class="comment">// &#39;PEEP pressure not reached&#39; high-priority alarm takes precedence over its \</span>
             <span class="comment">//   medium-priority counterpart</span>
-            <span class="ident">RMC_SW_3</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">RMC_SW_15</span>)),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+            <span class="ident">RMC_SW_3</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">RMC_SW_15</span>)),
+            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
         }
     }
 
     <span class="doccomment">/// Unwrap the inner alarm code</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">code</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">code</span>(<span class="self">self</span>) -&gt; <span class="ident">u8</span> {
         <span class="self">self</span>.<span class="ident">code</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AlarmCode</span> {
     <span class="doccomment">/// Wrap a raw alarm code</span>
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">code</span>: <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">AlarmCode</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">code</span>: <span class="ident">u8</span>) -&gt; <span class="ident">AlarmCode</span> {
         <span class="ident">AlarmCode</span> { <span class="ident">code</span> }
     }
 }

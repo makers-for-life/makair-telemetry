@@ -91,7 +91,7 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">accept_with_config</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Write</span><span class="op">&gt;</span>(
     <span class="ident">stream</span>: <span class="ident">S</span>,
     <span class="ident">config</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WebSocketConfig</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">WebSocket</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>, <span class="ident">HandshakeError</span><span class="op">&lt;</span><span class="ident">ServerHandshake</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">NoCallback</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">WebSocket</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>, <span class="ident">HandshakeError</span><span class="op">&lt;</span><span class="ident">ServerHandshake</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">NoCallback</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">accept_hdr_with_config</span>(<span class="ident">stream</span>, <span class="ident">NoCallback</span>, <span class="ident">config</span>)
 }
 
@@ -103,7 +103,7 @@
 <span class="doccomment">/// including those from `Mio` and others.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">accept</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Write</span><span class="op">&gt;</span>(
     <span class="ident">stream</span>: <span class="ident">S</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">WebSocket</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>, <span class="ident">HandshakeError</span><span class="op">&lt;</span><span class="ident">ServerHandshake</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">NoCallback</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">WebSocket</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>, <span class="ident">HandshakeError</span><span class="op">&lt;</span><span class="ident">ServerHandshake</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">NoCallback</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">accept_with_config</span>(<span class="ident">stream</span>, <span class="prelude-val">None</span>)
 }
 
@@ -119,7 +119,7 @@
     <span class="ident">stream</span>: <span class="ident">S</span>,
     <span class="ident">callback</span>: <span class="ident">C</span>,
     <span class="ident">config</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WebSocketConfig</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">WebSocket</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>, <span class="ident">HandshakeError</span><span class="op">&lt;</span><span class="ident">ServerHandshake</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">C</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">WebSocket</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>, <span class="ident">HandshakeError</span><span class="op">&lt;</span><span class="ident">ServerHandshake</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">C</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">ServerHandshake::start</span>(<span class="ident">stream</span>, <span class="ident">callback</span>, <span class="ident">config</span>).<span class="ident">handshake</span>()
 }
 
@@ -131,7 +131,7 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">accept_hdr</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Write</span>, <span class="ident">C</span>: <span class="ident">Callback</span><span class="op">&gt;</span>(
     <span class="ident">stream</span>: <span class="ident">S</span>,
     <span class="ident">callback</span>: <span class="ident">C</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">WebSocket</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>, <span class="ident">HandshakeError</span><span class="op">&lt;</span><span class="ident">ServerHandshake</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">C</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">WebSocket</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>, <span class="ident">HandshakeError</span><span class="op">&lt;</span><span class="ident">ServerHandshake</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">C</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">accept_hdr_with_config</span>(<span class="ident">stream</span>, <span class="ident">callback</span>, <span class="prelude-val">None</span>)
 }
 </code></pre></div>

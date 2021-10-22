@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;clap-3.0.0-beta.4&#x2F;src&#x2F;parse&#x2F;matches&#x2F;arg_matches.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>arg_matches.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../clap/index.html'><div class='logo-container rust-logo'><img src='https:&#x2F;&#x2F;clap.rs&#x2F;images&#x2F;media&#x2F;clap.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;clap-3.0.0-beta.5&#x2F;src&#x2F;parse&#x2F;matches&#x2F;arg_matches.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>arg_matches.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../clap/index.html'><div class='logo-container rust-logo'><img src='https:&#x2F;&#x2F;clap.rs&#x2F;images&#x2F;media&#x2F;clap.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1208,6 +1208,19 @@
 <span id="1208">1208</span>
 <span id="1209">1209</span>
 <span id="1210">1210</span>
+<span id="1211">1211</span>
+<span id="1212">1212</span>
+<span id="1213">1213</span>
+<span id="1214">1214</span>
+<span id="1215">1215</span>
+<span id="1216">1216</span>
+<span id="1217">1217</span>
+<span id="1218">1218</span>
+<span id="1219">1219</span>
+<span id="1220">1220</span>
+<span id="1221">1221</span>
+<span id="1222">1222</span>
+<span id="1223">1223</span>
 </pre><pre class="rust"><code><span class="comment">// Std</span>
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow::Cow</span>,
@@ -1224,7 +1237,7 @@
 <span class="comment">// Internal</span>
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">parse::MatchedArg</span>,
-    <span class="ident">util</span>::{<span class="ident">termcolor::ColorChoice</span>, <span class="ident">Id</span>, <span class="ident">Key</span>},
+    <span class="ident">util</span>::{<span class="ident">Id</span>, <span class="ident">Key</span>},
     {<span class="ident">Error</span>, <span class="ident">INVALID_UTF8</span>},
 };
 
@@ -1289,7 +1302,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ArgMatches</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident">ArgMatches</span> {
             <span class="ident">args</span>: <span class="ident">IndexMap::new</span>(),
             <span class="ident">subcommand</span>: <span class="prelude-val">None</span>,
@@ -1311,7 +1324,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Panics</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This method will [`panic!`] if the value contains invalid UTF-8 code points.</span>
+    <span class="doccomment">/// This method will [`panic!`] if the value is invalid UTF-8.  See</span>
+    <span class="doccomment">/// [`ArgSettings::AllowInvalidUtf8`][crate::ArgSettings::AllowInvalidUtf8].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
@@ -1329,7 +1343,7 @@
     <span class="doccomment">/// [`ArgMatches::values_of`]: ArgMatches::values_of()</span>
     <span class="doccomment">/// [`default_value`]: crate::Arg::default_value()</span>
     <span class="doccomment">/// [`occurrences_of`]: crate::ArgMatches::occurrences_of()</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_of</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_of</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">arg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">args</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">Id::from</span>(<span class="ident">id</span>)) {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">first</span>() {
                 <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">v</span>.<span class="ident">to_str</span>().<span class="ident">expect</span>(<span class="ident">INVALID_UTF8</span>));
@@ -1339,8 +1353,10 @@
     }
 
     <span class="doccomment">/// Gets the lossy value of a specific argument. If the argument wasn&#39;t present at runtime</span>
-    <span class="doccomment">/// it returns `None`. A lossy value is one which contains invalid UTF-8 code points, those</span>
+    <span class="doccomment">/// it returns `None`. A lossy value is one which contains invalid UTF-8, those</span>
     <span class="doccomment">/// invalid points will be replaced with `\u{FFFD}`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// *NOTE:* Recommend having set [`ArgSettings::AllowInvalidUtf8`][crate::ArgSettings::AllowInvalidUtf8].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// *NOTE:* If getting a value for an option or positional argument that allows multiples,</span>
     <span class="doccomment">/// prefer [`Arg::values_of_lossy`] as `value_of_lossy()` will only return the *first* value.</span>
@@ -1357,7 +1373,8 @@
     <span class="doccomment">/// use std::os::unix::ffi::{OsStrExt,OsStringExt};</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let m = App::new(&quot;utf8&quot;)</span>
-    <span class="doccomment">///     .arg(Arg::from(&quot;&lt;arg&gt; &#39;some arg&#39;&quot;))</span>
+    <span class="doccomment">///     .arg(Arg::from(&quot;&lt;arg&gt; &#39;some arg&#39;&quot;)</span>
+    <span class="doccomment">///         .allow_invalid_utf8(true))</span>
     <span class="doccomment">///     .get_matches_from(vec![OsString::from(&quot;myprog&quot;),</span>
     <span class="doccomment">///                             // &quot;Hi {0xe9}!&quot;</span>
     <span class="doccomment">///                             OsString::from_vec(vec![b&#39;H&#39;, b&#39;i&#39;, b&#39; &#39;, 0xe9, b&#39;!&#39;])]);</span>
@@ -1366,7 +1383,7 @@
     <span class="doccomment">/// [`default_value`]: crate::Arg::default_value()</span>
     <span class="doccomment">/// [`occurrences_of`]: ArgMatches::occurrences_of()</span>
     <span class="doccomment">/// [`Arg::values_of_lossy`]: ArgMatches::values_of_lossy()</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_of_lossy</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_of_lossy</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">arg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">args</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">Id::from</span>(<span class="ident">id</span>)) {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">first</span>() {
                 <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">v</span>.<span class="ident">to_string_lossy</span>());
@@ -1380,6 +1397,8 @@
     <span class="doccomment">/// regardless of whether or not they contain valid UTF-8 code points. Since [`String`]s in</span>
     <span class="doccomment">/// Rust are guaranteed to be valid UTF-8, a valid filename on a Unix system as an argument</span>
     <span class="doccomment">/// value may contain invalid UTF-8 code points.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// *NOTE:* Recommend having set [`ArgSettings::AllowInvalidUtf8`][crate::ArgSettings::AllowInvalidUtf8].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// *NOTE:* If getting a value for an option or positional argument that allows multiples,</span>
     <span class="doccomment">/// prefer [`ArgMatches::values_of_os`] as `Arg::value_of_os` will only return the *first*</span>
@@ -1397,7 +1416,8 @@
     <span class="doccomment">/// use std::os::unix::ffi::{OsStrExt,OsStringExt};</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let m = App::new(&quot;utf8&quot;)</span>
-    <span class="doccomment">///     .arg(Arg::from(&quot;&lt;arg&gt; &#39;some arg&#39;&quot;))</span>
+    <span class="doccomment">///     .arg(Arg::from(&quot;&lt;arg&gt; &#39;some arg&#39;&quot;)</span>
+    <span class="doccomment">///         .allow_invalid_utf8(true))</span>
     <span class="doccomment">///     .get_matches_from(vec![OsString::from(&quot;myprog&quot;),</span>
     <span class="doccomment">///                             // &quot;Hi {0xe9}!&quot;</span>
     <span class="doccomment">///                             OsString::from_vec(vec![b&#39;H&#39;, b&#39;i&#39;, b&#39; &#39;, 0xe9, b&#39;!&#39;])]);</span>
@@ -1406,7 +1426,7 @@
     <span class="doccomment">/// [`default_value`]: crate::Arg::default_value()</span>
     <span class="doccomment">/// [`occurrences_of`]: ArgMatches::occurrences_of()</span>
     <span class="doccomment">/// [`ArgMatches::values_of_os`]: ArgMatches::values_of_os()</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_of_os</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_of_os</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">args</span>
             .<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">Id::from</span>(<span class="ident">id</span>))
             .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">arg</span><span class="op">|</span> <span class="ident">arg</span>.<span class="ident">first</span>().<span class="ident">map</span>(<span class="ident">OsString::as_os_str</span>))
@@ -1418,7 +1438,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Panics</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This method will panic if any of the values contain invalid UTF-8 code points.</span>
+    <span class="doccomment">/// This method will [`panic!`] if the value is invalid UTF-8.  See</span>
+    <span class="doccomment">/// [`ArgSettings::AllowInvalidUtf8`][crate::ArgSettings::AllowInvalidUtf8].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
@@ -1426,19 +1447,19 @@
     <span class="doccomment">/// # use clap::{App, Arg};</span>
     <span class="doccomment">/// let m = App::new(&quot;myprog&quot;)</span>
     <span class="doccomment">///     .arg(Arg::new(&quot;output&quot;)</span>
-    <span class="doccomment">///         .multiple_values(true)</span>
+    <span class="doccomment">///         .multiple_occurrences(true)</span>
     <span class="doccomment">///         .short(&#39;o&#39;)</span>
     <span class="doccomment">///         .takes_value(true))</span>
     <span class="doccomment">///     .get_matches_from(vec![</span>
-    <span class="doccomment">///         &quot;myprog&quot;, &quot;-o&quot;, &quot;val1&quot;, &quot;val2&quot;, &quot;val3&quot;</span>
+    <span class="doccomment">///         &quot;myprog&quot;, &quot;-o&quot;, &quot;val1&quot;, &quot;-o&quot;, &quot;val2&quot;, &quot;-o&quot;, &quot;val3&quot;</span>
     <span class="doccomment">///     ]);</span>
     <span class="doccomment">/// let vals: Vec&lt;&amp;str&gt; = m.values_of(&quot;output&quot;).unwrap().collect();</span>
     <span class="doccomment">/// assert_eq!(vals, [&quot;val1&quot;, &quot;val2&quot;, &quot;val3&quot;]);</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// [`Iterator`]: std::iter::Iterator</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">values_of</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Values</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">values_of</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Values</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">args</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">Id::from</span>(<span class="ident">id</span>)).<span class="ident">map</span>(<span class="op">|</span><span class="ident">arg</span><span class="op">|</span> {
-            <span class="kw">fn</span> <span class="ident">to_str_slice</span>(<span class="ident">o</span>: <span class="kw-2">&amp;</span><span class="ident">OsString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+            <span class="kw">fn</span> <span class="ident">to_str_slice</span>(<span class="ident">o</span>: <span class="kw-2">&amp;</span><span class="ident">OsString</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
                 <span class="ident">o</span>.<span class="ident">to_str</span>().<span class="ident">expect</span>(<span class="ident">INVALID_UTF8</span>)
             }
 
@@ -1449,13 +1470,13 @@
     }
 
     <span class="doccomment">/// Placeholder documentation.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">grouped_values_of</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GroupedValues</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">grouped_values_of</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GroupedValues</span><span class="op">&gt;</span> {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::type_complexity</span>)]</span>
         <span class="kw">let</span> <span class="ident">arg_values</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">fn</span>(
             <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">MatchedArg</span>,
-        ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Map</span><span class="op">&lt;</span>
+        ) -&gt; <span class="ident">Map</span><span class="op">&lt;</span>
             <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-            <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>,
+            <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>,
         <span class="op">&gt;</span> <span class="op">=</span> <span class="op">|</span><span class="ident">arg</span><span class="op">|</span> {
             <span class="ident">arg</span>.<span class="ident">vals</span>()
                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">g</span><span class="op">|</span> <span class="ident">g</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">to_str</span>().<span class="ident">expect</span>(<span class="ident">INVALID_UTF8</span>)).<span class="ident">collect</span>())
@@ -1470,6 +1491,8 @@
     <span class="doccomment">/// it returns `None`. A lossy value is one where if it contains invalid UTF-8 code points,</span>
     <span class="doccomment">/// those invalid points will be replaced with `\u{FFFD}`</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// *NOTE:* Recommend having set [`ArgSettings::AllowInvalidUtf8`][crate::ArgSettings::AllowInvalidUtf8].</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">unix</span>), <span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; ```ignore&quot;</span>)]</span>
@@ -1479,7 +1502,8 @@
     <span class="doccomment">/// use std::os::unix::ffi::OsStringExt;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let m = App::new(&quot;utf8&quot;)</span>
-    <span class="doccomment">///     .arg(Arg::from(&quot;&lt;arg&gt;... &#39;some arg&#39;&quot;))</span>
+    <span class="doccomment">///     .arg(Arg::from(&quot;&lt;arg&gt;... &#39;some arg&#39;&quot;)</span>
+    <span class="doccomment">///         .allow_invalid_utf8(true))</span>
     <span class="doccomment">///     .get_matches_from(vec![OsString::from(&quot;myprog&quot;),</span>
     <span class="doccomment">///                             // &quot;Hi&quot;</span>
     <span class="doccomment">///                             OsString::from_vec(vec![b&#39;H&#39;, b&#39;i&#39;]),</span>
@@ -1490,7 +1514,7 @@
     <span class="doccomment">/// assert_eq!(&amp;itr.next().unwrap()[..], &quot;\u{FFFD}!&quot;);</span>
     <span class="doccomment">/// assert_eq!(itr.next(), None);</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">values_of_lossy</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">values_of_lossy</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">args</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">Id::from</span>(<span class="ident">id</span>)).<span class="ident">map</span>(<span class="op">|</span><span class="ident">arg</span><span class="op">|</span> {
             <span class="ident">arg</span>.<span class="ident">vals_flatten</span>()
                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">to_string_lossy</span>().<span class="ident">into_owned</span>())
@@ -1504,6 +1528,8 @@
     <span class="doccomment">/// valid UTF-8 code points. Since [`String`]s in Rust are guaranteed to be valid UTF-8, a valid</span>
     <span class="doccomment">/// filename as an argument value on Linux (for example) may contain invalid UTF-8 code points.</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// *NOTE:* Recommend having set [`ArgSettings::AllowInvalidUtf8`][crate::ArgSettings::AllowInvalidUtf8].</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">unix</span>), <span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; ```ignore&quot;</span>)]</span>
@@ -1513,7 +1539,8 @@
     <span class="doccomment">/// use std::os::unix::ffi::{OsStrExt,OsStringExt};</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let m = App::new(&quot;utf8&quot;)</span>
-    <span class="doccomment">///     .arg(Arg::from(&quot;&lt;arg&gt;... &#39;some arg&#39;&quot;))</span>
+    <span class="doccomment">///     .arg(Arg::from(&quot;&lt;arg&gt;... &#39;some arg&#39;&quot;)</span>
+    <span class="doccomment">///         .allow_invalid_utf8(true))</span>
     <span class="doccomment">///     .get_matches_from(vec![OsString::from(&quot;myprog&quot;),</span>
     <span class="doccomment">///                                 // &quot;Hi&quot;</span>
     <span class="doccomment">///                                 OsString::from_vec(vec![b&#39;H&#39;, b&#39;i&#39;]),</span>
@@ -1528,8 +1555,8 @@
     <span class="doccomment">/// [`Iterator`]: std::iter::Iterator</span>
     <span class="doccomment">/// [`OsString`]: std::ffi::OsString</span>
     <span class="doccomment">/// [`String`]: std::string::String</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">values_of_os</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">OsValues</span><span class="op">&gt;</span> {
-        <span class="kw">fn</span> <span class="ident">to_str_slice</span>(<span class="ident">o</span>: <span class="kw-2">&amp;</span><span class="ident">OsString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">OsStr</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">values_of_os</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">OsValues</span><span class="op">&gt;</span> {
+        <span class="kw">fn</span> <span class="ident">to_str_slice</span>(<span class="ident">o</span>: <span class="kw-2">&amp;</span><span class="ident">OsString</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">OsStr</span> {
             <span class="ident">o</span>
         }
 
@@ -1550,7 +1577,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Panics</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This method will [`panic!`] if the value contains invalid UTF-8 code points.</span>
+    <span class="doccomment">/// This method will [`panic!`] if the value is invalid UTF-8.  See</span>
+    <span class="doccomment">/// [`ArgSettings::AllowInvalidUtf8`][crate::ArgSettings::AllowInvalidUtf8].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
@@ -1574,7 +1602,7 @@
     <span class="doccomment">/// [`ArgMatches::values_of_t`]: ArgMatches::values_of_t()</span>
     <span class="doccomment">/// [`panic!`]: https://doc.rust-lang.org/std/macro.panic!.html</span>
     <span class="doccomment">/// [`ErrorKind`]: crate::ErrorKind</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_of_t</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">Error</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_of_t</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">R</span>: <span class="ident">FromStr</span>,
         <span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">FromStr</span><span class="op">&gt;</span><span class="ident">::Err</span>: <span class="ident">Display</span>,
@@ -1586,12 +1614,7 @@
                     <span class="ident">v</span>, <span class="ident">name</span>, <span class="ident">e</span>
                 );
 
-                <span class="ident">Error::value_validation</span>(
-                    <span class="ident">name</span>.<span class="ident">to_string</span>(),
-                    <span class="ident">v</span>.<span class="ident">to_string</span>(),
-                    <span class="ident">message</span>.<span class="ident">into</span>(),
-                    <span class="ident">ColorChoice::Auto</span>,
-                )
+                <span class="ident">Error::value_validation_without_app</span>(<span class="ident">name</span>.<span class="ident">to_string</span>(), <span class="ident">v</span>.<span class="ident">to_string</span>(), <span class="ident">message</span>.<span class="ident">into</span>())
             })
         } <span class="kw">else</span> {
             <span class="prelude-val">Err</span>(<span class="ident">Error::argument_not_found_auto</span>(<span class="ident">name</span>.<span class="ident">to_string</span>()))
@@ -1605,7 +1628,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Panics</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This method will [`panic!`] if the value contains invalid UTF-8 code points.</span>
+    <span class="doccomment">/// This method will [`panic!`] if the value is invalid UTF-8.  See</span>
+    <span class="doccomment">/// [`ArgSettings::AllowInvalidUtf8`][crate::ArgSettings::AllowInvalidUtf8].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
@@ -1627,7 +1651,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`panic!`]: https://doc.rust-lang.org/std/macro.panic!.html</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_of_t_or_exit</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">R</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_of_t_or_exit</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">R</span>
     <span class="kw">where</span>
         <span class="ident">R</span>: <span class="ident">FromStr</span>,
         <span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">FromStr</span><span class="op">&gt;</span><span class="ident">::Err</span>: <span class="ident">Display</span>,
@@ -1642,7 +1666,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Panics</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This method will [`panic!`] if any of the values contains invalid UTF-8 code points.</span>
+    <span class="doccomment">/// This method will [`panic!`] if the value is invalid UTF-8.  See</span>
+    <span class="doccomment">/// [`ArgSettings::AllowInvalidUtf8`][crate::ArgSettings::AllowInvalidUtf8].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
@@ -1664,7 +1689,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`panic!`]: https://doc.rust-lang.org/std/macro.panic!.html</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">values_of_t</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">values_of_t</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">R</span>: <span class="ident">FromStr</span>,
         <span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">FromStr</span><span class="op">&gt;</span><span class="ident">::Err</span>: <span class="ident">Display</span>,
@@ -1674,11 +1699,10 @@
                 <span class="ident">v</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
                     <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;The argument &#39;{}&#39; isn&#39;t a valid value: {}&quot;</span>, <span class="ident">v</span>, <span class="ident">e</span>);
 
-                    <span class="ident">Error::value_validation</span>(
+                    <span class="ident">Error::value_validation_without_app</span>(
                         <span class="ident">name</span>.<span class="ident">to_string</span>(),
                         <span class="ident">v</span>.<span class="ident">to_string</span>(),
                         <span class="ident">message</span>.<span class="ident">into</span>(),
-                        <span class="ident">ColorChoice::Auto</span>,
                     )
                 })
             })
@@ -1695,7 +1719,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Panics</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This method will [`panic!`] if any of the values contains invalid UTF-8 code points.</span>
+    <span class="doccomment">/// This method will [`panic!`] if the value is invalid UTF-8.  See</span>
+    <span class="doccomment">/// [`ArgSettings::AllowInvalidUtf8`][crate::ArgSettings::AllowInvalidUtf8].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
@@ -1717,7 +1742,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`panic!`]: https://doc.rust-lang.org/std/macro.panic!.html</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">values_of_t_or_exit</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">values_of_t_or_exit</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">R</span>: <span class="ident">FromStr</span>,
         <span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">FromStr</span><span class="op">&gt;</span><span class="ident">::Err</span>: <span class="ident">Display</span>,
@@ -1746,7 +1771,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`default_value`]: crate::Arg::default_value()</span>
     <span class="doccomment">/// [`occurrences_of`]: ArgMatches::occurrences_of()</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_present</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_present</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">Id::from</span>(<span class="ident">id</span>);
         <span class="self">self</span>.<span class="ident">args</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>)
     }
@@ -1790,7 +1815,7 @@
     <span class="doccomment">/// assert_eq!(m.occurrences_of(&quot;debug&quot;), 3);</span>
     <span class="doccomment">/// assert_eq!(m.occurrences_of(&quot;flag&quot;), 1);</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">occurrences_of</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">occurrences_of</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) -&gt; <span class="ident">u64</span> {
         <span class="self">self</span>.<span class="ident">args</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">Id::from</span>(<span class="ident">id</span>)).<span class="ident">map_or</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">occurs</span>)
     }
 
@@ -1923,7 +1948,7 @@
     <span class="doccomment">/// assert_eq!(m.indices_of(&quot;option&quot;).unwrap().collect::&lt;Vec&lt;_&gt;&gt;(), &amp;[2, 3, 4]);</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// [delimiter]: crate::Arg::value_delimiter()</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">index_of</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">index_of</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">arg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">args</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">Id::from</span>(<span class="ident">name</span>)) {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">i</span>) <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">get_index</span>(<span class="number">0</span>) {
                 <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">i</span>);
@@ -2003,7 +2028,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// [`ArgMatches::index_of`]: ArgMatches::index_of()</span>
     <span class="doccomment">/// [delimiter]: Arg::value_delimiter()</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">indices_of</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Indices</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">indices_of</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Indices</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">args</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">Id::from</span>(<span class="ident">id</span>)).<span class="ident">map</span>(<span class="op">|</span><span class="ident">arg</span><span class="op">|</span> <span class="ident">Indices</span> {
             <span class="ident">iter</span>: <span class="ident">arg</span>.<span class="ident">indices</span>(),
         })
@@ -2040,9 +2065,9 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Subcommand`]: crate::Subcommand</span>
     <span class="doccomment">/// [`App`]: crate::App</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">subcommand_matches</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ArgMatches</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">subcommand_matches</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ArgMatches</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">s</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">subcommand</span> {
-            <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">id</span> <span class="op">=</span><span class="op">=</span> <span class="ident">id</span>.<span class="ident">into</span>() {
+            <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">id</span> <span class="op">==</span> <span class="ident">id</span>.<span class="ident">into</span>() {
                 <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>.<span class="ident">matches</span>);
             }
         }
@@ -2107,7 +2132,7 @@
     <span class="doccomment">/// [`Subcommand`]: crate::Subcommand</span>
     <span class="doccomment">/// [`App`]: crate::App</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">subcommand_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">subcommand_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">subcommand</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">sc</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">sc</span>.<span class="ident">name</span>)
     }
 
@@ -2159,7 +2184,7 @@
     <span class="doccomment">/// [`ArgMatches::subcommand_matches`]: ArgMatches::subcommand_matches()</span>
     <span class="doccomment">/// [`ArgMatches::subcommand_name`]: ArgMatches::subcommand_name()</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">subcommand</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="ident">ArgMatches</span>)<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">subcommand</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="ident">ArgMatches</span>)<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">subcommand</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">sc</span><span class="op">|</span> (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">sc</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">sc</span>.<span class="ident">matches</span>))
     }
 }
@@ -2179,9 +2204,9 @@
 <span class="doccomment">/// let m = App::new(&quot;myapp&quot;)</span>
 <span class="doccomment">///     .arg(Arg::new(&quot;output&quot;)</span>
 <span class="doccomment">///         .short(&#39;o&#39;)</span>
-<span class="doccomment">///         .multiple_values(true)</span>
+<span class="doccomment">///         .multiple_occurrences(true)</span>
 <span class="doccomment">///         .takes_value(true))</span>
-<span class="doccomment">///     .get_matches_from(vec![&quot;myapp&quot;, &quot;-o&quot;, &quot;val1&quot;, &quot;val2&quot;]);</span>
+<span class="doccomment">///     .get_matches_from(vec![&quot;myapp&quot;, &quot;-o&quot;, &quot;val1&quot;, &quot;-o&quot;, &quot;val2&quot;]);</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let mut values = m.values_of(&quot;output&quot;).unwrap();</span>
 <span class="doccomment">///</span>
@@ -2194,22 +2219,22 @@
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_debug_implementations</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Values</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::type_complexity</span>)]</span>
-    <span class="ident">iter</span>: <span class="ident">Map</span><span class="op">&lt;</span><span class="ident">Flatten</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span><span class="op">&gt;</span> <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="ident">OsString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="ident">str</span><span class="op">&gt;</span>,
+    <span class="ident">iter</span>: <span class="ident">Map</span><span class="op">&lt;</span><span class="ident">Flatten</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span><span class="op">&gt;</span> <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="ident">OsString</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="ident">str</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Values</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>()
     }
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
+    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
         <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">size_hint</span>()
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="ident">Values</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next_back</span>()
     }
 }
@@ -2218,7 +2243,7 @@
 
 <span class="doccomment">/// Creates an empty iterator.</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Values</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="kw">static</span> <span class="ident">EMPTY</span>: [<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span>; <span class="number">0</span>] <span class="op">=</span> [];
         <span class="ident">Values</span> {
             <span class="ident">iter</span>: <span class="ident">EMPTY</span>[..].<span class="ident">iter</span>().<span class="ident">flatten</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="macro">unreachable!</span>()),
@@ -2230,22 +2255,22 @@
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_debug_implementations</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GroupedValues</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::type_complexity</span>)]</span>
-    <span class="ident">iter</span>: <span class="ident">Map</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">iter</span>: <span class="ident">Map</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">GroupedValues</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>()
     }
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
+    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
         <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">size_hint</span>()
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="ident">GroupedValues</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next_back</span>()
     }
 }
@@ -2254,7 +2279,7 @@
 
 <span class="doccomment">/// Creates an empty iterator. Used for `unwrap_or_default()`.</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">GroupedValues</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="kw">static</span> <span class="ident">EMPTY</span>: [<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span>; <span class="number">0</span>] <span class="op">=</span> [];
         <span class="ident">GroupedValues</span> {
             <span class="ident">iter</span>: <span class="ident">EMPTY</span>[..].<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="macro">unreachable!</span>()),
@@ -2275,7 +2300,8 @@
 <span class="doccomment">/// use std::os::unix::ffi::{OsStrExt,OsStringExt};</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let m = App::new(&quot;utf8&quot;)</span>
-<span class="doccomment">///     .arg(Arg::from(&quot;&lt;arg&gt; &#39;some arg&#39;&quot;))</span>
+<span class="doccomment">///     .arg(Arg::from(&quot;&lt;arg&gt; &#39;some arg&#39;&quot;)</span>
+<span class="doccomment">///         .allow_invalid_utf8(true))</span>
 <span class="doccomment">///     .get_matches_from(vec![OsString::from(&quot;myprog&quot;),</span>
 <span class="doccomment">///                             // &quot;Hi {0xe9}!&quot;</span>
 <span class="doccomment">///                             OsString::from_vec(vec![b&#39;H&#39;, b&#39;i&#39;, b&#39; &#39;, 0xe9, b&#39;!&#39;])]);</span>
@@ -2286,22 +2312,22 @@
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_debug_implementations</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OsValues</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::type_complexity</span>)]</span>
-    <span class="ident">iter</span>: <span class="ident">Map</span><span class="op">&lt;</span><span class="ident">Flatten</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">OsString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span>,
+    <span class="ident">iter</span>: <span class="ident">Map</span><span class="op">&lt;</span><span class="ident">Flatten</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">OsString</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">OsValues</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">OsStr</span>;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">OsStr</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">OsStr</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>()
     }
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
+    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
         <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">size_hint</span>()
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="ident">OsValues</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">OsStr</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">OsStr</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next_back</span>()
     }
 }
@@ -2310,7 +2336,7 @@
 
 <span class="doccomment">/// Creates an empty iterator.</span>
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">OsValues</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="kw">static</span> <span class="ident">EMPTY</span>: [<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span>; <span class="number">0</span>] <span class="op">=</span> [];
         <span class="ident">OsValues</span> {
             <span class="ident">iter</span>: <span class="ident">EMPTY</span>[..].<span class="ident">iter</span>().<span class="ident">flatten</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="macro">unreachable!</span>()),
@@ -2348,16 +2374,16 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Indices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">usize</span>;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>()
     }
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
+    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
         <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">size_hint</span>()
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="ident">Indices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next_back</span>()
     }
 }
@@ -2366,7 +2392,7 @@
 
 <span class="doccomment">/// Creates an empty iterator.</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Indices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="kw">static</span> <span class="ident">EMPTY</span>: [<span class="ident">usize</span>; <span class="number">0</span>] <span class="op">=</span> [];
         <span class="comment">// This is never called because the iterator is empty:</span>
         <span class="ident">Indices</span> {

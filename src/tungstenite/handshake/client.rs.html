@@ -362,7 +362,7 @@
         <span class="ident">stream</span>: <span class="ident">S</span>,
         <span class="ident">request</span>: <span class="ident">Request</span>,
         <span class="ident">config</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WebSocketConfig</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">MidHandshake</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">MidHandshake</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">request</span>.<span class="ident">method</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">http::Method::GET</span> {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::WrongHttpMethod</span>));
         }
@@ -398,12 +398,12 @@
     <span class="kw">fn</span> <span class="ident">stage_finished</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">finish</span>: <span class="ident">StageResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::IncomingData</span>, <span class="ident"><span class="self">Self</span>::InternalStream</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ProcessingResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::InternalStream</span>, <span class="ident"><span class="self">Self</span>::FinalResult</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ProcessingResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::InternalStream</span>, <span class="ident"><span class="self">Self</span>::FinalResult</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">finish</span> {
-            <span class="ident">StageResult::DoneWriting</span>(<span class="ident">stream</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">StageResult::DoneWriting</span>(<span class="ident">stream</span>) =&gt; {
                 <span class="ident">ProcessingResult::Continue</span>(<span class="ident">HandshakeMachine::start_read</span>(<span class="ident">stream</span>))
             }
-            <span class="ident">StageResult::DoneReading</span> { <span class="ident">stream</span>, <span class="ident">result</span>, <span class="ident">tail</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">StageResult::DoneReading</span> { <span class="ident">stream</span>, <span class="ident">result</span>, <span class="ident">tail</span> } =&gt; {
                 <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">verify_data</span>.<span class="ident">verify_response</span>(<span class="ident">result</span>)<span class="question-mark">?</span>;
                 <span class="macro">debug!</span>(<span class="string">&quot;Client handshake done.&quot;</span>);
                 <span class="kw">let</span> <span class="ident">websocket</span> <span class="op">=</span>
@@ -415,7 +415,7 @@
 }
 
 <span class="doccomment">/// Generate client request.</span>
-<span class="kw">fn</span> <span class="ident">generate_request</span>(<span class="ident">request</span>: <span class="ident">Request</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">generate_request</span>(<span class="ident">request</span>: <span class="ident">Request</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
     <span class="kw">let</span> <span class="ident">uri</span> <span class="op">=</span> <span class="ident">request</span>.<span class="ident">uri</span>();
 
@@ -448,7 +448,7 @@
 
     <span class="kw">for</span> (<span class="ident">k</span>, <span class="ident">v</span>) <span class="kw">in</span> <span class="ident">request</span>.<span class="ident">headers</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">k</span> <span class="op">=</span> <span class="ident">k</span>.<span class="ident">as_str</span>();
-        <span class="kw">if</span> <span class="ident">k</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;sec-websocket-protocol&quot;</span> {
+        <span class="kw">if</span> <span class="ident">k</span> <span class="op">==</span> <span class="string">&quot;sec-websocket-protocol&quot;</span> {
             <span class="ident">k</span> <span class="op">=</span> <span class="string">&quot;Sec-WebSocket-Protocol&quot;</span>;
         }
         <span class="macro">writeln!</span>(<span class="ident">req</span>, <span class="string">&quot;{}: {}\r&quot;</span>, <span class="ident">k</span>, <span class="ident">v</span>.<span class="ident">to_str</span>()<span class="question-mark">?</span>).<span class="ident">unwrap</span>();
@@ -466,7 +466,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">VerifyData</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">verify_response</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">response</span>: <span class="ident">Response</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">verify_response</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">response</span>: <span class="ident">Response</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
         <span class="comment">// 1. If the status code received from the server is not 101, the</span>
         <span class="comment">// client handles the response per HTTP [RFC2616] procedures. (RFC 6455)</span>
         <span class="kw">if</span> <span class="ident">response</span>.<span class="ident">status</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">StatusCode::SWITCHING_PROTOCOLS</span> {
@@ -503,7 +503,7 @@
         <span class="comment">// the |Sec-WebSocket-Accept| contains a value other than the</span>
         <span class="comment">// base64-encoded SHA-1 of ... the client MUST _Fail the WebSocket</span>
         <span class="comment">// Connection_. (RFC 6455)</span>
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">headers</span>.<span class="ident">get</span>(<span class="string">&quot;Sec-WebSocket-Accept&quot;</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">h</span><span class="op">|</span> <span class="ident">h</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">accept_key</span>).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>) {
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">headers</span>.<span class="ident">get</span>(<span class="string">&quot;Sec-WebSocket-Accept&quot;</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">h</span><span class="op">|</span> <span class="ident">h</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">accept_key</span>).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>) {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::SecWebSocketAcceptKeyMismatch</span>));
         }
         <span class="comment">// 5.  If the response includes a |Sec-WebSocket-Extensions| header</span>
@@ -525,18 +525,18 @@
 }
 
 <span class="kw">impl</span> <span class="ident">TryParse</span> <span class="kw">for</span> <span class="ident">Response</span> {
-    <span class="kw">fn</span> <span class="ident">try_parse</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="self">Self</span>)<span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_parse</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="self">Self</span>)<span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hbuffer</span> <span class="op">=</span> [<span class="ident">httparse::EMPTY_HEADER</span>; <span class="ident">MAX_HEADERS</span>];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">httparse::Response::new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hbuffer</span>);
         <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">req</span>.<span class="ident">parse</span>(<span class="ident">buf</span>)<span class="question-mark">?</span> {
-            <span class="ident">Status::Partial</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-            <span class="ident">Status::Complete</span>(<span class="ident">size</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>((<span class="ident">size</span>, <span class="ident">Response::from_httparse</span>(<span class="ident">req</span>)<span class="question-mark">?</span>)),
+            <span class="ident">Status::Partial</span> =&gt; <span class="prelude-val">None</span>,
+            <span class="ident">Status::Complete</span>(<span class="ident">size</span>) =&gt; <span class="prelude-val">Some</span>((<span class="ident">size</span>, <span class="ident">Response::from_httparse</span>(<span class="ident">req</span>)<span class="question-mark">?</span>)),
         })
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;b</span>: <span class="lifetime">&#39;h</span><span class="op">&gt;</span> <span class="ident">FromHttparse</span><span class="op">&lt;</span><span class="ident">httparse::Response</span><span class="op">&lt;</span><span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;b</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Response</span> {
-    <span class="kw">fn</span> <span class="ident">from_httparse</span>(<span class="ident">raw</span>: <span class="ident">httparse::Response</span><span class="op">&lt;</span><span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;b</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from_httparse</span>(<span class="ident">raw</span>: <span class="ident">httparse::Response</span><span class="op">&lt;</span><span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;b</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">raw</span>.<span class="ident">version</span>.<span class="ident">expect</span>(<span class="string">&quot;Bug: no HTTP version&quot;</span>) <span class="op">&lt;</span> <span class="comment">/*1.*/</span><span class="number">1</span> {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::WrongHttpMethod</span>));
         }
@@ -555,7 +555,7 @@
 }
 
 <span class="doccomment">/// Generate a random key for the `Sec-WebSocket-Key` header.</span>
-<span class="kw">fn</span> <span class="ident">generate_key</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+<span class="kw">fn</span> <span class="ident">generate_key</span>() -&gt; <span class="ident">String</span> {
     <span class="comment">// a base64-encoded (see Section 4 of [RFC4648]) value that,</span>
     <span class="comment">// when decoded, is 16 bytes in length (RFC 6455)</span>
     <span class="kw">let</span> <span class="ident">r</span>: [<span class="ident">u8</span>; <span class="number">16</span>] <span class="op">=</span> <span class="ident">rand::random</span>();

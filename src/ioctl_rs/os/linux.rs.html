@@ -236,7 +236,7 @@
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TIOCM_DSR</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x00000100</span>;
 
 <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ioctl</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">request</span>: <span class="ident">c_int</span>, ...) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ioctl</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">request</span>: <span class="ident">c_int</span>, ...) -&gt; <span class="ident">c_int</span>;
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="ioctl_rs" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>

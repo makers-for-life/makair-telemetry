@@ -113,29 +113,29 @@
 
 <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_int</span>, <span class="ident">c_char</span>, <span class="ident">size_t</span>};
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">last_os_error</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core::Error</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">last_os_error</span>() -&gt; <span class="ident">core::Error</span> {
     <span class="ident">from_raw_os_error</span>(<span class="ident">errno</span>())
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_raw_os_error</span>(<span class="ident">errno</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core::Error</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_raw_os_error</span>(<span class="ident">errno</span>: <span class="ident">i32</span>) -&gt; <span class="ident">core::Error</span> {
     <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">EBUSY</span>, <span class="ident">EISDIR</span>, <span class="ident">ELOOP</span>, <span class="ident">ENOTDIR</span>, <span class="ident">ENOENT</span>, <span class="ident">ENODEV</span>, <span class="ident">ENXIO</span>, <span class="ident">EACCES</span>, <span class="ident">EINVAL</span>, <span class="ident">ENAMETOOLONG</span>, <span class="ident">EINTR</span>, <span class="ident">EWOULDBLOCK</span>};
 
     <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">errno</span> {
-        <span class="ident">EBUSY</span> <span class="op">|</span> <span class="ident">EISDIR</span> <span class="op">|</span> <span class="ident">ELOOP</span> <span class="op">|</span> <span class="ident">ENOTDIR</span> <span class="op">|</span> <span class="ident">ENOENT</span> <span class="op">|</span> <span class="ident">ENODEV</span> <span class="op">|</span> <span class="ident">ENXIO</span> <span class="op">|</span> <span class="ident">EACCES</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">core::ErrorKind::NoDevice</span>,
-        <span class="ident">EINVAL</span> <span class="op">|</span> <span class="ident">ENAMETOOLONG</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">core::ErrorKind::InvalidInput</span>,
+        <span class="ident">EBUSY</span> <span class="op">|</span> <span class="ident">EISDIR</span> <span class="op">|</span> <span class="ident">ELOOP</span> <span class="op">|</span> <span class="ident">ENOTDIR</span> <span class="op">|</span> <span class="ident">ENOENT</span> <span class="op">|</span> <span class="ident">ENODEV</span> <span class="op">|</span> <span class="ident">ENXIO</span> <span class="op">|</span> <span class="ident">EACCES</span> =&gt; <span class="ident">core::ErrorKind::NoDevice</span>,
+        <span class="ident">EINVAL</span> <span class="op">|</span> <span class="ident">ENAMETOOLONG</span> =&gt; <span class="ident">core::ErrorKind::InvalidInput</span>,
 
-        <span class="ident">EINTR</span>       <span class="op">=</span><span class="op">&gt;</span> <span class="ident">core::ErrorKind::Io</span>(<span class="ident">io::ErrorKind::Interrupted</span>),
-        <span class="ident">EWOULDBLOCK</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">core::ErrorKind::Io</span>(<span class="ident">io::ErrorKind::WouldBlock</span>),
-        <span class="kw">_</span>           <span class="op">=</span><span class="op">&gt;</span> <span class="ident">core::ErrorKind::Io</span>(<span class="ident">io::ErrorKind::Other</span>),
+        <span class="ident">EINTR</span>       =&gt; <span class="ident">core::ErrorKind::Io</span>(<span class="ident">io::ErrorKind::Interrupted</span>),
+        <span class="ident">EWOULDBLOCK</span> =&gt; <span class="ident">core::ErrorKind::Io</span>(<span class="ident">io::ErrorKind::WouldBlock</span>),
+        <span class="kw">_</span>           =&gt; <span class="ident">core::ErrorKind::Io</span>(<span class="ident">io::ErrorKind::Other</span>),
     };
 
     <span class="ident">core::Error::new</span>(<span class="ident">kind</span>, <span class="ident">error_string</span>(<span class="ident">errno</span>))
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_io_error</span>(<span class="ident">io_error</span>: <span class="ident">io::Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core::Error</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_io_error</span>(<span class="ident">io_error</span>: <span class="ident">io::Error</span>) -&gt; <span class="ident">core::Error</span> {
     <span class="kw">match</span> <span class="ident">io_error</span>.<span class="ident">raw_os_error</span>() {
-        <span class="prelude-val">Some</span>(<span class="ident">errno</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">from_raw_os_error</span>(<span class="ident">errno</span>),
-        <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="ident">errno</span>) =&gt; <span class="ident">from_raw_os_error</span>(<span class="ident">errno</span>),
+        <span class="prelude-val">None</span> =&gt; {
             <span class="kw">let</span> <span class="ident">description</span> <span class="op">=</span> <span class="ident">io_error</span>.<span class="ident">description</span>().<span class="ident">to_string</span>();
 
             <span class="ident">core::Error::new</span>(<span class="ident">core::ErrorKind::Io</span>(<span class="ident">io_error</span>.<span class="ident">kind</span>()), <span class="ident">description</span>)
@@ -147,17 +147,17 @@
 
 <span class="kw">const</span> <span class="ident">TMPBUF_SZ</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">128</span>;
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">errno</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">errno</span>() -&gt; <span class="ident">i32</span> {
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>))]</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">errno_location</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span> {
-        <span class="kw">extern</span> { <span class="kw">fn</span> <span class="ident">__error</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span>; }
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">errno_location</span>() -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span> {
+        <span class="kw">extern</span> { <span class="kw">fn</span> <span class="ident">__error</span>() -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span>; }
         <span class="ident">__error</span>()
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;bitrig&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">errno_location</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span> {
+    <span class="kw">fn</span> <span class="ident">errno_location</span>() -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span> {
         <span class="kw">extern</span> {
-            <span class="kw">fn</span> <span class="ident">__errno</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span>;
+            <span class="kw">fn</span> <span class="ident">__errno</span>() -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span>;
         }
         <span class="kw">unsafe</span> {
             <span class="ident">__errno</span>()
@@ -165,20 +165,20 @@
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>)]</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">errno_location</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span> {
-        <span class="kw">extern</span> { <span class="kw">fn</span> <span class="ident">__dfly_error</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span>; }
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">errno_location</span>() -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span> {
+        <span class="kw">extern</span> { <span class="kw">fn</span> <span class="ident">__dfly_error</span>() -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span>; }
         <span class="ident">__dfly_error</span>()
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>)]</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">errno_location</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span> {
-        <span class="kw">extern</span> { <span class="kw">fn</span> <span class="ident">__errno</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span>; }
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">errno_location</span>() -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span> {
+        <span class="kw">extern</span> { <span class="kw">fn</span> <span class="ident">__errno</span>() -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span>; }
         <span class="ident">__errno</span>()
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">errno_location</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span> {
-        <span class="kw">extern</span> { <span class="kw">fn</span> <span class="ident">__errno_location</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span>; }
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">errno_location</span>() -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span> {
+        <span class="kw">extern</span> { <span class="kw">fn</span> <span class="ident">__errno_location</span>() -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span>; }
         <span class="ident">__errno_location</span>()
     }
 
@@ -187,15 +187,15 @@
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error_string</span>(<span class="ident">errno</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error_string</span>(<span class="ident">errno</span>: <span class="ident">i32</span>) -&gt; <span class="ident">String</span> {
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
     <span class="kw">extern</span> {
         <span class="attribute">#[<span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;__xpg_strerror_r&quot;</span>]</span>
-        <span class="kw">fn</span> <span class="ident">strerror_r</span>(<span class="ident">errnum</span>: <span class="ident">c_int</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">buflen</span>: <span class="ident">size_t</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span>;
+        <span class="kw">fn</span> <span class="ident">strerror_r</span>(<span class="ident">errnum</span>: <span class="ident">c_int</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">buflen</span>: <span class="ident">size_t</span>) -&gt; <span class="ident">c_int</span>;
     }
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>))]</span>
     <span class="kw">extern</span> {
-        <span class="kw">fn</span> <span class="ident">strerror_r</span>(<span class="ident">errnum</span>: <span class="ident">c_int</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">buflen</span>: <span class="ident">size_t</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span>;
+        <span class="kw">fn</span> <span class="ident">strerror_r</span>(<span class="ident">errnum</span>: <span class="ident">c_int</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">buflen</span>: <span class="ident">size_t</span>) -&gt; <span class="ident">c_int</span>;
     }
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> [<span class="number">0</span> <span class="kw">as</span> <span class="ident">c_char</span>; <span class="ident">TMPBUF_SZ</span>];

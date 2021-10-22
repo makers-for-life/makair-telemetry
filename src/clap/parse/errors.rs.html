@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;clap-3.0.0-beta.4&#x2F;src&#x2F;parse&#x2F;errors.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>errors.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../clap/index.html'><div class='logo-container rust-logo'><img src='https:&#x2F;&#x2F;clap.rs&#x2F;images&#x2F;media&#x2F;clap.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;clap-3.0.0-beta.5&#x2F;src&#x2F;parse&#x2F;errors.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>errors.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../clap/index.html'><div class='logo-container rust-logo'><img src='https:&#x2F;&#x2F;clap.rs&#x2F;images&#x2F;media&#x2F;clap.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1040,6 +1040,149 @@
 <span id="1040">1040</span>
 <span id="1041">1041</span>
 <span id="1042">1042</span>
+<span id="1043">1043</span>
+<span id="1044">1044</span>
+<span id="1045">1045</span>
+<span id="1046">1046</span>
+<span id="1047">1047</span>
+<span id="1048">1048</span>
+<span id="1049">1049</span>
+<span id="1050">1050</span>
+<span id="1051">1051</span>
+<span id="1052">1052</span>
+<span id="1053">1053</span>
+<span id="1054">1054</span>
+<span id="1055">1055</span>
+<span id="1056">1056</span>
+<span id="1057">1057</span>
+<span id="1058">1058</span>
+<span id="1059">1059</span>
+<span id="1060">1060</span>
+<span id="1061">1061</span>
+<span id="1062">1062</span>
+<span id="1063">1063</span>
+<span id="1064">1064</span>
+<span id="1065">1065</span>
+<span id="1066">1066</span>
+<span id="1067">1067</span>
+<span id="1068">1068</span>
+<span id="1069">1069</span>
+<span id="1070">1070</span>
+<span id="1071">1071</span>
+<span id="1072">1072</span>
+<span id="1073">1073</span>
+<span id="1074">1074</span>
+<span id="1075">1075</span>
+<span id="1076">1076</span>
+<span id="1077">1077</span>
+<span id="1078">1078</span>
+<span id="1079">1079</span>
+<span id="1080">1080</span>
+<span id="1081">1081</span>
+<span id="1082">1082</span>
+<span id="1083">1083</span>
+<span id="1084">1084</span>
+<span id="1085">1085</span>
+<span id="1086">1086</span>
+<span id="1087">1087</span>
+<span id="1088">1088</span>
+<span id="1089">1089</span>
+<span id="1090">1090</span>
+<span id="1091">1091</span>
+<span id="1092">1092</span>
+<span id="1093">1093</span>
+<span id="1094">1094</span>
+<span id="1095">1095</span>
+<span id="1096">1096</span>
+<span id="1097">1097</span>
+<span id="1098">1098</span>
+<span id="1099">1099</span>
+<span id="1100">1100</span>
+<span id="1101">1101</span>
+<span id="1102">1102</span>
+<span id="1103">1103</span>
+<span id="1104">1104</span>
+<span id="1105">1105</span>
+<span id="1106">1106</span>
+<span id="1107">1107</span>
+<span id="1108">1108</span>
+<span id="1109">1109</span>
+<span id="1110">1110</span>
+<span id="1111">1111</span>
+<span id="1112">1112</span>
+<span id="1113">1113</span>
+<span id="1114">1114</span>
+<span id="1115">1115</span>
+<span id="1116">1116</span>
+<span id="1117">1117</span>
+<span id="1118">1118</span>
+<span id="1119">1119</span>
+<span id="1120">1120</span>
+<span id="1121">1121</span>
+<span id="1122">1122</span>
+<span id="1123">1123</span>
+<span id="1124">1124</span>
+<span id="1125">1125</span>
+<span id="1126">1126</span>
+<span id="1127">1127</span>
+<span id="1128">1128</span>
+<span id="1129">1129</span>
+<span id="1130">1130</span>
+<span id="1131">1131</span>
+<span id="1132">1132</span>
+<span id="1133">1133</span>
+<span id="1134">1134</span>
+<span id="1135">1135</span>
+<span id="1136">1136</span>
+<span id="1137">1137</span>
+<span id="1138">1138</span>
+<span id="1139">1139</span>
+<span id="1140">1140</span>
+<span id="1141">1141</span>
+<span id="1142">1142</span>
+<span id="1143">1143</span>
+<span id="1144">1144</span>
+<span id="1145">1145</span>
+<span id="1146">1146</span>
+<span id="1147">1147</span>
+<span id="1148">1148</span>
+<span id="1149">1149</span>
+<span id="1150">1150</span>
+<span id="1151">1151</span>
+<span id="1152">1152</span>
+<span id="1153">1153</span>
+<span id="1154">1154</span>
+<span id="1155">1155</span>
+<span id="1156">1156</span>
+<span id="1157">1157</span>
+<span id="1158">1158</span>
+<span id="1159">1159</span>
+<span id="1160">1160</span>
+<span id="1161">1161</span>
+<span id="1162">1162</span>
+<span id="1163">1163</span>
+<span id="1164">1164</span>
+<span id="1165">1165</span>
+<span id="1166">1166</span>
+<span id="1167">1167</span>
+<span id="1168">1168</span>
+<span id="1169">1169</span>
+<span id="1170">1170</span>
+<span id="1171">1171</span>
+<span id="1172">1172</span>
+<span id="1173">1173</span>
+<span id="1174">1174</span>
+<span id="1175">1175</span>
+<span id="1176">1176</span>
+<span id="1177">1177</span>
+<span id="1178">1178</span>
+<span id="1179">1179</span>
+<span id="1180">1180</span>
+<span id="1181">1181</span>
+<span id="1182">1182</span>
+<span id="1183">1183</span>
+<span id="1184">1184</span>
+<span id="1185">1185</span>
 </pre><pre class="rust"><code><span class="comment">// Std</span>
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">convert::From</span>,
@@ -1054,7 +1197,8 @@
     <span class="ident">build::Arg</span>,
     <span class="ident">output::fmt::Colorizer</span>,
     <span class="ident">parse::features::suggestions</span>,
-    <span class="ident">util</span>::{<span class="ident">safe_exit</span>, <span class="ident">termcolor::ColorChoice</span>, <span class="ident">SUCCESS_CODE</span>, <span class="ident">USAGE_CODE</span>},
+    <span class="ident">util</span>::{<span class="ident">color::ColorChoice</span>, <span class="ident">safe_exit</span>, <span class="ident">SUCCESS_CODE</span>, <span class="ident">USAGE_CODE</span>},
+    <span class="ident">App</span>, <span class="ident">AppSettings</span>,
 };
 
 <span class="doccomment">/// Short hand for [`Result`] type</span>
@@ -1352,8 +1496,12 @@
     <span class="doccomment">/// ```</span>
     <span class="ident">UnexpectedMultipleUsage</span>,
 
-    <span class="doccomment">/// Occurs when the user provides a value containing invalid UTF-8 for an argument and</span>
-    <span class="doccomment">/// [`AppSettings::StrictUtf8`] is set.</span>
+    <span class="doccomment">/// Occurs when the user provides a value containing invalid UTF-8.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// To allow arbitrary data</span>
+    <span class="doccomment">/// - Set [`ArgSettings::AllowInvalidUtf8`] for argument values</span>
+    <span class="doccomment">/// - Set [`AppSettings::AllowInvalidUtf8ForExternalSubcommands`] for external-subcommand</span>
+    <span class="doccomment">///   values</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Platform Specific</span>
     <span class="doccomment">///</span>
@@ -1367,7 +1515,6 @@
     <span class="doccomment">/// # use std::os::unix::ffi::OsStringExt;</span>
     <span class="doccomment">/// # use std::ffi::OsString;</span>
     <span class="doccomment">/// let result = App::new(&quot;prog&quot;)</span>
-    <span class="doccomment">///     .setting(AppSettings::StrictUtf8)</span>
     <span class="doccomment">///     .arg(Arg::new(&quot;utf8&quot;)</span>
     <span class="doccomment">///         .short(&#39;u&#39;)</span>
     <span class="doccomment">///         .takes_value(true))</span>
@@ -1378,7 +1525,8 @@
     <span class="doccomment">/// assert_eq!(result.unwrap_err().kind, ErrorKind::InvalidUtf8);</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`AppSettings::StrictUtf8`]: crate::AppSettings::StrictUtf8</span>
+    <span class="doccomment">/// [`ArgSettings::AllowInvalidUtf8`]: crate::ArgSettings::AllowInvalidUtf8</span>
+    <span class="doccomment">/// [`AppSettings::AllowInvalidUtf8ForExternalSubcommands`]: crate::AppSettings::AllowInvalidUtf8ForExternalSubcommands</span>
     <span class="ident">InvalidUtf8</span>,
 
     <span class="doccomment">/// Not a true &quot;error&quot; as it means `--help` or similar was used.</span>
@@ -1431,6 +1579,7 @@
     <span class="doccomment">/// ```rust</span>
     <span class="doccomment">/// # use clap::{App, Arg, ErrorKind};</span>
     <span class="doccomment">/// let result = App::new(&quot;prog&quot;)</span>
+    <span class="doccomment">///     .version(&quot;3.0&quot;)</span>
     <span class="doccomment">///     .try_get_matches_from(vec![&quot;prog&quot;, &quot;--version&quot;]);</span>
     <span class="doccomment">/// assert!(result.is_err());</span>
     <span class="doccomment">/// assert_eq!(result.unwrap_err().kind, ErrorKind::DisplayVersion);</span>
@@ -1459,6 +1608,10 @@
 }
 
 <span class="doccomment">/// Command Line Argument Parser Error</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// See [`App::error`] to create an error.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`App::error`]: crate::App::error</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Error</span> {
     <span class="doccomment">/// Formatted error message, enhancing the cause message with extra information</span>
@@ -1468,12 +1621,24 @@
     <span class="doccomment">/// Additional information depending on the error kind, like values and argument names.</span>
     <span class="doccomment">/// Useful when you want to render an error of your own.</span>
     <span class="kw">pub</span> <span class="ident">info</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">error::Error</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">error::Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">backtrace</span>: <span class="ident">Backtrace</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
-        <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">message</span>, <span class="ident">f</span>)
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>)]</span>
+        {
+            <span class="macro">writeln!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">message</span>)<span class="question-mark">?</span>;
+            <span class="macro">writeln!</span>(<span class="ident">f</span>)<span class="question-mark">?</span>;
+            <span class="macro">writeln!</span>(<span class="ident">f</span>, <span class="string">&quot;Backtrace:&quot;</span>)<span class="question-mark">?</span>;
+            <span class="macro">writeln!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">backtrace</span>)<span class="question-mark">?</span>;
+        }
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>))]</span>
+        {
+            <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">message</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+        }
+        <span class="prelude-val">Ok</span>(())
     }
 }
 
@@ -1488,15 +1653,21 @@
     <span class="ident">c</span>.<span class="ident">none</span>(<span class="ident">usage</span>);
 }
 
-<span class="kw">fn</span> <span class="ident">try_help</span>(<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Colorizer</span>) {
-    <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;\n\nFor more information try &quot;</span>);
-    <span class="ident">c</span>.<span class="ident">good</span>(<span class="string">&quot;--help&quot;</span>);
-    <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;\n&quot;</span>);
+<span class="kw">fn</span> <span class="ident">try_help</span>(<span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>, <span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Colorizer</span>) {
+    <span class="kw">if</span> <span class="op">!</span><span class="ident">app</span>.<span class="ident">settings</span>.<span class="ident">is_set</span>(<span class="ident">AppSettings::DisableHelpFlag</span>) {
+        <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;\n\nFor more information try &quot;</span>);
+        <span class="ident">c</span>.<span class="ident">good</span>(<span class="string">&quot;--help&quot;</span>);
+        <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;\n&quot;</span>);
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">app</span>.<span class="ident">has_subcommands</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">app</span>.<span class="ident">settings</span>.<span class="ident">is_set</span>(<span class="ident">AppSettings::DisableHelpSubcommand</span>) {
+        <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;\n\nFor more information try &quot;</span>);
+        <span class="ident">c</span>.<span class="ident">good</span>(<span class="string">&quot;help&quot;</span>);
+        <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;\n&quot;</span>);
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> {
     <span class="doccomment">/// Returns the singular or plural form on the verb to be based on the argument&#39;s value.</span>
-    <span class="kw">fn</span> <span class="ident">singular_or_plural</span>(<span class="ident">n</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="kw">fn</span> <span class="ident">singular_or_plural</span>(<span class="ident">n</span>: <span class="ident">usize</span>) -&gt; <span class="ident">String</span> {
         <span class="kw">if</span> <span class="ident">n</span> <span class="op">&gt;</span> <span class="number">1</span> {
             <span class="ident">String::from</span>(<span class="string">&quot;were&quot;</span>)
         } <span class="kw">else</span> {
@@ -1506,25 +1677,25 @@
 
     <span class="doccomment">/// Should the message be written to `stdout` or not</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">use_stderr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">use_stderr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="op">!</span><span class="macro">matches!</span>(
             <span class="self">self</span>.<span class="ident">kind</span>,
-            <span class="ident">ErrorKind::DisplayHelp</span>
-                <span class="op">|</span> <span class="ident">ErrorKind::DisplayVersion</span>
-                <span class="op">|</span> <span class="ident">ErrorKind::DisplayHelpOnMissingArgumentOrSubcommand</span>
+            <span class="ident">ErrorKind::DisplayHelp</span> <span class="op">|</span> <span class="ident">ErrorKind::DisplayVersion</span>
         )
     }
 
     <span class="doccomment">/// Prints the error and exits. Depending on the error kind, this</span>
     <span class="doccomment">/// either prints to `stderr` and exits with a status of `1`</span>
     <span class="doccomment">/// or prints to `stdout` and exits with a status of `0`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="op">!</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="op">!</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">use_stderr</span>() {
-            <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">print</span>().<span class="ident">expect</span>(<span class="string">&quot;Error writing Error to stderr&quot;</span>);
+            <span class="comment">// Swallow broken pipe errors</span>
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">print</span>();
             <span class="ident">safe_exit</span>(<span class="ident">USAGE_CODE</span>);
         }
 
-        <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">print</span>().<span class="ident">expect</span>(<span class="string">&quot;Error writing Error to stdout&quot;</span>);
+        <span class="comment">// Swallow broken pipe errors</span>
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">print</span>();
         <span class="ident">safe_exit</span>(<span class="ident">SUCCESS_CODE</span>)
     }
 
@@ -1544,17 +1715,48 @@
     <span class="doccomment">///     },</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">print</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">print</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">print</span>()
     }
 
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">message</span>: <span class="ident">Colorizer</span>, <span class="ident">kind</span>: <span class="ident">ErrorKind</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">Self</span> {
+            <span class="ident">message</span>,
+            <span class="ident">kind</span>,
+            <span class="ident">info</span>: <span class="macro">vec!</span>[],
+            <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
+        }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">user_error</span>(
+        <span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>,
+        <span class="ident">usage</span>: <span class="ident">String</span>,
+        <span class="ident">kind</span>: <span class="ident">ErrorKind</span>,
+        <span class="ident">message</span>: <span class="kw">impl</span> <span class="ident">std::fmt::Display</span>,
+    ) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
+
+        <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">message</span>.<span class="ident">to_string</span>());
+        <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+
+        <span class="self">Self</span> {
+            <span class="ident">message</span>: <span class="ident">c</span>,
+            <span class="ident">kind</span>,
+            <span class="ident">info</span>: <span class="macro">vec!</span>[],
+            <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
+        }
+    }
+
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">argument_conflict</span>(
+        <span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>,
         <span class="ident">arg</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span>,
         <span class="ident">other</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
         <span class="ident">usage</span>: <span class="ident">String</span>,
-        <span class="ident">color</span>: <span class="ident">ColorChoice</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    ) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
         <span class="kw">let</span> <span class="ident">arg</span> <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">to_string</span>();
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;The argument &#39;&quot;</span>);
@@ -1562,18 +1764,18 @@
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;&#39; cannot be used with &quot;</span>);
 
         <span class="kw">match</span> <span class="ident">other</span> {
-            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">name</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">name</span>) =&gt; {
                 <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;&#39;&quot;</span>);
                 <span class="ident">c</span>.<span class="ident">warning</span>(<span class="ident">name</span>);
                 <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;&#39;&quot;</span>);
             }
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">None</span> =&gt; {
                 <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;one or more of the other specified arguments&quot;</span>);
             }
         };
 
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">info</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">arg</span>];
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">other</span>) <span class="op">=</span> <span class="ident">other</span> {
@@ -1585,56 +1787,59 @@
             <span class="ident">kind</span>: <span class="ident">ErrorKind::ArgumentConflict</span>,
             <span class="ident">info</span>,
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">empty_value</span>(<span class="ident">arg</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span>, <span class="ident">usage</span>: <span class="ident">String</span>, <span class="ident">color</span>: <span class="ident">ColorChoice</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">empty_value</span>(<span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>, <span class="ident">arg</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span>, <span class="ident">usage</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
         <span class="kw">let</span> <span class="ident">arg</span> <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">to_string</span>();
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;The argument &#39;&quot;</span>);
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="ident">arg</span>.<span class="ident">clone</span>());
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;&#39; requires a value but none was supplied&quot;</span>);
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::EmptyValue</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[<span class="ident">arg</span>],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">no_equals</span>(<span class="ident">arg</span>: <span class="ident">String</span>, <span class="ident">usage</span>: <span class="ident">String</span>, <span class="ident">color</span>: <span class="ident">ColorChoice</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">no_equals</span>(<span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>, <span class="ident">arg</span>: <span class="ident">String</span>, <span class="ident">usage</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;Equal sign is needed when assigning values to &#39;&quot;</span>);
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="kw-2">&amp;</span><span class="ident">arg</span>);
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;&#39;.&quot;</span>);
 
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::NoEquals</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[<span class="ident">arg</span>],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">invalid_value</span><span class="op">&lt;</span><span class="ident">G</span><span class="op">&gt;</span>(
+        <span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>,
         <span class="ident">bad_val</span>: <span class="ident">String</span>,
         <span class="ident">good_vals</span>: <span class="kw-2">&amp;</span>[<span class="ident">G</span>],
         <span class="ident">arg</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span>,
         <span class="ident">usage</span>: <span class="ident">String</span>,
-        <span class="ident">color</span>: <span class="ident">ColorChoice</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>
+    ) -&gt; <span class="self">Self</span>
     <span class="kw">where</span>
         <span class="ident">G</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Display</span>,
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
         <span class="kw">let</span> <span class="ident">suffix</span> <span class="op">=</span> <span class="ident">suggestions::did_you_mean</span>(<span class="kw-2">&amp;</span><span class="ident">bad_val</span>, <span class="ident">good_vals</span>.<span class="ident">iter</span>()).<span class="ident">pop</span>();
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sorted</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">good_vals</span>
@@ -1674,7 +1879,7 @@
         }
 
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">info</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">arg</span>.<span class="ident">to_string</span>(), <span class="ident">bad_val</span>];
         <span class="ident">info</span>.<span class="ident">extend</span>(<span class="ident">sorted</span>);
@@ -1684,17 +1889,18 @@
             <span class="ident">kind</span>: <span class="ident">ErrorKind::InvalidValue</span>,
             <span class="ident">info</span>,
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">invalid_subcommand</span>(
+        <span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>,
         <span class="ident">subcmd</span>: <span class="ident">String</span>,
         <span class="ident">did_you_mean</span>: <span class="ident">String</span>,
         <span class="ident">name</span>: <span class="ident">String</span>,
         <span class="ident">usage</span>: <span class="ident">String</span>,
-        <span class="ident">color</span>: <span class="ident">ColorChoice</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    ) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;The subcommand &#39;&quot;</span>);
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="ident">subcmd</span>.<span class="ident">clone</span>());
@@ -1708,44 +1914,42 @@
         <span class="ident">c</span>.<span class="ident">good</span>(<span class="string">&quot;--&quot;</span>);
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="macro">format!</span>(<span class="string">&quot; {}&#39;&quot;</span>, <span class="ident">subcmd</span>));
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::InvalidSubcommand</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[<span class="ident">subcmd</span>],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">unrecognized_subcommand</span>(
-        <span class="ident">subcmd</span>: <span class="ident">String</span>,
-        <span class="ident">name</span>: <span class="ident">String</span>,
-        <span class="ident">color</span>: <span class="ident">ColorChoice</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">unrecognized_subcommand</span>(<span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>, <span class="ident">subcmd</span>: <span class="ident">String</span>, <span class="ident">name</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot; The subcommand &#39;&quot;</span>);
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="ident">subcmd</span>.<span class="ident">clone</span>());
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;&#39; wasn&#39;t recognized\n\n&quot;</span>);
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="string">&quot;USAGE:&quot;</span>);
-        <span class="ident">c</span>.<span class="ident">none</span>(<span class="macro">format!</span>(<span class="string">&quot;\n\t{} help &lt;subcommands&gt;...&quot;</span>, <span class="ident">name</span>));
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">c</span>.<span class="ident">none</span>(<span class="macro">format!</span>(<span class="string">&quot;\n    {} &lt;subcommands&gt;&quot;</span>, <span class="ident">name</span>));
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::UnrecognizedSubcommand</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[<span class="ident">subcmd</span>],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">missing_required_argument</span>(
+        <span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>,
         <span class="ident">required</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
         <span class="ident">usage</span>: <span class="ident">String</span>,
-        <span class="ident">color</span>: <span class="ident">ColorChoice</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    ) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
 
         <span class="ident">start_error</span>(
             <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>,
@@ -1760,59 +1964,62 @@
         }
 
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::MissingRequiredArgument</span>,
             <span class="ident">info</span>,
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">missing_subcommand</span>(<span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">usage</span>: <span class="ident">String</span>, <span class="ident">color</span>: <span class="ident">ColorChoice</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">missing_subcommand</span>(<span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">usage</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;&#39;&quot;</span>);
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="ident">name</span>);
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;&#39; requires a subcommand, but one was not provided&quot;</span>);
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::MissingSubcommand</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">invalid_utf8</span>(<span class="ident">usage</span>: <span class="ident">String</span>, <span class="ident">color</span>: <span class="ident">ColorChoice</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">invalid_utf8</span>(<span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>, <span class="ident">usage</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
 
         <span class="ident">start_error</span>(
             <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>,
             <span class="string">&quot;Invalid UTF-8 was detected in one or more arguments&quot;</span>,
         );
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::InvalidUtf8</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">too_many_occurrences</span>(
+        <span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>,
         <span class="ident">arg</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span>,
         <span class="ident">max_occurs</span>: <span class="ident">usize</span>,
         <span class="ident">curr_occurs</span>: <span class="ident">usize</span>,
         <span class="ident">usage</span>: <span class="ident">String</span>,
-        <span class="ident">color</span>: <span class="ident">ColorChoice</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    ) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
         <span class="kw">let</span> <span class="ident">verb</span> <span class="op">=</span> <span class="ident">Error::singular_or_plural</span>(<span class="ident">curr_occurs</span>);
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;The argument &#39;&quot;</span>);
@@ -1823,7 +2030,7 @@
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="ident">curr_occurs</span>.<span class="ident">to_string</span>());
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="macro">format!</span>(<span class="string">&quot; {} provided&quot;</span>, <span class="ident">verb</span>));
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
@@ -1834,16 +2041,12 @@
                 <span class="ident">max_occurs</span>.<span class="ident">to_string</span>(),
             ],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">too_many_values</span>(
-        <span class="ident">val</span>: <span class="ident">String</span>,
-        <span class="ident">arg</span>: <span class="ident">String</span>,
-        <span class="ident">usage</span>: <span class="ident">String</span>,
-        <span class="ident">color</span>: <span class="ident">ColorChoice</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">too_many_values</span>(<span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>, <span class="ident">val</span>: <span class="ident">String</span>, <span class="ident">arg</span>: <span class="ident">String</span>, <span class="ident">usage</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;The value &#39;&quot;</span>);
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="ident">val</span>.<span class="ident">clone</span>());
@@ -1851,24 +2054,25 @@
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="kw-2">&amp;</span><span class="ident">arg</span>);
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;&#39; but it wasn&#39;t expecting any more values&quot;</span>);
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::TooManyValues</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[<span class="ident">arg</span>, <span class="ident">val</span>],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">too_few_values</span>(
+        <span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>,
         <span class="ident">arg</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span>,
         <span class="ident">min_vals</span>: <span class="ident">usize</span>,
         <span class="ident">curr_vals</span>: <span class="ident">usize</span>,
         <span class="ident">usage</span>: <span class="ident">String</span>,
-        <span class="ident">color</span>: <span class="ident">ColorChoice</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    ) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
         <span class="kw">let</span> <span class="ident">verb</span> <span class="op">=</span> <span class="ident">Error::singular_or_plural</span>(<span class="ident">curr_vals</span>);
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;The argument &#39;&quot;</span>);
@@ -1879,22 +2083,54 @@
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="ident">curr_vals</span>.<span class="ident">to_string</span>());
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="macro">format!</span>(<span class="string">&quot; {} provided&quot;</span>, <span class="ident">verb</span>));
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::TooFewValues</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[<span class="ident">arg</span>.<span class="ident">to_string</span>(), <span class="ident">curr_vals</span>.<span class="ident">to_string</span>(), <span class="ident">min_vals</span>.<span class="ident">to_string</span>()],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">value_validation</span>(
+        <span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>,
         <span class="ident">arg</span>: <span class="ident">String</span>,
         <span class="ident">val</span>: <span class="ident">String</span>,
-        <span class="ident">err</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">error::Error</span><span class="op">&gt;</span>,
+        <span class="ident">err</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">error::Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="self">Self</span> {
+            <span class="kw-2">mut</span> <span class="ident">message</span>,
+            <span class="ident">kind</span>,
+            <span class="ident">info</span>,
+            <span class="ident">source</span>,
+            <span class="ident">backtrace</span>,
+        } <span class="op">=</span> <span class="ident"><span class="self">Self</span>::value_validation_with_color</span>(<span class="ident">arg</span>, <span class="ident">val</span>, <span class="ident">err</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">message</span>);
+        <span class="self">Self</span> {
+            <span class="ident">message</span>,
+            <span class="ident">kind</span>,
+            <span class="ident">info</span>,
+            <span class="ident">source</span>,
+            <span class="ident">backtrace</span>,
+        }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">value_validation_without_app</span>(
+        <span class="ident">arg</span>: <span class="ident">String</span>,
+        <span class="ident">val</span>: <span class="ident">String</span>,
+        <span class="ident">err</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">error::Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::value_validation_with_color</span>(<span class="ident">arg</span>, <span class="ident">val</span>, <span class="ident">err</span>, <span class="ident">ColorChoice::Auto</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">value_validation_with_color</span>(
+        <span class="ident">arg</span>: <span class="ident">String</span>,
+        <span class="ident">val</span>: <span class="ident">String</span>,
+        <span class="ident">err</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">error::Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>,
         <span class="ident">color</span>: <span class="ident">ColorChoice</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    ) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;Invalid value&quot;</span>);
@@ -1904,24 +2140,24 @@
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;&#39;&quot;</span>);
 
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="macro">format!</span>(<span class="string">&quot;: {}&quot;</span>, <span class="ident">err</span>));
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::ValueValidation</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[<span class="ident">arg</span>, <span class="ident">val</span>, <span class="ident">err</span>.<span class="ident">to_string</span>()],
             <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">err</span>),
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">wrong_number_of_values</span>(
+        <span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>,
         <span class="ident">arg</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span>,
         <span class="ident">num_vals</span>: <span class="ident">usize</span>,
         <span class="ident">curr_vals</span>: <span class="ident">usize</span>,
         <span class="ident">usage</span>: <span class="ident">String</span>,
-        <span class="ident">color</span>: <span class="ident">ColorChoice</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    ) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
         <span class="kw">let</span> <span class="ident">verb</span> <span class="op">=</span> <span class="ident">Error::singular_or_plural</span>(<span class="ident">curr_vals</span>);
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;The argument &#39;&quot;</span>);
@@ -1932,41 +2168,43 @@
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="ident">curr_vals</span>.<span class="ident">to_string</span>());
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="macro">format!</span>(<span class="string">&quot; {} provided&quot;</span>, <span class="ident">verb</span>));
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::WrongNumberOfValues</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[<span class="ident">arg</span>.<span class="ident">to_string</span>(), <span class="ident">curr_vals</span>.<span class="ident">to_string</span>(), <span class="ident">num_vals</span>.<span class="ident">to_string</span>()],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">unexpected_multiple_usage</span>(<span class="ident">arg</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span>, <span class="ident">usage</span>: <span class="ident">String</span>, <span class="ident">color</span>: <span class="ident">ColorChoice</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">unexpected_multiple_usage</span>(<span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>, <span class="ident">arg</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span>, <span class="ident">usage</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
         <span class="kw">let</span> <span class="ident">arg</span> <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">to_string</span>();
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;The argument &#39;&quot;</span>);
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="ident">arg</span>.<span class="ident">clone</span>());
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;&#39; was provided more than once, but cannot be used multiple times&quot;</span>);
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::UnexpectedMultipleUsage</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[<span class="ident">arg</span>],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">unknown_argument</span>(
+        <span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>,
         <span class="ident">arg</span>: <span class="ident">String</span>,
         <span class="ident">did_you_mean</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
         <span class="ident">usage</span>: <span class="ident">String</span>,
-        <span class="ident">color</span>: <span class="ident">ColorChoice</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    ) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;Found argument &#39;&quot;</span>);
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="ident">arg</span>.<span class="ident">clone</span>());
@@ -1999,18 +2237,19 @@
         }
 
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::UnknownArgument</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[<span class="ident">arg</span>],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">unnecessary_double_dash</span>(<span class="ident">arg</span>: <span class="ident">String</span>, <span class="ident">usage</span>: <span class="ident">String</span>, <span class="ident">color</span>: <span class="ident">ColorChoice</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">color</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">unnecessary_double_dash</span>(<span class="ident">app</span>: <span class="kw-2">&amp;</span><span class="ident">App</span>, <span class="ident">arg</span>: <span class="ident">String</span>, <span class="ident">usage</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">app</span>.<span class="ident">get_color</span>());
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;Found argument &#39;&quot;</span>);
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="ident">arg</span>.<span class="ident">clone</span>());
@@ -2021,65 +2260,112 @@
             <span class="ident">arg</span>
         ));
         <span class="ident">put_usage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">usage</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
+        <span class="ident">try_help</span>(<span class="ident">app</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::UnknownArgument</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[<span class="ident">arg</span>],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">argument_not_found_auto</span>(<span class="ident">arg</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">argument_not_found_auto</span>(<span class="ident">arg</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">ColorChoice::Auto</span>);
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="string">&quot;The argument &#39;&quot;</span>);
         <span class="ident">c</span>.<span class="ident">warning</span>(<span class="ident">arg</span>.<span class="ident">clone</span>());
         <span class="ident">c</span>.<span class="ident">none</span>(<span class="string">&quot;&#39; wasn&#39;t found&quot;</span>);
-        <span class="ident">try_help</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>);
 
         <span class="ident">Error</span> {
             <span class="ident">message</span>: <span class="ident">c</span>,
             <span class="ident">kind</span>: <span class="ident">ErrorKind::ArgumentNotFound</span>,
             <span class="ident">info</span>: <span class="macro">vec!</span>[<span class="ident">arg</span>],
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="ident">backtrace</span>: <span class="ident">Backtrace::new</span>(),
         }
     }
 
-    <span class="doccomment">/// Create an error with a custom description.</span>
+    <span class="doccomment">/// Deprecated, see [`App::error`]</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This can be used in combination with `Error::exit` to exit your program</span>
-    <span class="doccomment">/// with a custom error message.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_description</span>(<span class="ident">description</span>: <span class="ident">String</span>, <span class="ident">kind</span>: <span class="ident">ErrorKind</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="doccomment">/// [`App::error`]: crate::App::error</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;3.0.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Replaced with `App::error`&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_description</span>(<span class="ident">description</span>: <span class="ident">String</span>, <span class="ident">kind</span>: <span class="ident">ErrorKind</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">ColorChoice::Auto</span>);
 
         <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">description</span>);
-
-        <span class="ident">Error</span> {
-            <span class="ident">message</span>: <span class="ident">c</span>,
-            <span class="ident">kind</span>,
-            <span class="ident">info</span>: <span class="macro">vec!</span>[],
-            <span class="ident">source</span>: <span class="prelude-val">None</span>,
-        }
+        <span class="ident">Error::new</span>(<span class="ident">c</span>, <span class="ident">kind</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">io::Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">e</span>: <span class="ident">io::Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">Error::with_description</span>(<span class="ident">e</span>.<span class="ident">to_string</span>(), <span class="ident">ErrorKind::Io</span>)
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">e</span>: <span class="ident">io::Error</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">ColorChoice::Auto</span>);
+        <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">e</span>.<span class="ident">to_string</span>());
+        <span class="ident">Error::new</span>(<span class="ident">c</span>, <span class="ident">ErrorKind::Io</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">fmt::Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">e</span>: <span class="ident">fmt::Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">Error::with_description</span>(<span class="ident">e</span>.<span class="ident">to_string</span>(), <span class="ident">ErrorKind::Format</span>)
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">e</span>: <span class="ident">fmt::Error</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Colorizer::new</span>(<span class="bool-val">true</span>, <span class="ident">ColorChoice::Auto</span>);
+        <span class="ident">start_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">c</span>, <span class="ident">e</span>.<span class="ident">to_string</span>());
+        <span class="ident">Error::new</span>(<span class="ident">c</span>, <span class="ident">ErrorKind::Format</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">error::Error</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">as_deref</span>()
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">trivial_casts</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">as_ref</span>() <span class="kw">as</span> <span class="kw">_</span>)
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">struct</span> <span class="ident">Backtrace</span>(<span class="ident">backtrace::Backtrace</span>);
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>)]</span>
+<span class="kw">impl</span> <span class="ident">Backtrace</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
+        <span class="self">Self</span>(<span class="ident">backtrace::Backtrace::new</span>())
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>)]</span>
+<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Backtrace</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+        <span class="comment">// `backtrace::Backtrace` uses `Debug` instead of `Display`</span>
+        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{:?}&quot;</span>, <span class="self">self</span>.<span class="number">0</span>)
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">struct</span> <span class="ident">Backtrace</span>;
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>))]</span>
+<span class="kw">impl</span> <span class="ident">Backtrace</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
+        <span class="self">Self</span>
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>))]</span>
+<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Backtrace</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+        <span class="prelude-val">Ok</span>(())
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="doccomment">/// Check `clap::Error` impls Send and Sync.</span>
+    <span class="kw">mod</span> <span class="ident">clap_error_impl_send_sync</span> {
+        <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Error</span>;
+        <span class="kw">trait</span> <span class="ident">Foo</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {}
+        <span class="kw">impl</span> <span class="ident">Foo</span> <span class="kw">for</span> <span class="ident">Error</span> {}
     }
 }
 </code></pre></div>

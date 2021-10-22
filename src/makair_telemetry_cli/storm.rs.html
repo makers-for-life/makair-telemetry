@@ -41,17 +41,17 @@
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::control</span>::<span class="kw-2">*</span>;
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen_random_message</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ControlMessage</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen_random_message</span>() -&gt; <span class="ident">ControlMessage</span> {
     <span class="ident">rand::thread_rng</span>().<span class="ident">gen</span>()
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen_random_message_bytes</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen_random_message_bytes</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
     <span class="ident">rand::thread_rng</span>()
         .<span class="ident">gen</span>::<span class="op">&lt;</span><span class="ident">ControlMessage</span><span class="op">&gt;</span>()
         .<span class="ident">to_control_frame</span>()
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen_random_bytes</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen_random_bytes</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand::thread_rng</span>();
     <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">1</span>..<span class="op">=</span><span class="number">10</span>);
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec!</span>[];
@@ -61,7 +61,7 @@
     <span class="ident">bytes</span>
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen_random_message_with_wrong_crc</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen_random_message_with_wrong_crc</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand::thread_rng</span>();
     <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen</span>::<span class="op">&lt;</span><span class="ident">ControlMessage</span><span class="op">&gt;</span>();
     <span class="ident">msg</span>.<span class="ident">to_control_frame_with</span>(<span class="prelude-val">Some</span>(<span class="ident">rng</span>.<span class="ident">gen</span>()))

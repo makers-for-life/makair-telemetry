@@ -332,74 +332,74 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">Data</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">Data::Continue</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;CONTINUE&quot;</span>),
-            <span class="ident">Data::Text</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;TEXT&quot;</span>),
-            <span class="ident">Data::Binary</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;BINARY&quot;</span>),
-            <span class="ident">Data::Reserved</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;RESERVED_DATA_{}&quot;</span>, <span class="ident">x</span>),
+            <span class="ident">Data::Continue</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;CONTINUE&quot;</span>),
+            <span class="ident">Data::Text</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;TEXT&quot;</span>),
+            <span class="ident">Data::Binary</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;BINARY&quot;</span>),
+            <span class="ident">Data::Reserved</span>(<span class="ident">x</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;RESERVED_DATA_{}&quot;</span>, <span class="ident">x</span>),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">Control</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">Control::Close</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;CLOSE&quot;</span>),
-            <span class="ident">Control::Ping</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;PING&quot;</span>),
-            <span class="ident">Control::Pong</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;PONG&quot;</span>),
-            <span class="ident">Control::Reserved</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;RESERVED_CONTROL_{}&quot;</span>, <span class="ident">x</span>),
+            <span class="ident">Control::Close</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;CLOSE&quot;</span>),
+            <span class="ident">Control::Ping</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;PING&quot;</span>),
+            <span class="ident">Control::Pong</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;PONG&quot;</span>),
+            <span class="ident">Control::Reserved</span>(<span class="ident">x</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;RESERVED_CONTROL_{}&quot;</span>, <span class="ident">x</span>),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">OpCode</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">OpCode::Data</span>(<span class="ident">d</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">d</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
-            <span class="ident">OpCode::Control</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">c</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident">OpCode::Data</span>(<span class="ident">d</span>) =&gt; <span class="ident">d</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident">OpCode::Control</span>(<span class="ident">c</span>) =&gt; <span class="ident">c</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">OpCode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u8</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">code</span>: <span class="ident">OpCode</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">code</span>: <span class="ident">OpCode</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">use</span> <span class="self">self</span>::{
             <span class="ident">Control</span>::{<span class="ident">Close</span>, <span class="ident">Ping</span>, <span class="ident">Pong</span>},
             <span class="ident">Data</span>::{<span class="ident">Binary</span>, <span class="ident">Continue</span>, <span class="ident">Text</span>},
             <span class="ident">OpCode</span>::<span class="kw-2">*</span>,
         };
         <span class="kw">match</span> <span class="ident">code</span> {
-            <span class="ident">Data</span>(<span class="ident">Continue</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
-            <span class="ident">Data</span>(<span class="ident">Text</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="number">1</span>,
-            <span class="ident">Data</span>(<span class="ident">Binary</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="number">2</span>,
-            <span class="ident">Data</span>(<span class="ident"><span class="self">self</span>::Data::Reserved</span>(<span class="ident">i</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">i</span>,
+            <span class="ident">Data</span>(<span class="ident">Continue</span>) =&gt; <span class="number">0</span>,
+            <span class="ident">Data</span>(<span class="ident">Text</span>) =&gt; <span class="number">1</span>,
+            <span class="ident">Data</span>(<span class="ident">Binary</span>) =&gt; <span class="number">2</span>,
+            <span class="ident">Data</span>(<span class="ident"><span class="self">self</span>::Data::Reserved</span>(<span class="ident">i</span>)) =&gt; <span class="ident">i</span>,
 
-            <span class="ident">Control</span>(<span class="ident">Close</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="number">8</span>,
-            <span class="ident">Control</span>(<span class="ident">Ping</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="number">9</span>,
-            <span class="ident">Control</span>(<span class="ident">Pong</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="number">10</span>,
-            <span class="ident">Control</span>(<span class="ident"><span class="self">self</span>::Control::Reserved</span>(<span class="ident">i</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">i</span>,
+            <span class="ident">Control</span>(<span class="ident">Close</span>) =&gt; <span class="number">8</span>,
+            <span class="ident">Control</span>(<span class="ident">Ping</span>) =&gt; <span class="number">9</span>,
+            <span class="ident">Control</span>(<span class="ident">Pong</span>) =&gt; <span class="number">10</span>,
+            <span class="ident">Control</span>(<span class="ident"><span class="self">self</span>::Control::Reserved</span>(<span class="ident">i</span>)) =&gt; <span class="ident">i</span>,
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">OpCode</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">byte</span>: <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">OpCode</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">byte</span>: <span class="ident">u8</span>) -&gt; <span class="ident">OpCode</span> {
         <span class="kw">use</span> <span class="self">self</span>::{
             <span class="ident">Control</span>::{<span class="ident">Close</span>, <span class="ident">Ping</span>, <span class="ident">Pong</span>},
             <span class="ident">Data</span>::{<span class="ident">Binary</span>, <span class="ident">Continue</span>, <span class="ident">Text</span>},
             <span class="ident">OpCode</span>::<span class="kw-2">*</span>,
         };
         <span class="kw">match</span> <span class="ident">byte</span> {
-            <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Data</span>(<span class="ident">Continue</span>),
-            <span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Data</span>(<span class="ident">Text</span>),
-            <span class="number">2</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Data</span>(<span class="ident">Binary</span>),
-            <span class="ident">i</span> @ <span class="number">3</span>..<span class="op">=</span><span class="number">7</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Data</span>(<span class="ident"><span class="self">self</span>::Data::Reserved</span>(<span class="ident">i</span>)),
-            <span class="number">8</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Control</span>(<span class="ident">Close</span>),
-            <span class="number">9</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Control</span>(<span class="ident">Ping</span>),
-            <span class="number">10</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Control</span>(<span class="ident">Pong</span>),
-            <span class="ident">i</span> @ <span class="number">11</span>..<span class="op">=</span><span class="number">15</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Control</span>(<span class="ident"><span class="self">self</span>::Control::Reserved</span>(<span class="ident">i</span>)),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;Bug: OpCode out of range&quot;</span>),
+            <span class="number">0</span> =&gt; <span class="ident">Data</span>(<span class="ident">Continue</span>),
+            <span class="number">1</span> =&gt; <span class="ident">Data</span>(<span class="ident">Text</span>),
+            <span class="number">2</span> =&gt; <span class="ident">Data</span>(<span class="ident">Binary</span>),
+            <span class="ident">i</span> @ <span class="number">3</span>..<span class="op">=</span><span class="number">7</span> =&gt; <span class="ident">Data</span>(<span class="ident"><span class="self">self</span>::Data::Reserved</span>(<span class="ident">i</span>)),
+            <span class="number">8</span> =&gt; <span class="ident">Control</span>(<span class="ident">Close</span>),
+            <span class="number">9</span> =&gt; <span class="ident">Control</span>(<span class="ident">Ping</span>),
+            <span class="number">10</span> =&gt; <span class="ident">Control</span>(<span class="ident">Pong</span>),
+            <span class="ident">i</span> @ <span class="number">11</span>..<span class="op">=</span><span class="number">15</span> =&gt; <span class="ident">Control</span>(<span class="ident"><span class="self">self</span>::Control::Reserved</span>(<span class="ident">i</span>)),
+            <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Bug: OpCode out of range&quot;</span>),
         }
     }
 }
@@ -480,71 +480,71 @@
 
 <span class="kw">impl</span> <span class="ident">CloseCode</span> {
     <span class="doccomment">/// Check if this CloseCode is allowed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_allowed</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_allowed</span>(<span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="op">!</span><span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident">Bad</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Reserved</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Status</span> <span class="op">|</span> <span class="ident">Abnormal</span> <span class="op">|</span> <span class="ident">Tls</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">CloseCode</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="kw">let</span> <span class="ident">code</span>: <span class="ident">u16</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">into</span>();
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">code</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">CloseCode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u16</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">code</span>: <span class="ident">CloseCode</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u16</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">code</span>: <span class="ident">CloseCode</span>) -&gt; <span class="ident">u16</span> {
         <span class="kw">match</span> <span class="ident">code</span> {
-            <span class="ident">Normal</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1000</span>,
-            <span class="ident">Away</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1001</span>,
-            <span class="ident">Protocol</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1002</span>,
-            <span class="ident">Unsupported</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1003</span>,
-            <span class="ident">Status</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1005</span>,
-            <span class="ident">Abnormal</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1006</span>,
-            <span class="ident">Invalid</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1007</span>,
-            <span class="ident">Policy</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1008</span>,
-            <span class="ident">Size</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1009</span>,
-            <span class="ident">Extension</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1010</span>,
-            <span class="ident">Error</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1011</span>,
-            <span class="ident">Restart</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1012</span>,
-            <span class="ident">Again</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1013</span>,
-            <span class="ident">Tls</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1015</span>,
-            <span class="ident">Reserved</span>(<span class="ident">code</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">code</span>,
-            <span class="ident">Iana</span>(<span class="ident">code</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">code</span>,
-            <span class="ident">Library</span>(<span class="ident">code</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">code</span>,
-            <span class="ident">Bad</span>(<span class="ident">code</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">code</span>,
+            <span class="ident">Normal</span> =&gt; <span class="number">1000</span>,
+            <span class="ident">Away</span> =&gt; <span class="number">1001</span>,
+            <span class="ident">Protocol</span> =&gt; <span class="number">1002</span>,
+            <span class="ident">Unsupported</span> =&gt; <span class="number">1003</span>,
+            <span class="ident">Status</span> =&gt; <span class="number">1005</span>,
+            <span class="ident">Abnormal</span> =&gt; <span class="number">1006</span>,
+            <span class="ident">Invalid</span> =&gt; <span class="number">1007</span>,
+            <span class="ident">Policy</span> =&gt; <span class="number">1008</span>,
+            <span class="ident">Size</span> =&gt; <span class="number">1009</span>,
+            <span class="ident">Extension</span> =&gt; <span class="number">1010</span>,
+            <span class="ident">Error</span> =&gt; <span class="number">1011</span>,
+            <span class="ident">Restart</span> =&gt; <span class="number">1012</span>,
+            <span class="ident">Again</span> =&gt; <span class="number">1013</span>,
+            <span class="ident">Tls</span> =&gt; <span class="number">1015</span>,
+            <span class="ident">Reserved</span>(<span class="ident">code</span>) =&gt; <span class="ident">code</span>,
+            <span class="ident">Iana</span>(<span class="ident">code</span>) =&gt; <span class="ident">code</span>,
+            <span class="ident">Library</span>(<span class="ident">code</span>) =&gt; <span class="ident">code</span>,
+            <span class="ident">Bad</span>(<span class="ident">code</span>) =&gt; <span class="ident">code</span>,
         }
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="ident">CloseCode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u16</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="ident">CloseCode</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u16</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="ident">CloseCode</span>) -&gt; <span class="ident">u16</span> {
         (<span class="kw-2">*</span><span class="ident">code</span>).<span class="ident">into</span>()
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CloseCode</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">code</span>: <span class="ident">u16</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CloseCode</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">code</span>: <span class="ident">u16</span>) -&gt; <span class="ident">CloseCode</span> {
         <span class="kw">match</span> <span class="ident">code</span> {
-            <span class="number">1000</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Normal</span>,
-            <span class="number">1001</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Away</span>,
-            <span class="number">1002</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Protocol</span>,
-            <span class="number">1003</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Unsupported</span>,
-            <span class="number">1005</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Status</span>,
-            <span class="number">1006</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Abnormal</span>,
-            <span class="number">1007</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Invalid</span>,
-            <span class="number">1008</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Policy</span>,
-            <span class="number">1009</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Size</span>,
-            <span class="number">1010</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Extension</span>,
-            <span class="number">1011</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Error</span>,
-            <span class="number">1012</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Restart</span>,
-            <span class="number">1013</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Again</span>,
-            <span class="number">1015</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Tls</span>,
-            <span class="number">1</span>..<span class="op">=</span><span class="number">999</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Bad</span>(<span class="ident">code</span>),
-            <span class="number">1016</span>..<span class="op">=</span><span class="number">2999</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Reserved</span>(<span class="ident">code</span>),
-            <span class="number">3000</span>..<span class="op">=</span><span class="number">3999</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Iana</span>(<span class="ident">code</span>),
-            <span class="number">4000</span>..<span class="op">=</span><span class="number">4999</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Library</span>(<span class="ident">code</span>),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Bad</span>(<span class="ident">code</span>),
+            <span class="number">1000</span> =&gt; <span class="ident">Normal</span>,
+            <span class="number">1001</span> =&gt; <span class="ident">Away</span>,
+            <span class="number">1002</span> =&gt; <span class="ident">Protocol</span>,
+            <span class="number">1003</span> =&gt; <span class="ident">Unsupported</span>,
+            <span class="number">1005</span> =&gt; <span class="ident">Status</span>,
+            <span class="number">1006</span> =&gt; <span class="ident">Abnormal</span>,
+            <span class="number">1007</span> =&gt; <span class="ident">Invalid</span>,
+            <span class="number">1008</span> =&gt; <span class="ident">Policy</span>,
+            <span class="number">1009</span> =&gt; <span class="ident">Size</span>,
+            <span class="number">1010</span> =&gt; <span class="ident">Extension</span>,
+            <span class="number">1011</span> =&gt; <span class="ident">Error</span>,
+            <span class="number">1012</span> =&gt; <span class="ident">Restart</span>,
+            <span class="number">1013</span> =&gt; <span class="ident">Again</span>,
+            <span class="number">1015</span> =&gt; <span class="ident">Tls</span>,
+            <span class="number">1</span>..<span class="op">=</span><span class="number">999</span> =&gt; <span class="ident">Bad</span>(<span class="ident">code</span>),
+            <span class="number">1016</span>..<span class="op">=</span><span class="number">2999</span> =&gt; <span class="ident">Reserved</span>(<span class="ident">code</span>),
+            <span class="number">3000</span>..<span class="op">=</span><span class="number">3999</span> =&gt; <span class="ident">Iana</span>(<span class="ident">code</span>),
+            <span class="number">4000</span>..<span class="op">=</span><span class="number">4999</span> =&gt; <span class="ident">Library</span>(<span class="ident">code</span>),
+            <span class="kw">_</span> =&gt; <span class="ident">Bad</span>(<span class="ident">code</span>),
         }
     }
 }

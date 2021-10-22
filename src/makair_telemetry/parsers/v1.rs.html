@@ -788,15 +788,15 @@
 
 <span class="kw">const</span> <span class="ident">VERSION</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">1</span>;
 
-<span class="kw">fn</span> <span class="ident">sep</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">sep</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> {
     <span class="ident">tag</span>(<span class="string">&quot;\t&quot;</span>)(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">end</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">end</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> {
     <span class="ident">tag</span>(<span class="string">&quot;\n&quot;</span>)(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">mode</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">Mode</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">mode</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">Mode</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">alt</span>((
         <span class="ident">map</span>(<span class="ident">tag</span>(<span class="string">b&quot;\x01&quot;</span>), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Mode::Production</span>),
         <span class="ident">map</span>(<span class="ident">tag</span>(<span class="string">b&quot;\x02&quot;</span>), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Mode::Qualification</span>),
@@ -805,7 +805,7 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">phase_and_subphase</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], (<span class="ident">Phase</span>, <span class="ident">SubPhase</span>)<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">phase_and_subphase</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], (<span class="ident">Phase</span>, <span class="ident">SubPhase</span>)<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">alt</span>((
         <span class="ident">map</span>(<span class="ident">tag</span>([<span class="number">17u8</span>]), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> (<span class="ident">Phase::Inhalation</span>, <span class="ident">SubPhase::Inspiration</span>)),
         <span class="ident">map</span>(<span class="ident">tag</span>([<span class="number">18u8</span>]), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
@@ -816,12 +816,12 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">control_setting</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">ControlSetting</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">control_setting</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">ControlSetting</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map_res</span>(<span class="ident">be_u8</span>, <span class="ident">ControlSetting::try_from</span>);
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">alarm_priority</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">AlarmPriority</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">alarm_priority</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">AlarmPriority</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">alt</span>((
         <span class="ident">map</span>(<span class="ident">tag</span>([<span class="number">4u8</span>]), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">AlarmPriority::High</span>),
         <span class="ident">map</span>(<span class="ident">tag</span>([<span class="number">2u8</span>]), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">AlarmPriority::Medium</span>),
@@ -830,30 +830,30 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">u8_array</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">u8_array</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(<span class="ident">length_data</span>(<span class="ident">be_u8</span>), <span class="ident">Vec::from</span>);
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">triggered</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">bool</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">triggered</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">bool</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">alt</span>((<span class="ident">map</span>(<span class="ident">tag</span>([<span class="number">240u8</span>]), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="bool-val">true</span>), <span class="ident">map</span>(<span class="ident">tag</span>([<span class="number">15u8</span>]), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="bool-val">false</span>)));
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">software_version</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">software_version</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
     <span class="kw">let</span> (<span class="ident">rest</span>, <span class="ident">len</span>) <span class="op">=</span> <span class="ident">be_u8</span>(<span class="ident">input</span>)<span class="question-mark">?</span>;
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map_res</span>(<span class="ident">take</span>(<span class="ident">len</span>), <span class="ident">std::str::from_utf8</span>);
     <span class="ident">parser</span>(<span class="ident">rest</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">device_id</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">String</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">device_id</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">String</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(<span class="ident">tuple</span>((<span class="ident">be_u32</span>, <span class="ident">be_u32</span>, <span class="ident">be_u32</span>)), <span class="op">|</span>(<span class="ident">p1</span>, <span class="ident">p2</span>, <span class="ident">p3</span>)<span class="op">|</span> {
         <span class="macro">format!</span>(<span class="string">&quot;{}-{}-{}&quot;</span>, <span class="ident">p1</span>, <span class="ident">p2</span>, <span class="ident">p3</span>)
     });
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">boot</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">boot</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tag</span>(<span class="string">&quot;B:&quot;</span>),
@@ -882,7 +882,7 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">stopped</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">stopped</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tag</span>(<span class="string">&quot;O:&quot;</span>),
@@ -938,7 +938,7 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">data_snapshot</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">data_snapshot</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tag</span>(<span class="string">&quot;D:&quot;</span>),
@@ -1007,7 +1007,7 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">machine_state_snapshot</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">machine_state_snapshot</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tuple</span>((
@@ -1090,7 +1090,7 @@
                 <span class="ident">previous_plateau_pressure</span>,
                 <span class="ident">previous_peep_pressure</span>,
                 <span class="ident">current_alarm_codes</span>,
-                <span class="ident">previous_volume</span>: <span class="kw">if</span> <span class="ident">previous_volume</span> <span class="op">=</span><span class="op">=</span> <span class="number">0xFFFF</span> {
+                <span class="ident">previous_volume</span>: <span class="kw">if</span> <span class="ident">previous_volume</span> <span class="op">==</span> <span class="number">0xFFFF</span> {
                     <span class="prelude-val">None</span>
                 } <span class="kw">else</span> {
                     <span class="prelude-val">Some</span>(<span class="ident">previous_volume</span>)
@@ -1131,7 +1131,7 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">alarm_trap</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">alarm_trap</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tuple</span>((
@@ -1207,7 +1207,7 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">control_ack</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">control_ack</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tag</span>(<span class="string">&quot;A:&quot;</span>),
@@ -1241,7 +1241,7 @@
 <span class="doccomment">/// * `input` - Bytes to parse.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This only decodes the message body: header, CRC and footer must be stripped beforehand.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">message</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">message</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">nom::branch::alt</span>((
         <span class="ident">boot</span>,
         <span class="ident">stopped</span>,
@@ -1264,7 +1264,7 @@
     <span class="kw">use</span> <span class="ident">proptest::prelude</span>::<span class="kw-2">*</span>;
 
     <span class="comment">// TODO Generate all combinations (independent each other) ?</span>
-    <span class="kw">fn</span> <span class="ident">phase_subphase_strategy</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">Value</span> <span class="op">=</span> (<span class="ident">Phase</span>, <span class="ident">SubPhase</span>)<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">phase_subphase_strategy</span>() -&gt; <span class="kw">impl</span> <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">Value</span> <span class="op">=</span> (<span class="ident">Phase</span>, <span class="ident">SubPhase</span>)<span class="op">&gt;</span> {
         <span class="macro">prop_oneof!</span>[
             (<span class="ident">Just</span>(<span class="ident">Phase::Inhalation</span>), <span class="ident">Just</span>(<span class="ident">SubPhase::Inspiration</span>)),
             (<span class="ident">Just</span>(<span class="ident">Phase::Inhalation</span>), <span class="ident">Just</span>(<span class="ident">SubPhase::HoldInspiration</span>)),
@@ -1272,7 +1272,7 @@
         ]
     }
 
-    <span class="kw">fn</span> <span class="ident">alarm_priority_strategy</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">Value</span> <span class="op">=</span> <span class="ident">AlarmPriority</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">alarm_priority_strategy</span>() -&gt; <span class="kw">impl</span> <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">Value</span> <span class="op">=</span> <span class="ident">AlarmPriority</span><span class="op">&gt;</span> {
         <span class="macro">prop_oneof!</span>[
             <span class="ident">Just</span>(<span class="ident">AlarmPriority::Low</span>),
             <span class="ident">Just</span>(<span class="ident">AlarmPriority::Medium</span>),
@@ -1280,7 +1280,7 @@
         ]
     }
 
-    <span class="kw">fn</span> <span class="ident">control_setting_strategy</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">Value</span> <span class="op">=</span> <span class="ident">ControlSetting</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">control_setting_strategy</span>() -&gt; <span class="kw">impl</span> <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">Value</span> <span class="op">=</span> <span class="ident">ControlSetting</span><span class="op">&gt;</span> {
         <span class="ident">proptest::num::u8::ANY</span>.<span class="ident">prop_filter_map</span>(<span class="string">&quot;Invalid control setting&quot;</span>, <span class="op">|</span><span class="ident">n</span><span class="op">|</span> {
             <span class="ident">ControlSetting::try_from</span>(<span class="ident">n</span>).<span class="ident">ok</span>()
         })

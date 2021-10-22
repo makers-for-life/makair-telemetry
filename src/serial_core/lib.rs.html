@@ -856,7 +856,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">kind</span>: <span class="ident">ErrorKind</span>, <span class="ident">description</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">kind</span>: <span class="ident">ErrorKind</span>, <span class="ident">description</span>: <span class="ident">T</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Error</span> {
             <span class="ident">kind</span>: <span class="ident">kind</span>,
             <span class="ident">description</span>: <span class="ident">description</span>.<span class="ident">into</span>(),
@@ -864,35 +864,35 @@
     }
 
     <span class="doccomment">/// Returns the corresponding `ErrorKind` for this error.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ErrorKind</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ErrorKind</span> {
         <span class="self">self</span>.<span class="ident">kind</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::result::Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">std::result::Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
         <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">description</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">StdError</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">description</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">io::Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">io_error</span>: <span class="ident">io::Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">io_error</span>: <span class="ident">io::Error</span>) -&gt; <span class="ident">Error</span> {
         <span class="ident">Error::new</span>(<span class="ident">ErrorKind::Io</span>(<span class="ident">io_error</span>.<span class="ident">kind</span>()), <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">io_error</span>))
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">io::Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">error</span>: <span class="ident">Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">error</span>: <span class="ident">Error</span>) -&gt; <span class="ident">io::Error</span> {
         <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">error</span>.<span class="ident">kind</span> {
-            <span class="ident">ErrorKind::NoDevice</span>     <span class="op">=</span><span class="op">&gt;</span> <span class="ident">io::ErrorKind::NotFound</span>,
-            <span class="ident">ErrorKind::InvalidInput</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">io::ErrorKind::InvalidInput</span>,
-            <span class="ident">ErrorKind::Io</span>(<span class="ident">kind</span>)     <span class="op">=</span><span class="op">&gt;</span> <span class="ident">kind</span>,
+            <span class="ident">ErrorKind::NoDevice</span>     =&gt; <span class="ident">io::ErrorKind::NotFound</span>,
+            <span class="ident">ErrorKind::InvalidInput</span> =&gt; <span class="ident">io::ErrorKind::InvalidInput</span>,
+            <span class="ident">ErrorKind::Io</span>(<span class="ident">kind</span>)     =&gt; <span class="ident">kind</span>,
         };
 
         <span class="ident">io::Error::new</span>(<span class="ident">kind</span>, <span class="ident">error</span>.<span class="ident">description</span>)
@@ -969,20 +969,20 @@
     <span class="doccomment">/// assert_eq!(BaudRate::Baud115200, BaudRate::from_speed(115200));</span>
     <span class="doccomment">/// assert_eq!(BaudRate::BaudOther(4000000), BaudRate::from_speed(4000000));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_speed</span>(<span class="ident">speed</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">BaudRate</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_speed</span>(<span class="ident">speed</span>: <span class="ident">usize</span>) -&gt; <span class="ident">BaudRate</span> {
         <span class="kw">match</span> <span class="ident">speed</span> {
-            <span class="number">110</span>    <span class="op">=</span><span class="op">&gt;</span> <span class="ident">BaudRate::Baud110</span>,
-            <span class="number">300</span>    <span class="op">=</span><span class="op">&gt;</span> <span class="ident">BaudRate::Baud300</span>,
-            <span class="number">600</span>    <span class="op">=</span><span class="op">&gt;</span> <span class="ident">BaudRate::Baud600</span>,
-            <span class="number">1200</span>   <span class="op">=</span><span class="op">&gt;</span> <span class="ident">BaudRate::Baud1200</span>,
-            <span class="number">2400</span>   <span class="op">=</span><span class="op">&gt;</span> <span class="ident">BaudRate::Baud2400</span>,
-            <span class="number">4800</span>   <span class="op">=</span><span class="op">&gt;</span> <span class="ident">BaudRate::Baud4800</span>,
-            <span class="number">9600</span>   <span class="op">=</span><span class="op">&gt;</span> <span class="ident">BaudRate::Baud9600</span>,
-            <span class="number">19200</span>  <span class="op">=</span><span class="op">&gt;</span> <span class="ident">BaudRate::Baud19200</span>,
-            <span class="number">38400</span>  <span class="op">=</span><span class="op">&gt;</span> <span class="ident">BaudRate::Baud38400</span>,
-            <span class="number">57600</span>  <span class="op">=</span><span class="op">&gt;</span> <span class="ident">BaudRate::Baud57600</span>,
-            <span class="number">115200</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">BaudRate::Baud115200</span>,
-            <span class="ident">n</span>      <span class="op">=</span><span class="op">&gt;</span> <span class="ident">BaudRate::BaudOther</span>(<span class="ident">n</span>),
+            <span class="number">110</span>    =&gt; <span class="ident">BaudRate::Baud110</span>,
+            <span class="number">300</span>    =&gt; <span class="ident">BaudRate::Baud300</span>,
+            <span class="number">600</span>    =&gt; <span class="ident">BaudRate::Baud600</span>,
+            <span class="number">1200</span>   =&gt; <span class="ident">BaudRate::Baud1200</span>,
+            <span class="number">2400</span>   =&gt; <span class="ident">BaudRate::Baud2400</span>,
+            <span class="number">4800</span>   =&gt; <span class="ident">BaudRate::Baud4800</span>,
+            <span class="number">9600</span>   =&gt; <span class="ident">BaudRate::Baud9600</span>,
+            <span class="number">19200</span>  =&gt; <span class="ident">BaudRate::Baud19200</span>,
+            <span class="number">38400</span>  =&gt; <span class="ident">BaudRate::Baud38400</span>,
+            <span class="number">57600</span>  =&gt; <span class="ident">BaudRate::Baud57600</span>,
+            <span class="number">115200</span> =&gt; <span class="ident">BaudRate::Baud115200</span>,
+            <span class="ident">n</span>      =&gt; <span class="ident">BaudRate::BaudOther</span>(<span class="ident">n</span>),
         }
     }
 
@@ -996,20 +996,20 @@
     <span class="doccomment">/// assert_eq!(115200, BaudRate::Baud115200.speed());</span>
     <span class="doccomment">/// assert_eq!(4000000, BaudRate::BaudOther(4000000).speed());</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">speed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">speed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">BaudRate::Baud110</span>      <span class="op">=</span><span class="op">&gt;</span> <span class="number">110</span>,
-            <span class="ident">BaudRate::Baud300</span>      <span class="op">=</span><span class="op">&gt;</span> <span class="number">300</span>,
-            <span class="ident">BaudRate::Baud600</span>      <span class="op">=</span><span class="op">&gt;</span> <span class="number">600</span>,
-            <span class="ident">BaudRate::Baud1200</span>     <span class="op">=</span><span class="op">&gt;</span> <span class="number">1200</span>,
-            <span class="ident">BaudRate::Baud2400</span>     <span class="op">=</span><span class="op">&gt;</span> <span class="number">2400</span>,
-            <span class="ident">BaudRate::Baud4800</span>     <span class="op">=</span><span class="op">&gt;</span> <span class="number">4800</span>,
-            <span class="ident">BaudRate::Baud9600</span>     <span class="op">=</span><span class="op">&gt;</span> <span class="number">9600</span>,
-            <span class="ident">BaudRate::Baud19200</span>    <span class="op">=</span><span class="op">&gt;</span> <span class="number">19200</span>,
-            <span class="ident">BaudRate::Baud38400</span>    <span class="op">=</span><span class="op">&gt;</span> <span class="number">38400</span>,
-            <span class="ident">BaudRate::Baud57600</span>    <span class="op">=</span><span class="op">&gt;</span> <span class="number">57600</span>,
-            <span class="ident">BaudRate::Baud115200</span>   <span class="op">=</span><span class="op">&gt;</span> <span class="number">115200</span>,
-            <span class="ident">BaudRate::BaudOther</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">n</span>,
+            <span class="ident">BaudRate::Baud110</span>      =&gt; <span class="number">110</span>,
+            <span class="ident">BaudRate::Baud300</span>      =&gt; <span class="number">300</span>,
+            <span class="ident">BaudRate::Baud600</span>      =&gt; <span class="number">600</span>,
+            <span class="ident">BaudRate::Baud1200</span>     =&gt; <span class="number">1200</span>,
+            <span class="ident">BaudRate::Baud2400</span>     =&gt; <span class="number">2400</span>,
+            <span class="ident">BaudRate::Baud4800</span>     =&gt; <span class="number">4800</span>,
+            <span class="ident">BaudRate::Baud9600</span>     =&gt; <span class="number">9600</span>,
+            <span class="ident">BaudRate::Baud19200</span>    =&gt; <span class="number">19200</span>,
+            <span class="ident">BaudRate::Baud38400</span>    =&gt; <span class="number">38400</span>,
+            <span class="ident">BaudRate::Baud57600</span>    =&gt; <span class="number">57600</span>,
+            <span class="ident">BaudRate::Baud115200</span>   =&gt; <span class="number">115200</span>,
+            <span class="ident">BaudRate::BaudOther</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>,
         }
     }
 }
@@ -1121,7 +1121,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">read_settings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Settings</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">read_settings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Settings</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Applies new settings to the serial device.</span>
     <span class="doccomment">///</span>
@@ -1140,13 +1140,13 @@
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `InvalidInput` if a setting is not compatible with the underlying hardware.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">write_settings</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">settings</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Settings</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">write_settings</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">settings</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Settings</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="doccomment">/// Returns the current timeout.</span>
-    <span class="kw">fn</span> <span class="ident">timeout</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Duration</span>;
+    <span class="kw">fn</span> <span class="ident">timeout</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Duration</span>;
 
     <span class="doccomment">/// Sets the timeout for future I/O operations.</span>
-    <span class="kw">fn</span> <span class="ident">set_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">set_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="doccomment">/// Sets the state of the RTS (Request To Send) control signal.</span>
     <span class="doccomment">///</span>
@@ -1159,7 +1159,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">set_rts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">set_rts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="doccomment">/// Sets the state of the DTR (Data Terminal Ready) control signal.</span>
     <span class="doccomment">///</span>
@@ -1172,7 +1172,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">set_dtr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">set_dtr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="doccomment">/// Reads the state of the CTS (Clear To Send) control signal.</span>
     <span class="doccomment">///</span>
@@ -1185,7 +1185,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">read_cts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">read_cts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Reads the state of the DSR (Data Set Ready) control signal.</span>
     <span class="doccomment">///</span>
@@ -1198,7 +1198,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">read_dsr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">read_dsr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Reads the state of the RI (Ring Indicator) control signal.</span>
     <span class="doccomment">///</span>
@@ -1211,7 +1211,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">read_ri</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">read_ri</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Reads the state of the CD (Carrier Detect) control signal.</span>
     <span class="doccomment">///</span>
@@ -1224,7 +1224,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">read_cd</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">read_cd</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
 }
 
 <span class="doccomment">/// A trait for serial port devices.</span>
@@ -1239,10 +1239,10 @@
 <span class="doccomment">/// The serial port will be closed when the value is dropped.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SerialPort</span>: <span class="ident">io::Read</span> <span class="op">+</span> <span class="ident">io::Write</span> {
     <span class="doccomment">/// Returns the current timeout.</span>
-    <span class="kw">fn</span> <span class="ident">timeout</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Duration</span>;
+    <span class="kw">fn</span> <span class="ident">timeout</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Duration</span>;
 
     <span class="doccomment">/// Sets the timeout for future I/O operations.</span>
-    <span class="kw">fn</span> <span class="ident">set_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">set_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="doccomment">/// Configures a serial port device.</span>
     <span class="doccomment">///</span>
@@ -1254,7 +1254,7 @@
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `InvalidInput` if a setting is not compatible with the underlying hardware.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">configure</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">settings</span>: <span class="kw-2">&amp;</span><span class="ident">PortSettings</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">configure</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">settings</span>: <span class="kw-2">&amp;</span><span class="ident">PortSettings</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="doccomment">/// Alter the serial port&#39;s configuration.</span>
     <span class="doccomment">///</span>
@@ -1294,7 +1294,7 @@
     <span class="doccomment">///     })</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">reconfigure</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">setup</span>: <span class="kw-2">&amp;</span><span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SerialPortSettings</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">reconfigure</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">setup</span>: <span class="kw-2">&amp;</span><span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SerialPortSettings</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="doccomment">/// Sets the state of the RTS (Request To Send) control signal.</span>
     <span class="doccomment">///</span>
@@ -1307,7 +1307,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">set_rts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">set_rts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="doccomment">/// Sets the state of the DTR (Data Terminal Ready) control signal.</span>
     <span class="doccomment">///</span>
@@ -1320,7 +1320,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">set_dtr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">set_dtr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="doccomment">/// Reads the state of the CTS (Clear To Send) control signal.</span>
     <span class="doccomment">///</span>
@@ -1333,7 +1333,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">read_cts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">read_cts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Reads the state of the DSR (Data Set Ready) control signal.</span>
     <span class="doccomment">///</span>
@@ -1346,7 +1346,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">read_dsr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">read_dsr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Reads the state of the RI (Ring Indicator) control signal.</span>
     <span class="doccomment">///</span>
@@ -1359,7 +1359,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">read_ri</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">read_ri</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Reads the state of the CD (Carrier Detect) control signal.</span>
     <span class="doccomment">///</span>
@@ -1372,21 +1372,21 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `NoDevice` if the device was disconnected.</span>
     <span class="doccomment">/// * `Io` for any other type of I/O error.</span>
-    <span class="kw">fn</span> <span class="ident">read_cd</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">read_cd</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">SerialPort</span> <span class="kw">for</span> <span class="ident">T</span>
     <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">SerialDevice</span>
 {
-    <span class="kw">fn</span> <span class="ident">timeout</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Duration</span> {
+    <span class="kw">fn</span> <span class="ident">timeout</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Duration</span> {
         <span class="ident">T::timeout</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">set_timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="ident">T::set_timeout</span>(<span class="self">self</span>, <span class="ident">timeout</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">configure</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">settings</span>: <span class="kw-2">&amp;</span><span class="ident">PortSettings</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">configure</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">settings</span>: <span class="kw-2">&amp;</span><span class="ident">PortSettings</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">device_settings</span> <span class="op">=</span> <span class="macro">try!</span>(<span class="ident">T::read_settings</span>(<span class="self">self</span>));
 
         <span class="macro">try!</span>(<span class="ident">device_settings</span>.<span class="ident">set_baud_rate</span>(<span class="ident">settings</span>.<span class="ident">baud_rate</span>));
@@ -1398,33 +1398,33 @@
         <span class="ident">T::write_settings</span>(<span class="self">self</span>, <span class="kw-2">&amp;</span><span class="ident">device_settings</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">reconfigure</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">setup</span>: <span class="kw-2">&amp;</span><span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SerialPortSettings</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">reconfigure</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">setup</span>: <span class="kw-2">&amp;</span><span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SerialPortSettings</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">device_settings</span> <span class="op">=</span> <span class="macro">try!</span>(<span class="ident">T::read_settings</span>(<span class="self">self</span>));
         <span class="macro">try!</span>(<span class="ident">setup</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">device_settings</span>));
         <span class="ident">T::write_settings</span>(<span class="self">self</span>, <span class="kw-2">&amp;</span><span class="ident">device_settings</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_rts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">set_rts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="ident">T::set_rts</span>(<span class="self">self</span>, <span class="ident">level</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_dtr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">set_dtr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">level</span>: <span class="ident">bool</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="ident">T::set_dtr</span>(<span class="self">self</span>, <span class="ident">level</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">read_cts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read_cts</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="ident">T::read_cts</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">read_dsr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read_dsr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="ident">T::read_dsr</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">read_ri</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read_ri</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="ident">T::read_ri</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">read_cd</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read_cd</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="ident">T::read_cd</span>(<span class="self">self</span>)
     }
 }
@@ -1436,7 +1436,7 @@
     <span class="doccomment">/// This function returns `None` if the baud rate could not be determined. This may occur if</span>
     <span class="doccomment">/// the hardware is in an uninitialized state. Setting a baud rate with `set_baud_rate()`</span>
     <span class="doccomment">/// should initialize the baud rate to a supported value.</span>
-    <span class="kw">fn</span> <span class="ident">baud_rate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BaudRate</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">baud_rate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BaudRate</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Returns the character size.</span>
     <span class="doccomment">///</span>
@@ -1444,14 +1444,14 @@
     <span class="doccomment">/// if the hardware is in an uninitialized state or is using a non-standard character size.</span>
     <span class="doccomment">/// Setting a baud rate with `set_char_size()` should initialize the character size to a</span>
     <span class="doccomment">/// supported value.</span>
-    <span class="kw">fn</span> <span class="ident">char_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CharSize</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">char_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CharSize</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Returns the parity-checking mode.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This function returns `None` if the parity mode could not be determined. This may occur if</span>
     <span class="doccomment">/// the hardware is in an uninitialized state or is using a non-standard parity mode. Setting</span>
     <span class="doccomment">/// a parity mode with `set_parity()` should initialize the parity mode to a supported value.</span>
-    <span class="kw">fn</span> <span class="ident">parity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Parity</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">parity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Parity</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Returns the number of stop bits.</span>
     <span class="doccomment">///</span>
@@ -1459,7 +1459,7 @@
     <span class="doccomment">/// occur if the hardware is in an uninitialized state or is using an unsupported stop bit</span>
     <span class="doccomment">/// configuration. Setting the number of stop bits with `set_stop-bits()` should initialize the</span>
     <span class="doccomment">/// stop bits to a supported value.</span>
-    <span class="kw">fn</span> <span class="ident">stop_bits</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StopBits</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">stop_bits</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StopBits</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Returns the flow control mode.</span>
     <span class="doccomment">///</span>
@@ -1467,7 +1467,7 @@
     <span class="doccomment">/// occur if the hardware is in an uninitialized state or is using an unsupported flow control</span>
     <span class="doccomment">/// mode. Setting a flow control mode with `set_flow_control()` should initialize the flow</span>
     <span class="doccomment">/// control mode to a supported value.</span>
-    <span class="kw">fn</span> <span class="ident">flow_control</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FlowControl</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">flow_control</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FlowControl</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Sets the baud rate.</span>
     <span class="doccomment">///</span>
@@ -1476,7 +1476,7 @@
     <span class="doccomment">/// If the implementation does not support the requested baud rate, this function may return an</span>
     <span class="doccomment">/// `InvalidInput` error. Even if the baud rate is accepted by `set_baud_rate()`, it may not be</span>
     <span class="doccomment">/// supported by the underlying hardware.</span>
-    <span class="kw">fn</span> <span class="ident">set_baud_rate</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">baud_rate</span>: <span class="ident">BaudRate</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">set_baud_rate</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">baud_rate</span>: <span class="ident">BaudRate</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="doccomment">/// Sets the character size.</span>
     <span class="kw">fn</span> <span class="ident">set_char_size</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">char_size</span>: <span class="ident">CharSize</span>);
@@ -1511,27 +1511,27 @@
 }
 
 <span class="kw">impl</span> <span class="ident">SerialPortSettings</span> <span class="kw">for</span> <span class="ident">PortSettings</span> {
-    <span class="kw">fn</span> <span class="ident">baud_rate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BaudRate</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">baud_rate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BaudRate</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">baud_rate</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">char_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CharSize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">char_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CharSize</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">char_size</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">parity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Parity</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">parity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Parity</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">parity</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">stop_bits</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StopBits</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">stop_bits</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StopBits</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">stop_bits</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">flow_control</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FlowControl</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">flow_control</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FlowControl</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">flow_control</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_baud_rate</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">baud_rate</span>: <span class="ident">BaudRate</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">set_baud_rate</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">baud_rate</span>: <span class="ident">BaudRate</span>) -&gt; <span class="ident">::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">baud_rate</span> <span class="op">=</span> <span class="ident">baud_rate</span>;
         <span class="prelude-val">Ok</span>(())
     }
@@ -1557,7 +1557,7 @@
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
-    <span class="kw">fn</span> <span class="ident">default_port_settings</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PortSettings</span> {
+    <span class="kw">fn</span> <span class="ident">default_port_settings</span>() -&gt; <span class="ident">PortSettings</span> {
         <span class="ident">PortSettings</span> {
             <span class="ident">baud_rate</span>: <span class="ident">BaudRate::Baud9600</span>,
             <span class="ident">char_size</span>: <span class="ident">CharSize::Bits8</span>,

@@ -333,52 +333,52 @@
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">str::Utf8Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw">_</span>: <span class="ident">str::Utf8Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw">_</span>: <span class="ident">str::Utf8Error</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Error::Utf8</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">string::FromUtf8Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw">_</span>: <span class="ident">string::FromUtf8Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw">_</span>: <span class="ident">string::FromUtf8Error</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Error::Utf8</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">http::header::InvalidHeaderValue</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">http::header::InvalidHeaderValue</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">http::header::InvalidHeaderValue</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Error::HttpFormat</span>(<span class="ident">err</span>.<span class="ident">into</span>())
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">http::header::InvalidHeaderName</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">http::header::InvalidHeaderName</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">http::header::InvalidHeaderName</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Error::HttpFormat</span>(<span class="ident">err</span>.<span class="ident">into</span>())
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">http::header::ToStrError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw">_</span>: <span class="ident">http::header::ToStrError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw">_</span>: <span class="ident">http::header::ToStrError</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Error::Utf8</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">http::uri::InvalidUri</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">http::uri::InvalidUri</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">http::uri::InvalidUri</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Error::HttpFormat</span>(<span class="ident">err</span>.<span class="ident">into</span>())
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">http::status::InvalidStatusCode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">http::status::InvalidStatusCode</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">http::status::InvalidStatusCode</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Error::HttpFormat</span>(<span class="ident">err</span>.<span class="ident">into</span>())
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">httparse::Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">httparse::Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">httparse::Error</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">err</span> {
-            <span class="ident">httparse::Error::TooManyHeaders</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Error::Capacity</span>(<span class="ident">CapacityError::TooManyHeaders</span>),
-            <span class="ident">e</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::HttparseError</span>(<span class="ident">e</span>)),
+            <span class="ident">httparse::Error::TooManyHeaders</span> =&gt; <span class="ident">Error::Capacity</span>(<span class="ident">CapacityError::TooManyHeaders</span>),
+            <span class="ident">e</span> =&gt; <span class="ident">Error::Protocol</span>(<span class="ident">ProtocolError::HttparseError</span>(<span class="ident">e</span>)),
         }
     }
 }

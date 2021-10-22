@@ -250,15 +250,15 @@
 
 <span class="kw">const</span> <span class="ident">MAXIMUM_SUPPORTED_VERSION</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">2</span>;
 
-<span class="kw">fn</span> <span class="ident">header</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">header</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">nom::bytes::streaming::tag</span>(<span class="string">b&quot;\x03\x0C&quot;</span>)(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">footer</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">footer</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">nom::bytes::streaming::tag</span>(<span class="string">b&quot;\x30\xC0&quot;</span>)(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">message</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">message</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">nom::branch::alt</span>((<span class="ident">v2::message</span>, <span class="ident">v1::message</span>))(<span class="ident">input</span>).<span class="ident">map_err</span>(<span class="ident">nom::Err::convert</span>)
 }
 
@@ -268,7 +268,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// This requires the message header and the 3 first bytes of the message body.</span>
 <span class="doccomment">/// CRC will not be checked.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">protocol_version</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">u8</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">protocol_version</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">u8</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="ident">nom::bytes::streaming</span>::{<span class="ident">tag</span>, <span class="ident">take</span>};
     <span class="kw">use</span> <span class="ident">nom::number::streaming::be_u8</span>;
     <span class="kw">use</span> <span class="ident">nom::sequence</span>::{<span class="ident">pair</span>, <span class="ident">preceded</span>};
@@ -285,7 +285,7 @@
 <span class="doccomment">/// CRC will be checked.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_telemetry_message</span>(
     <span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="ident">nom::combinator::consumed</span>;
     <span class="kw">use</span> <span class="ident">nom::number::streaming::be_u32</span>;
     <span class="kw">use</span> <span class="ident">nom::sequence</span>::{<span class="ident">pair</span>, <span class="ident">preceded</span>, <span class="ident">terminated</span>};
@@ -296,7 +296,7 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">crc</span> <span class="op">=</span> <span class="ident">crc32fast::Hasher::new</span>();
             <span class="ident">crc</span>.<span class="ident">update</span>(<span class="ident">msg_bytes</span>);
             <span class="kw">let</span> <span class="ident">computed_crc</span> <span class="op">=</span> <span class="ident">crc</span>.<span class="ident">finalize</span>();
-            <span class="kw">if</span> <span class="ident">expected_crc</span> <span class="op">=</span><span class="op">=</span> <span class="ident">computed_crc</span> {
+            <span class="kw">if</span> <span class="ident">expected_crc</span> <span class="op">==</span> <span class="ident">computed_crc</span> {
                 <span class="prelude-val">Ok</span>((<span class="ident">rest</span>, <span class="ident">msg</span>))
             } <span class="kw">else</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">nom::Err::Failure</span>(<span class="ident">TelemetryError</span>(
@@ -312,7 +312,7 @@
             <span class="ident">nom::Err::Error</span>(<span class="ident">TelemetryError</span>(
                 <span class="kw">_</span>,
                 <span class="ident">TelemetryErrorKind::ParserError</span>(<span class="ident">nom::error::ErrorKind::Tag</span>),
-            )) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">protocol_version</span>(<span class="ident">input</span>).<span class="ident">and_then</span>(<span class="op">|</span>(<span class="ident">_rest</span>, <span class="ident">version</span>)<span class="op">|</span> {
+            )) =&gt; <span class="ident">protocol_version</span>(<span class="ident">input</span>).<span class="ident">and_then</span>(<span class="op">|</span>(<span class="ident">_rest</span>, <span class="ident">version</span>)<span class="op">|</span> {
                 <span class="kw">if</span> <span class="ident">version</span> <span class="op">&gt;</span> <span class="ident">MAXIMUM_SUPPORTED_VERSION</span> {
                     <span class="prelude-val">Err</span>(<span class="ident">nom::Err::Failure</span>(<span class="ident">TelemetryError</span>(
                         <span class="ident">input</span>,
@@ -325,7 +325,7 @@
                     <span class="prelude-val">Err</span>(<span class="ident">e</span>)
                 }
             }),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>),
+            <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">e</span>),
         })
 }
 
@@ -335,11 +335,11 @@
     <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::serializers::ToBytes</span>;
     <span class="kw">use</span> <span class="ident">proptest::prelude</span>::<span class="kw-2">*</span>;
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flat</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flat</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]]) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="ident">v</span>.<span class="ident">iter</span>().<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>()).<span class="ident">copied</span>().<span class="ident">collect</span>()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mode_strategy</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">Value</span> <span class="op">=</span> <span class="ident">Mode</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mode_strategy</span>() -&gt; <span class="kw">impl</span> <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">Value</span> <span class="op">=</span> <span class="ident">Mode</span><span class="op">&gt;</span> {
         <span class="macro">prop_oneof!</span>[
             <span class="ident">Just</span>(<span class="ident">Mode::Production</span>),
             <span class="ident">Just</span>(<span class="ident">Mode::Qualification</span>),
@@ -347,11 +347,11 @@
         ]
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mode_ordinal</span>(<span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">Mode</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u8</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mode_ordinal</span>(<span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">Mode</span>) -&gt; <span class="ident">u8</span> {
         <span class="kw">match</span> <span class="ident">m</span> {
-            <span class="ident">Mode::Production</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1</span>,
-            <span class="ident">Mode::Qualification</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">2</span>,
-            <span class="ident">Mode::IntegrationTest</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">3</span>,
+            <span class="ident">Mode::Production</span> =&gt; <span class="number">1</span>,
+            <span class="ident">Mode::Qualification</span> =&gt; <span class="number">2</span>,
+            <span class="ident">Mode::IntegrationTest</span> =&gt; <span class="number">3</span>,
         }
     }
 
@@ -396,7 +396,7 @@
             <span class="ident">crc</span>.<span class="ident">update</span>(<span class="ident">input_message</span>);
             <span class="kw">let</span> <span class="ident">expected_crc</span> <span class="op">=</span> <span class="ident">crc</span>.<span class="ident">finalize</span>();
 
-            <span class="kw">let</span> <span class="ident">fake_crc</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">random_crc</span> <span class="op">=</span><span class="op">=</span> <span class="ident">expected_crc</span> {
+            <span class="kw">let</span> <span class="ident">fake_crc</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">random_crc</span> <span class="op">==</span> <span class="ident">expected_crc</span> {
                 <span class="kw">if</span> <span class="ident">random_crc</span> <span class="op">&gt;</span> <span class="number">0</span> { <span class="ident">random_crc</span> <span class="op">-</span> <span class="number">1</span> } <span class="kw">else</span> { <span class="ident">random_crc</span> <span class="op">+</span> <span class="number">1</span> }
             } <span class="kw">else</span> {
                 <span class="ident">random_crc</span>

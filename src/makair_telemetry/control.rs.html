@@ -364,11 +364,6 @@
 <span id="364">364</span>
 <span id="365">365</span>
 <span id="366">366</span>
-<span id="367">367</span>
-<span id="368">368</span>
-<span id="369">369</span>
-<span id="370">370</span>
-<span id="371">371</span>
 </pre><pre class="rust"><code><span class="comment">// MakAir Telemetry</span>
 <span class="comment">//</span>
 <span class="comment">// Copyright: 2020, Makers For Life</span>
@@ -464,80 +459,80 @@
 
 <span class="kw">impl</span> <span class="ident">ControlSetting</span> {
     <span class="doccomment">/// Default settings</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
         <span class="comment">// Returns default value</span>
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Heartbeat</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
-            <span class="ident"><span class="self">Self</span>::VentilationMode</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1</span>,
-            <span class="ident"><span class="self">Self</span>::PlateauPressure</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
-            <span class="ident"><span class="self">Self</span>::PEEP</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
-            <span class="ident"><span class="self">Self</span>::CyclesPerMinute</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">20</span>,
-            <span class="ident"><span class="self">Self</span>::ExpiratoryTerm</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">20</span>,
-            <span class="ident"><span class="self">Self</span>::TriggerEnabled</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
-            <span class="ident"><span class="self">Self</span>::TriggerOffset</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">20</span>,
-            <span class="ident"><span class="self">Self</span>::RespirationEnabled</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
-            <span class="ident"><span class="self">Self</span>::AlarmSnooze</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
-            <span class="ident"><span class="self">Self</span>::InspiratoryTriggerFlow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">10</span>,
-            <span class="ident"><span class="self">Self</span>::ExpiratoryTriggerFlow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">30</span>,
-            <span class="ident"><span class="self">Self</span>::TiMin</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">200</span>,
-            <span class="ident"><span class="self">Self</span>::TiMax</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1_000</span>,
-            <span class="ident"><span class="self">Self</span>::LowInspiratoryMinuteVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">3</span>,
-            <span class="ident"><span class="self">Self</span>::HighInspiratoryMinuteVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">20</span>,
-            <span class="ident"><span class="self">Self</span>::LowExpiratoryMinuteVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">3</span>,
-            <span class="ident"><span class="self">Self</span>::HighExpiratoryMinuteVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">20</span>,
-            <span class="ident"><span class="self">Self</span>::LowRespiratoryRateAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">16</span>,
-            <span class="ident"><span class="self">Self</span>::HighRespiratoryRateAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">24</span>,
-            <span class="ident"><span class="self">Self</span>::TargetTidalVolume</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">400</span>,
-            <span class="ident"><span class="self">Self</span>::LowTidalVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">200</span>,
-            <span class="ident"><span class="self">Self</span>::HighTidalVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1_000</span>,
-            <span class="ident"><span class="self">Self</span>::PlateauDuration</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">200</span>,
-            <span class="ident"><span class="self">Self</span>::LeakAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">200</span>,
-            <span class="ident"><span class="self">Self</span>::TargetInspiratoryFlow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">40</span>,
-            <span class="ident"><span class="self">Self</span>::InspiratoryDuration</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">800</span>,
-            <span class="ident"><span class="self">Self</span>::Locale</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Locale::default</span>().<span class="ident">as_usize</span>(),
-            <span class="ident"><span class="self">Self</span>::PatientHeight</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">160</span>,
-            <span class="ident"><span class="self">Self</span>::PatientGender</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
-            <span class="ident"><span class="self">Self</span>::PeakPressureAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">500</span>,
-            <span class="ident"><span class="self">Self</span>::EolConfirm</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
+            <span class="ident"><span class="self">Self</span>::Heartbeat</span> =&gt; <span class="number">0</span>,
+            <span class="ident"><span class="self">Self</span>::VentilationMode</span> =&gt; <span class="number">1</span>,
+            <span class="ident"><span class="self">Self</span>::PlateauPressure</span> =&gt; <span class="number">0</span>,
+            <span class="ident"><span class="self">Self</span>::PEEP</span> =&gt; <span class="number">0</span>,
+            <span class="ident"><span class="self">Self</span>::CyclesPerMinute</span> =&gt; <span class="number">20</span>,
+            <span class="ident"><span class="self">Self</span>::ExpiratoryTerm</span> =&gt; <span class="number">20</span>,
+            <span class="ident"><span class="self">Self</span>::TriggerEnabled</span> =&gt; <span class="number">0</span>,
+            <span class="ident"><span class="self">Self</span>::TriggerOffset</span> =&gt; <span class="number">20</span>,
+            <span class="ident"><span class="self">Self</span>::RespirationEnabled</span> =&gt; <span class="number">0</span>,
+            <span class="ident"><span class="self">Self</span>::AlarmSnooze</span> =&gt; <span class="number">0</span>,
+            <span class="ident"><span class="self">Self</span>::InspiratoryTriggerFlow</span> =&gt; <span class="number">10</span>,
+            <span class="ident"><span class="self">Self</span>::ExpiratoryTriggerFlow</span> =&gt; <span class="number">30</span>,
+            <span class="ident"><span class="self">Self</span>::TiMin</span> =&gt; <span class="number">200</span>,
+            <span class="ident"><span class="self">Self</span>::TiMax</span> =&gt; <span class="number">1_000</span>,
+            <span class="ident"><span class="self">Self</span>::LowInspiratoryMinuteVolumeAlarmThreshold</span> =&gt; <span class="number">3</span>,
+            <span class="ident"><span class="self">Self</span>::HighInspiratoryMinuteVolumeAlarmThreshold</span> =&gt; <span class="number">20</span>,
+            <span class="ident"><span class="self">Self</span>::LowExpiratoryMinuteVolumeAlarmThreshold</span> =&gt; <span class="number">3</span>,
+            <span class="ident"><span class="self">Self</span>::HighExpiratoryMinuteVolumeAlarmThreshold</span> =&gt; <span class="number">20</span>,
+            <span class="ident"><span class="self">Self</span>::LowRespiratoryRateAlarmThreshold</span> =&gt; <span class="number">16</span>,
+            <span class="ident"><span class="self">Self</span>::HighRespiratoryRateAlarmThreshold</span> =&gt; <span class="number">24</span>,
+            <span class="ident"><span class="self">Self</span>::TargetTidalVolume</span> =&gt; <span class="number">400</span>,
+            <span class="ident"><span class="self">Self</span>::LowTidalVolumeAlarmThreshold</span> =&gt; <span class="number">200</span>,
+            <span class="ident"><span class="self">Self</span>::HighTidalVolumeAlarmThreshold</span> =&gt; <span class="number">1_000</span>,
+            <span class="ident"><span class="self">Self</span>::PlateauDuration</span> =&gt; <span class="number">200</span>,
+            <span class="ident"><span class="self">Self</span>::LeakAlarmThreshold</span> =&gt; <span class="number">200</span>,
+            <span class="ident"><span class="self">Self</span>::TargetInspiratoryFlow</span> =&gt; <span class="number">40</span>,
+            <span class="ident"><span class="self">Self</span>::InspiratoryDuration</span> =&gt; <span class="number">800</span>,
+            <span class="ident"><span class="self">Self</span>::Locale</span> =&gt; <span class="ident">Locale::default</span>().<span class="ident">as_usize</span>(),
+            <span class="ident"><span class="self">Self</span>::PatientHeight</span> =&gt; <span class="number">160</span>,
+            <span class="ident"><span class="self">Self</span>::PatientGender</span> =&gt; <span class="number">0</span>,
+            <span class="ident"><span class="self">Self</span>::PeakPressureAlarmThreshold</span> =&gt; <span class="number">500</span>,
+            <span class="ident"><span class="self">Self</span>::EolConfirm</span> =&gt; <span class="number">0</span>,
         }
     }
 
     <span class="doccomment">/// Allowed value bounds per setting</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bounds</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RangeInclusive</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bounds</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RangeInclusive</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="comment">// Returns allowed value bounds</span>
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Heartbeat</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">255</span>),
-            <span class="ident"><span class="self">Self</span>::VentilationMode</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">1</span>, <span class="number">5</span>),
-            <span class="ident"><span class="self">Self</span>::PlateauPressure</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">50</span>, <span class="number">400</span>),
-            <span class="ident"><span class="self">Self</span>::PEEP</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">300</span>),
-            <span class="ident"><span class="self">Self</span>::CyclesPerMinute</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">5</span>, <span class="number">35</span>),
-            <span class="ident"><span class="self">Self</span>::ExpiratoryTerm</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">10</span>, <span class="number">60</span>),
-            <span class="ident"><span class="self">Self</span>::TriggerEnabled</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">1</span>),
-            <span class="ident"><span class="self">Self</span>::TriggerOffset</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">100</span>),
-            <span class="ident"><span class="self">Self</span>::RespirationEnabled</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">1</span>),
-            <span class="ident"><span class="self">Self</span>::AlarmSnooze</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">1</span>),
-            <span class="ident"><span class="self">Self</span>::InspiratoryTriggerFlow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">100</span>),
-            <span class="ident"><span class="self">Self</span>::ExpiratoryTriggerFlow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">100</span>),
-            <span class="ident"><span class="self">Self</span>::TiMin</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">100</span>, <span class="number">3_000</span>),
-            <span class="ident"><span class="self">Self</span>::TiMax</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">200</span>, <span class="number">5_000</span>),
-            <span class="ident"><span class="self">Self</span>::LowInspiratoryMinuteVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">20</span>),
-            <span class="ident"><span class="self">Self</span>::HighInspiratoryMinuteVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">1</span>, <span class="number">40</span>),
-            <span class="ident"><span class="self">Self</span>::LowExpiratoryMinuteVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">20</span>),
-            <span class="ident"><span class="self">Self</span>::HighExpiratoryMinuteVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">1</span>, <span class="number">40</span>),
-            <span class="ident"><span class="self">Self</span>::LowRespiratoryRateAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">5</span>, <span class="number">25</span>),
-            <span class="ident"><span class="self">Self</span>::HighRespiratoryRateAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">15</span>, <span class="number">35</span>),
-            <span class="ident"><span class="self">Self</span>::TargetTidalVolume</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">50</span>, <span class="number">2_000</span>),
-            <span class="ident"><span class="self">Self</span>::LowTidalVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">1_000</span>),
-            <span class="ident"><span class="self">Self</span>::HighTidalVolumeAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">50</span>, <span class="number">2_000</span>),
-            <span class="ident"><span class="self">Self</span>::PlateauDuration</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">100</span>, <span class="number">2_000</span>),
-            <span class="ident"><span class="self">Self</span>::LeakAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">10_000</span>),
-            <span class="ident"><span class="self">Self</span>::TargetInspiratoryFlow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">5</span>, <span class="number">80</span>),
-            <span class="ident"><span class="self">Self</span>::InspiratoryDuration</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">200</span>, <span class="number">3_000</span>),
-            <span class="ident"><span class="self">Self</span>::Locale</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Locale::bounds</span>(),
-            <span class="ident"><span class="self">Self</span>::PatientHeight</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">30</span>, <span class="number">250</span>),
-            <span class="ident"><span class="self">Self</span>::PatientGender</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">1</span>),
-            <span class="ident"><span class="self">Self</span>::PeakPressureAlarmThreshold</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">50</span>, <span class="number">700</span>),
-            <span class="ident"><span class="self">Self</span>::EolConfirm</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">0</span>),
+            <span class="ident"><span class="self">Self</span>::Heartbeat</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">255</span>),
+            <span class="ident"><span class="self">Self</span>::VentilationMode</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">1</span>, <span class="number">5</span>),
+            <span class="ident"><span class="self">Self</span>::PlateauPressure</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">50</span>, <span class="number">400</span>),
+            <span class="ident"><span class="self">Self</span>::PEEP</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">300</span>),
+            <span class="ident"><span class="self">Self</span>::CyclesPerMinute</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">5</span>, <span class="number">35</span>),
+            <span class="ident"><span class="self">Self</span>::ExpiratoryTerm</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">10</span>, <span class="number">60</span>),
+            <span class="ident"><span class="self">Self</span>::TriggerEnabled</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">1</span>),
+            <span class="ident"><span class="self">Self</span>::TriggerOffset</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">100</span>),
+            <span class="ident"><span class="self">Self</span>::RespirationEnabled</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">1</span>),
+            <span class="ident"><span class="self">Self</span>::AlarmSnooze</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">1</span>),
+            <span class="ident"><span class="self">Self</span>::InspiratoryTriggerFlow</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">100</span>),
+            <span class="ident"><span class="self">Self</span>::ExpiratoryTriggerFlow</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">100</span>),
+            <span class="ident"><span class="self">Self</span>::TiMin</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">100</span>, <span class="number">3_000</span>),
+            <span class="ident"><span class="self">Self</span>::TiMax</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">200</span>, <span class="number">5_000</span>),
+            <span class="ident"><span class="self">Self</span>::LowInspiratoryMinuteVolumeAlarmThreshold</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">20</span>),
+            <span class="ident"><span class="self">Self</span>::HighInspiratoryMinuteVolumeAlarmThreshold</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">1</span>, <span class="number">40</span>),
+            <span class="ident"><span class="self">Self</span>::LowExpiratoryMinuteVolumeAlarmThreshold</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">20</span>),
+            <span class="ident"><span class="self">Self</span>::HighExpiratoryMinuteVolumeAlarmThreshold</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">1</span>, <span class="number">40</span>),
+            <span class="ident"><span class="self">Self</span>::LowRespiratoryRateAlarmThreshold</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">5</span>, <span class="number">25</span>),
+            <span class="ident"><span class="self">Self</span>::HighRespiratoryRateAlarmThreshold</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">15</span>, <span class="number">35</span>),
+            <span class="ident"><span class="self">Self</span>::TargetTidalVolume</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">50</span>, <span class="number">2_000</span>),
+            <span class="ident"><span class="self">Self</span>::LowTidalVolumeAlarmThreshold</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">1_000</span>),
+            <span class="ident"><span class="self">Self</span>::HighTidalVolumeAlarmThreshold</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">50</span>, <span class="number">2_000</span>),
+            <span class="ident"><span class="self">Self</span>::PlateauDuration</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">100</span>, <span class="number">2_000</span>),
+            <span class="ident"><span class="self">Self</span>::LeakAlarmThreshold</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">10_000</span>),
+            <span class="ident"><span class="self">Self</span>::TargetInspiratoryFlow</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">5</span>, <span class="number">80</span>),
+            <span class="ident"><span class="self">Self</span>::InspiratoryDuration</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">200</span>, <span class="number">3_000</span>),
+            <span class="ident"><span class="self">Self</span>::Locale</span> =&gt; <span class="ident">Locale::bounds</span>(),
+            <span class="ident"><span class="self">Self</span>::PatientHeight</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">30</span>, <span class="number">250</span>),
+            <span class="ident"><span class="self">Self</span>::PatientGender</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">1</span>),
+            <span class="ident"><span class="self">Self</span>::PeakPressureAlarmThreshold</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">50</span>, <span class="number">700</span>),
+            <span class="ident"><span class="self">Self</span>::EolConfirm</span> =&gt; <span class="ident">RangeInclusive::new</span>(<span class="number">0</span>, <span class="number">0</span>),
         }
     }
 }
@@ -545,50 +540,48 @@
 <span class="kw">impl</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ControlSetting</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="ident">u8</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">value</span> {
-            <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::Heartbeat</span>),
-            <span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::VentilationMode</span>),
-            <span class="number">2</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PlateauPressure</span>),
-            <span class="number">3</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PEEP</span>),
-            <span class="number">4</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::CyclesPerMinute</span>),
-            <span class="number">5</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::ExpiratoryTerm</span>),
-            <span class="number">6</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::TriggerEnabled</span>),
-            <span class="number">7</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::TriggerOffset</span>),
-            <span class="number">8</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::RespirationEnabled</span>),
-            <span class="number">9</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::AlarmSnooze</span>),
-            <span class="number">10</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::InspiratoryTriggerFlow</span>),
-            <span class="number">11</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::ExpiratoryTriggerFlow</span>),
-            <span class="number">12</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::TiMin</span>),
-            <span class="number">13</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::TiMax</span>),
-            <span class="number">14</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::LowInspiratoryMinuteVolumeAlarmThreshold</span>),
-            <span class="number">15</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold</span>),
-            <span class="number">16</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold</span>),
-            <span class="number">17</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold</span>),
-            <span class="number">18</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::LowRespiratoryRateAlarmThreshold</span>),
-            <span class="number">19</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::HighRespiratoryRateAlarmThreshold</span>),
-            <span class="number">20</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::TargetTidalVolume</span>),
-            <span class="number">21</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::LowTidalVolumeAlarmThreshold</span>),
-            <span class="number">22</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::HighTidalVolumeAlarmThreshold</span>),
-            <span class="number">23</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PlateauDuration</span>),
-            <span class="number">24</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::LeakAlarmThreshold</span>),
-            <span class="number">25</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::TargetInspiratoryFlow</span>),
-            <span class="number">26</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::InspiratoryDuration</span>),
-            <span class="number">27</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::Locale</span>),
-            <span class="number">28</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PatientHeight</span>),
-            <span class="number">29</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PatientGender</span>),
-            <span class="number">30</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PeakPressureAlarmThreshold</span>),
-            <span class="number">31</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::EolConfirm</span>),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Invalid setting number&quot;</span>),
+            <span class="number">0</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::Heartbeat</span>),
+            <span class="number">1</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::VentilationMode</span>),
+            <span class="number">2</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PlateauPressure</span>),
+            <span class="number">3</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PEEP</span>),
+            <span class="number">4</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::CyclesPerMinute</span>),
+            <span class="number">5</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::ExpiratoryTerm</span>),
+            <span class="number">6</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::TriggerEnabled</span>),
+            <span class="number">7</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::TriggerOffset</span>),
+            <span class="number">8</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::RespirationEnabled</span>),
+            <span class="number">9</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::AlarmSnooze</span>),
+            <span class="number">10</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::InspiratoryTriggerFlow</span>),
+            <span class="number">11</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::ExpiratoryTriggerFlow</span>),
+            <span class="number">12</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::TiMin</span>),
+            <span class="number">13</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::TiMax</span>),
+            <span class="number">14</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::LowInspiratoryMinuteVolumeAlarmThreshold</span>),
+            <span class="number">15</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::HighInspiratoryMinuteVolumeAlarmThreshold</span>),
+            <span class="number">16</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::LowExpiratoryMinuteVolumeAlarmThreshold</span>),
+            <span class="number">17</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::HighExpiratoryMinuteVolumeAlarmThreshold</span>),
+            <span class="number">18</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::LowRespiratoryRateAlarmThreshold</span>),
+            <span class="number">19</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::HighRespiratoryRateAlarmThreshold</span>),
+            <span class="number">20</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::TargetTidalVolume</span>),
+            <span class="number">21</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::LowTidalVolumeAlarmThreshold</span>),
+            <span class="number">22</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::HighTidalVolumeAlarmThreshold</span>),
+            <span class="number">23</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PlateauDuration</span>),
+            <span class="number">24</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::LeakAlarmThreshold</span>),
+            <span class="number">25</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::TargetInspiratoryFlow</span>),
+            <span class="number">26</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::InspiratoryDuration</span>),
+            <span class="number">27</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::Locale</span>),
+            <span class="number">28</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PatientHeight</span>),
+            <span class="number">29</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PatientGender</span>),
+            <span class="number">30</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::PeakPressureAlarmThreshold</span>),
+            <span class="number">31</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ControlSetting::EolConfirm</span>),
+            <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="string">&quot;Invalid setting number&quot;</span>),
         }
     }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rand&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">rand::distributions::Distribution</span><span class="op">&lt;</span><span class="ident">ControlSetting</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">rand::distributions::Standard</span> {
-    <span class="kw">fn</span> <span class="ident">sample</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">rand::Rng</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ControlSetting</span> {
-        <span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
-
+    <span class="kw">fn</span> <span class="ident">sample</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">rand::Rng</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) -&gt; <span class="ident">ControlSetting</span> {
         <span class="kw">let</span> <span class="ident">number</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">1</span>..<span class="op">=</span><span class="number">5</span>);
         <span class="ident">ControlSetting::try_from</span>(<span class="ident">number</span>).<span class="ident">unwrap</span>()
     }
@@ -605,9 +598,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rand&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">rand::distributions::Distribution</span><span class="op">&lt;</span><span class="ident">ControlMessage</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">rand::distributions::Standard</span> {
-    <span class="kw">fn</span> <span class="ident">sample</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">rand::Rng</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ControlMessage</span> {
-        <span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
-
+    <span class="kw">fn</span> <span class="ident">sample</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">rand::Rng</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) -&gt; <span class="ident">ControlMessage</span> {
         <span class="kw">let</span> <span class="ident">setting</span>: <span class="ident">ControlSetting</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen</span>();
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">u16::try_from</span>(<span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="ident">setting</span>.<span class="ident">bounds</span>())).<span class="ident">unwrap_or</span>(<span class="ident">u16::MAX</span>);
         <span class="ident">ControlMessage</span> { <span class="ident">setting</span>, <span class="ident">value</span> }
@@ -615,21 +606,21 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">ControlMessage</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{:?} = {}&quot;</span>, <span class="self">self</span>.<span class="ident">setting</span>, <span class="self">self</span>.<span class="ident">value</span>)
     }
 }
 
-<span class="kw">fn</span> <span class="ident">flat</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">flat</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]]) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
     <span class="ident">v</span>.<span class="ident">iter</span>().<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>()).<span class="ident">copied</span>().<span class="ident">collect</span>()
 }
 
 <span class="kw">impl</span> <span class="ident">ControlMessage</span> {
-    <span class="kw">fn</span> <span class="ident">to_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="self">self</span>.<span class="ident">setting</span> <span class="kw">as</span> <span class="ident">u8</span>], <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>.<span class="ident">to_be_bytes</span>()])
     }
 
-    <span class="kw">fn</span> <span class="ident">crc</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+    <span class="kw">fn</span> <span class="ident">crc</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">crc</span> <span class="op">=</span> <span class="ident">crc32fast::Hasher::new</span>();
         <span class="ident">crc</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to_bytes</span>());
         <span class="ident">crc</span>.<span class="ident">finalize</span>()
@@ -640,7 +631,7 @@
     <span class="doccomment">/// This converts message to binary and adds header, footer and CRC</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `force_crc` - CRC value to be used; will be computed if not specified.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_control_frame_with</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">force_crc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_control_frame_with</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">force_crc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="ident">flat</span>(<span class="kw-2">&amp;</span>[
             <span class="string">b&quot;\x05\x0A&quot;</span>,
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">to_bytes</span>(),
@@ -652,20 +643,19 @@
     <span class="doccomment">/// Create a frame to be sent trough serial port</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This converts message to binary and adds header, footer and CRC</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_control_frame</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_control_frame</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">to_control_frame_with</span>(<span class="prelude-val">None</span>)
     }
 }
 
-<span class="kw">fn</span> <span class="ident">parse_control_setting</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">ControlSetting</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">parse_control_setting</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">ControlSetting</span><span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="ident">nom::combinator::map_res</span>;
     <span class="kw">use</span> <span class="ident">nom::number::streaming::be_u8</span>;
-    <span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
 
     <span class="ident">map_res</span>(<span class="ident">be_u8</span>, <span class="ident">ControlSetting::try_from</span>)(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">parse_inner_control_message</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">ControlMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">parse_inner_control_message</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">ControlMessage</span><span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="ident">nom::number::streaming::be_u16</span>;
     <span class="kw">use</span> <span class="ident">nom::sequence::pair</span>;
 
@@ -678,7 +668,7 @@
 <span class="doccomment">/// * `input` - Bytes to parse.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_control_message</span>(
     <span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">ControlMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">ControlMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="ident">nom::bytes::streaming::tag</span>;
     <span class="kw">use</span> <span class="ident">nom::combinator::consumed</span>;
     <span class="kw">use</span> <span class="ident">nom::number::streaming::be_u32</span>;
@@ -697,7 +687,7 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">crc</span> <span class="op">=</span> <span class="ident">crc32fast::Hasher::new</span>();
             <span class="ident">crc</span>.<span class="ident">update</span>(<span class="ident">msg_bytes</span>);
             <span class="kw">let</span> <span class="ident">computed_crc</span> <span class="op">=</span> <span class="ident">crc</span>.<span class="ident">finalize</span>();
-            <span class="kw">if</span> <span class="ident">expected_crc</span> <span class="op">=</span><span class="op">=</span> <span class="ident">computed_crc</span> {
+            <span class="kw">if</span> <span class="ident">expected_crc</span> <span class="op">==</span> <span class="ident">computed_crc</span> {
                 <span class="prelude-val">Ok</span>((<span class="ident">rest</span>, <span class="ident">msg</span>))
             } <span class="kw">else</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">nom::Err::Failure</span>(<span class="ident">TelemetryError</span>(
@@ -718,7 +708,7 @@
     <span class="kw">use</span> <span class="ident">proptest::prelude</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
 
-    <span class="kw">fn</span> <span class="ident">control_setting_strategy</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">Value</span> <span class="op">=</span> <span class="ident">ControlSetting</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">control_setting_strategy</span>() -&gt; <span class="kw">impl</span> <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">Value</span> <span class="op">=</span> <span class="ident">ControlSetting</span><span class="op">&gt;</span> {
         <span class="ident">proptest::num::u8::ANY</span>.<span class="ident">prop_filter_map</span>(<span class="string">&quot;Invalid control setting&quot;</span>, <span class="op">|</span><span class="ident">n</span><span class="op">|</span> {
             <span class="ident">ControlSetting::try_from</span>(<span class="ident">n</span>).<span class="ident">ok</span>()
         })

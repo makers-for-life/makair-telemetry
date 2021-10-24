@@ -488,3 +488,98 @@ pub fn gather_telemetry_from_ws(
         }
     }
 }
+
+/// Open a byte channel, consume it endlessly and send parsed telemetry messages through another channel
+///
+/// * `telemetry_bytes_rx` - Receiver of a channel used to transport telemetry bytes (input).
+/// * `telemetry_tx` - Sender of a channel used to transport structured telemetry messages (output).
+/// * `control_rx` - Optional receiver of a channel used to transport structured control messages (input).
+/// * `control_bytes_tx` - Optional sender of a channel used to transport control bytes (output).
+///
+/// This is meant to be run in a dedicated thread.
+pub fn gather_telemetry_from_bytes(
+    telemetry_bytes_rx: Receiver<Vec<u8>>,
+    telemetry_tx: Sender<TelemetryChannelType>,
+    control_rx: Option<Receiver<ControlMessage>>,
+    control_bytes_tx: Option<Sender<Vec<u8>>>,
+) {
+    let mut telemetry_buffer = Vec::new();
+
+    if control_rx.is_none() || control_bytes_tx.is_none() {
+        warn!("Control message will not be handled (optional sender/receiver were not provided)");
+    }
+
+    loop {
+        // Check for new bytes from the telemetry bytes channel and handle them
+        if let Ok(mut new_telemetry_bytes) = telemetry_bytes_rx.try_recv() {
+            telemetry_buffer.append(&mut new_telemetry_bytes);
+
+            match parse_telemetry_message(&telemetry_buffer) {
+                // It worked! Let's extract the message and replace the buffer with the rest of the bytes
+                Ok((rest, message)) => {
+                    telemetry_tx
+                        .send(Ok(message))
+                        .expect("[telemetry tx channel] failed sending message");
+
+                    telemetry_buffer = Vec::from(rest);
+                }
+                // Message was read but there was a CRC error
+                Err(nom::Err::Failure(TelemetryError(
+                    msg_bytes,
+                    TelemetryErrorKind::CrcError { expected, computed },
+                ))) => {
+                    warn!("[CRC error]\texpected={}\tcomputed={}", expected, computed);
+
+                    telemetry_tx
+                        .send(Err(HighLevelError::CrcError { expected, computed }.into()))
+                        .expect("[telemetry tx channel] failed sending message");
+
+                    telemetry_buffer = telemetry_buffer.clone().split_off(msg_bytes.len());
+                }
+                // Message was built using an unsupported protocol version
+                Err(nom::Err::Failure(TelemetryError(
+                    msg_bytes,
+                    TelemetryErrorKind::UnsupportedProtocolVersion {
+                        maximum_supported,
+                        found,
+                    },
+                ))) => {
+                    warn!(
+                        "[unsupported protocol version]\tmaximum_supported={}\tfound={}",
+                        maximum_supported, found
+                    );
+
+                    telemetry_tx
+                        .send(Err(HighLevelError::UnsupportedProtocolVersion {
+                            maximum_supported,
+                            found,
+                        }
+                        .into()))
+                        .expect("[telemetry tx channel] failed sending message");
+
+                    telemetry_buffer = telemetry_buffer.clone().split_off(msg_bytes.len());
+                }
+                // There are not enough bytes, let's wait until we get more
+                Err(nom::Err::Incomplete(_)) => {
+                    // Do nothing
+                }
+                // We can't do anything with the begining of the buffer, let's drop its first byte
+                Err(e) => {
+                    debug!("{:?}", &e);
+                    if !telemetry_buffer.is_empty() {
+                        telemetry_buffer.remove(0);
+                    }
+                }
+            }
+        }
+
+        // Check for a new message from the structured control message channel and handle it
+        if let (Some(rx), Some(tx)) = (control_rx.as_ref(), control_bytes_tx.as_ref()) {
+            if let Ok(new_control_message) = rx.try_recv() {
+                let new_control_bytes = new_control_message.to_control_frame();
+                tx.send(new_control_bytes)
+                    .expect("[control tx channel] failed sending bytes");
+            }
+        }
+    }
+}

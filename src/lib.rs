@@ -506,7 +506,7 @@ pub fn gather_telemetry_from_bytes(
     let mut telemetry_buffer = Vec::new();
 
     if control_rx.is_none() || control_bytes_tx.is_none() {
-        warn!("Control message will not be handled (optional sender/receiver were not provided)");
+        warn!("Control messages will not be handled (optional sender/receiver were not provided)");
     }
 
     loop {

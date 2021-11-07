@@ -42,7 +42,6 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 #[cfg(feature = "serial")]
 use std::io::{BufWriter, Read, Write};
-#[cfg(feature = "serial")]
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;
 #[cfg(feature = "serial")]
@@ -50,7 +49,6 @@ use std::sync::{Arc, Mutex};
 #[cfg(feature = "websocket")]
 use url::Url;
 
-#[cfg(feature = "serial")]
 use control::*;
 use parsers::*;
 use structures::*;

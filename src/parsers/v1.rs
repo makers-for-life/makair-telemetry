@@ -1,6 +1,7 @@
 use nom::branch::alt;
 use nom::bytes::streaming::{tag, take};
 use nom::combinator::{map, map_res};
+use nom::error::{FromExternalError, ParseError};
 use nom::multi::length_data;
 use nom::number::streaming::{be_u16, be_u32, be_u64, be_u8};
 use nom::sequence::tuple;
@@ -12,15 +13,15 @@ use crate::structures::*;
 
 const VERSION: u8 = 1;
 
-fn sep(input: &[u8]) -> IResult<&[u8], &[u8]> {
+fn sep<'a, E: ParseError<&'a [u8]>>(input: &'a [u8]) -> IResult<&'a [u8], &[u8], E> {
     tag("\t")(input)
 }
 
-fn end(input: &[u8]) -> IResult<&[u8], &[u8]> {
+fn end<'a, E: ParseError<&'a [u8]>>(input: &'a [u8]) -> IResult<&'a [u8], &[u8], E> {
     tag("\n")(input)
 }
 
-fn mode(input: &[u8]) -> IResult<&[u8], Mode> {
+fn mode<'a, E: ParseError<&'a [u8]>>(input: &'a [u8]) -> IResult<&'a [u8], Mode, E> {
     let mut parser = alt((
         map(tag(b"\x01"), |_| Mode::Production),
         map(tag(b"\x02"), |_| Mode::Qualification),
@@ -29,7 +30,9 @@ fn mode(input: &[u8]) -> IResult<&[u8], Mode> {
     parser(input)
 }
 
-fn phase_and_subphase(input: &[u8]) -> IResult<&[u8], (Phase, SubPhase)> {
+fn phase_and_subphase<'a, E: ParseError<&'a [u8]>>(
+    input: &'a [u8],
+) -> IResult<&'a [u8], (Phase, SubPhase), E> {
     let mut parser = alt((
         map(tag([17u8]), |_| (Phase::Inhalation, SubPhase::Inspiration)),
         map(tag([18u8]), |_| {
@@ -40,12 +43,19 @@ fn phase_and_subphase(input: &[u8]) -> IResult<&[u8], (Phase, SubPhase)> {
     parser(input)
 }
 
-fn control_setting(input: &[u8]) -> IResult<&[u8], ControlSetting> {
-    let mut parser = map_res(be_u8, ControlSetting::try_from);
+fn control_setting<'a, E: ParseError<&'a [u8]> + FromExternalError<&'a [u8], E>>(
+    input: &'a [u8],
+) -> IResult<&'a [u8], ControlSetting, E> {
+    let mut parser = map_res(be_u8, |b| {
+        ControlSetting::try_from(b)
+            .map_err(|_e| E::from_error_kind(input, nom::error::ErrorKind::Fail))
+    });
     parser(input)
 }
 
-fn alarm_priority(input: &[u8]) -> IResult<&[u8], AlarmPriority> {
+fn alarm_priority<'a, E: ParseError<&'a [u8]>>(
+    input: &'a [u8],
+) -> IResult<&'a [u8], AlarmPriority, E> {
     let mut parser = alt((
         map(tag([4u8]), |_| AlarmPriority::High),
         map(tag([2u8]), |_| AlarmPriority::Medium),
@@ -54,30 +64,37 @@ fn alarm_priority(input: &[u8]) -> IResult<&[u8], AlarmPriority> {
     parser(input)
 }
 
-fn u8_array(input: &[u8]) -> IResult<&[u8], Vec<u8>> {
+fn u8_array<'a, E: ParseError<&'a [u8]>>(input: &'a [u8]) -> IResult<&'a [u8], Vec<u8>, E> {
     let mut parser = map(length_data(be_u8), Vec::from);
     parser(input)
 }
 
-fn triggered(input: &[u8]) -> IResult<&[u8], bool> {
+fn triggered<'a, E: ParseError<&'a [u8]>>(input: &'a [u8]) -> IResult<&'a [u8], bool, E> {
     let mut parser = alt((map(tag([240u8]), |_| true), map(tag([15u8]), |_| false)));
     parser(input)
 }
 
-fn software_version(input: &[u8]) -> IResult<&[u8], &str> {
+fn software_version<'a, E: ParseError<&'a [u8]> + FromExternalError<&'a [u8], E>>(
+    input: &'a [u8],
+) -> IResult<&'a [u8], &str, E> {
     let (rest, len) = be_u8(input)?;
-    let mut parser = map_res(take(len), std::str::from_utf8);
+    let mut parser = map_res(take(len), |bytes| {
+        std::str::from_utf8(bytes)
+            .map_err(|_e| E::from_error_kind(input, nom::error::ErrorKind::Fail))
+    });
     parser(rest)
 }
 
-fn device_id(input: &[u8]) -> IResult<&[u8], String> {
+fn device_id<'a, E: ParseError<&'a [u8]>>(input: &'a [u8]) -> IResult<&'a [u8], String, E> {
     let mut parser = map(tuple((be_u32, be_u32, be_u32)), |(p1, p2, p3)| {
         format!("{}-{}-{}", p1, p2, p3)
     });
     parser(input)
 }
 
-fn boot(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
+fn boot<'a, E: ParseError<&'a [u8]> + FromExternalError<&'a [u8], E>>(
+    input: &'a [u8],
+) -> IResult<&'a [u8], TelemetryMessage, E> {
     let mut parser = map(
         tuple((
             tag("B:"),
@@ -106,7 +123,9 @@ fn boot(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
     parser(input)
 }
 
-fn stopped(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
+fn stopped<'a, E: ParseError<&'a [u8]> + FromExternalError<&'a [u8], E>>(
+    input: &'a [u8],
+) -> IResult<&'a [u8], TelemetryMessage, E> {
     let mut parser = map(
         tuple((
             tag("O:"),
@@ -162,7 +181,9 @@ fn stopped(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
     parser(input)
 }
 
-fn data_snapshot(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
+fn data_snapshot<'a, E: ParseError<&'a [u8]> + FromExternalError<&'a [u8], E>>(
+    input: &'a [u8],
+) -> IResult<&'a [u8], TelemetryMessage, E> {
     let mut parser = map(
         tuple((
             tag("D:"),
@@ -231,7 +252,9 @@ fn data_snapshot(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
     parser(input)
 }
 
-fn machine_state_snapshot(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
+fn machine_state_snapshot<'a, E: ParseError<&'a [u8]> + FromExternalError<&'a [u8], E>>(
+    input: &'a [u8],
+) -> IResult<&'a [u8], TelemetryMessage, E> {
     let mut parser = map(
         tuple((
             tuple((
@@ -355,7 +378,9 @@ fn machine_state_snapshot(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
     parser(input)
 }
 
-fn alarm_trap(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
+fn alarm_trap<'a, E: ParseError<&'a [u8]> + FromExternalError<&'a [u8], E>>(
+    input: &'a [u8],
+) -> IResult<&'a [u8], TelemetryMessage, E> {
     let mut parser = map(
         tuple((
             tuple((
@@ -431,7 +456,9 @@ fn alarm_trap(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
     parser(input)
 }
 
-fn control_ack(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
+fn control_ack<'a, E: ParseError<&'a [u8]> + FromExternalError<&'a [u8], E>>(
+    input: &'a [u8],
+) -> IResult<&'a [u8], TelemetryMessage, E> {
     let mut parser = map(
         tuple((
             tag("A:"),
@@ -465,7 +492,9 @@ fn control_ack(input: &[u8]) -> IResult<&[u8], TelemetryMessage> {
 /// * `input` - Bytes to parse.
 ///
 /// This only decodes the message body: header, CRC and footer must be stripped beforehand.
-pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
+pub fn message<'a, E: ParseError<&'a [u8]> + FromExternalError<&'a [u8], E>>(
+    input: &'a [u8],
+) -> IResult<&'a [u8], TelemetryMessage, E> {
     nom::branch::alt((
         boot,
         stopped,
@@ -474,7 +503,6 @@ pub fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<
         alarm_trap,
         control_ack,
     ))(input)
-    .map_err(nom::Err::convert)
 }
 
 #[cfg(test)]
@@ -482,12 +510,12 @@ mod tests {
     use super::super::tests::*;
     use super::*;
     use crate::serializers::ToBytes;
+    use nom::error::VerboseError;
     use proptest::bool;
     use proptest::collection;
     use proptest::option;
     use proptest::prelude::*;
 
-    // TODO Generate all combinations (independent each other) ?
     fn phase_subphase_strategy() -> impl Strategy<Value = (Phase, SubPhase)> {
         prop_oneof![
             (Just(Phase::Inhalation), Just(SubPhase::Inspiration)),
@@ -532,7 +560,7 @@ mod tests {
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::BootMessage(msg);
 
-            assert_eq!(nom::error::dbg_dmp(boot, "boot")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(boot::<VerboseError<&[u8]>>, "boot")(input), Ok((&[][..], expected)));
         }
     }
 
@@ -587,7 +615,7 @@ mod tests {
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::StoppedMessage(msg);
 
-            assert_eq!(nom::error::dbg_dmp(stopped, "stopped")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(stopped::<VerboseError<&[u8]>>, "stopped")(input), Ok((&[][..], expected)));
         }
     }
 
@@ -626,7 +654,7 @@ mod tests {
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::DataSnapshot(msg);
 
-            assert_eq!(nom::error::dbg_dmp(data_snapshot, "data_snapshot")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(data_snapshot::<VerboseError<&[u8]>>, "data_snapshot")(input), Ok((&[][..], expected)));
         }
     }
 
@@ -701,7 +729,7 @@ mod tests {
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::MachineStateSnapshot(msg);
 
-            assert_eq!(nom::error::dbg_dmp(machine_state_snapshot, "machine_state_snapshot")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(machine_state_snapshot::<VerboseError<&[u8]>>, "machine_state_snapshot")(input), Ok((&[][..], expected)));
         }
     }
 
@@ -744,7 +772,7 @@ mod tests {
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::AlarmTrap(msg);
 
-            assert_eq!(nom::error::dbg_dmp(alarm_trap, "alarm_trap")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(alarm_trap::<VerboseError<&[u8]>>, "alarm_trap")(input), Ok((&[][..], expected)));
         }
     }
 
@@ -770,7 +798,7 @@ mod tests {
             let input = &msg.to_bytes_v1();
             let expected = TelemetryMessage::ControlAck(msg);
 
-            assert_eq!(nom::error::dbg_dmp(control_ack, "control_ack")(input), Ok((&[][..], expected)));
+            assert_eq!(nom::error::dbg_dmp(control_ack::<VerboseError<&[u8]>>, "control_ack")(input), Ok((&[][..], expected)));
         }
     }
 }

@@ -46,6 +46,7 @@ use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;
 #[cfg(feature = "serial")]
 use std::sync::{Arc, Mutex};
+use std::time::Duration;
 #[cfg(feature = "websocket")]
 use url::Url;
 
@@ -493,6 +494,7 @@ pub fn gather_telemetry_from_ws(
 /// * `telemetry_tx` - Sender of a channel used to transport structured telemetry messages (output).
 /// * `control_rx` - Optional receiver of a channel used to transport structured control messages (input).
 /// * `control_bytes_tx` - Optional sender of a channel used to transport control bytes (output).
+/// * `sleep_duration` - Optional duration to wait when there are no more bytes to parse; if `None` then no sleep.
 ///
 /// This is meant to be run in a dedicated thread.
 pub fn gather_telemetry_from_bytes(
@@ -500,6 +502,7 @@ pub fn gather_telemetry_from_bytes(
     telemetry_tx: Sender<TelemetryChannelType>,
     control_rx: Option<Receiver<ControlMessage>>,
     control_bytes_tx: Option<Sender<Vec<u8>>>,
+    sleep_duration: Option<Duration>,
 ) {
     let mut telemetry_buffer = Vec::new();
 
@@ -511,7 +514,9 @@ pub fn gather_telemetry_from_bytes(
         // Check for new bytes from the telemetry bytes channel and handle them
         if let Ok(mut new_telemetry_bytes) = telemetry_bytes_rx.try_recv() {
             telemetry_buffer.append(&mut new_telemetry_bytes);
+        }
 
+        if !telemetry_buffer.is_empty() {
             match parse_telemetry_message(&telemetry_buffer) {
                 // It worked! Let's extract the message and replace the buffer with the rest of the bytes
                 Ok((rest, message)) => {
@@ -560,15 +565,18 @@ pub fn gather_telemetry_from_bytes(
                 // There are not enough bytes, let's wait until we get more
                 Err(nom::Err::Incomplete(_)) => {
                     // Do nothing
+                    if let Some(duration) = sleep_duration {
+                        std::thread::sleep(duration);
+                    }
                 }
                 // We can't do anything with the begining of the buffer, let's drop its first byte
                 Err(e) => {
                     debug!("{:?}", &e);
-                    if !telemetry_buffer.is_empty() {
-                        telemetry_buffer.remove(0);
-                    }
+                    telemetry_buffer.remove(0);
                 }
             }
+        } else if let Some(duration) = sleep_duration {
+            std::thread::sleep(duration);
         }
 
         // Check for a new message from the structured control message channel and handle it

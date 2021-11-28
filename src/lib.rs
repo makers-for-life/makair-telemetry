@@ -589,3 +589,107 @@ pub fn gather_telemetry_from_bytes(
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::serializers::*;
+
+    use ntest::timeout;
+    use std::sync::mpsc::channel;
+
+    const TELEMETRY_VERSION: u8 = 2;
+    const VERSION: &str = "test";
+    const DEVICE_ID: &str = "0-0-0";
+
+    fn gen_fake_messages() -> Vec<TelemetryMessage> {
+        vec![
+            TelemetryMessage::BootMessage(BootMessage {
+                telemetry_version: TELEMETRY_VERSION,
+                version: VERSION.to_owned(),
+                device_id: DEVICE_ID.to_owned(),
+                systick: 10,
+                mode: Mode::Production,
+                value128: 128,
+            }),
+            TelemetryMessage::ControlAck(ControlAck {
+                telemetry_version: TELEMETRY_VERSION,
+                version: VERSION.to_owned(),
+                device_id: DEVICE_ID.to_owned(),
+                systick: 50,
+                setting: ControlSetting::PEEP,
+                value: 0,
+            }),
+            TelemetryMessage::ControlAck(ControlAck {
+                telemetry_version: TELEMETRY_VERSION,
+                version: VERSION.to_owned(),
+                device_id: DEVICE_ID.to_owned(),
+                systick: 200,
+                setting: ControlSetting::RespirationEnabled,
+                value: 1,
+            }),
+            TelemetryMessage::DataSnapshot(DataSnapshot {
+                telemetry_version: TELEMETRY_VERSION,
+                version: VERSION.to_owned(),
+                device_id: DEVICE_ID.to_owned(),
+                systick: 1500,
+                centile: 10,
+                pressure: 200,
+                phase: Phase::Inhalation,
+                subphase: None,
+                blower_valve_position: 35,
+                patient_valve_position: 0,
+                blower_rpm: 10,
+                battery_level: 24,
+                inspiratory_flow: Some(100),
+                expiratory_flow: Some(0),
+            }),
+        ]
+    }
+
+    #[test]
+    #[timeout(5000)]
+    fn gather_telemetry_from_bytes_works() {
+        // Prepare telemetry messages
+        let messages = gen_fake_messages();
+
+        // Serialize these messages into binary
+        let message_bytes = messages
+            .iter()
+            .map(|m| mk_frame(&m.to_bytes()))
+            .flatten()
+            .collect::<Vec<_>>();
+
+        // Prepare channels to communicate with the gather_telemetry* function
+        let (telemetry_bytes_tx, telemetry_bytes_rx) = channel::<Vec<u8>>();
+        let (telemetry_messages_tx, telemetry_messages_rx) = channel::<TelemetryChannelType>();
+
+        // Run the gather_telemetry* function in a thread (it will never terminate)
+        std::thread::spawn(|| {
+            gather_telemetry_from_bytes(telemetry_bytes_rx, telemetry_messages_tx, None, None, None)
+        });
+
+        // Send messages byte by byte
+        for b in message_bytes {
+            telemetry_bytes_tx.send(vec![b]).unwrap();
+        }
+
+        // Wait to receive messages through the output channel
+        let mut messages_received = 0;
+        'check_received_messages: loop {
+            // Panic if this is not a message (could be an error)
+            let msg = telemetry_messages_rx.recv().unwrap().unwrap();
+
+            // Check that the message is right
+            assert_eq!(&msg, messages.get(messages_received).unwrap());
+
+            // Mark this message a received
+            messages_received += 1;
+
+            // If this was the last message expected, let's break out and end the test
+            if messages.len() == messages_received {
+                break 'check_received_messages;
+            }
+        }
+    }
+}

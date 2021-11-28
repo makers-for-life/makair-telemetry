@@ -74,7 +74,7 @@ pub fn gather_telemetry(
     tx: Sender<TelemetryChannelType>,
     mut file_buf: Option<BufWriter<File>>,
     control_rx: Option<Receiver<ControlMessage>>,
-) {
+) -> ! {
     loop {
         info!("opening {}", &port_id);
         match serial::open(&port_id) {
@@ -368,7 +368,7 @@ pub fn gather_telemetry_from_ws(
     tx: Sender<TelemetryChannelType>,
     mut file_buf: Option<BufWriter<File>>,
     control_rx: Option<Receiver<ControlMessage>>,
-) {
+) -> ! {
     use tungstenite::client::connect;
     use tungstenite::protocol::Message;
 
@@ -503,7 +503,7 @@ pub fn gather_telemetry_from_bytes(
     control_rx: Option<Receiver<ControlMessage>>,
     control_bytes_tx: Option<Sender<Vec<u8>>>,
     sleep_duration: Option<Duration>,
-) {
+) -> ! {
     let mut telemetry_buffer = Vec::new();
 
     if control_rx.is_none() || control_bytes_tx.is_none() {

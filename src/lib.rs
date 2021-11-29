@@ -602,7 +602,7 @@ mod tests {
     const VERSION: &str = "test";
     const DEVICE_ID: &str = "0-0-0";
 
-    fn gen_fake_messages() -> Vec<TelemetryMessage> {
+    fn gen_fake_telemetry_messages() -> Vec<TelemetryMessage> {
         vec![
             TelemetryMessage::BootMessage(BootMessage {
                 telemetry_version: TELEMETRY_VERSION,
@@ -647,47 +647,103 @@ mod tests {
         ]
     }
 
+    fn gen_fake_control_messages() -> Vec<ControlMessage> {
+        vec![
+            ControlMessage {
+                setting: ControlSetting::Heartbeat,
+                value: 1,
+            },
+            ControlMessage {
+                setting: ControlSetting::PEEP,
+                value: 0,
+            },
+            ControlMessage {
+                setting: ControlSetting::RespirationEnabled,
+                value: 1,
+            },
+            ControlMessage {
+                setting: ControlSetting::Heartbeat,
+                value: 1,
+            },
+        ]
+    }
+
     #[test]
-    #[timeout(5000)]
+    #[timeout(2000)]
     fn gather_telemetry_from_bytes_works() {
         // Prepare telemetry messages
-        let messages = gen_fake_messages();
+        let telemetry_messages = gen_fake_telemetry_messages();
 
-        // Serialize these messages into binary
-        let message_bytes = messages
+        // Serialize these telemetry messages into binary
+        let telemetry_bytes = telemetry_messages
             .iter()
             .map(|m| mk_frame(&m.to_bytes()))
+            .flatten()
+            .collect::<Vec<_>>();
+
+        // Prepare control messages
+        let control_messages = gen_fake_control_messages();
+
+        // Serialize these control messages into binary
+        let control_bytes = control_messages
+            .iter()
+            .map(|m| m.to_control_frame())
             .flatten()
             .collect::<Vec<_>>();
 
         // Prepare channels to communicate with the gather_telemetry* function
         let (telemetry_bytes_tx, telemetry_bytes_rx) = channel::<Vec<u8>>();
         let (telemetry_messages_tx, telemetry_messages_rx) = channel::<TelemetryChannelType>();
+        let (control_bytes_tx, control_bytes_rx) = channel::<Vec<u8>>();
+        let (control_messages_tx, control_messages_rx) = channel::<ControlMessage>();
 
         // Run the gather_telemetry* function in a thread (it will never terminate)
         std::thread::spawn(|| {
-            gather_telemetry_from_bytes(telemetry_bytes_rx, telemetry_messages_tx, None, None, None)
+            gather_telemetry_from_bytes(
+                telemetry_bytes_rx,
+                telemetry_messages_tx,
+                Some(control_messages_rx),
+                Some(control_bytes_tx),
+                None,
+            )
         });
 
-        // Send messages byte by byte
-        for b in message_bytes {
+        // Send telemetry messages byte by byte
+        for b in telemetry_bytes {
             telemetry_bytes_tx.send(vec![b]).unwrap();
         }
 
-        // Wait to receive messages through the output channel
-        let mut messages_received = 0;
+        // Send control messages
+        for m in control_messages {
+            control_messages_tx.send(m).unwrap();
+        }
+
+        // Wait to receive messages through one of the output channel
+        let mut telemetry_messages_received = 0;
+        let mut control_bytes_received: Vec<u8> = vec![];
         'check_received_messages: loop {
-            // Panic if this is not a message (could be an error)
-            let msg = telemetry_messages_rx.recv().unwrap().unwrap();
+            // Check for telemetry messages
+            if let Ok(msg) = telemetry_messages_rx.try_recv() {
+                // Check that the message is right
+                assert_eq!(
+                    &msg.unwrap(),
+                    telemetry_messages.get(telemetry_messages_received).unwrap()
+                );
 
-            // Check that the message is right
-            assert_eq!(&msg, messages.get(messages_received).unwrap());
+                // Mark this message a received
+                telemetry_messages_received += 1;
+            }
 
-            // Mark this message a received
-            messages_received += 1;
+            // Check for control bytes
+            if let Ok(mut msg) = control_bytes_rx.try_recv() {
+                // Push bytes into the buffer
+                control_bytes_received.append(&mut msg);
+            }
 
             // If this was the last message expected, let's break out and end the test
-            if messages.len() == messages_received {
+            if telemetry_messages.len() == telemetry_messages_received
+                && control_bytes_received == control_bytes
+            {
                 break 'check_received_messages;
             }
         }

@@ -813,10 +813,10 @@ impl TelemetryMessage {
 }
 
 /// Extension of Nom's `ErrorKind` to be able to represent CRC errors
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum TelemetryErrorKind {
     /// Standard Nom error
-    ParserError(nom::error::ErrorKind),
+    ParserError(nom::error::VerboseErrorKind),
     /// CRC error
     CrcError {
         /// Expected CRC (included in the message)
@@ -834,21 +834,35 @@ pub enum TelemetryErrorKind {
 }
 
 /// Custom parser error type to leverage `TelemetryErrorKind`
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct TelemetryError<I>(pub I, pub TelemetryErrorKind);
 
 impl<I> nom::error::ParseError<I> for TelemetryError<I> {
     fn from_error_kind(input: I, kind: nom::error::ErrorKind) -> Self {
-        TelemetryError(input, TelemetryErrorKind::ParserError(kind))
+        TelemetryError(
+            input,
+            TelemetryErrorKind::ParserError(nom::error::VerboseErrorKind::Nom(kind)),
+        )
     }
     fn append(_: I, _: nom::error::ErrorKind, other: Self) -> Self {
         other
     }
 }
 
+impl<I, E> nom::error::FromExternalError<I, E> for TelemetryError<I> {
+    fn from_external_error(input: I, kind: nom::error::ErrorKind, _e: E) -> Self {
+        use nom::error::ParseError;
+
+        Self::from_error_kind(input, kind)
+    }
+}
+
 impl<I> From<nom::error::Error<I>> for TelemetryError<I> {
     fn from(error: nom::error::Error<I>) -> Self {
-        TelemetryError(error.input, TelemetryErrorKind::ParserError(error.code))
+        TelemetryError(
+            error.input,
+            TelemetryErrorKind::ParserError(nom::error::VerboseErrorKind::Nom(error.code)),
+        )
     }
 }
 

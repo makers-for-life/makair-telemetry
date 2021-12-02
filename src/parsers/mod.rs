@@ -8,21 +8,24 @@ pub mod v1;
 /// Parsers for the telemetry protocol version 2
 pub mod v2;
 
+use nom::error::{FromExternalError, ParseError};
 use nom::IResult;
 
 use super::structures::*;
 
 const MAXIMUM_SUPPORTED_VERSION: u8 = 2;
 
-fn header(input: &[u8]) -> IResult<&[u8], &[u8], TelemetryError<&[u8]>> {
+fn header<'a, E: ParseError<&'a [u8]>>(input: &'a [u8]) -> IResult<&'a [u8], &[u8], E> {
     nom::bytes::streaming::tag(b"\x03\x0C")(input)
 }
 
-fn footer(input: &[u8]) -> IResult<&[u8], &[u8], TelemetryError<&[u8]>> {
+fn footer<'a, E: ParseError<&'a [u8]>>(input: &'a [u8]) -> IResult<&'a [u8], &[u8], E> {
     nom::bytes::streaming::tag(b"\x30\xC0")(input)
 }
 
-fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8]>> {
+fn message<'a, E: ParseError<&'a [u8]> + FromExternalError<&'a [u8], E>>(
+    input: &'a [u8],
+) -> IResult<&'a [u8], TelemetryMessage, E> {
     nom::branch::alt((v2::message, v1::message))(input).map_err(nom::Err::convert)
 }
 
@@ -32,7 +35,7 @@ fn message(input: &[u8]) -> IResult<&[u8], TelemetryMessage, TelemetryError<&[u8
 ///
 /// This requires the message header and the 3 first bytes of the message body.
 /// CRC will not be checked.
-pub fn protocol_version(input: &[u8]) -> IResult<&[u8], u8, TelemetryError<&[u8]>> {
+pub fn protocol_version<'a, E: ParseError<&'a [u8]>>(input: &'a [u8]) -> IResult<&'a [u8], u8, E> {
     use nom::bytes::streaming::{tag, take};
     use nom::number::streaming::be_u8;
     use nom::sequence::{pair, preceded};
@@ -75,7 +78,9 @@ pub fn parse_telemetry_message(
         .or_else(|e| match e {
             nom::Err::Error(TelemetryError(
                 _,
-                TelemetryErrorKind::ParserError(nom::error::ErrorKind::Tag),
+                TelemetryErrorKind::ParserError(nom::error::VerboseErrorKind::Nom(
+                    nom::error::ErrorKind::Tag,
+                )),
             )) => protocol_version(input).and_then(|(_rest, version)| {
                 if version > MAXIMUM_SUPPORTED_VERSION {
                     Err(nom::Err::Failure(TelemetryError(
@@ -132,7 +137,7 @@ mod tests {
             value128 in (0u8..),
         ) {
             let msg = BootMessage {
-                telemetry_version: 1,
+                telemetry_version: 2,
                 version,
                 device_id: format!("{}-{}-{}", device_id1, device_id2, device_id3),
                 systick,
@@ -142,7 +147,7 @@ mod tests {
 
             // This needs to be consistent with sendBootMessage() defined in src/software/firmware/srcs/telemetry.cpp
             let input_message = &flat(&[
-                b"B:\x01",
+                b"B:\x02",
                 &[msg.version.len() as u8],
                 msg.version.as_bytes(),
                 &device_id1.to_be_bytes(),

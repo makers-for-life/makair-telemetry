@@ -1,3 +1,4 @@
 (function() {var implementors = {};
+implementors["makair_telemetry"] = [{"text":"impl&lt;I, E&gt; <a class=\"trait\" href=\"nom/error/trait.FromExternalError.html\" title=\"trait nom::error::FromExternalError\">FromExternalError</a>&lt;I, E&gt; for <a class=\"struct\" href=\"makair_telemetry/structures/struct.TelemetryError.html\" title=\"struct makair_telemetry::structures::TelemetryError\">TelemetryError</a>&lt;I&gt;","synthetic":false,"types":["makair_telemetry::structures::TelemetryError"]}];
 implementors["nom"] = [];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

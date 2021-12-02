@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;parsers&#x2F;v2.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>v2.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../makair_telemetry/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;parsers&#x2F;v2.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>v2.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css"disabled><link rel="stylesheet" type="text/css" href="../../../dark.css"disabled><link rel="stylesheet" type="text/css" href="../../../light.css"id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><script defer src="../../../main.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script>
+    <noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../makair_telemetry/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1384,9 +1385,60 @@
 <span id="1384">1384</span>
 <span id="1385">1385</span>
 <span id="1386">1386</span>
+<span id="1387">1387</span>
+<span id="1388">1388</span>
+<span id="1389">1389</span>
+<span id="1390">1390</span>
+<span id="1391">1391</span>
+<span id="1392">1392</span>
+<span id="1393">1393</span>
+<span id="1394">1394</span>
+<span id="1395">1395</span>
+<span id="1396">1396</span>
+<span id="1397">1397</span>
+<span id="1398">1398</span>
+<span id="1399">1399</span>
+<span id="1400">1400</span>
+<span id="1401">1401</span>
+<span id="1402">1402</span>
+<span id="1403">1403</span>
+<span id="1404">1404</span>
+<span id="1405">1405</span>
+<span id="1406">1406</span>
+<span id="1407">1407</span>
+<span id="1408">1408</span>
+<span id="1409">1409</span>
+<span id="1410">1410</span>
+<span id="1411">1411</span>
+<span id="1412">1412</span>
+<span id="1413">1413</span>
+<span id="1414">1414</span>
+<span id="1415">1415</span>
+<span id="1416">1416</span>
+<span id="1417">1417</span>
+<span id="1418">1418</span>
+<span id="1419">1419</span>
+<span id="1420">1420</span>
+<span id="1421">1421</span>
+<span id="1422">1422</span>
+<span id="1423">1423</span>
+<span id="1424">1424</span>
+<span id="1425">1425</span>
+<span id="1426">1426</span>
+<span id="1427">1427</span>
+<span id="1428">1428</span>
+<span id="1429">1429</span>
+<span id="1430">1430</span>
+<span id="1431">1431</span>
+<span id="1432">1432</span>
+<span id="1433">1433</span>
+<span id="1434">1434</span>
+<span id="1435">1435</span>
+<span id="1436">1436</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">nom::branch::alt</span>;
 <span class="kw">use</span> <span class="ident">nom::bytes::streaming</span>::{<span class="ident">tag</span>, <span class="ident">take</span>};
 <span class="kw">use</span> <span class="ident">nom::combinator</span>::{<span class="ident">map</span>, <span class="ident">map_res</span>};
+<span class="kw">use</span> <span class="ident">nom::error</span>::{<span class="ident">FromExternalError</span>, <span class="ident">ParseError</span>};
 <span class="kw">use</span> <span class="ident">nom::multi::length_data</span>;
 <span class="kw">use</span> <span class="ident">nom::number::streaming</span>::{<span class="ident">be_i16</span>, <span class="ident">be_u16</span>, <span class="ident">be_u32</span>, <span class="ident">be_u64</span>, <span class="ident">be_u8</span>};
 <span class="kw">use</span> <span class="ident">nom::sequence::tuple</span>;
@@ -1399,15 +1451,15 @@
 
 <span class="kw">const</span> <span class="ident">VERSION</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">2</span>;
 
-<span class="kw">fn</span> <span class="ident">sep</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">sep</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="ident">tag</span>(<span class="string">&quot;\t&quot;</span>)(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">end</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">end</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="ident">tag</span>(<span class="string">&quot;\n&quot;</span>)(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">mode</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">Mode</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">mode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">Mode</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">alt</span>((
         <span class="ident">map</span>(<span class="ident">tag</span>(<span class="string">b&quot;\x01&quot;</span>), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Mode::Production</span>),
         <span class="ident">map</span>(<span class="ident">tag</span>(<span class="string">b&quot;\x02&quot;</span>), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Mode::Qualification</span>),
@@ -1416,7 +1468,7 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">phase</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">Phase</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">phase</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">Phase</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">alt</span>((
         <span class="ident">map</span>(<span class="ident">tag</span>([<span class="number">17u8</span>]), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Phase::Inhalation</span>),
         <span class="ident">map</span>(<span class="ident">tag</span>([<span class="number">68u8</span>]), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Phase::Exhalation</span>),
@@ -1424,12 +1476,19 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">control_setting</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">ControlSetting</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map_res</span>(<span class="ident">be_u8</span>, <span class="ident">ControlSetting::try_from</span>);
+<span class="kw">fn</span> <span class="ident">control_setting</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">ControlSetting</span>, <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map_res</span>(<span class="ident">be_u8</span>, <span class="op">|</span><span class="ident">b</span><span class="op">|</span> {
+        <span class="ident">ControlSetting::try_from</span>(<span class="ident">b</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">_e</span><span class="op">|</span> <span class="ident">E::from_error_kind</span>(<span class="ident">input</span>, <span class="ident">nom::error::ErrorKind::Fail</span>))
+    });
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">alarm_priority</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">AlarmPriority</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">alarm_priority</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">AlarmPriority</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">alt</span>((
         <span class="ident">map</span>(<span class="ident">tag</span>([<span class="number">4u8</span>]), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">AlarmPriority::High</span>),
         <span class="ident">map</span>(<span class="ident">tag</span>([<span class="number">2u8</span>]), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">AlarmPriority::Medium</span>),
@@ -1438,36 +1497,48 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">u8_array</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">u8_array</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(<span class="ident">length_data</span>(<span class="ident">be_u8</span>), <span class="ident">Vec::from</span>);
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">triggered</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">bool</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">triggered</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">bool</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">alt</span>((<span class="ident">map</span>(<span class="ident">tag</span>([<span class="number">240u8</span>]), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="bool-val">true</span>), <span class="ident">map</span>(<span class="ident">tag</span>([<span class="number">15u8</span>]), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="bool-val">false</span>)));
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">software_version</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">software_version</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> (<span class="ident">rest</span>, <span class="ident">len</span>) <span class="op">=</span> <span class="ident">be_u8</span>(<span class="ident">input</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map_res</span>(<span class="ident">take</span>(<span class="ident">len</span>), <span class="ident">std::str::from_utf8</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map_res</span>(<span class="ident">take</span>(<span class="ident">len</span>), <span class="op">|</span><span class="ident">bytes</span><span class="op">|</span> {
+        <span class="ident">std::str::from_utf8</span>(<span class="ident">bytes</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">_e</span><span class="op">|</span> <span class="ident">E::from_error_kind</span>(<span class="ident">input</span>, <span class="ident">nom::error::ErrorKind::Fail</span>))
+    });
     <span class="ident">parser</span>(<span class="ident">rest</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">device_id</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">String</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">device_id</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">String</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(<span class="ident">tuple</span>((<span class="ident">be_u32</span>, <span class="ident">be_u32</span>, <span class="ident">be_u32</span>)), <span class="op">|</span>(<span class="ident">p1</span>, <span class="ident">p2</span>, <span class="ident">p3</span>)<span class="op">|</span> {
         <span class="macro">format!</span>(<span class="string">&quot;{}-{}-{}&quot;</span>, <span class="ident">p1</span>, <span class="ident">p2</span>, <span class="ident">p3</span>)
     });
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">ventilation_mode</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">VentilationMode</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map_res</span>(<span class="ident">be_u8</span>, <span class="ident">VentilationMode::try_from</span>);
+<span class="kw">fn</span> <span class="ident">ventilation_mode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">VentilationMode</span>, <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map_res</span>(<span class="ident">be_u8</span>, <span class="op">|</span><span class="ident">b</span><span class="op">|</span> {
+        <span class="ident">VentilationMode::try_from</span>(<span class="ident">b</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">_e</span><span class="op">|</span> <span class="ident">E::from_error_kind</span>(<span class="ident">input</span>, <span class="ident">nom::error::ErrorKind::Fail</span>))
+    });
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">fatal_error_details</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">FatalErrorDetails</span><span class="op">&gt;</span> {
-    <span class="kw">use</span> <span class="ident">nom::error</span>::{<span class="ident">Error</span>, <span class="ident">ErrorKind</span>};
+<span class="kw">fn</span> <span class="ident">fatal_error_details</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">FatalErrorDetails</span>, <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="kw">use</span> <span class="ident">nom::error::ErrorKind</span>;
     <span class="kw">use</span> <span class="ident">nom::Err::Failure</span>;
     <span class="kw">use</span> <span class="ident">FatalErrorDetails</span>::<span class="kw-2">*</span>;
 
@@ -1523,17 +1594,24 @@
             });
             <span class="ident">parser</span>(<span class="ident">input</span>)
         }
-        <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">Failure</span>(<span class="ident">Error::new</span>(<span class="ident">input</span>, <span class="ident">ErrorKind::Switch</span>))),
+        <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">Failure</span>(<span class="ident">E::from_error_kind</span>(<span class="ident">input</span>, <span class="ident">ErrorKind::Switch</span>))),
     }
 }
 
-<span class="kw">fn</span> <span class="ident">eol_test_step</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">EolTestStep</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map_res</span>(<span class="ident">be_u8</span>, <span class="ident">EolTestStep::try_from</span>);
+<span class="kw">fn</span> <span class="ident">eol_test_step</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">EolTestStep</span>, <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map_res</span>(<span class="ident">be_u8</span>, <span class="op">|</span><span class="ident">b</span><span class="op">|</span> {
+        <span class="ident">EolTestStep::try_from</span>(<span class="ident">b</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">_e</span><span class="op">|</span> <span class="ident">E::from_error_kind</span>(<span class="ident">input</span>, <span class="ident">nom::error::ErrorKind::Fail</span>))
+    });
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">eol_test_snapshot_content</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">EolTestSnapshotContent</span><span class="op">&gt;</span> {
-    <span class="kw">use</span> <span class="ident">nom::error</span>::{<span class="ident">Error</span>, <span class="ident">ErrorKind</span>};
+<span class="kw">fn</span> <span class="ident">eol_test_snapshot_content</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">EolTestSnapshotContent</span>, <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="kw">use</span> <span class="ident">nom::error::ErrorKind</span>;
     <span class="kw">use</span> <span class="ident">nom::Err::Failure</span>;
     <span class="kw">use</span> <span class="ident">EolTestSnapshotContent</span>::<span class="kw-2">*</span>;
 
@@ -1557,16 +1635,23 @@
             });
             <span class="ident">parser</span>(<span class="ident">input</span>)
         }
-        <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">Failure</span>(<span class="ident">Error::new</span>(<span class="ident">input</span>, <span class="ident">ErrorKind::Switch</span>))),
+        <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">Failure</span>(<span class="ident">E::from_error_kind</span>(<span class="ident">input</span>, <span class="ident">ErrorKind::Switch</span>))),
     }
 }
 
-<span class="kw">fn</span> <span class="ident">patient_gender</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">PatientGender</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map_res</span>(<span class="ident">be_u8</span>, <span class="ident">PatientGender::try_from</span>);
+<span class="kw">fn</span> <span class="ident">patient_gender</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">PatientGender</span>, <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map_res</span>(<span class="ident">be_u8</span>, <span class="op">|</span><span class="ident">b</span><span class="op">|</span> {
+        <span class="ident">PatientGender::try_from</span>(<span class="ident">b</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">_e</span><span class="op">|</span> <span class="ident">E::from_error_kind</span>(<span class="ident">input</span>, <span class="ident">nom::error::ErrorKind::Fail</span>))
+    });
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">boot</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">boot</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tag</span>(<span class="string">&quot;B:&quot;</span>),
@@ -1595,7 +1680,9 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">stopped</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">stopped</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tuple</span>((
@@ -1796,7 +1883,9 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">data_snapshot</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">data_snapshot</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tuple</span>((
@@ -1871,7 +1960,9 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">machine_state_snapshot</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">machine_state_snapshot</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tuple</span>((
@@ -2107,7 +2198,9 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">alarm_trap</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">alarm_trap</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tuple</span>((
@@ -2183,7 +2276,9 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">control_ack</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">control_ack</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tag</span>(<span class="string">&quot;A:&quot;</span>),
@@ -2212,7 +2307,9 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">fatal_error</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">fatal_error</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tag</span>(<span class="string">&quot;E:&quot;</span>),
@@ -2238,7 +2335,9 @@
     <span class="ident">parser</span>(<span class="ident">input</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">eol_test_snapshot</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">eol_test_snapshot</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">map</span>(
         <span class="ident">tuple</span>((
             <span class="ident">tag</span>(<span class="string">&quot;L:&quot;</span>),
@@ -2272,7 +2371,9 @@
 <span class="doccomment">/// * `input` - Bytes to parse.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This only decodes the message body: header, CRC and footer must be stripped beforehand.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">message</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">TelemetryError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">message</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">ParseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromExternalError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+) -&gt; <span class="ident">IResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">TelemetryMessage</span>, <span class="ident">E</span><span class="op">&gt;</span> {
     <span class="ident">nom::branch::alt</span>((
         <span class="ident">boot</span>,
         <span class="ident">stopped</span>,
@@ -2283,7 +2384,6 @@
         <span class="ident">fatal_error</span>,
         <span class="ident">eol_test_snapshot</span>,
     ))(<span class="ident">input</span>)
-    .<span class="ident">map_err</span>(<span class="ident">nom::Err::convert</span>)
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -2291,6 +2391,7 @@
     <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::<span class="kw">super</span>::tests</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::serializers::ToBytes</span>;
+    <span class="kw">use</span> <span class="ident">nom::error::VerboseError</span>;
     <span class="kw">use</span> <span class="ident">proptest::bool</span>;
     <span class="kw">use</span> <span class="ident">proptest::collection</span>;
     <span class="kw">use</span> <span class="ident">proptest::num</span>;
@@ -2418,7 +2519,7 @@
             <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">to_bytes_v2</span>();
             <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TelemetryMessage::BootMessage</span>(<span class="ident">msg</span>);
 
-            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">boot</span>, <span class="string">&quot;boot&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
+            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">boot</span>::<span class="op">&lt;</span><span class="ident">VerboseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>, <span class="string">&quot;boot&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
         }
     }
 
@@ -2505,7 +2606,7 @@
             <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">to_bytes_v2</span>();
             <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TelemetryMessage::StoppedMessage</span>(<span class="ident">msg</span>);
 
-            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">stopped</span>, <span class="string">&quot;stopped&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
+            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">stopped</span>::<span class="op">&lt;</span><span class="ident">VerboseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>, <span class="string">&quot;stopped&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
         }
     }
 
@@ -2546,7 +2647,7 @@
             <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">to_bytes_v2</span>();
             <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TelemetryMessage::DataSnapshot</span>(<span class="ident">msg</span>);
 
-            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">data_snapshot</span>, <span class="string">&quot;data_snapshot&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
+            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">data_snapshot</span>::<span class="op">&lt;</span><span class="ident">VerboseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>, <span class="string">&quot;data_snapshot&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
         }
     }
 
@@ -2647,7 +2748,7 @@
             <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">to_bytes_v2</span>();
             <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TelemetryMessage::MachineStateSnapshot</span>(<span class="ident">msg</span>);
 
-            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">machine_state_snapshot</span>, <span class="string">&quot;machine_state_snapshot&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
+            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">machine_state_snapshot</span>::<span class="op">&lt;</span><span class="ident">VerboseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>, <span class="string">&quot;machine_state_snapshot&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
         }
     }
 
@@ -2690,7 +2791,7 @@
             <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">to_bytes_v2</span>();
             <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TelemetryMessage::AlarmTrap</span>(<span class="ident">msg</span>);
 
-            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">alarm_trap</span>, <span class="string">&quot;alarm_trap&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
+            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">alarm_trap</span>::<span class="op">&lt;</span><span class="ident">VerboseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>, <span class="string">&quot;alarm_trap&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
         }
     }
 
@@ -2716,7 +2817,7 @@
             <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">to_bytes_v2</span>();
             <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TelemetryMessage::ControlAck</span>(<span class="ident">msg</span>);
 
-            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">control_ack</span>, <span class="string">&quot;control_ack&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
+            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">control_ack</span>::<span class="op">&lt;</span><span class="ident">VerboseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>, <span class="string">&quot;control_ack&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
         }
     }
 
@@ -2740,7 +2841,7 @@
             <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">to_bytes_v2</span>();
             <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TelemetryMessage::FatalError</span>(<span class="ident">msg</span>);
 
-            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">fatal_error</span>, <span class="string">&quot;fatal_error&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
+            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">fatal_error</span>::<span class="op">&lt;</span><span class="ident">VerboseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>, <span class="string">&quot;fatal_error&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
         }
     }
 
@@ -2766,11 +2867,10 @@
             <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">msg</span>.<span class="ident">to_bytes_v2</span>();
             <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TelemetryMessage::EolTestSnapshot</span>(<span class="ident">msg</span>);
 
-            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">eol_test_snapshot</span>, <span class="string">&quot;eol_test_snapshot&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
+            <span class="macro">assert_eq!</span>(<span class="ident">nom::error::dbg_dmp</span>(<span class="ident">eol_test_snapshot</span>::<span class="op">&lt;</span><span class="ident">VerboseError</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>, <span class="string">&quot;eol_test_snapshot&quot;</span>)(<span class="ident">input</span>), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>[][..], <span class="ident">expected</span>)));
         }
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="makair_telemetry" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
-    <script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="makair_telemetry" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (48a5999fc 2021-12-01)" ></div>
 </body></html>

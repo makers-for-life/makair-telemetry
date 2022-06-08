@@ -1,103 +1,111 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;clap-3.0.0-beta.5&#x2F;src&#x2F;parse&#x2F;validator.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>validator.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css"disabled><link rel="stylesheet" type="text/css" href="../../../dark.css"disabled><link rel="stylesheet" type="text/css" href="../../../light.css"id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><script defer src="../../../main.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script>
-    <noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../clap/index.html'><div class='logo-container rust-logo'><img src='https:&#x2F;&#x2F;clap.rs&#x2F;images&#x2F;media&#x2F;clap.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
-<span id="2">  2</span>
-<span id="3">  3</span>
-<span id="4">  4</span>
-<span id="5">  5</span>
-<span id="6">  6</span>
-<span id="7">  7</span>
-<span id="8">  8</span>
-<span id="9">  9</span>
-<span id="10"> 10</span>
-<span id="11"> 11</span>
-<span id="12"> 12</span>
-<span id="13"> 13</span>
-<span id="14"> 14</span>
-<span id="15"> 15</span>
-<span id="16"> 16</span>
-<span id="17"> 17</span>
-<span id="18"> 18</span>
-<span id="19"> 19</span>
-<span id="20"> 20</span>
-<span id="21"> 21</span>
-<span id="22"> 22</span>
-<span id="23"> 23</span>
-<span id="24"> 24</span>
-<span id="25"> 25</span>
-<span id="26"> 26</span>
-<span id="27"> 27</span>
-<span id="28"> 28</span>
-<span id="29"> 29</span>
-<span id="30"> 30</span>
-<span id="31"> 31</span>
-<span id="32"> 32</span>
-<span id="33"> 33</span>
-<span id="34"> 34</span>
-<span id="35"> 35</span>
-<span id="36"> 36</span>
-<span id="37"> 37</span>
-<span id="38"> 38</span>
-<span id="39"> 39</span>
-<span id="40"> 40</span>
-<span id="41"> 41</span>
-<span id="42"> 42</span>
-<span id="43"> 43</span>
-<span id="44"> 44</span>
-<span id="45"> 45</span>
-<span id="46"> 46</span>
-<span id="47"> 47</span>
-<span id="48"> 48</span>
-<span id="49"> 49</span>
-<span id="50"> 50</span>
-<span id="51"> 51</span>
-<span id="52"> 52</span>
-<span id="53"> 53</span>
-<span id="54"> 54</span>
-<span id="55"> 55</span>
-<span id="56"> 56</span>
-<span id="57"> 57</span>
-<span id="58"> 58</span>
-<span id="59"> 59</span>
-<span id="60"> 60</span>
-<span id="61"> 61</span>
-<span id="62"> 62</span>
-<span id="63"> 63</span>
-<span id="64"> 64</span>
-<span id="65"> 65</span>
-<span id="66"> 66</span>
-<span id="67"> 67</span>
-<span id="68"> 68</span>
-<span id="69"> 69</span>
-<span id="70"> 70</span>
-<span id="71"> 71</span>
-<span id="72"> 72</span>
-<span id="73"> 73</span>
-<span id="74"> 74</span>
-<span id="75"> 75</span>
-<span id="76"> 76</span>
-<span id="77"> 77</span>
-<span id="78"> 78</span>
-<span id="79"> 79</span>
-<span id="80"> 80</span>
-<span id="81"> 81</span>
-<span id="82"> 82</span>
-<span id="83"> 83</span>
-<span id="84"> 84</span>
-<span id="85"> 85</span>
-<span id="86"> 86</span>
-<span id="87"> 87</span>
-<span id="88"> 88</span>
-<span id="89"> 89</span>
-<span id="90"> 90</span>
-<span id="91"> 91</span>
-<span id="92"> 92</span>
-<span id="93"> 93</span>
-<span id="94"> 94</span>
-<span id="95"> 95</span>
-<span id="96"> 96</span>
-<span id="97"> 97</span>
-<span id="98"> 98</span>
-<span id="99"> 99</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-3.1.18/src/parse/validator.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>validator.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><script defer src="../../../main.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script>
+    <noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../clap/index.html"><div class="logo-container"><img src="https://raw.githubusercontent.com/clap-rs/clap/master/assets/clap.png" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../../clap/index.html"><div class="logo-container">
+                    <img src="https://raw.githubusercontent.com/clap-rs/clap/master/assets/clap.png" alt="logo"></div>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../clap/index.html">
+                        <img src="https://raw.githubusercontent.com/clap-rs/clap/master/assets/clap.png" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
@@ -684,99 +692,93 @@
 <span id="683">683</span>
 <span id="684">684</span>
 <span id="685">685</span>
-<span id="686">686</span>
-<span id="687">687</span>
-<span id="688">688</span>
-<span id="689">689</span>
-<span id="690">690</span>
-<span id="691">691</span>
-<span id="692">692</span>
-<span id="693">693</span>
-<span id="694">694</span>
-<span id="695">695</span>
-<span id="696">696</span>
-<span id="697">697</span>
-<span id="698">698</span>
-<span id="699">699</span>
-<span id="700">700</span>
-<span id="701">701</span>
-<span id="702">702</span>
-<span id="703">703</span>
-<span id="704">704</span>
 </pre><pre class="rust"><code><span class="comment">// Internal</span>
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">build</span>::{<span class="ident">arg::ArgValue</span>, <span class="ident">AppSettings</span> <span class="kw">as</span> <span class="ident">AS</span>, <span class="ident">Arg</span>, <span class="ident">ArgSettings</span>},
-    <span class="ident">output::Usage</span>,
-    <span class="ident">parse</span>::{
-        <span class="ident">errors</span>::{<span class="ident">Error</span>, <span class="ident">ErrorKind</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">ClapResult</span>},
-        <span class="ident">ArgMatcher</span>, <span class="ident">MatchedArg</span>, <span class="ident">ParseState</span>, <span class="ident">Parser</span>, <span class="ident">ValueType</span>,
-    },
-    <span class="ident">util</span>::{<span class="ident">ChildGraph</span>, <span class="ident">Id</span>},
-    <span class="ident">INTERNAL_ERROR_MSG</span>, <span class="ident">INVALID_UTF8</span>,
-};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::build</span>::{<span class="ident">AppSettings</span>, <span class="ident">Arg</span>, <span class="ident">ArgPredicate</span>, <span class="ident">Command</span>, <span class="ident">PossibleValue</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="ident">Error</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">ClapResult</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::output::fmt::Stream</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::output::Usage</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parse</span>::{<span class="ident">ArgMatcher</span>, <span class="ident">MatchedArg</span>, <span class="ident">ParseState</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::util::ChildGraph</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::util::Id</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">INTERNAL_ERROR_MSG</span>, <span class="ident">INVALID_UTF8</span>};
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Validator</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span>, <span class="lifetime">&#39;app</span>, <span class="lifetime">&#39;parser</span><span class="op">&gt;</span> {
-    <span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;parser</span> <span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span>, <span class="lifetime">&#39;app</span><span class="op">&gt;</span>,
-    <span class="ident">c</span>: <span class="ident">ChildGraph</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&gt;</span>,
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Validator</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span>, <span class="lifetime">&#39;cmd</span><span class="op">&gt;</span> {
+    <span class="ident">cmd</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;cmd</span> <span class="ident">Command</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span>,
+    <span class="ident">required</span>: <span class="ident">ChildGraph</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span>, <span class="lifetime">&#39;app</span>, <span class="lifetime">&#39;parser</span><span class="op">&gt;</span> <span class="ident">Validator</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span>, <span class="lifetime">&#39;app</span>, <span class="lifetime">&#39;parser</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;parser</span> <span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span>, <span class="lifetime">&#39;app</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">Validator</span> {
-            <span class="ident">p</span>,
-            <span class="ident">c</span>: <span class="ident">ChildGraph::with_capacity</span>(<span class="number">5</span>),
-        }
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span>, <span class="lifetime">&#39;cmd</span><span class="op">&gt;</span> <span class="ident">Validator</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span>, <span class="lifetime">&#39;cmd</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cmd</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;cmd</span> <span class="ident">Command</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">required</span> <span class="op">=</span> <span class="ident">cmd</span>.<span class="ident">required_graph</span>();
+        <span class="ident">Validator</span> { <span class="ident">cmd</span>, <span class="ident">required</span> }
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">validate</span>(
         <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">parse_state</span>: <span class="ident">ParseState</span>,
-        <span class="ident">is_subcmd</span>: <span class="ident">bool</span>,
         <span class="ident">matcher</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ArgMatcher</span>,
-        <span class="ident">trailing_values</span>: <span class="ident">bool</span>,
     ) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate&quot;</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reqs_validated</span> <span class="op">=</span> <span class="bool-val">false</span>;
-
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;env&quot;</span>)]</span>
-        <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">add_env</span>(<span class="ident">matcher</span>, <span class="ident">trailing_values</span>)<span class="question-mark">?</span>;
-
-        <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">add_defaults</span>(<span class="ident">matcher</span>, <span class="ident">trailing_values</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">conflicts</span> <span class="op">=</span> <span class="ident">Conflicts::new</span>();
+        <span class="kw">let</span> <span class="ident">has_subcmd</span> <span class="op">=</span> <span class="ident">matcher</span>.<span class="ident">subcommand_name</span>().<span class="ident">is_some</span>();
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ParseState::Opt</span>(<span class="ident">a</span>) <span class="op">=</span> <span class="ident">parse_state</span> {
             <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate: needs_val_of={:?}&quot;</span>, <span class="ident">a</span>);
-            <span class="self">self</span>.<span class="ident">validate_required</span>(<span class="ident">matcher</span>)<span class="question-mark">?</span>;
 
-            <span class="kw">let</span> <span class="ident">o</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>[<span class="kw-2">&amp;</span><span class="ident">a</span>];
-            <span class="ident">reqs_validated</span> <span class="op">=</span> <span class="bool-val">true</span>;
-            <span class="kw">let</span> <span class="ident">should_err</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span> <span class="ident">matcher</span>.<span class="number">0</span>.<span class="ident">args</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">o</span>.<span class="ident">id</span>) {
-                <span class="ident">v</span>.<span class="ident">is_vals_empty</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span>(<span class="ident">o</span>.<span class="ident">min_vals</span>.<span class="ident">is_some</span>() <span class="op">&amp;&amp;</span> <span class="ident">o</span>.<span class="ident">min_vals</span>.<span class="ident">unwrap</span>() <span class="op">==</span> <span class="number">0</span>)
+            <span class="kw">let</span> <span class="ident">o</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">cmd</span>[<span class="kw-2">&amp;</span><span class="ident">a</span>];
+            <span class="kw">let</span> <span class="ident">should_err</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span> <span class="ident">matcher</span>.<span class="ident">args</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">o</span>.<span class="ident">id</span>) {
+                <span class="ident">v</span>.<span class="ident">all_val_groups_empty</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span>(<span class="ident">o</span>.<span class="ident">min_vals</span>.<span class="ident">is_some</span>() <span class="op">&amp;&amp;</span> <span class="ident">o</span>.<span class="ident">min_vals</span>.<span class="ident">unwrap</span>() <span class="op">==</span> <span class="number">0</span>)
             } <span class="kw">else</span> {
                 <span class="bool-val">true</span>
             };
             <span class="kw">if</span> <span class="ident">should_err</span> {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::empty_value</span>(
-                    <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
+                    <span class="self">self</span>.<span class="ident">cmd</span>,
+                    <span class="kw-2">&amp;</span><span class="ident">o</span>.<span class="ident">possible_vals</span>
+                        .<span class="ident">iter</span>()
+                        .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">pv</span><span class="op">|</span> <span class="op">!</span><span class="ident">pv</span>.<span class="ident">is_hide_set</span>())
+                        .<span class="ident">map</span>(<span class="ident">PossibleValue::get_name</span>)
+                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
                     <span class="ident">o</span>,
-                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>).<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
+                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>)
+                        .<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>)
+                        .<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
                 ));
             }
         }
 
-        <span class="kw">if</span> <span class="ident">matcher</span>.<span class="ident">is_empty</span>()
-            <span class="op">&amp;&amp;</span> <span class="ident">matcher</span>.<span class="ident">subcommand_name</span>().<span class="ident">is_none</span>()
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">is_set</span>(<span class="ident">AS::ArgRequiredElseHelp</span>)
-        {
-            <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">write_help_err</span>()<span class="question-mark">?</span>;
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::new</span>(
-                <span class="ident">message</span>,
-                <span class="ident">ErrorKind::DisplayHelpOnMissingArgumentOrSubcommand</span>,
-            ));
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">has_subcmd</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">is_arg_required_else_help_set</span>() {
+            <span class="kw">let</span> <span class="ident">num_user_values</span> <span class="op">=</span> <span class="ident">matcher</span>
+                .<span class="ident">arg_names</span>()
+                .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">arg_id</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">check_explicit</span>(<span class="ident">arg_id</span>, <span class="ident">ArgPredicate::IsPresent</span>))
+                .<span class="ident">count</span>();
+            <span class="kw">if</span> <span class="ident">num_user_values</span> <span class="op">==</span> <span class="number">0</span> {
+                <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">write_help_err</span>(<span class="bool-val">false</span>, <span class="ident">Stream::Stderr</span>)<span class="question-mark">?</span>;
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::display_help_error</span>(<span class="self">self</span>.<span class="ident">cmd</span>, <span class="ident">message</span>));
+            }
         }
-        <span class="self">self</span>.<span class="ident">validate_conflicts</span>(<span class="ident">matcher</span>)<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="op">!</span>(<span class="self">self</span>.<span class="ident">p</span>.<span class="ident">is_set</span>(<span class="ident">AS::SubcommandsNegateReqs</span>) <span class="op">&amp;&amp;</span> <span class="ident">is_subcmd</span> <span class="op">|</span><span class="op">|</span> <span class="ident">reqs_validated</span>) {
-            <span class="self">self</span>.<span class="ident">validate_required</span>(<span class="ident">matcher</span>)<span class="question-mark">?</span>;
-            <span class="self">self</span>.<span class="ident">validate_required_unless</span>(<span class="ident">matcher</span>)<span class="question-mark">?</span>;
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">has_subcmd</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">is_subcommand_required_set</span>() {
+            <span class="kw">let</span> <span class="ident">bn</span> <span class="op">=</span> <span class="self">self</span>
+                .<span class="ident">cmd</span>
+                .<span class="ident">get_bin_name</span>()
+                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">get_name</span>());
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::missing_subcommand</span>(
+                <span class="self">self</span>.<span class="ident">cmd</span>,
+                <span class="ident">bn</span>.<span class="ident">to_string</span>(),
+                <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>)
+                    .<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>)
+                    .<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
+            ));
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">has_subcmd</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">is_set</span>(<span class="ident">AppSettings::SubcommandRequiredElseHelp</span>) {
+            <span class="macro">debug!</span>(<span class="string">&quot;Validator::new::get_matches_with: SubcommandRequiredElseHelp=true&quot;</span>);
+            <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">write_help_err</span>(<span class="bool-val">false</span>, <span class="ident">Stream::Stderr</span>)<span class="question-mark">?</span>;
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::display_help_error</span>(<span class="self">self</span>.<span class="ident">cmd</span>, <span class="ident">message</span>));
+        }
+
+        <span class="self">self</span>.<span class="ident">validate_conflicts</span>(<span class="ident">matcher</span>, <span class="kw-2">&amp;mut</span> <span class="ident">conflicts</span>)<span class="question-mark">?</span>;
+        <span class="kw">if</span> <span class="op">!</span>(<span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">is_subcommand_negates_reqs_set</span>() <span class="op">&amp;&amp;</span> <span class="ident">has_subcmd</span>) {
+            <span class="self">self</span>.<span class="ident">validate_required</span>(<span class="ident">matcher</span>, <span class="kw-2">&amp;mut</span> <span class="ident">conflicts</span>)<span class="question-mark">?</span>;
         }
         <span class="self">self</span>.<span class="ident">validate_matched_args</span>(<span class="ident">matcher</span>)<span class="question-mark">?</span>;
 
@@ -791,14 +793,16 @@
     ) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_arg_values: arg={:?}&quot;</span>, <span class="ident">arg</span>.<span class="ident">name</span>);
         <span class="kw">for</span> <span class="ident">val</span> <span class="kw">in</span> <span class="ident">ma</span>.<span class="ident">vals_flatten</span>() {
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">arg</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings::AllowInvalidUtf8</span>) <span class="op">&amp;&amp;</span> <span class="ident">val</span>.<span class="ident">to_str</span>().<span class="ident">is_none</span>() {
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">arg</span>.<span class="ident">is_allow_invalid_utf8_set</span>() <span class="op">&amp;&amp;</span> <span class="ident">val</span>.<span class="ident">to_str</span>().<span class="ident">is_none</span>() {
                 <span class="macro">debug!</span>(
                     <span class="string">&quot;Validator::validate_arg_values: invalid UTF-8 found in val {:?}&quot;</span>,
                     <span class="ident">val</span>
                 );
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::invalid_utf8</span>(
-                    <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
-                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>).<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
+                    <span class="self">self</span>.<span class="ident">cmd</span>,
+                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>)
+                        .<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>)
+                        .<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
                 ));
             }
             <span class="kw">if</span> <span class="op">!</span><span class="ident">arg</span>.<span class="ident">possible_vals</span>.<span class="ident">is_empty</span>() {
@@ -810,38 +814,42 @@
                 <span class="kw">let</span> <span class="ident">ok</span> <span class="op">=</span> <span class="ident">arg</span>
                     .<span class="ident">possible_vals</span>
                     .<span class="ident">iter</span>()
-                    .<span class="ident">any</span>(<span class="op">|</span><span class="ident">pv</span><span class="op">|</span> <span class="ident">pv</span>.<span class="ident">matches</span>(<span class="kw-2">&amp;</span><span class="ident">val_str</span>, <span class="ident">arg</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings::IgnoreCase</span>)));
+                    .<span class="ident">any</span>(<span class="op">|</span><span class="ident">pv</span><span class="op">|</span> <span class="ident">pv</span>.<span class="ident">matches</span>(<span class="kw-2">&amp;</span><span class="ident">val_str</span>, <span class="ident">arg</span>.<span class="ident">is_ignore_case_set</span>()));
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">ok</span> {
                     <span class="kw">let</span> <span class="ident">used</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">matcher</span>
                         .<span class="ident">arg_names</span>()
-                        .<span class="ident">filter</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">n</span><span class="op">|</span> {
-                            <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">find</span>(<span class="ident">n</span>).<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
-                                <span class="op">!</span>(<span class="ident">a</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings::Hidden</span>) <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">required</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">id</span>))
-                            })
-                        })
+                        .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">arg_id</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">check_explicit</span>(<span class="ident">arg_id</span>, <span class="ident">ArgPredicate::IsPresent</span>))
+                        .<span class="ident">filter</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">n</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">find</span>(<span class="ident">n</span>).<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="op">!</span><span class="ident">a</span>.<span class="ident">is_hide_set</span>()))
                         .<span class="ident">cloned</span>()
                         .<span class="ident">collect</span>();
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::invalid_value</span>(
-                        <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
+                        <span class="self">self</span>.<span class="ident">cmd</span>,
                         <span class="ident">val_str</span>.<span class="ident">into_owned</span>(),
                         <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">possible_vals</span>
                             .<span class="ident">iter</span>()
-                            .<span class="ident">filter_map</span>(<span class="ident">ArgValue::get_visible_name</span>)
+                            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">pv</span><span class="op">|</span> <span class="op">!</span><span class="ident">pv</span>.<span class="ident">is_hide_set</span>())
+                            .<span class="ident">map</span>(<span class="ident">PossibleValue::get_name</span>)
                             .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
                         <span class="ident">arg</span>,
-                        <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>).<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span><span class="ident">used</span>),
+                        <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>)
+                            .<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>)
+                            .<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span><span class="ident">used</span>),
                     ));
                 }
             }
-            <span class="kw">if</span> <span class="ident">arg</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings::ForbidEmptyValues</span>)
-                <span class="op">&amp;&amp;</span> <span class="ident">val</span>.<span class="ident">is_empty</span>()
-                <span class="op">&amp;&amp;</span> <span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">id</span>)
-            {
+            <span class="kw">if</span> <span class="ident">arg</span>.<span class="ident">is_forbid_empty_values_set</span>() <span class="op">&amp;&amp;</span> <span class="ident">val</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">id</span>) {
                 <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_arg_values: illegal empty val found&quot;</span>);
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::empty_value</span>(
-                    <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
+                    <span class="self">self</span>.<span class="ident">cmd</span>,
+                    <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">possible_vals</span>
+                        .<span class="ident">iter</span>()
+                        .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">pv</span><span class="op">|</span> <span class="op">!</span><span class="ident">pv</span>.<span class="ident">is_hide_set</span>())
+                        .<span class="ident">map</span>(<span class="ident">PossibleValue::get_name</span>)
+                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
                     <span class="ident">arg</span>,
-                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>).<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
+                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>)
+                        .<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>)
+                        .<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
                 ));
             }
 
@@ -851,11 +859,11 @@
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">vtor</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">val</span>.<span class="ident">to_string_lossy</span>()) {
                     <span class="macro">debug!</span>(<span class="string">&quot;error&quot;</span>);
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::value_validation</span>(
-                        <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
                         <span class="ident">arg</span>.<span class="ident">to_string</span>(),
                         <span class="ident">val</span>.<span class="ident">to_string_lossy</span>().<span class="ident">into_owned</span>(),
                         <span class="ident">e</span>,
-                    ));
+                    )
+                    .<span class="ident">with_cmd</span>(<span class="self">self</span>.<span class="ident">cmd</span>));
                 } <span class="kw">else</span> {
                     <span class="macro">debug!</span>(<span class="string">&quot;good&quot;</span>);
                 }
@@ -866,11 +874,11 @@
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">vtor</span>(<span class="ident">val</span>) {
                     <span class="macro">debug!</span>(<span class="string">&quot;error&quot;</span>);
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::value_validation</span>(
-                        <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
                         <span class="ident">arg</span>.<span class="ident">to_string</span>(),
                         <span class="ident">val</span>.<span class="ident">to_string_lossy</span>().<span class="ident">into</span>(),
                         <span class="ident">e</span>,
-                    ));
+                    )
+                    .<span class="ident">with_cmd</span>(<span class="self">self</span>.<span class="ident">cmd</span>));
                 } <span class="kw">else</span> {
                     <span class="macro">debug!</span>(<span class="string">&quot;good&quot;</span>);
                 }
@@ -879,242 +887,145 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">build_conflict_err_usage</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
+    <span class="kw">fn</span> <span class="ident">validate_conflicts</span>(
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>,
-        <span class="ident">retained_arg</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span>,
-        <span class="ident">conflicting_key</span>: <span class="kw-2">&amp;</span><span class="ident">Id</span>,
-    ) -&gt; <span class="ident">String</span> {
-        <span class="kw">let</span> <span class="ident">retained_blacklist</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">retained_arg</span>.<span class="ident">blacklist</span>;
-        <span class="kw">let</span> <span class="ident">used_filtered</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">matcher</span>
-            .<span class="ident">arg_names</span>()
-            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">key</span> <span class="op">!</span><span class="op">=</span> <span class="ident">conflicting_key</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">retained_blacklist</span>.<span class="ident">contains</span>(<span class="ident">key</span>))
-            .<span class="ident">cloned</span>()
-            .<span class="ident">collect</span>();
-        <span class="kw">let</span> <span class="ident">required</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">used_filtered</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">find</span>(<span class="ident">key</span>))
-            .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">arg</span><span class="op">|</span> <span class="ident">arg</span>.<span class="ident">requires</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">item</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">item</span>.<span class="number">1</span>))
-            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> {
-                <span class="op">!</span><span class="ident">used_filtered</span>.<span class="ident">contains</span>(<span class="ident">key</span>)
-                    <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">key</span> <span class="op">!</span><span class="op">=</span> <span class="ident">conflicting_key</span>
-                    <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">retained_blacklist</span>.<span class="ident">contains</span>(<span class="ident">key</span>)
-            })
-            .<span class="ident">chain</span>(<span class="ident">used_filtered</span>.<span class="ident">iter</span>())
-            .<span class="ident">cloned</span>()
-            .<span class="ident">collect</span>();
-        <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>).<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span><span class="ident">required</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">build_conflict_err</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">Id</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="macro">debug!</span>(<span class="string">&quot;Validator::build_conflict_err: name={:?}&quot;</span>, <span class="ident">name</span>);
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">checked_arg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">find</span>(<span class="ident">name</span>) {
-            <span class="ident">matcher</span>
-                .<span class="ident">arg_names</span>()
-                .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">k</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">arg</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">find</span>(<span class="ident">k</span>);
-                    <span class="comment">// For an arg that blacklists `name`, this will return `Some((k, a))` to indicate a conflict.</span>
-                    <span class="ident">arg</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">blacklist</span>.<span class="ident">contains</span>(<span class="ident">name</span>)).<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> (<span class="ident">k</span>, <span class="ident">a</span>))
-                })
-                .<span class="ident">try_for_each</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">a</span>)<span class="op">|</span> {
-                    <span class="comment">// The error will be then constructed according to the first conflict.</span>
-                    <span class="kw">let</span> (<span class="ident">_former</span>, <span class="ident">former_arg</span>, <span class="ident">latter</span>, <span class="ident">latter_arg</span>) <span class="op">=</span> {
-                        <span class="kw">let</span> <span class="ident">name_pos</span> <span class="op">=</span> <span class="ident">matcher</span>.<span class="ident">arg_names</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> <span class="ident">key</span> <span class="op">==</span> <span class="ident">name</span>);
-                        <span class="kw">let</span> <span class="ident">k_pos</span> <span class="op">=</span> <span class="ident">matcher</span>.<span class="ident">arg_names</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> <span class="ident">key</span> <span class="op">==</span> <span class="ident">k</span>);
-                        <span class="kw">if</span> <span class="ident">name_pos</span> <span class="op">&lt;</span> <span class="ident">k_pos</span> {
-                            (<span class="ident">name</span>, <span class="ident">checked_arg</span>, <span class="ident">k</span>, <span class="ident">a</span>)
-                        } <span class="kw">else</span> {
-                            (<span class="ident">k</span>, <span class="ident">a</span>, <span class="ident">name</span>, <span class="ident">checked_arg</span>)
-                        }
-                    };
-                    <span class="kw">let</span> <span class="ident">usg</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build_conflict_err_usage</span>(<span class="ident">matcher</span>, <span class="ident">former_arg</span>, <span class="ident">latter</span>);
-                    <span class="prelude-val">Err</span>(<span class="ident">Error::argument_conflict</span>(
-                        <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
-                        <span class="ident">latter_arg</span>,
-                        <span class="prelude-val">Some</span>(<span class="ident">former_arg</span>.<span class="ident">to_string</span>()),
-                        <span class="ident">usg</span>,
-                    ))
-                })
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">g</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">groups</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">id</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">name</span>) {
-            <span class="kw">let</span> <span class="ident">usg</span> <span class="op">=</span> <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>).<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]);
-            <span class="kw">let</span> <span class="ident">args_in_group</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">unroll_args_in_group</span>(<span class="kw-2">&amp;</span><span class="ident">g</span>.<span class="ident">id</span>);
-            <span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">matcher</span>
-                .<span class="ident">arg_names</span>()
-                .<span class="ident">find</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">args_in_group</span>.<span class="ident">contains</span>(<span class="ident">x</span>))
-                .<span class="ident">expect</span>(<span class="ident">INTERNAL_ERROR_MSG</span>);
-            <span class="kw">let</span> <span class="ident">c_with</span> <span class="op">=</span> <span class="ident">matcher</span>
-                .<span class="ident">arg_names</span>()
-                .<span class="ident">find</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span> <span class="op">!</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">first</span> <span class="op">&amp;&amp;</span> <span class="ident">args_in_group</span>.<span class="ident">contains</span>(<span class="ident">x</span>))
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>[<span class="ident">x</span>].<span class="ident">to_string</span>());
-            <span class="macro">debug!</span>(<span class="string">&quot;Validator::build_conflict_err: c_with={:?}:group&quot;</span>, <span class="ident">c_with</span>);
-            <span class="prelude-val">Err</span>(<span class="ident">Error::argument_conflict</span>(
-                <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>[<span class="ident">first</span>],
-                <span class="ident">c_with</span>,
-                <span class="ident">usg</span>,
-            ))
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Ok</span>(())
-        }<span class="question-mark">?</span>;
-
-        <span class="macro">panic!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">INTERNAL_ERROR_MSG</span>);
-    }
-
-    <span class="kw">fn</span> <span class="ident">validate_conflicts</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ArgMatcher</span>) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="ident">conflicts</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Conflicts</span>,
+    ) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_conflicts&quot;</span>);
-        <span class="self">self</span>.<span class="ident">validate_exclusive</span>(<span class="ident">matcher</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">gather_conflicts</span>(<span class="ident">matcher</span>);
 
-        <span class="self">self</span>.<span class="ident">c</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">filter</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">name</span><span class="op">|</span> {
-                <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_conflicts:iter:{:?}&quot;</span>, <span class="ident">name</span>);
-                <span class="comment">// Filter out the conflicting cases.</span>
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">g</span>) <span class="op">=</span> <span class="self">self</span>
-                    .<span class="ident">p</span>
-                    .<span class="ident">app</span>
-                    .<span class="ident">groups</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">find</span>(<span class="op">|</span><span class="ident">g</span><span class="op">|</span> <span class="op">!</span><span class="ident">g</span>.<span class="ident">multiple</span> <span class="op">&amp;&amp;</span> <span class="ident">g</span>.<span class="ident">id</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">name</span>)
-                {
-                    <span class="kw">let</span> <span class="ident">conf_with_self</span> <span class="op">=</span> <span class="op">|</span><span class="op">|</span> {
-                        <span class="self">self</span>.<span class="ident">p</span>
-                            .<span class="ident">app</span>
-                            .<span class="ident">unroll_args_in_group</span>(<span class="kw-2">&amp;</span><span class="ident">g</span>.<span class="ident">id</span>)
-                            .<span class="ident">iter</span>()
-                            .<span class="ident">filter</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">a</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="ident">a</span>))
-                            .<span class="ident">count</span>()
-                            <span class="op">&gt;</span> <span class="number">1</span>
-                    };
-                    <span class="kw">let</span> <span class="ident">conf_with_arg</span> <span class="op">=</span> <span class="op">|</span><span class="op">|</span> <span class="ident">g</span>.<span class="ident">conflicts</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="ident">x</span>));
-                    <span class="kw">let</span> <span class="ident">arg_conf_with_gr</span> <span class="op">=</span> <span class="op">|</span><span class="op">|</span> {
-                        <span class="ident">matcher</span>
-                            .<span class="ident">arg_names</span>()
-                            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">find</span>(<span class="ident">x</span>))
-                            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">blacklist</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">c</span> <span class="op">==</span> <span class="ident">g</span>.<span class="ident">id</span>))
-                    };
-                    <span class="ident">conf_with_self</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">conf_with_arg</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">arg_conf_with_gr</span>()
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ma</span>) <span class="op">=</span> <span class="ident">matcher</span>.<span class="ident">get</span>(<span class="ident">name</span>) {
-                    <span class="macro">debug!</span>(
-                        <span class="string">&quot;Validator::validate_conflicts:iter:{:?}: matcher contains it...&quot;</span>,
-                        <span class="ident">name</span>
-                    );
-                    <span class="ident">ma</span>.<span class="ident">occurs</span> <span class="op">&gt;</span> <span class="number">0</span>
-                } <span class="kw">else</span> {
-                    <span class="bool-val">false</span>
-                }
-            })
-            <span class="comment">// Throw an error for the first conflict found.</span>
-            .<span class="ident">try_for_each</span>(<span class="op">|</span><span class="ident">odd</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">build_conflict_err</span>(<span class="ident">odd</span>, <span class="ident">matcher</span>))
+        <span class="self">self</span>.<span class="ident">validate_exclusive</span>(<span class="ident">matcher</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">for</span> <span class="ident">arg_id</span> <span class="kw">in</span> <span class="ident">matcher</span>
+            .<span class="ident">arg_names</span>()
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">arg_id</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">check_explicit</span>(<span class="ident">arg_id</span>, <span class="ident">ArgPredicate::IsPresent</span>))
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">arg_id</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">find</span>(<span class="ident">arg_id</span>).<span class="ident">is_some</span>())
+        {
+            <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_conflicts::iter: id={:?}&quot;</span>, <span class="ident">arg_id</span>);
+            <span class="kw">let</span> <span class="ident">conflicts</span> <span class="op">=</span> <span class="ident">conflicts</span>.<span class="ident">gather_conflicts</span>(<span class="self">self</span>.<span class="ident">cmd</span>, <span class="ident">matcher</span>, <span class="ident">arg_id</span>);
+            <span class="self">self</span>.<span class="ident">build_conflict_err</span>(<span class="ident">arg_id</span>, <span class="kw-2">&amp;</span><span class="ident">conflicts</span>, <span class="ident">matcher</span>)<span class="question-mark">?</span>;
+        }
+
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">validate_exclusive</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ArgMatcher</span>) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">validate_exclusive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_exclusive&quot;</span>);
+        <span class="comment">// Not bothering to filter for `check_explicit` since defaults shouldn&#39;t play into this</span>
         <span class="kw">let</span> <span class="ident">args_count</span> <span class="op">=</span> <span class="ident">matcher</span>.<span class="ident">arg_names</span>().<span class="ident">count</span>();
+        <span class="kw">if</span> <span class="ident">args_count</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">1</span> {
+            <span class="comment">// Nothing present to conflict with</span>
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+        }
+
         <span class="ident">matcher</span>
             .<span class="ident">arg_names</span>()
             .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">name</span><span class="op">|</span> {
                 <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_exclusive:iter:{:?}&quot;</span>, <span class="ident">name</span>);
-                <span class="self">self</span>.<span class="ident">p</span>
-                    .<span class="ident">app</span>
+                <span class="self">self</span>.<span class="ident">cmd</span>
                     .<span class="ident">find</span>(<span class="ident">name</span>)
                     <span class="comment">// Find `arg`s which are exclusive but also appear with other args.</span>
-                    .<span class="ident">filter</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">arg</span><span class="op">|</span> <span class="ident">arg</span>.<span class="ident">exclusive</span> <span class="op">&amp;&amp;</span> <span class="ident">args_count</span> <span class="op">&gt;</span> <span class="number">1</span>)
+                    .<span class="ident">filter</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">arg</span><span class="op">|</span> <span class="ident">arg</span>.<span class="ident">is_exclusive_set</span>() <span class="op">&amp;&amp;</span> <span class="ident">args_count</span> <span class="op">&gt;</span> <span class="number">1</span>)
             })
             <span class="comment">// Throw an error for the first conflict found.</span>
             .<span class="ident">try_for_each</span>(<span class="op">|</span><span class="ident">arg</span><span class="op">|</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">Error::argument_conflict</span>(
-                    <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
+                    <span class="self">self</span>.<span class="ident">cmd</span>,
                     <span class="ident">arg</span>,
-                    <span class="prelude-val">None</span>,
-                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>).<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
+                    <span class="ident">Vec::new</span>(),
+                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>)
+                        .<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>)
+                        .<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
                 ))
             })
     }
 
-    <span class="comment">// Gathers potential conflicts based on used argument, but without considering requirements</span>
-    <span class="comment">// and such</span>
-    <span class="kw">fn</span> <span class="ident">gather_conflicts</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ArgMatcher</span>) {
-        <span class="macro">debug!</span>(<span class="string">&quot;Validator::gather_conflicts&quot;</span>);
-        <span class="ident">matcher</span>
-            .<span class="ident">arg_names</span>()
-            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">name</span><span class="op">|</span> {
-                <span class="macro">debug!</span>(<span class="string">&quot;Validator::gather_conflicts:iter: id={:?}&quot;</span>, <span class="ident">name</span>);
-                <span class="comment">// if arg is &quot;present&quot; only because it got default value</span>
-                <span class="comment">// it doesn&#39;t conflict with anything and should be skipped</span>
-                <span class="kw">let</span> <span class="ident">skip</span> <span class="op">=</span> <span class="ident">matcher</span>
-                    .<span class="ident">get</span>(<span class="ident">name</span>)
-                    .<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">ty</span> <span class="op">==</span> <span class="ident">ValueType::DefaultValue</span>);
-                <span class="kw">if</span> <span class="ident">skip</span> {
-                    <span class="macro">debug!</span>(<span class="string">&quot;Validator::gather_conflicts:iter: This is default value, skipping.&quot;</span>,);
+    <span class="kw">fn</span> <span class="ident">build_conflict_err</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">Id</span>,
+        <span class="ident">conflict_ids</span>: <span class="kw-2">&amp;</span>[<span class="ident">Id</span>],
+        <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>,
+    ) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">conflict_ids</span>.<span class="ident">is_empty</span>() {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+        }
+
+        <span class="macro">debug!</span>(<span class="string">&quot;Validator::build_conflict_err: name={:?}&quot;</span>, <span class="ident">name</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">seen</span> <span class="op">=</span> <span class="ident">std::collections::HashSet::new</span>();
+        <span class="kw">let</span> <span class="ident">conflicts</span> <span class="op">=</span> <span class="ident">conflict_ids</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">c_id</span><span class="op">|</span> {
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">find_group</span>(<span class="ident">c_id</span>).<span class="ident">is_some</span>() {
+                    <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">unroll_args_in_group</span>(<span class="ident">c_id</span>)
+                } <span class="kw">else</span> {
+                    <span class="macro">vec!</span>[<span class="ident">c_id</span>.<span class="ident">clone</span>()]
                 }
-                <span class="op">!</span><span class="ident">skip</span>
             })
-            .<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">name</span><span class="op">|</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">arg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">find</span>(<span class="ident">name</span>) {
-                    <span class="comment">// Since an arg was used, every arg it conflicts with is added to the conflicts</span>
-                    <span class="kw">for</span> <span class="ident">conf</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">blacklist</span> {
-                        <span class="comment">/*
-                        for g_arg in self.p.app.unroll_args_in_group(&amp;g.name) {
-                            if &amp;g_arg != name {
-                                self.c.insert(g.id.clone()); // TODO ERROR is here - groups allow one arg but this line disallows all group args
-                            }
-                        }
-                        */</span>
-                        <span class="self">self</span>.<span class="ident">c</span>.<span class="ident">insert</span>(<span class="ident">conf</span>.<span class="ident">clone</span>());
-                    }
-                    <span class="comment">// Now we need to know which groups this arg was a member of, to add all other</span>
-                    <span class="comment">// args in that group to the conflicts, as well as any args those args conflict</span>
-                    <span class="comment">// with</span>
-                    <span class="kw">for</span> <span class="ident">grp</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">groups_for_arg</span>(<span class="ident">name</span>) {
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">g</span>) <span class="op">=</span> <span class="self">self</span>
-                            .<span class="ident">p</span>
-                            .<span class="ident">app</span>
-                            .<span class="ident">groups</span>
-                            .<span class="ident">iter</span>()
-                            .<span class="ident">find</span>(<span class="op">|</span><span class="ident">g</span><span class="op">|</span> <span class="op">!</span><span class="ident">g</span>.<span class="ident">multiple</span> <span class="op">&amp;&amp;</span> <span class="ident">g</span>.<span class="ident">id</span> <span class="op">==</span> <span class="ident">grp</span>)
-                        {
-                            <span class="comment">/*
-                            for g_arg in self.p.app.unroll_args_in_group(&amp;g.name) {
-                                if &amp;g_arg != name {
-                                    self.c.insert(g.id.clone());
-                                }
-                            }
-                            */</span>
-                            <span class="self">self</span>.<span class="ident">c</span>.<span class="ident">insert</span>(<span class="ident">g</span>.<span class="ident">id</span>.<span class="ident">clone</span>());
-                        }
-                    }
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">g</span>) <span class="op">=</span> <span class="self">self</span>
-                    .<span class="ident">p</span>
-                    .<span class="ident">app</span>
-                    .<span class="ident">groups</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">find</span>(<span class="op">|</span><span class="ident">g</span><span class="op">|</span> <span class="op">!</span><span class="ident">g</span>.<span class="ident">multiple</span> <span class="op">&amp;&amp;</span> <span class="ident">g</span>.<span class="ident">id</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">name</span>)
-                {
-                    <span class="macro">debug!</span>(<span class="string">&quot;Validator::gather_conflicts:iter:{:?}:group&quot;</span>, <span class="ident">name</span>);
-                    <span class="self">self</span>.<span class="ident">c</span>.<span class="ident">insert</span>(<span class="ident">g</span>.<span class="ident">id</span>.<span class="ident">clone</span>());
-                }
-            });
+            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">c_id</span><span class="op">|</span> {
+                <span class="ident">seen</span>.<span class="ident">insert</span>(<span class="ident">c_id</span>.<span class="ident">clone</span>()).<span class="ident">then</span>(<span class="op">|</span><span class="op">|</span> {
+                    <span class="kw">let</span> <span class="ident">c_arg</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">find</span>(<span class="kw-2">&amp;</span><span class="ident">c_id</span>).<span class="ident">expect</span>(<span class="ident">INTERNAL_ERROR_MSG</span>);
+                    <span class="ident">c_arg</span>.<span class="ident">to_string</span>()
+                })
+            })
+            .<span class="ident">collect</span>();
+
+        <span class="kw">let</span> <span class="ident">former_arg</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">find</span>(<span class="ident">name</span>).<span class="ident">expect</span>(<span class="ident">INTERNAL_ERROR_MSG</span>);
+        <span class="kw">let</span> <span class="ident">usg</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build_conflict_err_usage</span>(<span class="ident">matcher</span>, <span class="ident">conflict_ids</span>);
+        <span class="prelude-val">Err</span>(<span class="ident">Error::argument_conflict</span>(
+            <span class="self">self</span>.<span class="ident">cmd</span>, <span class="ident">former_arg</span>, <span class="ident">conflicts</span>, <span class="ident">usg</span>,
+        ))
     }
 
-    <span class="kw">fn</span> <span class="ident">gather_requirements</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>) {
-        <span class="macro">debug!</span>(<span class="string">&quot;Validator::gather_requirements&quot;</span>);
-        <span class="kw">for</span> <span class="ident">name</span> <span class="kw">in</span> <span class="ident">matcher</span>.<span class="ident">arg_names</span>() {
-            <span class="macro">debug!</span>(<span class="string">&quot;Validator::gather_requirements:iter:{:?}&quot;</span>, <span class="ident">name</span>);
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">arg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">find</span>(<span class="ident">name</span>) {
-                <span class="kw">for</span> <span class="ident">req</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">unroll_requirements_for_arg</span>(<span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">id</span>, <span class="ident">matcher</span>) {
-                    <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">required</span>.<span class="ident">insert</span>(<span class="ident">req</span>);
+    <span class="kw">fn</span> <span class="ident">build_conflict_err_usage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>, <span class="ident">conflicting_keys</span>: <span class="kw-2">&amp;</span>[<span class="ident">Id</span>]) -&gt; <span class="ident">String</span> {
+        <span class="kw">let</span> <span class="ident">used_filtered</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">matcher</span>
+            .<span class="ident">arg_names</span>()
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">arg_id</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">check_explicit</span>(<span class="ident">arg_id</span>, <span class="ident">ArgPredicate::IsPresent</span>))
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> {
+                <span class="comment">// Filter out the args we don&#39;t want to specify.</span>
+                <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">find</span>(<span class="ident">n</span>).<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="op">!</span><span class="ident">a</span>.<span class="ident">is_hide_set</span>())
+            })
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> <span class="op">!</span><span class="ident">conflicting_keys</span>.<span class="ident">contains</span>(<span class="ident">key</span>))
+            .<span class="ident">cloned</span>()
+            .<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="ident">required</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">used_filtered</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">find</span>(<span class="ident">key</span>))
+            .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">arg</span><span class="op">|</span> <span class="ident">arg</span>.<span class="ident">requires</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">item</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">item</span>.<span class="number">1</span>))
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> <span class="op">!</span><span class="ident">used_filtered</span>.<span class="ident">contains</span>(<span class="ident">key</span>) <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">conflicting_keys</span>.<span class="ident">contains</span>(<span class="ident">key</span>))
+            .<span class="ident">chain</span>(<span class="ident">used_filtered</span>.<span class="ident">iter</span>())
+            .<span class="ident">cloned</span>()
+            .<span class="ident">collect</span>();
+        <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>)
+            .<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>)
+            .<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span><span class="ident">required</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">gather_requires</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>) {
+        <span class="macro">debug!</span>(<span class="string">&quot;Validator::gather_requires&quot;</span>);
+        <span class="kw">for</span> <span class="ident">name</span> <span class="kw">in</span> <span class="ident">matcher</span>
+            .<span class="ident">arg_names</span>()
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">arg_id</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">check_explicit</span>(<span class="ident">arg_id</span>, <span class="ident">ArgPredicate::IsPresent</span>))
+        {
+            <span class="macro">debug!</span>(<span class="string">&quot;Validator::gather_requires:iter:{:?}&quot;</span>, <span class="ident">name</span>);
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">arg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">find</span>(<span class="ident">name</span>) {
+                <span class="kw">let</span> <span class="ident">is_relevant</span> <span class="op">=</span> <span class="op">|</span>(<span class="ident">val</span>, <span class="ident">req_arg</span>): <span class="kw-2">&amp;</span>(<span class="ident">ArgPredicate</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">Id</span>)<span class="op">|</span> -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&gt;</span> {
+                    <span class="kw">let</span> <span class="ident">required</span> <span class="op">=</span> <span class="ident">matcher</span>.<span class="ident">check_explicit</span>(<span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">id</span>, <span class="kw-2">*</span><span class="ident">val</span>);
+                    <span class="ident">required</span>.<span class="ident">then</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">req_arg</span>.<span class="ident">clone</span>())
+                };
+
+                <span class="kw">for</span> <span class="ident">req</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">unroll_arg_requires</span>(<span class="ident">is_relevant</span>, <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">id</span>) {
+                    <span class="self">self</span>.<span class="ident">required</span>.<span class="ident">insert</span>(<span class="ident">req</span>);
                 }
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">g</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">groups</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="ident">grp</span><span class="op">|</span> <span class="ident">grp</span>.<span class="ident">id</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">name</span>) {
-                <span class="macro">debug!</span>(<span class="string">&quot;Validator::gather_conflicts:iter:{:?}:group&quot;</span>, <span class="ident">name</span>);
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">g</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">find_group</span>(<span class="ident">name</span>) {
+                <span class="macro">debug!</span>(<span class="string">&quot;Validator::gather_requires:iter:{:?}:group&quot;</span>, <span class="ident">name</span>);
                 <span class="kw">for</span> <span class="ident">r</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">g</span>.<span class="ident">requires</span> {
-                    <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">required</span>.<span class="ident">insert</span>(<span class="ident">r</span>.<span class="ident">clone</span>());
+                    <span class="self">self</span>.<span class="ident">required</span>.<span class="ident">insert</span>(<span class="ident">r</span>.<span class="ident">clone</span>());
                 }
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">validate_matched_args</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ArgMatcher</span>) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">validate_matched_args</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_matched_args&quot;</span>);
         <span class="ident">matcher</span>.<span class="ident">iter</span>().<span class="ident">try_for_each</span>(<span class="op">|</span>(<span class="ident">name</span>, <span class="ident">ma</span>)<span class="op">|</span> {
             <span class="macro">debug!</span>(
@@ -1122,22 +1033,10 @@
                 <span class="ident">name</span>,
                 <span class="ident">ma</span>.<span class="ident">vals_flatten</span>()
             );
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">arg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">find</span>(<span class="ident">name</span>) {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">arg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">find</span>(<span class="ident">name</span>) {
                 <span class="self">self</span>.<span class="ident">validate_arg_num_vals</span>(<span class="ident">arg</span>, <span class="ident">ma</span>)<span class="question-mark">?</span>;
                 <span class="self">self</span>.<span class="ident">validate_arg_values</span>(<span class="ident">arg</span>, <span class="ident">ma</span>, <span class="ident">matcher</span>)<span class="question-mark">?</span>;
-                <span class="self">self</span>.<span class="ident">validate_arg_requires</span>(<span class="ident">arg</span>, <span class="ident">ma</span>, <span class="ident">matcher</span>)<span class="question-mark">?</span>;
                 <span class="self">self</span>.<span class="ident">validate_arg_num_occurs</span>(<span class="ident">arg</span>, <span class="ident">ma</span>)<span class="question-mark">?</span>;
-            } <span class="kw">else</span> {
-                <span class="kw">let</span> <span class="ident">grp</span> <span class="op">=</span> <span class="self">self</span>
-                    .<span class="ident">p</span>
-                    .<span class="ident">app</span>
-                    .<span class="ident">groups</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">find</span>(<span class="op">|</span><span class="ident">g</span><span class="op">|</span> <span class="ident">g</span>.<span class="ident">id</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">name</span>)
-                    .<span class="ident">expect</span>(<span class="ident">INTERNAL_ERROR_MSG</span>);
-                <span class="kw">if</span> <span class="ident">grp</span>.<span class="ident">requires</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="op">!</span><span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="ident">n</span>)) {
-                    <span class="kw">return</span> <span class="self">self</span>.<span class="ident">missing_required_error</span>(<span class="ident">matcher</span>, <span class="macro">vec!</span>[<span class="ident">name</span>.<span class="ident">clone</span>()]);
-                }
             }
             <span class="prelude-val">Ok</span>(())
         })
@@ -1146,16 +1045,19 @@
     <span class="kw">fn</span> <span class="ident">validate_arg_num_occurs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span>, <span class="ident">ma</span>: <span class="kw-2">&amp;</span><span class="ident">MatchedArg</span>) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="macro">debug!</span>(
             <span class="string">&quot;Validator::validate_arg_num_occurs: {:?}={}&quot;</span>,
-            <span class="ident">a</span>.<span class="ident">name</span>, <span class="ident">ma</span>.<span class="ident">occurs</span>
+            <span class="ident">a</span>.<span class="ident">name</span>,
+            <span class="ident">ma</span>.<span class="ident">get_occurrences</span>()
         );
         <span class="comment">// Occurrence of positional argument equals to number of values rather</span>
         <span class="comment">// than number of grouped values.</span>
-        <span class="kw">if</span> <span class="ident">ma</span>.<span class="ident">occurs</span> <span class="op">&gt;</span> <span class="number">1</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">a</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings::MultipleOccurrences</span>) <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">a</span>.<span class="ident">is_positional</span>() {
+        <span class="kw">if</span> <span class="ident">ma</span>.<span class="ident">get_occurrences</span>() <span class="op">&gt;</span> <span class="number">1</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">a</span>.<span class="ident">is_multiple_occurrences_set</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">a</span>.<span class="ident">is_positional</span>() {
             <span class="comment">// Not the first time, and we don&#39;t allow multiples</span>
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::unexpected_multiple_usage</span>(
-                <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
+                <span class="self">self</span>.<span class="ident">cmd</span>,
                 <span class="ident">a</span>,
-                <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>).<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
+                <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>)
+                    .<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>)
+                    .<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
             ));
         }
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">max_occurs</span>) <span class="op">=</span> <span class="ident">a</span>.<span class="ident">max_occurs</span> {
@@ -1163,14 +1065,16 @@
                 <span class="string">&quot;Validator::validate_arg_num_occurs: max_occurs set...{}&quot;</span>,
                 <span class="ident">max_occurs</span>
             );
-            <span class="kw">let</span> <span class="ident">occurs</span> <span class="op">=</span> <span class="ident">ma</span>.<span class="ident">occurs</span> <span class="kw">as</span> <span class="ident">usize</span>;
+            <span class="kw">let</span> <span class="ident">occurs</span> <span class="op">=</span> <span class="ident">ma</span>.<span class="ident">get_occurrences</span>() <span class="kw">as</span> <span class="ident">usize</span>;
             <span class="kw">if</span> <span class="ident">occurs</span> <span class="op">&gt;</span> <span class="ident">max_occurs</span> {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::too_many_occurrences</span>(
-                    <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
+                    <span class="self">self</span>.<span class="ident">cmd</span>,
                     <span class="ident">a</span>,
                     <span class="ident">max_occurs</span>,
                     <span class="ident">occurs</span>,
-                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>).<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
+                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>)
+                        .<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>)
+                        .<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
                 ));
             }
         }
@@ -1183,7 +1087,7 @@
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">num</span>) <span class="op">=</span> <span class="ident">a</span>.<span class="ident">num_vals</span> {
             <span class="kw">let</span> <span class="ident">total_num</span> <span class="op">=</span> <span class="ident">ma</span>.<span class="ident">num_vals</span>();
             <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_arg_num_vals: num_vals set...{}&quot;</span>, <span class="ident">num</span>);
-            <span class="kw">let</span> <span class="ident">should_err</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings::MultipleOccurrences</span>) {
+            <span class="kw">let</span> <span class="ident">should_err</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">is_multiple_occurrences_set</span>() {
                 <span class="ident">total_num</span> <span class="op">%</span> <span class="ident">num</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
             } <span class="kw">else</span> {
                 <span class="ident">num</span> <span class="op">!</span><span class="op">=</span> <span class="ident">total_num</span>
@@ -1191,15 +1095,17 @@
             <span class="kw">if</span> <span class="ident">should_err</span> {
                 <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_arg_num_vals: Sending error WrongNumberOfValues&quot;</span>);
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::wrong_number_of_values</span>(
-                    <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
+                    <span class="self">self</span>.<span class="ident">cmd</span>,
                     <span class="ident">a</span>,
                     <span class="ident">num</span>,
-                    <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings::MultipleOccurrences</span>) {
+                    <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">is_multiple_occurrences_set</span>() {
                         <span class="ident">total_num</span> <span class="op">%</span> <span class="ident">num</span>
                     } <span class="kw">else</span> {
                         <span class="ident">total_num</span>
                     },
-                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>).<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
+                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>)
+                        .<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>)
+                        .<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
                 ));
             }
         }
@@ -1208,7 +1114,7 @@
             <span class="kw">if</span> <span class="ident">ma</span>.<span class="ident">num_vals</span>() <span class="op">&gt;</span> <span class="ident">num</span> {
                 <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_arg_num_vals: Sending error TooManyValues&quot;</span>);
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::too_many_values</span>(
-                    <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
+                    <span class="self">self</span>.<span class="ident">cmd</span>,
                     <span class="ident">ma</span>.<span class="ident">vals_flatten</span>()
                         .<span class="ident">last</span>()
                         .<span class="ident">expect</span>(<span class="ident">INTERNAL_ERROR_MSG</span>)
@@ -1216,7 +1122,9 @@
                         .<span class="ident">expect</span>(<span class="ident">INVALID_UTF8</span>)
                         .<span class="ident">to_string</span>(),
                     <span class="ident">a</span>.<span class="ident">to_string</span>(),
-                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>).<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
+                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>)
+                        .<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>)
+                        .<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
                 ));
             }
         }
@@ -1225,68 +1133,68 @@
             <span class="kw">if</span> <span class="ident">ma</span>.<span class="ident">num_vals</span>() <span class="op">&lt;</span> <span class="ident">num</span> <span class="op">&amp;&amp;</span> <span class="ident">num</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
                 <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_arg_num_vals: Sending error TooFewValues&quot;</span>);
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::too_few_values</span>(
-                    <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
+                    <span class="self">self</span>.<span class="ident">cmd</span>,
                     <span class="ident">a</span>,
                     <span class="ident">num</span>,
                     <span class="ident">ma</span>.<span class="ident">num_vals</span>(),
-                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>).<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
+                    <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>)
+                        .<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>)
+                        .<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
                 ));
             }
             <span class="ident">num</span> <span class="op">==</span> <span class="number">0</span>
         } <span class="kw">else</span> {
             <span class="bool-val">false</span>
         };
-        <span class="comment">// Issue 665 (https://github.com/kbknapp/clap-rs/issues/665)</span>
-        <span class="comment">// Issue 1105 (https://github.com/kbknapp/clap-rs/issues/1105)</span>
-        <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings::TakesValue</span>) <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">min_vals_zero</span> <span class="op">&amp;&amp;</span> <span class="ident">ma</span>.<span class="ident">is_vals_empty</span>() {
+        <span class="comment">// Issue 665 (https://github.com/clap-rs/clap/issues/665)</span>
+        <span class="comment">// Issue 1105 (https://github.com/clap-rs/clap/issues/1105)</span>
+        <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">is_takes_value_set</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">min_vals_zero</span> <span class="op">&amp;&amp;</span> <span class="ident">ma</span>.<span class="ident">all_val_groups_empty</span>() {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::empty_value</span>(
-                <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
+                <span class="self">self</span>.<span class="ident">cmd</span>,
+                <span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">possible_vals</span>
+                    .<span class="ident">iter</span>()
+                    .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">pv</span><span class="op">|</span> <span class="op">!</span><span class="ident">pv</span>.<span class="ident">is_hide_set</span>())
+                    .<span class="ident">map</span>(<span class="ident">PossibleValue::get_name</span>)
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
                 <span class="ident">a</span>,
-                <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>).<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
+                <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>)
+                    .<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>)
+                    .<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span>[]),
             ));
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">validate_arg_requires</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span>,
-        <span class="ident">ma</span>: <span class="kw-2">&amp;</span><span class="ident">MatchedArg</span>,
+    <span class="kw">fn</span> <span class="ident">validate_required</span>(
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>,
+        <span class="ident">conflicts</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Conflicts</span>,
     ) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_arg_requires:{:?}&quot;</span>, <span class="ident">a</span>.<span class="ident">name</span>);
-        <span class="kw">for</span> (<span class="ident">val</span>, <span class="ident">name</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">requires</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">val</span> {
-                <span class="kw">let</span> <span class="ident">missing_req</span> <span class="op">=</span> <span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span> <span class="op">==</span> <span class="ident">val</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="ident">name</span>);
-                <span class="kw">if</span> <span class="ident">ma</span>.<span class="ident">vals_flatten</span>().<span class="ident">any</span>(<span class="ident">missing_req</span>) {
-                    <span class="kw">return</span> <span class="self">self</span>.<span class="ident">missing_required_error</span>(<span class="ident">matcher</span>, <span class="macro">vec!</span>[<span class="ident">a</span>.<span class="ident">id</span>.<span class="ident">clone</span>()]);
-                }
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="ident">name</span>) {
-                <span class="kw">return</span> <span class="self">self</span>.<span class="ident">missing_required_error</span>(<span class="ident">matcher</span>, <span class="macro">vec!</span>[<span class="ident">name</span>.<span class="ident">clone</span>()]);
-            }
-        }
-        <span class="prelude-val">Ok</span>(())
-    }
+        <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_required: required={:?}&quot;</span>, <span class="self">self</span>.<span class="ident">required</span>);
+        <span class="self">self</span>.<span class="ident">gather_requires</span>(<span class="ident">matcher</span>);
 
-    <span class="kw">fn</span> <span class="ident">validate_required</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">is_exclusive_present</span> <span class="op">=</span> <span class="ident">matcher</span>.<span class="ident">arg_names</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">name</span><span class="op">|</span> {
+            <span class="self">self</span>.<span class="ident">cmd</span>
+                .<span class="ident">find</span>(<span class="ident">name</span>)
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">arg</span><span class="op">|</span> <span class="ident">arg</span>.<span class="ident">is_exclusive_set</span>())
+                .<span class="ident">unwrap_or_default</span>()
+        });
         <span class="macro">debug!</span>(
-            <span class="string">&quot;Validator::validate_required: required={:?}&quot;</span>,
-            <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">required</span>
+            <span class="string">&quot;Validator::validate_required: is_exclusive_present={}&quot;</span>,
+            <span class="ident">is_exclusive_present</span>
         );
-        <span class="self">self</span>.<span class="ident">gather_requirements</span>(<span class="ident">matcher</span>);
 
-        <span class="kw">for</span> <span class="ident">arg_or_group</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">required</span>.<span class="ident">iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="op">!</span><span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="ident">r</span>)) {
+        <span class="kw">for</span> <span class="ident">arg_or_group</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">required</span>.<span class="ident">iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="op">!</span><span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="ident">r</span>)) {
             <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_required:iter:aog={:?}&quot;</span>, <span class="ident">arg_or_group</span>);
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">arg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">find</span>(<span class="ident">arg_or_group</span>) {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">arg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">find</span>(<span class="ident">arg_or_group</span>) {
                 <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_required:iter: This is an arg&quot;</span>);
-                <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">is_missing_required_ok</span>(<span class="ident">arg</span>, <span class="ident">matcher</span>) {
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">is_exclusive_present</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">is_missing_required_ok</span>(<span class="ident">arg</span>, <span class="ident">matcher</span>, <span class="ident">conflicts</span>) {
                     <span class="kw">return</span> <span class="self">self</span>.<span class="ident">missing_required_error</span>(<span class="ident">matcher</span>, <span class="macro">vec!</span>[]);
                 }
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">group</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">groups</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="ident">g</span><span class="op">|</span> <span class="ident">g</span>.<span class="ident">id</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">arg_or_group</span>) {
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">group</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">find_group</span>(<span class="ident">arg_or_group</span>) {
                 <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_required:iter: This is a group&quot;</span>);
                 <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>
-                    .<span class="ident">p</span>
-                    .<span class="ident">app</span>
+                    .<span class="ident">cmd</span>
                     .<span class="ident">unroll_args_in_group</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>.<span class="ident">id</span>)
                     .<span class="ident">iter</span>()
                     .<span class="ident">any</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="ident">a</span>))
@@ -1297,54 +1205,46 @@
         }
 
         <span class="comment">// Validate the conditionally required args</span>
-        <span class="kw">for</span> <span class="ident">a</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">args</span>.<span class="ident">args</span>() {
+        <span class="kw">for</span> <span class="ident">a</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">get_arguments</span>() {
             <span class="kw">for</span> (<span class="ident">other</span>, <span class="ident">val</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">r_ifs</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ma</span>) <span class="op">=</span> <span class="ident">matcher</span>.<span class="ident">get</span>(<span class="ident">other</span>) {
-                    <span class="kw">if</span> <span class="ident">ma</span>.<span class="ident">contains_val</span>(<span class="ident">val</span>) <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">id</span>) {
-                        <span class="kw">return</span> <span class="self">self</span>.<span class="ident">missing_required_error</span>(<span class="ident">matcher</span>, <span class="macro">vec!</span>[<span class="ident">a</span>.<span class="ident">id</span>.<span class="ident">clone</span>()]);
-                    }
+                <span class="kw">if</span> <span class="ident">matcher</span>.<span class="ident">check_explicit</span>(<span class="ident">other</span>, <span class="ident">ArgPredicate::Equals</span>(<span class="ident">std::ffi::OsStr::new</span>(<span class="kw-2">*</span><span class="ident">val</span>)))
+                    <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">id</span>)
+                {
+                    <span class="kw">return</span> <span class="self">self</span>.<span class="ident">missing_required_error</span>(<span class="ident">matcher</span>, <span class="macro">vec!</span>[<span class="ident">a</span>.<span class="ident">id</span>.<span class="ident">clone</span>()]);
                 }
             }
 
-            <span class="kw">let</span> <span class="ident">match_all</span> <span class="op">=</span> <span class="ident">a</span>
-                .<span class="ident">r_ifs_all</span>
-                .<span class="ident">iter</span>()
-                .<span class="ident">all</span>(<span class="op">|</span>(<span class="ident">other</span>, <span class="ident">val</span>)<span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">get</span>(<span class="ident">other</span>).<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">ma</span><span class="op">|</span> <span class="ident">ma</span>.<span class="ident">contains_val</span>(<span class="ident">val</span>)));
+            <span class="kw">let</span> <span class="ident">match_all</span> <span class="op">=</span> <span class="ident">a</span>.<span class="ident">r_ifs_all</span>.<span class="ident">iter</span>().<span class="ident">all</span>(<span class="op">|</span>(<span class="ident">other</span>, <span class="ident">val</span>)<span class="op">|</span> {
+                <span class="ident">matcher</span>.<span class="ident">check_explicit</span>(<span class="ident">other</span>, <span class="ident">ArgPredicate::Equals</span>(<span class="ident">std::ffi::OsStr::new</span>(<span class="kw-2">*</span><span class="ident">val</span>)))
+            });
             <span class="kw">if</span> <span class="ident">match_all</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">a</span>.<span class="ident">r_ifs_all</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">id</span>) {
                 <span class="kw">return</span> <span class="self">self</span>.<span class="ident">missing_required_error</span>(<span class="ident">matcher</span>, <span class="macro">vec!</span>[<span class="ident">a</span>.<span class="ident">id</span>.<span class="ident">clone</span>()]);
             }
         }
+
+        <span class="self">self</span>.<span class="ident">validate_required_unless</span>(<span class="ident">matcher</span>)<span class="question-mark">?</span>;
+
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">is_missing_required_ok</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>) -&gt; <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">is_missing_required_ok</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span>,
+        <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>,
+        <span class="ident">conflicts</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Conflicts</span>,
+    ) -&gt; <span class="ident">bool</span> {
         <span class="macro">debug!</span>(<span class="string">&quot;Validator::is_missing_required_ok: {}&quot;</span>, <span class="ident">a</span>.<span class="ident">name</span>);
-        <span class="self">self</span>.<span class="ident">validate_arg_conflicts</span>(<span class="ident">a</span>, <span class="ident">matcher</span>) <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">overridden</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">id</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">validate_arg_conflicts</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_arg_conflicts: a={:?}&quot;</span>, <span class="ident">a</span>.<span class="ident">name</span>);
-        <span class="ident">a</span>.<span class="ident">blacklist</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">conf</span><span class="op">|</span> {
-            <span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="ident">conf</span>)
-                <span class="op">|</span><span class="op">|</span> <span class="self">self</span>
-                    .<span class="ident">p</span>
-                    .<span class="ident">app</span>
-                    .<span class="ident">groups</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">find</span>(<span class="op">|</span><span class="ident">g</span><span class="op">|</span> <span class="ident">g</span>.<span class="ident">id</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">conf</span>)
-                    .<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">g</span><span class="op">|</span> <span class="ident">g</span>.<span class="ident">args</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">arg</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="ident">arg</span>)))
-        })
+        <span class="kw">let</span> <span class="ident">conflicts</span> <span class="op">=</span> <span class="ident">conflicts</span>.<span class="ident">gather_conflicts</span>(<span class="self">self</span>.<span class="ident">cmd</span>, <span class="ident">matcher</span>, <span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">id</span>);
+        <span class="op">!</span><span class="ident">conflicts</span>.<span class="ident">is_empty</span>()
     }
 
     <span class="kw">fn</span> <span class="ident">validate_required_unless</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>) -&gt; <span class="ident">ClapResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="macro">debug!</span>(<span class="string">&quot;Validator::validate_required_unless&quot;</span>);
         <span class="kw">let</span> <span class="ident">failed_args</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">p</span>
-            .<span class="ident">app</span>
-            .<span class="ident">args</span>
-            .<span class="ident">args</span>()
+            .<span class="ident">cmd</span>
+            .<span class="ident">get_arguments</span>()
             .<span class="ident">filter</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">a</span><span class="op">|</span> {
-                <span class="op">!</span><span class="ident">a</span>.<span class="ident">r_unless</span>.<span class="ident">is_empty</span>()
+                (<span class="op">!</span><span class="ident">a</span>.<span class="ident">r_unless</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="op">!</span><span class="ident">a</span>.<span class="ident">r_unless_all</span>.<span class="ident">is_empty</span>())
                     <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">id</span>)
                     <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">fails_arg_required_unless</span>(<span class="ident">a</span>, <span class="ident">matcher</span>)
             })
@@ -1360,13 +1260,10 @@
     <span class="comment">// Failing a required unless means, the arg&#39;s &quot;unless&quot; wasn&#39;t present, and neither were they</span>
     <span class="kw">fn</span> <span class="ident">fails_arg_required_unless</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Arg</span><span class="op">&lt;</span><span class="lifetime">&#39;help</span><span class="op">&gt;</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>) -&gt; <span class="ident">bool</span> {
         <span class="macro">debug!</span>(<span class="string">&quot;Validator::fails_arg_required_unless: a={:?}&quot;</span>, <span class="ident">a</span>.<span class="ident">name</span>);
-        <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings::RequiredUnlessAll</span>) {
-            <span class="macro">debug!</span>(<span class="string">&quot;Validator::fails_arg_required_unless:{}:All&quot;</span>, <span class="ident">a</span>.<span class="ident">name</span>);
-            <span class="op">!</span><span class="ident">a</span>.<span class="ident">r_unless</span>.<span class="ident">iter</span>().<span class="ident">all</span>(<span class="op">|</span><span class="ident">id</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="ident">id</span>))
-        } <span class="kw">else</span> {
-            <span class="macro">debug!</span>(<span class="string">&quot;Validator::fails_arg_required_unless:{}:Any&quot;</span>, <span class="ident">a</span>.<span class="ident">name</span>);
-            <span class="op">!</span><span class="ident">a</span>.<span class="ident">r_unless</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">id</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">contains</span>(<span class="ident">id</span>))
-        }
+        <span class="kw">let</span> <span class="ident">exists</span> <span class="op">=</span> <span class="op">|</span><span class="ident">id</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">check_explicit</span>(<span class="ident">id</span>, <span class="ident">ArgPredicate::IsPresent</span>);
+
+        (<span class="ident">a</span>.<span class="ident">r_unless_all</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="op">!</span><span class="ident">a</span>.<span class="ident">r_unless_all</span>.<span class="ident">iter</span>().<span class="ident">all</span>(<span class="ident">exists</span>))
+            <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">a</span>.<span class="ident">r_unless</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="ident">exists</span>)
     }
 
     <span class="comment">// `incl`: an arg to include in the error even if not used</span>
@@ -1374,12 +1271,15 @@
         <span class="macro">debug!</span>(<span class="string">&quot;Validator::missing_required_error; incl={:?}&quot;</span>, <span class="ident">incl</span>);
         <span class="macro">debug!</span>(
             <span class="string">&quot;Validator::missing_required_error: reqs={:?}&quot;</span>,
-            <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">required</span>
+            <span class="self">self</span>.<span class="ident">required</span>
         );
 
-        <span class="kw">let</span> <span class="ident">usg</span> <span class="op">=</span> <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">p</span>);
+        <span class="kw">let</span> <span class="ident">usg</span> <span class="op">=</span> <span class="ident">Usage::new</span>(<span class="self">self</span>.<span class="ident">cmd</span>).<span class="ident">required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required</span>);
 
-        <span class="kw">let</span> <span class="ident">req_args</span> <span class="op">=</span> <span class="ident">usg</span>.<span class="ident">get_required_usage_from</span>(<span class="kw-2">&amp;</span><span class="ident">incl</span>, <span class="prelude-val">Some</span>(<span class="ident">matcher</span>), <span class="bool-val">true</span>);
+        <span class="kw">let</span> <span class="ident">req_args</span> <span class="op">=</span> <span class="ident">usg</span>
+            .<span class="ident">get_required_usage_from</span>(<span class="kw-2">&amp;</span><span class="ident">incl</span>, <span class="prelude-val">Some</span>(<span class="ident">matcher</span>), <span class="bool-val">true</span>)
+            .<span class="ident">into_iter</span>()
+            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
 
         <span class="macro">debug!</span>(
             <span class="string">&quot;Validator::missing_required_error: req_args={:#?}&quot;</span>,
@@ -1388,25 +1288,95 @@
 
         <span class="kw">let</span> <span class="ident">used</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">matcher</span>
             .<span class="ident">arg_names</span>()
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">arg_id</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">check_explicit</span>(<span class="ident">arg_id</span>, <span class="ident">ArgPredicate::IsPresent</span>))
             .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> {
                 <span class="comment">// Filter out the args we don&#39;t want to specify.</span>
-                <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>.<span class="ident">find</span>(<span class="ident">n</span>).<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
-                    <span class="op">!</span><span class="ident">a</span>.<span class="ident">is_set</span>(<span class="ident">ArgSettings::Hidden</span>)
-                        <span class="op">&amp;&amp;</span> <span class="ident">a</span>.<span class="ident">default_vals</span>.<span class="ident">is_empty</span>()
-                        <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">p</span>.<span class="ident">required</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">id</span>)
-                })
+                <span class="self">self</span>.<span class="ident">cmd</span>.<span class="ident">find</span>(<span class="ident">n</span>).<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="op">!</span><span class="ident">a</span>.<span class="ident">is_hide_set</span>())
             })
             .<span class="ident">cloned</span>()
             .<span class="ident">chain</span>(<span class="ident">incl</span>)
             .<span class="ident">collect</span>();
 
         <span class="prelude-val">Err</span>(<span class="ident">Error::missing_required_argument</span>(
-            <span class="self">self</span>.<span class="ident">p</span>.<span class="ident">app</span>,
+            <span class="self">self</span>.<span class="ident">cmd</span>,
             <span class="ident">req_args</span>,
             <span class="ident">usg</span>.<span class="ident">create_usage_with_title</span>(<span class="kw-2">&amp;</span><span class="ident">used</span>),
         ))
     }
 }
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">struct</span> <span class="ident">Conflicts</span> {
+    <span class="ident">potential</span>: <span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">Id</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">Conflicts</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::default</span>()
+    }
+
+    <span class="kw">fn</span> <span class="ident">gather_conflicts</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cmd</span>: <span class="kw-2">&amp;</span><span class="ident">Command</span>, <span class="ident">matcher</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatcher</span>, <span class="ident">arg_id</span>: <span class="kw-2">&amp;</span><span class="ident">Id</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&gt;</span> {
+        <span class="macro">debug!</span>(<span class="string">&quot;Conflicts::gather_conflicts: arg={:?}&quot;</span>, <span class="ident">arg_id</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">conflicts</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="kw">for</span> <span class="ident">other_arg_id</span> <span class="kw">in</span> <span class="ident">matcher</span>
+            .<span class="ident">arg_names</span>()
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">arg_id</span><span class="op">|</span> <span class="ident">matcher</span>.<span class="ident">check_explicit</span>(<span class="ident">arg_id</span>, <span class="ident">ArgPredicate::IsPresent</span>))
+        {
+            <span class="kw">if</span> <span class="ident">arg_id</span> <span class="op">==</span> <span class="ident">other_arg_id</span> {
+                <span class="kw">continue</span>;
+            }
+
+            <span class="kw">if</span> <span class="self">self</span>
+                .<span class="ident">gather_direct_conflicts</span>(<span class="ident">cmd</span>, <span class="ident">arg_id</span>)
+                .<span class="ident">contains</span>(<span class="ident">other_arg_id</span>)
+            {
+                <span class="ident">conflicts</span>.<span class="ident">push</span>(<span class="ident">other_arg_id</span>.<span class="ident">clone</span>());
+            }
+            <span class="kw">if</span> <span class="self">self</span>
+                .<span class="ident">gather_direct_conflicts</span>(<span class="ident">cmd</span>, <span class="ident">other_arg_id</span>)
+                .<span class="ident">contains</span>(<span class="ident">arg_id</span>)
+            {
+                <span class="ident">conflicts</span>.<span class="ident">push</span>(<span class="ident">other_arg_id</span>.<span class="ident">clone</span>());
+            }
+        }
+        <span class="macro">debug!</span>(<span class="string">&quot;Conflicts::gather_conflicts: conflicts={:?}&quot;</span>, <span class="ident">conflicts</span>);
+        <span class="ident">conflicts</span>
+    }
+
+    <span class="kw">fn</span> <span class="ident">gather_direct_conflicts</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cmd</span>: <span class="kw-2">&amp;</span><span class="ident">Command</span>, <span class="ident">arg_id</span>: <span class="kw-2">&amp;</span><span class="ident">Id</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">Id</span>] {
+        <span class="self">self</span>.<span class="ident">potential</span>.<span class="ident">entry</span>(<span class="ident">arg_id</span>.<span class="ident">clone</span>()).<span class="ident">or_insert_with</span>(<span class="op">|</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">conf</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">arg</span>) <span class="op">=</span> <span class="ident">cmd</span>.<span class="ident">find</span>(<span class="ident">arg_id</span>) {
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">conf</span> <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">blacklist</span>.<span class="ident">clone</span>();
+                <span class="kw">for</span> <span class="ident">group_id</span> <span class="kw">in</span> <span class="ident">cmd</span>.<span class="ident">groups_for_arg</span>(<span class="ident">arg_id</span>) {
+                    <span class="kw">let</span> <span class="ident">group</span> <span class="op">=</span> <span class="ident">cmd</span>.<span class="ident">find_group</span>(<span class="kw-2">&amp;</span><span class="ident">group_id</span>).<span class="ident">expect</span>(<span class="ident">INTERNAL_ERROR_MSG</span>);
+                    <span class="ident">conf</span>.<span class="ident">extend</span>(<span class="ident">group</span>.<span class="ident">conflicts</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>());
+                    <span class="kw">if</span> <span class="op">!</span><span class="ident">group</span>.<span class="ident">multiple</span> {
+                        <span class="kw">for</span> <span class="ident">member_id</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">group</span>.<span class="ident">args</span> {
+                            <span class="kw">if</span> <span class="ident">member_id</span> <span class="op">!</span><span class="op">=</span> <span class="ident">arg_id</span> {
+                                <span class="ident">conf</span>.<span class="ident">push</span>(<span class="ident">member_id</span>.<span class="ident">clone</span>());
+                            }
+                        }
+                    }
+                }
+
+                <span class="comment">// Overrides are implicitly conflicts</span>
+                <span class="ident">conf</span>.<span class="ident">extend</span>(<span class="ident">arg</span>.<span class="ident">overrides</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>());
+
+                <span class="ident">conf</span>
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">group</span>) <span class="op">=</span> <span class="ident">cmd</span>.<span class="ident">find_group</span>(<span class="ident">arg_id</span>) {
+                <span class="ident">group</span>.<span class="ident">conflicts</span>.<span class="ident">clone</span>()
+            } <span class="kw">else</span> {
+                <span class="macro">debug_assert!</span>(<span class="bool-val">false</span>, <span class="string">&quot;id={:?} is unknown&quot;</span>, <span class="ident">arg_id</span>);
+                <span class="ident">Vec::new</span>()
+            };
+            <span class="macro">debug!</span>(
+                <span class="string">&quot;Conflicts::gather_direct_conflicts id={:?}, conflicts={:?}&quot;</span>,
+                <span class="ident">arg_id</span>, <span class="ident">conf</span>
+            );
+            <span class="ident">conf</span>
+        })
+    }
+}
 </code></pre></div>
-</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="clap" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (48a5999fc 2021-12-01)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="clap" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (5435ed691 2022-06-07)" ></div>
 </body></html>

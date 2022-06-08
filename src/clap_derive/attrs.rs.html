@@ -1,103 +1,111 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;clap_derive-3.0.0-beta.5&#x2F;src&#x2F;attrs.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>attrs.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css"disabled><link rel="stylesheet" type="text/css" href="../../dark.css"disabled><link rel="stylesheet" type="text/css" href="../../light.css"id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><script defer src="../../main.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script>
-    <noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../clap_derive/index.html'><div class='logo-container rust-logo'><img src='https:&#x2F;&#x2F;clap.rs&#x2F;images&#x2F;media&#x2F;clap.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
-<span id="2">  2</span>
-<span id="3">  3</span>
-<span id="4">  4</span>
-<span id="5">  5</span>
-<span id="6">  6</span>
-<span id="7">  7</span>
-<span id="8">  8</span>
-<span id="9">  9</span>
-<span id="10"> 10</span>
-<span id="11"> 11</span>
-<span id="12"> 12</span>
-<span id="13"> 13</span>
-<span id="14"> 14</span>
-<span id="15"> 15</span>
-<span id="16"> 16</span>
-<span id="17"> 17</span>
-<span id="18"> 18</span>
-<span id="19"> 19</span>
-<span id="20"> 20</span>
-<span id="21"> 21</span>
-<span id="22"> 22</span>
-<span id="23"> 23</span>
-<span id="24"> 24</span>
-<span id="25"> 25</span>
-<span id="26"> 26</span>
-<span id="27"> 27</span>
-<span id="28"> 28</span>
-<span id="29"> 29</span>
-<span id="30"> 30</span>
-<span id="31"> 31</span>
-<span id="32"> 32</span>
-<span id="33"> 33</span>
-<span id="34"> 34</span>
-<span id="35"> 35</span>
-<span id="36"> 36</span>
-<span id="37"> 37</span>
-<span id="38"> 38</span>
-<span id="39"> 39</span>
-<span id="40"> 40</span>
-<span id="41"> 41</span>
-<span id="42"> 42</span>
-<span id="43"> 43</span>
-<span id="44"> 44</span>
-<span id="45"> 45</span>
-<span id="46"> 46</span>
-<span id="47"> 47</span>
-<span id="48"> 48</span>
-<span id="49"> 49</span>
-<span id="50"> 50</span>
-<span id="51"> 51</span>
-<span id="52"> 52</span>
-<span id="53"> 53</span>
-<span id="54"> 54</span>
-<span id="55"> 55</span>
-<span id="56"> 56</span>
-<span id="57"> 57</span>
-<span id="58"> 58</span>
-<span id="59"> 59</span>
-<span id="60"> 60</span>
-<span id="61"> 61</span>
-<span id="62"> 62</span>
-<span id="63"> 63</span>
-<span id="64"> 64</span>
-<span id="65"> 65</span>
-<span id="66"> 66</span>
-<span id="67"> 67</span>
-<span id="68"> 68</span>
-<span id="69"> 69</span>
-<span id="70"> 70</span>
-<span id="71"> 71</span>
-<span id="72"> 72</span>
-<span id="73"> 73</span>
-<span id="74"> 74</span>
-<span id="75"> 75</span>
-<span id="76"> 76</span>
-<span id="77"> 77</span>
-<span id="78"> 78</span>
-<span id="79"> 79</span>
-<span id="80"> 80</span>
-<span id="81"> 81</span>
-<span id="82"> 82</span>
-<span id="83"> 83</span>
-<span id="84"> 84</span>
-<span id="85"> 85</span>
-<span id="86"> 86</span>
-<span id="87"> 87</span>
-<span id="88"> 88</span>
-<span id="89"> 89</span>
-<span id="90"> 90</span>
-<span id="91"> 91</span>
-<span id="92"> 92</span>
-<span id="93"> 93</span>
-<span id="94"> 94</span>
-<span id="95"> 95</span>
-<span id="96"> 96</span>
-<span id="97"> 97</span>
-<span id="98"> 98</span>
-<span id="99"> 99</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/clap_derive-3.1.18/src/attrs.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>attrs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><script defer src="../../main.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script>
+    <noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../clap_derive/index.html"><div class="logo-container"><img src="https://raw.githubusercontent.com/clap-rs/clap/master/assets/clap.png" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../clap_derive/index.html"><div class="logo-container">
+                    <img src="https://raw.githubusercontent.com/clap-rs/clap/master/assets/clap.png" alt="logo"></div>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../clap_derive/index.html">
+                        <img src="https://raw.githubusercontent.com/clap-rs/clap/master/assets/clap.png" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
@@ -877,9 +885,116 @@
 <span id="876">876</span>
 <span id="877">877</span>
 <span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
+<span id="897">897</span>
+<span id="898">898</span>
+<span id="899">899</span>
+<span id="900">900</span>
+<span id="901">901</span>
+<span id="902">902</span>
+<span id="903">903</span>
+<span id="904">904</span>
+<span id="905">905</span>
+<span id="906">906</span>
+<span id="907">907</span>
+<span id="908">908</span>
+<span id="909">909</span>
+<span id="910">910</span>
+<span id="911">911</span>
+<span id="912">912</span>
+<span id="913">913</span>
+<span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
+<span id="924">924</span>
+<span id="925">925</span>
+<span id="926">926</span>
+<span id="927">927</span>
+<span id="928">928</span>
+<span id="929">929</span>
+<span id="930">930</span>
+<span id="931">931</span>
+<span id="932">932</span>
+<span id="933">933</span>
+<span id="934">934</span>
+<span id="935">935</span>
+<span id="936">936</span>
+<span id="937">937</span>
+<span id="938">938</span>
+<span id="939">939</span>
+<span id="940">940</span>
+<span id="941">941</span>
+<span id="942">942</span>
+<span id="943">943</span>
+<span id="944">944</span>
+<span id="945">945</span>
+<span id="946">946</span>
+<span id="947">947</span>
+<span id="948">948</span>
+<span id="949">949</span>
+<span id="950">950</span>
+<span id="951">951</span>
+<span id="952">952</span>
+<span id="953">953</span>
+<span id="954">954</span>
+<span id="955">955</span>
+<span id="956">956</span>
+<span id="957">957</span>
+<span id="958">958</span>
+<span id="959">959</span>
+<span id="960">960</span>
+<span id="961">961</span>
+<span id="962">962</span>
+<span id="963">963</span>
+<span id="964">964</span>
+<span id="965">965</span>
+<span id="966">966</span>
+<span id="967">967</span>
+<span id="968">968</span>
+<span id="969">969</span>
+<span id="970">970</span>
+<span id="971">971</span>
+<span id="972">972</span>
+<span id="973">973</span>
+<span id="974">974</span>
+<span id="975">975</span>
+<span id="976">976</span>
+<span id="977">977</span>
+<span id="978">978</span>
+<span id="979">979</span>
+<span id="980">980</span>
+<span id="981">981</span>
+<span id="982">982</span>
+<span id="983">983</span>
+<span id="984">984</span>
+<span id="985">985</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright 2018 Guillaume Pinot (@TeXitoi) &lt;texitoi@texitoi.eu&gt;,</span>
 <span class="comment">// Kevin Knapp (@kbknapp) &lt;kbknapp@gmail.com&gt;, and</span>
-<span class="comment">// Andrew Hobden (@hoverbear) &lt;andrew@hoverbear.org&gt;</span>
+<span class="comment">// Ana Hobden (@hoverbear) &lt;operator@hoverbear.org&gt;</span>
 <span class="comment">//</span>
 <span class="comment">// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or</span>
 <span class="comment">// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license</span>
@@ -898,7 +1013,7 @@
 
 <span class="kw">use</span> <span class="ident">std::env</span>;
 
-<span class="kw">use</span> <span class="ident">heck</span>::{<span class="ident">CamelCase</span>, <span class="ident">KebabCase</span>, <span class="ident">MixedCase</span>, <span class="ident">ShoutySnakeCase</span>, <span class="ident">SnakeCase</span>};
+<span class="kw">use</span> <span class="ident">heck</span>::{<span class="ident">ToKebabCase</span>, <span class="ident">ToLowerCamelCase</span>, <span class="ident">ToShoutySnakeCase</span>, <span class="ident">ToSnakeCase</span>, <span class="ident">ToUpperCamelCase</span>};
 <span class="kw">use</span> <span class="ident">proc_macro2</span>::{<span class="self">self</span>, <span class="ident">Span</span>, <span class="ident">TokenStream</span>};
 <span class="kw">use</span> <span class="ident">proc_macro_error::abort</span>;
 <span class="kw">use</span> <span class="ident">quote</span>::{<span class="ident">quote</span>, <span class="ident">quote_spanned</span>, <span class="ident">ToTokens</span>};
@@ -913,66 +1028,6 @@
 <span class="doccomment">/// Default casing style for environment variables</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DEFAULT_ENV_CASING</span>: <span class="ident">CasingStyle</span> <span class="op">=</span> <span class="ident">CasingStyle::ScreamingSnake</span>;
 
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::large_enum_variant</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Kind</span> {
-    <span class="ident">Arg</span>(<span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">Ty</span><span class="op">&gt;</span>),
-    <span class="ident">FromGlobal</span>(<span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">Ty</span><span class="op">&gt;</span>),
-    <span class="ident">Subcommand</span>(<span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">Ty</span><span class="op">&gt;</span>),
-    <span class="ident">Flatten</span>,
-    <span class="ident">Skip</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>),
-    <span class="ident">ExternalSubcommand</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Method</span> {
-    <span class="ident">name</span>: <span class="ident">Ident</span>,
-    <span class="ident">args</span>: <span class="ident">TokenStream</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Parser</span> {
-    <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">ParserKind</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">func</span>: <span class="ident">TokenStream</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ParserKind</span> {
-    <span class="ident">FromStr</span>,
-    <span class="ident">TryFromStr</span>,
-    <span class="ident">FromOsStr</span>,
-    <span class="ident">TryFromOsStr</span>,
-    <span class="ident">FromOccurrences</span>,
-    <span class="ident">FromFlag</span>,
-}
-
-<span class="doccomment">/// Defines the casing for the attributes long representation.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CasingStyle</span> {
-    <span class="doccomment">/// Indicate word boundaries with uppercase letter, excluding the first word.</span>
-    <span class="ident">Camel</span>,
-    <span class="doccomment">/// Keep all letters lowercase and indicate word boundaries with hyphens.</span>
-    <span class="ident">Kebab</span>,
-    <span class="doccomment">/// Indicate word boundaries with uppercase letter, including the first word.</span>
-    <span class="ident">Pascal</span>,
-    <span class="doccomment">/// Keep all letters uppercase and indicate word boundaries with underscores.</span>
-    <span class="ident">ScreamingSnake</span>,
-    <span class="doccomment">/// Keep all letters lowercase and indicate word boundaries with underscores.</span>
-    <span class="ident">Snake</span>,
-    <span class="doccomment">/// Keep all letters lowercase and remove word boundaries.</span>
-    <span class="ident">Lower</span>,
-    <span class="doccomment">/// Keep all letters uppercase and remove word boundaries.</span>
-    <span class="ident">Upper</span>,
-    <span class="doccomment">/// Use the original attribute name defined in the code.</span>
-    <span class="ident">Verbatim</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Name</span> {
-    <span class="ident">Derived</span>(<span class="ident">Ident</span>),
-    <span class="ident">Assigned</span>(<span class="ident">TokenStream</span>),
-}
-
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Attrs</span> {
     <span class="ident">name</span>: <span class="ident">Name</span>,
@@ -982,354 +1037,16 @@
     <span class="ident">doc_comment</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Method</span><span class="op">&gt;</span>,
     <span class="ident">methods</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Method</span><span class="op">&gt;</span>,
     <span class="ident">parser</span>: <span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">Parser</span><span class="op">&gt;</span>,
-    <span class="ident">author</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Method</span><span class="op">&gt;</span>,
-    <span class="ident">version</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Method</span><span class="op">&gt;</span>,
     <span class="ident">verbatim_doc_comment</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Ident</span><span class="op">&gt;</span>,
+    <span class="ident">next_display_order</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Method</span><span class="op">&gt;</span>,
+    <span class="ident">next_help_heading</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Method</span><span class="op">&gt;</span>,
     <span class="ident">help_heading</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Method</span><span class="op">&gt;</span>,
     <span class="ident">is_enum</span>: <span class="ident">bool</span>,
     <span class="ident">has_custom_parser</span>: <span class="ident">bool</span>,
     <span class="ident">kind</span>: <span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">Kind</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">Method</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">name</span>: <span class="ident">Ident</span>, <span class="ident">args</span>: <span class="ident">TokenStream</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">Method</span> { <span class="ident">name</span>, <span class="ident">args</span> }
-    }
-
-    <span class="kw">fn</span> <span class="ident">from_lit_or_env</span>(<span class="ident">ident</span>: <span class="ident">Ident</span>, <span class="ident">lit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LitStr</span><span class="op">&gt;</span>, <span class="ident">env_var</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lit</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">lit</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">lit</span>) =&gt; <span class="ident">lit</span>,
-
-            <span class="prelude-val">None</span> =&gt; <span class="kw">match</span> <span class="ident">env::var</span>(<span class="ident">env_var</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">val</span>) =&gt; <span class="ident">LitStr::new</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>, <span class="ident">ident</span>.<span class="ident">span</span>()),
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-                    <span class="macro">abort!</span>(<span class="ident">ident</span>,
-                        <span class="string">&quot;cannot derive `{}` from Cargo.toml&quot;</span>, <span class="ident">ident</span>;
-                        <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;`{}` environment variable is not set&quot;</span>, <span class="ident">env_var</span>;
-                        <span class="ident">help</span> <span class="op">=</span> <span class="string">&quot;use `{} = \&quot;...\&quot;` to set {} manually&quot;</span>, <span class="ident">ident</span>, <span class="ident">ident</span>;
-                    );
-                }
-            },
-        };
-
-        <span class="kw">if</span> <span class="ident">ident</span> <span class="op">==</span> <span class="string">&quot;author&quot;</span> {
-            <span class="kw">let</span> <span class="ident">edited</span> <span class="op">=</span> <span class="ident">process_author_str</span>(<span class="kw-2">&amp;</span><span class="ident">lit</span>.<span class="ident">value</span>());
-            <span class="ident">lit</span> <span class="op">=</span> <span class="ident">LitStr::new</span>(<span class="kw-2">&amp;</span><span class="ident">edited</span>, <span class="ident">lit</span>.<span class="ident">span</span>());
-        }
-
-        <span class="ident">Method::new</span>(<span class="ident">ident</span>, <span class="macro">quote!</span>(#<span class="ident">lit</span>))
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">ToTokens</span> <span class="kw">for</span> <span class="ident">Method</span> {
-    <span class="kw">fn</span> <span class="ident">to_tokens</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ts</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>) {
-        <span class="kw">let</span> <span class="ident">Method</span> { <span class="kw-2">ref</span> <span class="ident">name</span>, <span class="kw-2">ref</span> <span class="ident">args</span> } <span class="op">=</span> <span class="self">self</span>;
-
-        <span class="kw">let</span> <span class="ident">tokens</span> <span class="op">=</span> <span class="macro">quote!</span>( .#<span class="ident">name</span>(#<span class="ident">args</span>) );
-
-        <span class="ident">tokens</span>.<span class="ident">to_tokens</span>(<span class="ident">ts</span>);
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">Parser</span> {
-    <span class="kw">fn</span> <span class="ident">default_spanned</span>(<span class="ident">span</span>: <span class="ident">Span</span>) -&gt; <span class="ident">Sp</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">ParserKind::TryFromStr</span>, <span class="ident">span</span>);
-        <span class="kw">let</span> <span class="ident">func</span> <span class="op">=</span> <span class="macro">quote_spanned!</span>(<span class="ident">span</span>=&gt; <span class="ident">::std::str::FromStr::from_str</span>);
-        <span class="ident">Sp::new</span>(<span class="ident">Parser</span> { <span class="ident">kind</span>, <span class="ident">func</span> }, <span class="ident">span</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">from_spec</span>(<span class="ident">parse_ident</span>: <span class="ident">Ident</span>, <span class="ident">spec</span>: <span class="ident">ParserSpec</span>) -&gt; <span class="ident">Sp</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">use</span> <span class="ident"><span class="self">self</span>::ParserKind</span>::<span class="kw-2">*</span>;
-
-        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">to_string</span>() {
-            <span class="string">&quot;from_str&quot;</span> =&gt; <span class="ident">FromStr</span>,
-            <span class="string">&quot;try_from_str&quot;</span> =&gt; <span class="ident">TryFromStr</span>,
-            <span class="string">&quot;from_os_str&quot;</span> =&gt; <span class="ident">FromOsStr</span>,
-            <span class="string">&quot;try_from_os_str&quot;</span> =&gt; <span class="ident">TryFromOsStr</span>,
-            <span class="string">&quot;from_occurrences&quot;</span> =&gt; <span class="ident">FromOccurrences</span>,
-            <span class="string">&quot;from_flag&quot;</span> =&gt; <span class="ident">FromFlag</span>,
-            <span class="ident">s</span> =&gt; <span class="macro">abort!</span>(<span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>(), <span class="string">&quot;unsupported parser `{}`&quot;</span>, <span class="ident">s</span>),
-        };
-
-        <span class="kw">let</span> <span class="ident">func</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">spec</span>.<span class="ident">parse_func</span> {
-            <span class="prelude-val">None</span> =&gt; <span class="kw">match</span> <span class="ident">kind</span> {
-                <span class="ident">FromStr</span> <span class="op">|</span> <span class="ident">FromOsStr</span> =&gt; {
-                    <span class="macro">quote_spanned!</span>(<span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>()=&gt; <span class="ident">::std::convert::From::from</span>)
-                }
-                <span class="ident">TryFromStr</span> =&gt; <span class="macro">quote_spanned!</span>(<span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>()=&gt; <span class="ident">::std::str::FromStr::from_str</span>),
-                <span class="ident">TryFromOsStr</span> =&gt; <span class="macro">abort!</span>(
-                    <span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>(),
-                    <span class="string">&quot;you must set parser for `try_from_os_str` explicitly&quot;</span>
-                ),
-                <span class="ident">FromOccurrences</span> =&gt; <span class="macro">quote_spanned!</span>(<span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>()=&gt; { <span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span> <span class="kw">as</span> <span class="kw">_</span> }),
-                <span class="ident">FromFlag</span> =&gt; <span class="macro">quote_spanned!</span>(<span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>()=&gt; <span class="ident">::std::convert::From::from</span>),
-            },
-
-            <span class="prelude-val">Some</span>(<span class="ident">func</span>) =&gt; <span class="kw">match</span> <span class="ident">func</span> {
-                <span class="ident">Expr::Path</span>(<span class="kw">_</span>) =&gt; <span class="macro">quote!</span>(#<span class="ident">func</span>),
-                <span class="kw">_</span> =&gt; <span class="macro">abort!</span>(<span class="ident">func</span>, <span class="string">&quot;`parse` argument must be a function path&quot;</span>),
-            },
-        };
-
-        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">kind</span>, <span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>());
-        <span class="kw">let</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">Parser</span> { <span class="ident">kind</span>, <span class="ident">func</span> };
-        <span class="ident">Sp::new</span>(<span class="ident">parser</span>, <span class="ident">parse_ident</span>.<span class="ident">span</span>())
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">CasingStyle</span> {
-    <span class="kw">fn</span> <span class="ident">from_lit</span>(<span class="ident">name</span>: <span class="ident">LitStr</span>) -&gt; <span class="ident">Sp</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">use</span> <span class="ident"><span class="self">self</span>::CasingStyle</span>::<span class="kw-2">*</span>;
-
-        <span class="kw">let</span> <span class="ident">normalized</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">value</span>().<span class="ident">to_camel_case</span>().<span class="ident">to_lowercase</span>();
-        <span class="kw">let</span> <span class="ident">cs</span> <span class="op">=</span> <span class="op">|</span><span class="ident">kind</span><span class="op">|</span> <span class="ident">Sp::new</span>(<span class="ident">kind</span>, <span class="ident">name</span>.<span class="ident">span</span>());
-
-        <span class="kw">match</span> <span class="ident">normalized</span>.<span class="ident">as_ref</span>() {
-            <span class="string">&quot;camel&quot;</span> <span class="op">|</span> <span class="string">&quot;camelcase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Camel</span>),
-            <span class="string">&quot;kebab&quot;</span> <span class="op">|</span> <span class="string">&quot;kebabcase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Kebab</span>),
-            <span class="string">&quot;pascal&quot;</span> <span class="op">|</span> <span class="string">&quot;pascalcase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Pascal</span>),
-            <span class="string">&quot;screamingsnake&quot;</span> <span class="op">|</span> <span class="string">&quot;screamingsnakecase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">ScreamingSnake</span>),
-            <span class="string">&quot;snake&quot;</span> <span class="op">|</span> <span class="string">&quot;snakecase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Snake</span>),
-            <span class="string">&quot;lower&quot;</span> <span class="op">|</span> <span class="string">&quot;lowercase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Lower</span>),
-            <span class="string">&quot;upper&quot;</span> <span class="op">|</span> <span class="string">&quot;uppercase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Upper</span>),
-            <span class="string">&quot;verbatim&quot;</span> <span class="op">|</span> <span class="string">&quot;verbatimcase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Verbatim</span>),
-            <span class="ident">s</span> =&gt; <span class="macro">abort!</span>(<span class="ident">name</span>, <span class="string">&quot;unsupported casing: `{}`&quot;</span>, <span class="ident">s</span>),
-        }
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">Name</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">translate</span>(<span class="self">self</span>, <span class="ident">style</span>: <span class="ident">CasingStyle</span>) -&gt; <span class="ident">TokenStream</span> {
-        <span class="kw">use</span> <span class="ident">CasingStyle</span>::<span class="kw-2">*</span>;
-
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Name::Assigned</span>(<span class="ident">tokens</span>) =&gt; <span class="ident">tokens</span>,
-            <span class="ident">Name::Derived</span>(<span class="ident">ident</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">ident</span>.<span class="ident">unraw</span>().<span class="ident">to_string</span>();
-                <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">style</span> {
-                    <span class="ident">Pascal</span> =&gt; <span class="ident">s</span>.<span class="ident">to_camel_case</span>(),
-                    <span class="ident">Kebab</span> =&gt; <span class="ident">s</span>.<span class="ident">to_kebab_case</span>(),
-                    <span class="ident">Camel</span> =&gt; <span class="ident">s</span>.<span class="ident">to_mixed_case</span>(),
-                    <span class="ident">ScreamingSnake</span> =&gt; <span class="ident">s</span>.<span class="ident">to_shouty_snake_case</span>(),
-                    <span class="ident">Snake</span> =&gt; <span class="ident">s</span>.<span class="ident">to_snake_case</span>(),
-                    <span class="ident">Lower</span> =&gt; <span class="ident">s</span>.<span class="ident">to_snake_case</span>().<span class="ident">replace</span>(<span class="string">&quot;_&quot;</span>, <span class="string">&quot;&quot;</span>),
-                    <span class="ident">Upper</span> =&gt; <span class="ident">s</span>.<span class="ident">to_shouty_snake_case</span>().<span class="ident">replace</span>(<span class="string">&quot;_&quot;</span>, <span class="string">&quot;&quot;</span>),
-                    <span class="ident">Verbatim</span> =&gt; <span class="ident">s</span>,
-                };
-                <span class="macro">quote_spanned!</span>(<span class="ident">ident</span>.<span class="ident">span</span>()=&gt; #<span class="ident">s</span>)
-            }
-        }
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">translate_char</span>(<span class="self">self</span>, <span class="ident">style</span>: <span class="ident">CasingStyle</span>) -&gt; <span class="ident">TokenStream</span> {
-        <span class="kw">use</span> <span class="ident">CasingStyle</span>::<span class="kw-2">*</span>;
-
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Name::Assigned</span>(<span class="ident">tokens</span>) =&gt; <span class="macro">quote!</span>( (#<span class="ident">tokens</span>).<span class="ident">chars</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>() ),
-            <span class="ident">Name::Derived</span>(<span class="ident">ident</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">ident</span>.<span class="ident">unraw</span>().<span class="ident">to_string</span>();
-                <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">style</span> {
-                    <span class="ident">Pascal</span> =&gt; <span class="ident">s</span>.<span class="ident">to_camel_case</span>(),
-                    <span class="ident">Kebab</span> =&gt; <span class="ident">s</span>.<span class="ident">to_kebab_case</span>(),
-                    <span class="ident">Camel</span> =&gt; <span class="ident">s</span>.<span class="ident">to_mixed_case</span>(),
-                    <span class="ident">ScreamingSnake</span> =&gt; <span class="ident">s</span>.<span class="ident">to_shouty_snake_case</span>(),
-                    <span class="ident">Snake</span> =&gt; <span class="ident">s</span>.<span class="ident">to_snake_case</span>(),
-                    <span class="ident">Lower</span> =&gt; <span class="ident">s</span>.<span class="ident">to_snake_case</span>(),
-                    <span class="ident">Upper</span> =&gt; <span class="ident">s</span>.<span class="ident">to_shouty_snake_case</span>(),
-                    <span class="ident">Verbatim</span> =&gt; <span class="ident">s</span>,
-                };
-
-                <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">chars</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>();
-                <span class="macro">quote_spanned!</span>(<span class="ident">ident</span>.<span class="ident">span</span>()=&gt; #<span class="ident">s</span>)
-            }
-        }
-    }
-}
-
 <span class="kw">impl</span> <span class="ident">Attrs</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">default_span</span>: <span class="ident">Span</span>,
-        <span class="ident">name</span>: <span class="ident">Name</span>,
-        <span class="ident">ty</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Type</span><span class="op">&gt;</span>,
-        <span class="ident">casing</span>: <span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">CasingStyle</span><span class="op">&gt;</span>,
-        <span class="ident">env_casing</span>: <span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">CasingStyle</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">name</span>,
-            <span class="ident">ty</span>,
-            <span class="ident">casing</span>,
-            <span class="ident">env_casing</span>,
-            <span class="ident">doc_comment</span>: <span class="macro">vec!</span>[],
-            <span class="ident">methods</span>: <span class="macro">vec!</span>[],
-            <span class="ident">parser</span>: <span class="ident">Parser::default_spanned</span>(<span class="ident">default_span</span>),
-            <span class="ident">author</span>: <span class="prelude-val">None</span>,
-            <span class="ident">version</span>: <span class="prelude-val">None</span>,
-            <span class="ident">verbatim_doc_comment</span>: <span class="prelude-val">None</span>,
-            <span class="ident">help_heading</span>: <span class="prelude-val">None</span>,
-            <span class="ident">is_enum</span>: <span class="bool-val">false</span>,
-            <span class="ident">has_custom_parser</span>: <span class="bool-val">false</span>,
-            <span class="ident">kind</span>: <span class="ident">Sp::new</span>(<span class="ident">Kind::Arg</span>(<span class="ident">Sp::new</span>(<span class="ident">Ty::Other</span>, <span class="ident">default_span</span>)), <span class="ident">default_span</span>),
-        }
-    }
-
-    <span class="kw">fn</span> <span class="ident">push_method</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="ident">Ident</span>, <span class="ident">arg</span>: <span class="kw">impl</span> <span class="ident">ToTokens</span>) {
-        <span class="kw">if</span> <span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;name&quot;</span> {
-            <span class="self">self</span>.<span class="ident">name</span> <span class="op">=</span> <span class="ident">Name::Assigned</span>(<span class="macro">quote!</span>(#<span class="ident">arg</span>));
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;version&quot;</span> {
-            <span class="self">self</span>.<span class="ident">version</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Method::new</span>(<span class="ident">name</span>, <span class="macro">quote!</span>(#<span class="ident">arg</span>)));
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">Method::new</span>(<span class="ident">name</span>, <span class="macro">quote!</span>(#<span class="ident">arg</span>)))
-        }
-    }
-
-    <span class="kw">fn</span> <span class="ident">push_attrs</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">attrs</span>: <span class="kw-2">&amp;</span>[<span class="ident">Attribute</span>]) {
-        <span class="kw">use</span> <span class="ident">ClapAttr</span>::<span class="kw-2">*</span>;
-
-        <span class="kw">for</span> <span class="ident">attr</span> <span class="kw">in</span> <span class="ident">parse_clap_attributes</span>(<span class="ident">attrs</span>) {
-            <span class="kw">match</span> <span class="ident">attr</span> {
-                <span class="ident">Short</span>(<span class="ident">ident</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">push_method</span>(<span class="ident">ident</span>, <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">clone</span>().<span class="ident">translate_char</span>(<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">casing</span>));
-                }
-
-                <span class="ident">Long</span>(<span class="ident">ident</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">push_method</span>(<span class="ident">ident</span>, <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">clone</span>().<span class="ident">translate</span>(<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">casing</span>));
-                }
-
-                <span class="ident">Env</span>(<span class="ident">ident</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">push_method</span>(<span class="ident">ident</span>, <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">clone</span>().<span class="ident">translate</span>(<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">env_casing</span>));
-                }
-
-                <span class="ident">ArgEnum</span>(<span class="kw">_</span>) =&gt; <span class="self">self</span>.<span class="ident">is_enum</span> <span class="op">=</span> <span class="bool-val">true</span>,
-
-                <span class="ident">FromGlobal</span>(<span class="ident">ident</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="ident">Sp::call_site</span>(<span class="ident">Ty::Other</span>);
-                    <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">Kind::FromGlobal</span>(<span class="ident">ty</span>), <span class="ident">ident</span>.<span class="ident">span</span>());
-                    <span class="self">self</span>.<span class="ident">set_kind</span>(<span class="ident">kind</span>);
-                }
-
-                <span class="ident">Subcommand</span>(<span class="ident">ident</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="ident">Sp::call_site</span>(<span class="ident">Ty::Other</span>);
-                    <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">Kind::Subcommand</span>(<span class="ident">ty</span>), <span class="ident">ident</span>.<span class="ident">span</span>());
-                    <span class="self">self</span>.<span class="ident">set_kind</span>(<span class="ident">kind</span>);
-                }
-
-                <span class="ident">ExternalSubcommand</span>(<span class="ident">ident</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">Kind::ExternalSubcommand</span>, <span class="ident">ident</span>.<span class="ident">span</span>());
-                    <span class="self">self</span>.<span class="ident">set_kind</span>(<span class="ident">kind</span>);
-                }
-
-                <span class="ident">Flatten</span>(<span class="ident">ident</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">Kind::Flatten</span>, <span class="ident">ident</span>.<span class="ident">span</span>());
-                    <span class="self">self</span>.<span class="ident">set_kind</span>(<span class="ident">kind</span>);
-                }
-
-                <span class="ident">Skip</span>(<span class="ident">ident</span>, <span class="ident">expr</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">Kind::Skip</span>(<span class="ident">expr</span>), <span class="ident">ident</span>.<span class="ident">span</span>());
-                    <span class="self">self</span>.<span class="ident">set_kind</span>(<span class="ident">kind</span>);
-                }
-
-                <span class="ident">VerbatimDocComment</span>(<span class="ident">ident</span>) =&gt; <span class="self">self</span>.<span class="ident">verbatim_doc_comment</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ident</span>),
-
-                <span class="ident">DefaultValueT</span>(<span class="ident">ident</span>, <span class="ident">expr</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ty</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">ty</span>.<span class="ident">as_ref</span>() {
-                        <span class="ident">ty</span>
-                    } <span class="kw">else</span> {
-                        <span class="macro">abort!</span>(
-                            <span class="ident">ident</span>,
-                            <span class="string">&quot;#[clap(default_value_t)] (without an argument) can be used \
-                            only on field level&quot;</span>;
-
-                            <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;see \
-                                https://docs.rs/structopt/0.3.5/structopt/#magical-methods&quot;</span>)
-                    };
-
-                    <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">expr</span>) <span class="op">=</span> <span class="ident">expr</span> {
-                        <span class="macro">quote!</span>(#<span class="ident">expr</span>)
-                    } <span class="kw">else</span> {
-                        <span class="macro">quote!</span>(<span class="op">&lt;</span>#<span class="ident">ty</span> <span class="kw">as</span> <span class="ident">::std::default::Default</span><span class="op">&gt;</span><span class="ident">::default</span>())
-                    };
-
-                    <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="macro">quote_spanned!</span>(<span class="ident">ident</span>.<span class="ident">span</span>()=&gt; {
-                        <span class="macro">clap::lazy_static::lazy_static!</span> {
-                            <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">DEFAULT_VALUE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> {
-                                <span class="kw">let</span> <span class="ident">val</span>: #<span class="ident">ty</span> <span class="op">=</span> #<span class="ident">val</span>;
-                                <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">::std::string::ToString::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>);
-                                <span class="ident">::std::boxed::Box::leak</span>(<span class="ident">s</span>.<span class="ident">into_boxed_str</span>())
-                            };
-                        }
-                        <span class="kw-2">*</span><span class="ident">DEFAULT_VALUE</span>
-                    });
-
-                    <span class="kw">let</span> <span class="ident">raw_ident</span> <span class="op">=</span> <span class="ident">Ident::new</span>(<span class="string">&quot;default_value&quot;</span>, <span class="ident">ident</span>.<span class="ident">span</span>());
-                    <span class="self">self</span>.<span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">Method::new</span>(<span class="ident">raw_ident</span>, <span class="ident">val</span>));
-                }
-
-                <span class="ident">HelpHeading</span>(<span class="ident">ident</span>, <span class="ident">expr</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">help_heading</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Method::new</span>(<span class="ident">ident</span>, <span class="macro">quote!</span>(#<span class="ident">expr</span>)));
-                }
-
-                <span class="ident">About</span>(<span class="ident">ident</span>, <span class="ident">about</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">method</span> <span class="op">=</span> <span class="ident">Method::from_lit_or_env</span>(<span class="ident">ident</span>, <span class="ident">about</span>, <span class="string">&quot;CARGO_PKG_DESCRIPTION&quot;</span>);
-                    <span class="self">self</span>.<span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">method</span>);
-                }
-
-                <span class="ident">Author</span>(<span class="ident">ident</span>, <span class="ident">author</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">author</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Method::from_lit_or_env</span>(<span class="ident">ident</span>, <span class="ident">author</span>, <span class="string">&quot;CARGO_PKG_AUTHORS&quot;</span>));
-                }
-
-                <span class="ident">Version</span>(<span class="ident">ident</span>, <span class="ident">version</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">version</span> <span class="op">=</span>
-                        <span class="prelude-val">Some</span>(<span class="ident">Method::from_lit_or_env</span>(<span class="ident">ident</span>, <span class="ident">version</span>, <span class="string">&quot;CARGO_PKG_VERSION&quot;</span>));
-                }
-
-                <span class="ident">NameLitStr</span>(<span class="ident">name</span>, <span class="ident">lit</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">push_method</span>(<span class="ident">name</span>, <span class="ident">lit</span>);
-                }
-
-                <span class="ident">NameExpr</span>(<span class="ident">name</span>, <span class="ident">expr</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">push_method</span>(<span class="ident">name</span>, <span class="ident">expr</span>);
-                }
-
-                <span class="ident">MethodCall</span>(<span class="ident">name</span>, <span class="ident">args</span>) =&gt; <span class="self">self</span>.<span class="ident">push_method</span>(<span class="ident">name</span>, <span class="macro">quote!</span>(#(#<span class="ident">args</span>),<span class="kw-2">*</span>)),
-
-                <span class="ident">RenameAll</span>(<span class="kw">_</span>, <span class="ident">casing_lit</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">casing</span> <span class="op">=</span> <span class="ident">CasingStyle::from_lit</span>(<span class="ident">casing_lit</span>);
-                }
-
-                <span class="ident">RenameAllEnv</span>(<span class="kw">_</span>, <span class="ident">casing_lit</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">env_casing</span> <span class="op">=</span> <span class="ident">CasingStyle::from_lit</span>(<span class="ident">casing_lit</span>);
-                }
-
-                <span class="ident">Parse</span>(<span class="ident">ident</span>, <span class="ident">spec</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">has_custom_parser</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                    <span class="self">self</span>.<span class="ident">parser</span> <span class="op">=</span> <span class="ident">Parser::from_spec</span>(<span class="ident">ident</span>, <span class="ident">spec</span>);
-                }
-            }
-        }
-    }
-
-    <span class="kw">fn</span> <span class="ident">push_doc_comment</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">attrs</span>: <span class="kw-2">&amp;</span>[<span class="ident">Attribute</span>], <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
-        <span class="kw">use</span> <span class="ident">syn::Lit</span>::<span class="kw-2">*</span>;
-        <span class="kw">use</span> <span class="ident">syn::Meta</span>::<span class="kw-2">*</span>;
-
-        <span class="kw">let</span> <span class="ident">comment_parts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">attrs</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">attr</span><span class="op">|</span> <span class="ident">attr</span>.<span class="ident">path</span>.<span class="ident">is_ident</span>(<span class="string">&quot;doc&quot;</span>))
-            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">attr</span><span class="op">|</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">NameValue</span>(<span class="ident">MetaNameValue</span> { <span class="ident">lit</span>: <span class="ident">Str</span>(<span class="ident">s</span>), .. })) <span class="op">=</span> <span class="ident">attr</span>.<span class="ident">parse_meta</span>() {
-                    <span class="prelude-val">Some</span>(<span class="ident">s</span>.<span class="ident">value</span>())
-                } <span class="kw">else</span> {
-                    <span class="comment">// non #[doc = &quot;...&quot;] attributes are not our concern</span>
-                    <span class="comment">// we leave them for rustc to handle</span>
-                    <span class="prelude-val">None</span>
-                }
-            })
-            .<span class="ident">collect</span>();
-
-        <span class="self">self</span>.<span class="ident">doc_comment</span> <span class="op">=</span>
-            <span class="ident">process_doc_comment</span>(<span class="ident">comment_parts</span>, <span class="ident">name</span>, <span class="self">self</span>.<span class="ident">verbatim_doc_comment</span>.<span class="ident">is_none</span>());
-    }
-
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_struct</span>(
         <span class="ident">span</span>: <span class="ident">Span</span>,
         <span class="ident">attrs</span>: <span class="kw-2">&amp;</span>[<span class="ident">Attribute</span>],
@@ -1404,15 +1121,9 @@
                         <span class="string">&quot;parse attribute is not allowed for subcommand&quot;</span>
                     );
                 }
-                <span class="kw">if</span> <span class="ident">res</span>.<span class="ident">has_explicit_methods</span>() {
-                    <span class="macro">abort!</span>(
-                        <span class="ident">res</span>.<span class="ident">kind</span>.<span class="ident">span</span>(),
-                        <span class="string">&quot;methods in attributes are not allowed for subcommand&quot;</span>
-                    );
-                }
+
                 <span class="kw">use</span> <span class="ident">syn::Fields</span>::<span class="kw-2">*</span>;
                 <span class="kw">use</span> <span class="ident">syn::FieldsUnnamed</span>;
-
                 <span class="kw">let</span> <span class="ident">field_ty</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">variant</span>.<span class="ident">fields</span> {
                     <span class="ident">Named</span>(<span class="kw">_</span>) =&gt; {
                         <span class="macro">abort!</span>(<span class="ident">variant</span>.<span class="ident">span</span>(), <span class="string">&quot;structs are not allowed for subcommand&quot;</span>);
@@ -1470,7 +1181,7 @@
             <span class="ident">env_casing</span>,
         );
         <span class="ident">res</span>.<span class="ident">push_attrs</span>(<span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">attrs</span>);
-        <span class="ident">res</span>.<span class="ident">push_doc_comment</span>(<span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">attrs</span>, <span class="string">&quot;about&quot;</span>);
+        <span class="ident">res</span>.<span class="ident">push_doc_comment</span>(<span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">attrs</span>, <span class="string">&quot;help&quot;</span>);
 
         <span class="kw">if</span> <span class="ident">res</span>.<span class="ident">has_custom_parser</span> {
             <span class="macro">abort!</span>(
@@ -1505,7 +1216,7 @@
             <span class="ident">env_casing</span>,
         );
         <span class="ident">res</span>.<span class="ident">push_attrs</span>(<span class="kw-2">&amp;</span><span class="ident">field</span>.<span class="ident">attrs</span>);
-        <span class="ident">res</span>.<span class="ident">push_doc_comment</span>(<span class="kw-2">&amp;</span><span class="ident">field</span>.<span class="ident">attrs</span>, <span class="string">&quot;about&quot;</span>);
+        <span class="ident">res</span>.<span class="ident">push_doc_comment</span>(<span class="kw-2">&amp;</span><span class="ident">field</span>.<span class="ident">attrs</span>, <span class="string">&quot;help&quot;</span>);
 
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">res</span>.<span class="ident">kind</span> {
             <span class="ident">Kind::Flatten</span> =&gt; {
@@ -1594,13 +1305,13 @@
                                 <span class="ident">help</span> <span class="op">=</span> <span class="string">&quot;if you want to create a flag add `long` or `short`&quot;</span>;
                                 <span class="ident">help</span> <span class="op">=</span> <span class="string">&quot;If you really want a boolean parameter \
                                     add an explicit parser, for example `parse(try_from_str)`&quot;</span>;
-                                <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;see also https://github.com/clap-rs/clap_derive/tree/master/examples/true_or_false.rs&quot;</span>;
+                                <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;see also https://github.com/clap-rs/clap/blob/master/examples/derive_ref/custom-bool.md&quot;</span>;
                             )
                         }
                         <span class="kw">if</span> <span class="ident">res</span>.<span class="ident">is_enum</span> {
                             <span class="macro">abort!</span>(<span class="ident">field</span>.<span class="ident">ty</span>, <span class="string">&quot;`arg_enum` is meaningless for bool&quot;</span>)
                         }
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">res</span>.<span class="ident">find_method</span>(<span class="string">&quot;default_value&quot;</span>) {
+                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">res</span>.<span class="ident">find_default_method</span>() {
                             <span class="macro">abort!</span>(<span class="ident">m</span>.<span class="ident">name</span>, <span class="string">&quot;default_value is meaningless for bool&quot;</span>)
                         }
                         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">res</span>.<span class="ident">find_method</span>(<span class="string">&quot;required&quot;</span>) {
@@ -1608,7 +1319,7 @@
                         }
                     }
                     <span class="ident">Ty::Option</span> =&gt; {
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">res</span>.<span class="ident">find_method</span>(<span class="string">&quot;default_value&quot;</span>) {
+                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">res</span>.<span class="ident">find_default_method</span>() {
                             <span class="macro">abort!</span>(<span class="ident">m</span>.<span class="ident">name</span>, <span class="string">&quot;default_value is meaningless for Option&quot;</span>)
                         }
                     }
@@ -1638,6 +1349,252 @@
         <span class="ident">res</span>
     }
 
+    <span class="kw">fn</span> <span class="ident">new</span>(
+        <span class="ident">default_span</span>: <span class="ident">Span</span>,
+        <span class="ident">name</span>: <span class="ident">Name</span>,
+        <span class="ident">ty</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Type</span><span class="op">&gt;</span>,
+        <span class="ident">casing</span>: <span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">CasingStyle</span><span class="op">&gt;</span>,
+        <span class="ident">env_casing</span>: <span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">CasingStyle</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="self">Self</span> {
+        <span class="self">Self</span> {
+            <span class="ident">name</span>,
+            <span class="ident">ty</span>,
+            <span class="ident">casing</span>,
+            <span class="ident">env_casing</span>,
+            <span class="ident">doc_comment</span>: <span class="macro">vec!</span>[],
+            <span class="ident">methods</span>: <span class="macro">vec!</span>[],
+            <span class="ident">parser</span>: <span class="ident">Parser::default_spanned</span>(<span class="ident">default_span</span>),
+            <span class="ident">verbatim_doc_comment</span>: <span class="prelude-val">None</span>,
+            <span class="ident">next_display_order</span>: <span class="prelude-val">None</span>,
+            <span class="ident">next_help_heading</span>: <span class="prelude-val">None</span>,
+            <span class="ident">help_heading</span>: <span class="prelude-val">None</span>,
+            <span class="ident">is_enum</span>: <span class="bool-val">false</span>,
+            <span class="ident">has_custom_parser</span>: <span class="bool-val">false</span>,
+            <span class="ident">kind</span>: <span class="ident">Sp::new</span>(<span class="ident">Kind::Arg</span>(<span class="ident">Sp::new</span>(<span class="ident">Ty::Other</span>, <span class="ident">default_span</span>)), <span class="ident">default_span</span>),
+        }
+    }
+
+    <span class="kw">fn</span> <span class="ident">push_method</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="ident">Ident</span>, <span class="ident">arg</span>: <span class="kw">impl</span> <span class="ident">ToTokens</span>) {
+        <span class="kw">if</span> <span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;name&quot;</span> {
+            <span class="self">self</span>.<span class="ident">name</span> <span class="op">=</span> <span class="ident">Name::Assigned</span>(<span class="macro">quote!</span>(#<span class="ident">arg</span>));
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">Method::new</span>(<span class="ident">name</span>, <span class="macro">quote!</span>(#<span class="ident">arg</span>)));
+        }
+    }
+
+    <span class="kw">fn</span> <span class="ident">push_attrs</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">attrs</span>: <span class="kw-2">&amp;</span>[<span class="ident">Attribute</span>]) {
+        <span class="kw">use</span> <span class="ident">ClapAttr</span>::<span class="kw-2">*</span>;
+
+        <span class="kw">let</span> <span class="ident">parsed</span> <span class="op">=</span> <span class="ident">parse_clap_attributes</span>(<span class="ident">attrs</span>);
+        <span class="kw">for</span> <span class="ident">attr</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">parsed</span> {
+            <span class="kw">let</span> <span class="ident">attr</span> <span class="op">=</span> <span class="ident">attr</span>.<span class="ident">clone</span>();
+            <span class="kw">match</span> <span class="ident">attr</span> {
+                <span class="ident">Short</span>(<span class="ident">ident</span>) =&gt; {
+                    <span class="self">self</span>.<span class="ident">push_method</span>(<span class="ident">ident</span>, <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">clone</span>().<span class="ident">translate_char</span>(<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">casing</span>));
+                }
+
+                <span class="ident">Long</span>(<span class="ident">ident</span>) =&gt; {
+                    <span class="self">self</span>.<span class="ident">push_method</span>(<span class="ident">ident</span>, <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">clone</span>().<span class="ident">translate</span>(<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">casing</span>));
+                }
+
+                <span class="ident">Env</span>(<span class="ident">ident</span>) =&gt; {
+                    <span class="self">self</span>.<span class="ident">push_method</span>(<span class="ident">ident</span>, <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">clone</span>().<span class="ident">translate</span>(<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">env_casing</span>));
+                }
+
+                <span class="ident">ArgEnum</span>(<span class="kw">_</span>) =&gt; <span class="self">self</span>.<span class="ident">is_enum</span> <span class="op">=</span> <span class="bool-val">true</span>,
+
+                <span class="ident">FromGlobal</span>(<span class="ident">ident</span>) =&gt; {
+                    <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="ident">Sp::call_site</span>(<span class="ident">Ty::Other</span>);
+                    <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">Kind::FromGlobal</span>(<span class="ident">ty</span>), <span class="ident">ident</span>.<span class="ident">span</span>());
+                    <span class="self">self</span>.<span class="ident">set_kind</span>(<span class="ident">kind</span>);
+                }
+
+                <span class="ident">Subcommand</span>(<span class="ident">ident</span>) =&gt; {
+                    <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="ident">Sp::call_site</span>(<span class="ident">Ty::Other</span>);
+                    <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">Kind::Subcommand</span>(<span class="ident">ty</span>), <span class="ident">ident</span>.<span class="ident">span</span>());
+                    <span class="self">self</span>.<span class="ident">set_kind</span>(<span class="ident">kind</span>);
+                }
+
+                <span class="ident">ExternalSubcommand</span>(<span class="ident">ident</span>) =&gt; {
+                    <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">Kind::ExternalSubcommand</span>, <span class="ident">ident</span>.<span class="ident">span</span>());
+                    <span class="self">self</span>.<span class="ident">set_kind</span>(<span class="ident">kind</span>);
+                }
+
+                <span class="ident">Flatten</span>(<span class="ident">ident</span>) =&gt; {
+                    <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">Kind::Flatten</span>, <span class="ident">ident</span>.<span class="ident">span</span>());
+                    <span class="self">self</span>.<span class="ident">set_kind</span>(<span class="ident">kind</span>);
+                }
+
+                <span class="ident">Skip</span>(<span class="ident">ident</span>, <span class="ident">expr</span>) =&gt; {
+                    <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">Kind::Skip</span>(<span class="ident">expr</span>), <span class="ident">ident</span>.<span class="ident">span</span>());
+                    <span class="self">self</span>.<span class="ident">set_kind</span>(<span class="ident">kind</span>);
+                }
+
+                <span class="ident">VerbatimDocComment</span>(<span class="ident">ident</span>) =&gt; <span class="self">self</span>.<span class="ident">verbatim_doc_comment</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ident</span>),
+
+                <span class="ident">DefaultValueT</span>(<span class="ident">ident</span>, <span class="ident">expr</span>) =&gt; {
+                    <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ty</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">ty</span>.<span class="ident">as_ref</span>() {
+                        <span class="ident">ty</span>
+                    } <span class="kw">else</span> {
+                        <span class="macro">abort!</span>(
+                            <span class="ident">ident</span>,
+                            <span class="string">&quot;#[clap(default_value_t)] (without an argument) can be used \
+                            only on field level&quot;</span>;
+
+                            <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;see \
+                                https://github.com/clap-rs/clap/blob/master/examples/derive_ref/README.md#magic-attributes&quot;</span>)
+                    };
+
+                    <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">expr</span>) <span class="op">=</span> <span class="ident">expr</span> {
+                        <span class="macro">quote!</span>(#<span class="ident">expr</span>)
+                    } <span class="kw">else</span> {
+                        <span class="macro">quote!</span>(<span class="op">&lt;</span>#<span class="ident">ty</span> <span class="kw">as</span> <span class="ident">::std::default::Default</span><span class="op">&gt;</span><span class="ident">::default</span>())
+                    };
+
+                    <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">parsed</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro">matches!</span>(<span class="ident">a</span>, <span class="ident">ArgEnum</span>(<span class="kw">_</span>))) {
+                        <span class="macro">quote_spanned!</span>(<span class="ident">ident</span>.<span class="ident">span</span>()=&gt; {
+                            {
+                                <span class="kw">let</span> <span class="ident">val</span>: #<span class="ident">ty</span> <span class="op">=</span> #<span class="ident">val</span>;
+                                <span class="ident">clap::ArgEnum::to_possible_value</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>).<span class="ident">unwrap</span>().<span class="ident">get_name</span>()
+                            }
+                        })
+                    } <span class="kw">else</span> {
+                        <span class="macro">quote_spanned!</span>(<span class="ident">ident</span>.<span class="ident">span</span>()=&gt; {
+                            <span class="macro">clap::lazy_static::lazy_static!</span> {
+                                <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">DEFAULT_VALUE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> {
+                                    <span class="kw">let</span> <span class="ident">val</span>: #<span class="ident">ty</span> <span class="op">=</span> #<span class="ident">val</span>;
+                                    <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">::std::string::ToString::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>);
+                                    <span class="ident">::std::boxed::Box::leak</span>(<span class="ident">s</span>.<span class="ident">into_boxed_str</span>())
+                                };
+                            }
+                            <span class="kw-2">*</span><span class="ident">DEFAULT_VALUE</span>
+                        })
+                    };
+
+                    <span class="kw">let</span> <span class="ident">raw_ident</span> <span class="op">=</span> <span class="ident">Ident::new</span>(<span class="string">&quot;default_value&quot;</span>, <span class="ident">ident</span>.<span class="ident">span</span>());
+                    <span class="self">self</span>.<span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">Method::new</span>(<span class="ident">raw_ident</span>, <span class="ident">val</span>));
+                }
+
+                <span class="ident">DefaultValueOsT</span>(<span class="ident">ident</span>, <span class="ident">expr</span>) =&gt; {
+                    <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ty</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">ty</span>.<span class="ident">as_ref</span>() {
+                        <span class="ident">ty</span>
+                    } <span class="kw">else</span> {
+                        <span class="macro">abort!</span>(
+                            <span class="ident">ident</span>,
+                            <span class="string">&quot;#[clap(default_value_os_t)] (without an argument) can be used \
+                            only on field level&quot;</span>;
+
+                            <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;see \
+                                https://github.com/clap-rs/clap/blob/master/examples/derive_ref/README.md#magic-attributes&quot;</span>)
+                    };
+
+                    <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">expr</span>) <span class="op">=</span> <span class="ident">expr</span> {
+                        <span class="macro">quote!</span>(#<span class="ident">expr</span>)
+                    } <span class="kw">else</span> {
+                        <span class="macro">quote!</span>(<span class="op">&lt;</span>#<span class="ident">ty</span> <span class="kw">as</span> <span class="ident">::std::default::Default</span><span class="op">&gt;</span><span class="ident">::default</span>())
+                    };
+
+                    <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">parsed</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro">matches!</span>(<span class="ident">a</span>, <span class="ident">ArgEnum</span>(<span class="kw">_</span>))) {
+                        <span class="macro">quote_spanned!</span>(<span class="ident">ident</span>.<span class="ident">span</span>()=&gt; {
+                            {
+                                <span class="kw">let</span> <span class="ident">val</span>: #<span class="ident">ty</span> <span class="op">=</span> #<span class="ident">val</span>;
+                                <span class="ident">clap::ArgEnum::to_possible_value</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>).<span class="ident">unwrap</span>().<span class="ident">get_name</span>()
+                            }
+                        })
+                    } <span class="kw">else</span> {
+                        <span class="macro">quote_spanned!</span>(<span class="ident">ident</span>.<span class="ident">span</span>()=&gt; {
+                            <span class="macro">clap::lazy_static::lazy_static!</span> {
+                                <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">DEFAULT_VALUE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">::std::ffi::OsStr</span> <span class="op">=</span> {
+                                    <span class="kw">let</span> <span class="ident">val</span>: #<span class="ident">ty</span> <span class="op">=</span> #<span class="ident">val</span>;
+                                    <span class="kw">let</span> <span class="ident">s</span>: <span class="ident">::std::ffi::OsString</span> <span class="op">=</span> <span class="ident">val</span>.<span class="ident">into</span>();
+                                    <span class="ident">::std::boxed::Box::leak</span>(<span class="ident">s</span>.<span class="ident">into_boxed_os_str</span>())
+                                };
+                            }
+                            <span class="kw-2">*</span><span class="ident">DEFAULT_VALUE</span>
+                        })
+                    };
+
+                    <span class="kw">let</span> <span class="ident">raw_ident</span> <span class="op">=</span> <span class="ident">Ident::new</span>(<span class="string">&quot;default_value_os&quot;</span>, <span class="ident">ident</span>.<span class="ident">span</span>());
+                    <span class="self">self</span>.<span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">Method::new</span>(<span class="ident">raw_ident</span>, <span class="ident">val</span>));
+                }
+
+                <span class="ident">NextDisplayOrder</span>(<span class="ident">ident</span>, <span class="ident">expr</span>) =&gt; {
+                    <span class="self">self</span>.<span class="ident">next_display_order</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Method::new</span>(<span class="ident">ident</span>, <span class="macro">quote!</span>(#<span class="ident">expr</span>)));
+                }
+
+                <span class="ident">HelpHeading</span>(<span class="ident">ident</span>, <span class="ident">expr</span>) =&gt; {
+                    <span class="self">self</span>.<span class="ident">help_heading</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Method::new</span>(<span class="ident">ident</span>, <span class="macro">quote!</span>(#<span class="ident">expr</span>)));
+                }
+                <span class="ident">NextHelpHeading</span>(<span class="ident">ident</span>, <span class="ident">expr</span>) =&gt; {
+                    <span class="self">self</span>.<span class="ident">next_help_heading</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Method::new</span>(<span class="ident">ident</span>, <span class="macro">quote!</span>(#<span class="ident">expr</span>)));
+                }
+
+                <span class="ident">About</span>(<span class="ident">ident</span>) =&gt; {
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">method</span>) <span class="op">=</span> <span class="ident">Method::from_env</span>(<span class="ident">ident</span>, <span class="string">&quot;CARGO_PKG_DESCRIPTION&quot;</span>) {
+                        <span class="self">self</span>.<span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">method</span>);
+                    }
+                }
+
+                <span class="ident">Author</span>(<span class="ident">ident</span>) =&gt; {
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">method</span>) <span class="op">=</span> <span class="ident">Method::from_env</span>(<span class="ident">ident</span>, <span class="string">&quot;CARGO_PKG_AUTHORS&quot;</span>) {
+                        <span class="self">self</span>.<span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">method</span>);
+                    }
+                }
+
+                <span class="ident">Version</span>(<span class="ident">ident</span>) =&gt; {
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">method</span>) <span class="op">=</span> <span class="ident">Method::from_env</span>(<span class="ident">ident</span>, <span class="string">&quot;CARGO_PKG_VERSION&quot;</span>) {
+                        <span class="self">self</span>.<span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">method</span>);
+                    }
+                }
+
+                <span class="ident">NameLitStr</span>(<span class="ident">name</span>, <span class="ident">lit</span>) =&gt; {
+                    <span class="self">self</span>.<span class="ident">push_method</span>(<span class="ident">name</span>, <span class="ident">lit</span>);
+                }
+
+                <span class="ident">NameExpr</span>(<span class="ident">name</span>, <span class="ident">expr</span>) =&gt; {
+                    <span class="self">self</span>.<span class="ident">push_method</span>(<span class="ident">name</span>, <span class="ident">expr</span>);
+                }
+
+                <span class="ident">MethodCall</span>(<span class="ident">name</span>, <span class="ident">args</span>) =&gt; <span class="self">self</span>.<span class="ident">push_method</span>(<span class="ident">name</span>, <span class="macro">quote!</span>(#(#<span class="ident">args</span>),<span class="kw-2">*</span>)),
+
+                <span class="ident">RenameAll</span>(<span class="kw">_</span>, <span class="ident">casing_lit</span>) =&gt; {
+                    <span class="self">self</span>.<span class="ident">casing</span> <span class="op">=</span> <span class="ident">CasingStyle::from_lit</span>(<span class="ident">casing_lit</span>);
+                }
+
+                <span class="ident">RenameAllEnv</span>(<span class="kw">_</span>, <span class="ident">casing_lit</span>) =&gt; {
+                    <span class="self">self</span>.<span class="ident">env_casing</span> <span class="op">=</span> <span class="ident">CasingStyle::from_lit</span>(<span class="ident">casing_lit</span>);
+                }
+
+                <span class="ident">Parse</span>(<span class="ident">ident</span>, <span class="ident">spec</span>) =&gt; {
+                    <span class="self">self</span>.<span class="ident">has_custom_parser</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                    <span class="self">self</span>.<span class="ident">parser</span> <span class="op">=</span> <span class="ident">Parser::from_spec</span>(<span class="ident">ident</span>, <span class="ident">spec</span>);
+                }
+            }
+        }
+    }
+
+    <span class="kw">fn</span> <span class="ident">push_doc_comment</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">attrs</span>: <span class="kw-2">&amp;</span>[<span class="ident">Attribute</span>], <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
+        <span class="kw">use</span> <span class="ident">syn::Lit</span>::<span class="kw-2">*</span>;
+        <span class="kw">use</span> <span class="ident">syn::Meta</span>::<span class="kw-2">*</span>;
+
+        <span class="kw">let</span> <span class="ident">comment_parts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">attrs</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">attr</span><span class="op">|</span> <span class="ident">attr</span>.<span class="ident">path</span>.<span class="ident">is_ident</span>(<span class="string">&quot;doc&quot;</span>))
+            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">attr</span><span class="op">|</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">NameValue</span>(<span class="ident">MetaNameValue</span> { <span class="ident">lit</span>: <span class="ident">Str</span>(<span class="ident">s</span>), .. })) <span class="op">=</span> <span class="ident">attr</span>.<span class="ident">parse_meta</span>() {
+                    <span class="prelude-val">Some</span>(<span class="ident">s</span>.<span class="ident">value</span>())
+                } <span class="kw">else</span> {
+                    <span class="comment">// non #[doc = &quot;...&quot;] attributes are not our concern</span>
+                    <span class="comment">// we leave them for rustc to handle</span>
+                    <span class="prelude-val">None</span>
+                }
+            })
+            .<span class="ident">collect</span>();
+
+        <span class="self">self</span>.<span class="ident">doc_comment</span> <span class="op">=</span>
+            <span class="ident">process_doc_comment</span>(<span class="ident">comment_parts</span>, <span class="ident">name</span>, <span class="self">self</span>.<span class="ident">verbatim_doc_comment</span>.<span class="ident">is_none</span>());
+    }
+
     <span class="kw">fn</span> <span class="ident">set_kind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">Kind</span><span class="op">&gt;</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Kind::Arg</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">kind</span> {
             <span class="self">self</span>.<span class="ident">kind</span> <span class="op">=</span> <span class="ident">kind</span>;
@@ -1649,35 +1606,73 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_method</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">find_method</span>(<span class="ident">name</span>).<span class="ident">is_some</span>()
-    }
-
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_method</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Method</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">methods</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">name</span> <span class="op">==</span> <span class="ident">name</span>)
     }
 
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_default_method</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Method</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">methods</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">find</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;default_value&quot;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;default_value_os&quot;</span>)
+    }
+
     <span class="doccomment">/// generate methods from attributes on top of struct or enum</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">initial_top_level_methods</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TokenStream</span> {
+        <span class="kw">let</span> <span class="ident">next_display_order</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_display_order</span>.<span class="ident">as_ref</span>().<span class="ident">into_iter</span>();
+        <span class="kw">let</span> <span class="ident">next_help_heading</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_help_heading</span>.<span class="ident">as_ref</span>().<span class="ident">into_iter</span>();
         <span class="kw">let</span> <span class="ident">help_heading</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">help_heading</span>.<span class="ident">as_ref</span>().<span class="ident">into_iter</span>();
-        <span class="macro">quote!</span>( #(#<span class="ident">help_heading</span>)<span class="op">*</span> )
+        <span class="macro">quote!</span>(
+            #(#<span class="ident">next_display_order</span>)<span class="op">*</span>
+            #(#<span class="ident">next_help_heading</span>)<span class="op">*</span>
+            #(#<span class="ident">help_heading</span>)<span class="op">*</span>
+        )
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">final_top_level_methods</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TokenStream</span> {
-        <span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">version</span>;
-        <span class="kw">let</span> <span class="ident">author</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">author</span>;
         <span class="kw">let</span> <span class="ident">methods</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">methods</span>;
         <span class="kw">let</span> <span class="ident">doc_comment</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">doc_comment</span>;
 
-        <span class="macro">quote!</span>( #(#<span class="ident">doc_comment</span>)<span class="op">*</span> #<span class="ident">author</span> #<span class="ident">version</span> #(#<span class="ident">methods</span>)<span class="kw-2">*</span>)
+        <span class="macro">quote!</span>( #(#<span class="ident">doc_comment</span>)<span class="op">*</span> #(#<span class="ident">methods</span>)<span class="kw-2">*</span>)
     }
 
     <span class="doccomment">/// generate methods on top of a field</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">field_methods</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">proc_macro2::TokenStream</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">field_methods</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">supports_long_help</span>: <span class="ident">bool</span>) -&gt; <span class="ident">proc_macro2::TokenStream</span> {
         <span class="kw">let</span> <span class="ident">methods</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">methods</span>;
-        <span class="kw">let</span> <span class="ident">doc_comment</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">doc_comment</span>;
         <span class="kw">let</span> <span class="ident">help_heading</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">help_heading</span>.<span class="ident">as_ref</span>().<span class="ident">into_iter</span>();
-        <span class="macro">quote!</span>( #(#<span class="ident">doc_comment</span>)<span class="op">*</span> #(#<span class="ident">help_heading</span>)<span class="op">*</span> #(#<span class="ident">methods</span>)<span class="op">*</span> )
+        <span class="kw">match</span> <span class="ident">supports_long_help</span> {
+            <span class="bool-val">true</span> =&gt; {
+                <span class="kw">let</span> <span class="ident">doc_comment</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">doc_comment</span>;
+                <span class="macro">quote!</span>( #(#<span class="ident">doc_comment</span>)<span class="op">*</span> #(#<span class="ident">help_heading</span>)<span class="op">*</span> #(#<span class="ident">methods</span>)<span class="op">*</span> )
+            }
+            <span class="bool-val">false</span> =&gt; {
+                <span class="kw">let</span> <span class="ident">doc_comment</span> <span class="op">=</span> <span class="self">self</span>
+                    .<span class="ident">doc_comment</span>
+                    .<span class="ident">iter</span>()
+                    .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">mth</span><span class="op">|</span> <span class="ident">mth</span>.<span class="ident">name</span> <span class="op">!</span><span class="op">=</span> <span class="string">&quot;long_help&quot;</span>);
+                <span class="macro">quote!</span>( #(#<span class="ident">doc_comment</span>)<span class="op">*</span> #(#<span class="ident">help_heading</span>)<span class="op">*</span> #(#<span class="ident">methods</span>)<span class="op">*</span> )
+            }
+        }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_display_order</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TokenStream</span> {
+        <span class="kw">let</span> <span class="ident">next_display_order</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_display_order</span>.<span class="ident">as_ref</span>().<span class="ident">into_iter</span>();
+        <span class="macro">quote!</span>( #(#<span class="ident">next_display_order</span>)<span class="op">*</span> )
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_help_heading</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TokenStream</span> {
+        <span class="kw">let</span> <span class="ident">next_help_heading</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_help_heading</span>.<span class="ident">as_ref</span>().<span class="ident">into_iter</span>();
+        <span class="kw">let</span> <span class="ident">help_heading</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">help_heading</span>.<span class="ident">as_ref</span>().<span class="ident">into_iter</span>();
+        <span class="macro">quote!</span>( #(#<span class="ident">next_help_heading</span>)<span class="op">*</span>  #(#<span class="ident">help_heading</span>)<span class="op">*</span> )
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable-v4&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TokenStream</span> {
+        <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">clone</span>().<span class="ident">raw</span>()
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable-v4&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TokenStream</span> {
+        <span class="self">self</span>.<span class="ident">cased_name</span>()
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cased_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TokenStream</span> {
@@ -1700,8 +1695,8 @@
         <span class="self">self</span>.<span class="ident">is_enum</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">case_insensitive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TokenStream</span> {
-        <span class="kw">let</span> <span class="ident">method</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">find_method</span>(<span class="string">&quot;case_insensitive&quot;</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ignore_case</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TokenStream</span> {
+        <span class="kw">let</span> <span class="ident">method</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">find_method</span>(<span class="string">&quot;ignore_case&quot;</span>);
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">method</span>) <span class="op">=</span> <span class="ident">method</span> {
             <span class="ident">method</span>.<span class="ident">args</span>.<span class="ident">clone</span>()
@@ -1727,7 +1722,65 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_explicit_methods</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">methods</span>
             .<span class="ident">iter</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">name</span> <span class="op">!</span><span class="op">=</span> <span class="string">&quot;about&quot;</span> <span class="op">&amp;&amp;</span> <span class="ident">m</span>.<span class="ident">name</span> <span class="op">!</span><span class="op">=</span> <span class="string">&quot;long_about&quot;</span>)
+            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">name</span> <span class="op">!</span><span class="op">=</span> <span class="string">&quot;help&quot;</span> <span class="op">&amp;&amp;</span> <span class="ident">m</span>.<span class="ident">name</span> <span class="op">!</span><span class="op">=</span> <span class="string">&quot;long_help&quot;</span>)
+    }
+}
+
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::large_enum_variant</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Kind</span> {
+    <span class="ident">Arg</span>(<span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">Ty</span><span class="op">&gt;</span>),
+    <span class="ident">FromGlobal</span>(<span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">Ty</span><span class="op">&gt;</span>),
+    <span class="ident">Subcommand</span>(<span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">Ty</span><span class="op">&gt;</span>),
+    <span class="ident">Flatten</span>,
+    <span class="ident">Skip</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>),
+    <span class="ident">ExternalSubcommand</span>,
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Method</span> {
+    <span class="ident">name</span>: <span class="ident">Ident</span>,
+    <span class="ident">args</span>: <span class="ident">TokenStream</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">Method</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">name</span>: <span class="ident">Ident</span>, <span class="ident">args</span>: <span class="ident">TokenStream</span>) -&gt; <span class="self">Self</span> {
+        <span class="ident">Method</span> { <span class="ident">name</span>, <span class="ident">args</span> }
+    }
+
+    <span class="kw">fn</span> <span class="ident">from_env</span>(<span class="ident">ident</span>: <span class="ident">Ident</span>, <span class="ident">env_var</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lit</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">env::var</span>(<span class="ident">env_var</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">val</span>) =&gt; {
+                <span class="kw">if</span> <span class="ident">val</span>.<span class="ident">is_empty</span>() {
+                    <span class="kw">return</span> <span class="prelude-val">None</span>;
+                }
+                <span class="ident">LitStr::new</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>, <span class="ident">ident</span>.<span class="ident">span</span>())
+            }
+            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
+                <span class="macro">abort!</span>(<span class="ident">ident</span>,
+                    <span class="string">&quot;cannot derive `{}` from Cargo.toml&quot;</span>, <span class="ident">ident</span>;
+                    <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;`{}` environment variable is not set&quot;</span>, <span class="ident">env_var</span>;
+                    <span class="ident">help</span> <span class="op">=</span> <span class="string">&quot;use `{} = \&quot;...\&quot;` to set {} manually&quot;</span>, <span class="ident">ident</span>, <span class="ident">ident</span>;
+                );
+            }
+        };
+
+        <span class="kw">if</span> <span class="ident">ident</span> <span class="op">==</span> <span class="string">&quot;author&quot;</span> {
+            <span class="kw">let</span> <span class="ident">edited</span> <span class="op">=</span> <span class="ident">process_author_str</span>(<span class="kw-2">&amp;</span><span class="ident">lit</span>.<span class="ident">value</span>());
+            <span class="ident">lit</span> <span class="op">=</span> <span class="ident">LitStr::new</span>(<span class="kw-2">&amp;</span><span class="ident">edited</span>, <span class="ident">lit</span>.<span class="ident">span</span>());
+        }
+
+        <span class="prelude-val">Some</span>(<span class="ident">Method::new</span>(<span class="ident">ident</span>, <span class="macro">quote!</span>(#<span class="ident">lit</span>)))
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">ToTokens</span> <span class="kw">for</span> <span class="ident">Method</span> {
+    <span class="kw">fn</span> <span class="ident">to_tokens</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ts</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>) {
+        <span class="kw">let</span> <span class="ident">Method</span> { <span class="kw-2">ref</span> <span class="ident">name</span>, <span class="kw-2">ref</span> <span class="ident">args</span> } <span class="op">=</span> <span class="self">self</span>;
+
+        <span class="kw">let</span> <span class="ident">tokens</span> <span class="op">=</span> <span class="macro">quote!</span>( .#<span class="ident">name</span>(#<span class="ident">args</span>) );
+
+        <span class="ident">tokens</span>.<span class="ident">to_tokens</span>(<span class="ident">ts</span>);
     }
 }
 
@@ -1755,6 +1808,175 @@
 
     <span class="ident">res</span>
 }
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Parser</span> {
+    <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">Sp</span><span class="op">&lt;</span><span class="ident">ParserKind</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">func</span>: <span class="ident">TokenStream</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">Parser</span> {
+    <span class="kw">fn</span> <span class="ident">default_spanned</span>(<span class="ident">span</span>: <span class="ident">Span</span>) -&gt; <span class="ident">Sp</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">ParserKind::TryFromStr</span>, <span class="ident">span</span>);
+        <span class="kw">let</span> <span class="ident">func</span> <span class="op">=</span> <span class="macro">quote_spanned!</span>(<span class="ident">span</span>=&gt; <span class="ident">::std::str::FromStr::from_str</span>);
+        <span class="ident">Sp::new</span>(<span class="ident">Parser</span> { <span class="ident">kind</span>, <span class="ident">func</span> }, <span class="ident">span</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">from_spec</span>(<span class="ident">parse_ident</span>: <span class="ident">Ident</span>, <span class="ident">spec</span>: <span class="ident">ParserSpec</span>) -&gt; <span class="ident">Sp</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="kw">use</span> <span class="ident"><span class="self">self</span>::ParserKind</span>::<span class="kw-2">*</span>;
+
+        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">to_string</span>() {
+            <span class="string">&quot;from_str&quot;</span> =&gt; <span class="ident">FromStr</span>,
+            <span class="string">&quot;try_from_str&quot;</span> =&gt; <span class="ident">TryFromStr</span>,
+            <span class="string">&quot;from_os_str&quot;</span> =&gt; <span class="ident">FromOsStr</span>,
+            <span class="string">&quot;try_from_os_str&quot;</span> =&gt; <span class="ident">TryFromOsStr</span>,
+            <span class="string">&quot;from_occurrences&quot;</span> =&gt; <span class="ident">FromOccurrences</span>,
+            <span class="string">&quot;from_flag&quot;</span> =&gt; <span class="ident">FromFlag</span>,
+            <span class="ident">s</span> =&gt; <span class="macro">abort!</span>(<span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>(), <span class="string">&quot;unsupported parser `{}`&quot;</span>, <span class="ident">s</span>),
+        };
+
+        <span class="kw">let</span> <span class="ident">func</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">spec</span>.<span class="ident">parse_func</span> {
+            <span class="prelude-val">None</span> =&gt; <span class="kw">match</span> <span class="ident">kind</span> {
+                <span class="ident">FromStr</span> <span class="op">|</span> <span class="ident">FromOsStr</span> =&gt; {
+                    <span class="macro">quote_spanned!</span>(<span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>()=&gt; <span class="ident">::std::convert::From::from</span>)
+                }
+                <span class="ident">TryFromStr</span> =&gt; <span class="macro">quote_spanned!</span>(<span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>()=&gt; <span class="ident">::std::str::FromStr::from_str</span>),
+                <span class="ident">TryFromOsStr</span> =&gt; <span class="macro">abort!</span>(
+                    <span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>(),
+                    <span class="string">&quot;you must set parser for `try_from_os_str` explicitly&quot;</span>
+                ),
+                <span class="ident">FromOccurrences</span> =&gt; <span class="macro">quote_spanned!</span>(<span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>()=&gt; { <span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span> <span class="kw">as</span> <span class="kw">_</span> }),
+                <span class="ident">FromFlag</span> =&gt; <span class="macro">quote_spanned!</span>(<span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>()=&gt; <span class="ident">::std::convert::From::from</span>),
+            },
+
+            <span class="prelude-val">Some</span>(<span class="ident">func</span>) =&gt; <span class="kw">match</span> <span class="ident">func</span> {
+                <span class="ident">Expr::Path</span>(<span class="kw">_</span>) =&gt; <span class="macro">quote!</span>(#<span class="ident">func</span>),
+                <span class="kw">_</span> =&gt; <span class="macro">abort!</span>(<span class="ident">func</span>, <span class="string">&quot;`parse` argument must be a function path&quot;</span>),
+            },
+        };
+
+        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">Sp::new</span>(<span class="ident">kind</span>, <span class="ident">spec</span>.<span class="ident">kind</span>.<span class="ident">span</span>());
+        <span class="kw">let</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">Parser</span> { <span class="ident">kind</span>, <span class="ident">func</span> };
+        <span class="ident">Sp::new</span>(<span class="ident">parser</span>, <span class="ident">parse_ident</span>.<span class="ident">span</span>())
+    }
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ParserKind</span> {
+    <span class="ident">FromStr</span>,
+    <span class="ident">TryFromStr</span>,
+    <span class="ident">FromOsStr</span>,
+    <span class="ident">TryFromOsStr</span>,
+    <span class="ident">FromOccurrences</span>,
+    <span class="ident">FromFlag</span>,
+}
+
+<span class="doccomment">/// Defines the casing for the attributes long representation.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CasingStyle</span> {
+    <span class="doccomment">/// Indicate word boundaries with uppercase letter, excluding the first word.</span>
+    <span class="ident">Camel</span>,
+    <span class="doccomment">/// Keep all letters lowercase and indicate word boundaries with hyphens.</span>
+    <span class="ident">Kebab</span>,
+    <span class="doccomment">/// Indicate word boundaries with uppercase letter, including the first word.</span>
+    <span class="ident">Pascal</span>,
+    <span class="doccomment">/// Keep all letters uppercase and indicate word boundaries with underscores.</span>
+    <span class="ident">ScreamingSnake</span>,
+    <span class="doccomment">/// Keep all letters lowercase and indicate word boundaries with underscores.</span>
+    <span class="ident">Snake</span>,
+    <span class="doccomment">/// Keep all letters lowercase and remove word boundaries.</span>
+    <span class="ident">Lower</span>,
+    <span class="doccomment">/// Keep all letters uppercase and remove word boundaries.</span>
+    <span class="ident">Upper</span>,
+    <span class="doccomment">/// Use the original attribute name defined in the code.</span>
+    <span class="ident">Verbatim</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">CasingStyle</span> {
+    <span class="kw">fn</span> <span class="ident">from_lit</span>(<span class="ident">name</span>: <span class="ident">LitStr</span>) -&gt; <span class="ident">Sp</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="kw">use</span> <span class="ident"><span class="self">self</span>::CasingStyle</span>::<span class="kw-2">*</span>;
+
+        <span class="kw">let</span> <span class="ident">normalized</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">value</span>().<span class="ident">to_upper_camel_case</span>().<span class="ident">to_lowercase</span>();
+        <span class="kw">let</span> <span class="ident">cs</span> <span class="op">=</span> <span class="op">|</span><span class="ident">kind</span><span class="op">|</span> <span class="ident">Sp::new</span>(<span class="ident">kind</span>, <span class="ident">name</span>.<span class="ident">span</span>());
+
+        <span class="kw">match</span> <span class="ident">normalized</span>.<span class="ident">as_ref</span>() {
+            <span class="string">&quot;camel&quot;</span> <span class="op">|</span> <span class="string">&quot;camelcase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Camel</span>),
+            <span class="string">&quot;kebab&quot;</span> <span class="op">|</span> <span class="string">&quot;kebabcase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Kebab</span>),
+            <span class="string">&quot;pascal&quot;</span> <span class="op">|</span> <span class="string">&quot;pascalcase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Pascal</span>),
+            <span class="string">&quot;screamingsnake&quot;</span> <span class="op">|</span> <span class="string">&quot;screamingsnakecase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">ScreamingSnake</span>),
+            <span class="string">&quot;snake&quot;</span> <span class="op">|</span> <span class="string">&quot;snakecase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Snake</span>),
+            <span class="string">&quot;lower&quot;</span> <span class="op">|</span> <span class="string">&quot;lowercase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Lower</span>),
+            <span class="string">&quot;upper&quot;</span> <span class="op">|</span> <span class="string">&quot;uppercase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Upper</span>),
+            <span class="string">&quot;verbatim&quot;</span> <span class="op">|</span> <span class="string">&quot;verbatimcase&quot;</span> =&gt; <span class="ident">cs</span>(<span class="ident">Verbatim</span>),
+            <span class="ident">s</span> =&gt; <span class="macro">abort!</span>(<span class="ident">name</span>, <span class="string">&quot;unsupported casing: `{}`&quot;</span>, <span class="ident">s</span>),
+        }
+    }
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Name</span> {
+    <span class="ident">Derived</span>(<span class="ident">Ident</span>),
+    <span class="ident">Assigned</span>(<span class="ident">TokenStream</span>),
+}
+
+<span class="kw">impl</span> <span class="ident">Name</span> {
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable-v4&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">raw</span>(<span class="self">self</span>) -&gt; <span class="ident">TokenStream</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident">Name::Assigned</span>(<span class="ident">tokens</span>) =&gt; <span class="ident">tokens</span>,
+            <span class="ident">Name::Derived</span>(<span class="ident">ident</span>) =&gt; {
+                <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">ident</span>.<span class="ident">unraw</span>().<span class="ident">to_string</span>();
+                <span class="macro">quote_spanned!</span>(<span class="ident">ident</span>.<span class="ident">span</span>()=&gt; #<span class="ident">s</span>)
+            }
+        }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">translate</span>(<span class="self">self</span>, <span class="ident">style</span>: <span class="ident">CasingStyle</span>) -&gt; <span class="ident">TokenStream</span> {
+        <span class="kw">use</span> <span class="ident">CasingStyle</span>::<span class="kw-2">*</span>;
+
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident">Name::Assigned</span>(<span class="ident">tokens</span>) =&gt; <span class="ident">tokens</span>,
+            <span class="ident">Name::Derived</span>(<span class="ident">ident</span>) =&gt; {
+                <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">ident</span>.<span class="ident">unraw</span>().<span class="ident">to_string</span>();
+                <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">style</span> {
+                    <span class="ident">Pascal</span> =&gt; <span class="ident">s</span>.<span class="ident">to_upper_camel_case</span>(),
+                    <span class="ident">Kebab</span> =&gt; <span class="ident">s</span>.<span class="ident">to_kebab_case</span>(),
+                    <span class="ident">Camel</span> =&gt; <span class="ident">s</span>.<span class="ident">to_lower_camel_case</span>(),
+                    <span class="ident">ScreamingSnake</span> =&gt; <span class="ident">s</span>.<span class="ident">to_shouty_snake_case</span>(),
+                    <span class="ident">Snake</span> =&gt; <span class="ident">s</span>.<span class="ident">to_snake_case</span>(),
+                    <span class="ident">Lower</span> =&gt; <span class="ident">s</span>.<span class="ident">to_snake_case</span>().<span class="ident">replace</span>(<span class="string">&#39;_&#39;</span>, <span class="string">&quot;&quot;</span>),
+                    <span class="ident">Upper</span> =&gt; <span class="ident">s</span>.<span class="ident">to_shouty_snake_case</span>().<span class="ident">replace</span>(<span class="string">&#39;_&#39;</span>, <span class="string">&quot;&quot;</span>),
+                    <span class="ident">Verbatim</span> =&gt; <span class="ident">s</span>,
+                };
+                <span class="macro">quote_spanned!</span>(<span class="ident">ident</span>.<span class="ident">span</span>()=&gt; #<span class="ident">s</span>)
+            }
+        }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">translate_char</span>(<span class="self">self</span>, <span class="ident">style</span>: <span class="ident">CasingStyle</span>) -&gt; <span class="ident">TokenStream</span> {
+        <span class="kw">use</span> <span class="ident">CasingStyle</span>::<span class="kw-2">*</span>;
+
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident">Name::Assigned</span>(<span class="ident">tokens</span>) =&gt; <span class="macro">quote!</span>( (#<span class="ident">tokens</span>).<span class="ident">chars</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>() ),
+            <span class="ident">Name::Derived</span>(<span class="ident">ident</span>) =&gt; {
+                <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">ident</span>.<span class="ident">unraw</span>().<span class="ident">to_string</span>();
+                <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">style</span> {
+                    <span class="ident">Pascal</span> =&gt; <span class="ident">s</span>.<span class="ident">to_upper_camel_case</span>(),
+                    <span class="ident">Kebab</span> =&gt; <span class="ident">s</span>.<span class="ident">to_kebab_case</span>(),
+                    <span class="ident">Camel</span> =&gt; <span class="ident">s</span>.<span class="ident">to_lower_camel_case</span>(),
+                    <span class="ident">ScreamingSnake</span> =&gt; <span class="ident">s</span>.<span class="ident">to_shouty_snake_case</span>(),
+                    <span class="ident">Snake</span> =&gt; <span class="ident">s</span>.<span class="ident">to_snake_case</span>(),
+                    <span class="ident">Lower</span> =&gt; <span class="ident">s</span>.<span class="ident">to_snake_case</span>(),
+                    <span class="ident">Upper</span> =&gt; <span class="ident">s</span>.<span class="ident">to_shouty_snake_case</span>(),
+                    <span class="ident">Verbatim</span> =&gt; <span class="ident">s</span>,
+                };
+
+                <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">chars</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>();
+                <span class="macro">quote_spanned!</span>(<span class="ident">ident</span>.<span class="ident">span</span>()=&gt; #<span class="ident">s</span>)
+            }
+        }
+    }
+}
 </code></pre></div>
-</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="clap_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (48a5999fc 2021-12-01)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="clap_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (5435ed691 2022-06-07)" ></div>
 </body></html>

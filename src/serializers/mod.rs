@@ -45,7 +45,7 @@ fn split_device_id(device_id: &str) -> (u32, u32, u32) {
 }
 
 fn phase_value_v1(phase: Phase, subphase: Option<SubPhase>) -> u8 {
-    let subphase = subphase.unwrap_or_else(|| match phase {
+    let subphase = subphase.unwrap_or(match phase {
         Phase::Inhalation => SubPhase::Inspiration,
         Phase::Exhalation => SubPhase::Exhale,
     });

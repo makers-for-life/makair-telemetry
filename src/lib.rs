@@ -677,8 +677,7 @@ mod tests {
         // Serialize these telemetry messages into binary
         let telemetry_bytes = telemetry_messages
             .iter()
-            .map(|m| mk_frame(&m.to_bytes()))
-            .flatten()
+            .flat_map(|m| mk_frame(&m.to_bytes()))
             .collect::<Vec<_>>();
 
         // Prepare control messages
@@ -687,8 +686,7 @@ mod tests {
         // Serialize these control messages into binary
         let control_bytes = control_messages
             .iter()
-            .map(|m| m.to_control_frame())
-            .flatten()
+            .flat_map(|m| m.to_control_frame())
             .collect::<Vec<_>>();
 
         // Prepare channels to communicate with the gather_telemetry* function

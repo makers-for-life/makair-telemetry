@@ -216,8 +216,6 @@ impl std::convert::TryFrom<u8> for ControlSetting {
 #[cfg(feature = "rand")]
 impl rand::distributions::Distribution<ControlSetting> for rand::distributions::Standard {
     fn sample<R: rand::Rng + ?Sized>(&self, rng: &mut R) -> ControlSetting {
-        use std::convert::TryFrom;
-
         let number = rng.gen_range(1..=5);
         ControlSetting::try_from(number).unwrap()
     }
@@ -235,8 +233,6 @@ pub struct ControlMessage {
 #[cfg(feature = "rand")]
 impl rand::distributions::Distribution<ControlMessage> for rand::distributions::Standard {
     fn sample<R: rand::Rng + ?Sized>(&self, rng: &mut R) -> ControlMessage {
-        use std::convert::TryFrom;
-
         let setting: ControlSetting = rng.gen();
         let value = u16::try_from(rng.gen_range(setting.bounds())).unwrap_or(u16::MAX);
         ControlMessage { setting, value }
@@ -289,7 +285,6 @@ impl ControlMessage {
 fn parse_control_setting(input: &[u8]) -> IResult<&[u8], ControlSetting> {
     use nom::combinator::map_res;
     use nom::number::streaming::be_u8;
-    use std::convert::TryFrom;
 
     map_res(be_u8, ControlSetting::try_from)(input)
 }
